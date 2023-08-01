@@ -1,3 +1,3 @@
 TaskStock🔥
 
-A world-changing To-do list web service is under development
+A world-changing To-do list web service is under development now 
