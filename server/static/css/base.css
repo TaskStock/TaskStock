@@ -24,14 +24,14 @@
     --grey_border: rgba(233, 233, 231);
 
     /* font */
-    --hero: 5rem;
-    --heading1: 3.8rem;
-    --heading2: 2.8rem;
-    --heading3: 2.2rem;
-    --subheading: 1.8rem;
-    --body1: 1.6rem;
-    --body2: 1.4rem;
-    --caption: 1.2rem;
+    --hero: 50px;
+    --heading1: 38px;
+    --heading2: 28px;
+    --heading3: 22px;
+    --subheading: 18px;
+    --body1: 16px;
+    --body2: 14px;
+    --caption: 12px;
 
     /* border-radius */
     --border-r: 8px;
@@ -60,7 +60,7 @@
     grid-template-columns: repeat(var(--columns), 1fr);
     grid-auto-rows: minmax(100px, auto);
     gap: var(--gutter);
-    padding: 0 var(--offset);
+    margin: 0 var(--offset);
 }
 
 /* start */
