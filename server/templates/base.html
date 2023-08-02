@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- font : pretendard -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <!-- icon : css.gg -->
+    <link href="https://css.gg/css" rel="stylesheet" />
+    <link href="https://unpkg.com/css.gg/icons/icons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/css.gg/icons/icons.css" rel="stylesheet"/>
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    
+    <title>TaskStock</title>
+</head>
+<body>
+    <div class="menu-left">
+        <div class="menu-left__logo menu-left__box">
+            <!-- 작업공간 -->
+            <h1>LOGO</h1>
+        </div>
+        <div class="menu-left__my-info menu-left__box"><!-- 작업공간 --></div>
+        <div class="menu-left__follower menu-left__box"><!-- 작업공간 --></div>
+        <!-- <div class="menu-left__following menu-left__box"></div> -->
+    </div>
+    <div class="main-container">
+        <main>
+            <div class="main-top">
+                <div class="main-left">
+                    <div class="main__current main__box">
+                        <div class="main__box--header main__current--header">
+                            <!-- 작업공간 -->
+                            <h2>Current Status</h2>
+                        </div>
+                    </div>
+                    <div class="main__badge main__box">
+                        <div class="main__box--header main__badge--header">
+                            <!-- 작업공간 -->
+                            <h2>Aquired Badges</h2>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="main__todo main__box">
+                    <div class="main__box--header main__todo--header">
+                        <!-- 작업공간 -->
+                        <h2>Todo</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="main-bottom">
+                <div class="main__graph main__box">
+                    <div class="main__box--header main__graph--header">
+                        <!-- 작업공간 -->
+                        <h2>Candle</h2>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- hamburger -->
+        <div class="menu-right__hamburger">
+            <div></div>                
+            <div></div>                
+            <div></div>                
+        </div>
+    </div>
+    <div class="menu-right active">
+        <div class="menu-right__wrap">
+            <a href="/" class="menu-right__home">
+                <div><i class="gg-home"></i></div>
+                <span>Home</span>
+            </a>
+            <a href="/" class="menu-right__search">
+                <div><i class="gg-search"></i></div>
+                <span>Search</span>
+            </a>
+            <a href="/" class="menu-right__settings">
+                <div><i class="gg-options"></i></div>
+                <span>Settings</span>
+            </a>
+            <a href="/" class="menu-right__primium">
+                <div><i class="gg-crown"></i></div>
+                <span>Primium</span>
+            </a>
+            <a href="/" class="menu-right__invite">
+                <div><i class="gg-user-add"></i></div>
+                <div><span>Invite Friends</span></div>
+            </a>
+            <a href="/" class="menu-right__logout">
+                <div><i class="gg-log-off"></i></div>
+                <span>Log out</span>
+            </a>
+        </div>
+    </div>
+    <script src="{% static 'js/hamburger.js' %}"></script>
+</body>
+</html>
