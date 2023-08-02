@@ -3,10 +3,11 @@
 <div class="login__header">Log in</div>
 {% load socialaccount %}		
 {% providers_media_js %}
-<a href="{% provider_login_url 'google' %}" class="login__google Flex_cc">
+<form action="{% provider_login_url 'google' %}" method="post" class="login__google Flex_cc">
+    {% csrf_token %}
     <i class="gg-google"></i>  
-    <span>Login via Google</span>
-</a>
+    <button type="submit">Login via Google</button>
+</form>
 <div class="bar"></div>
 <!-- form -->
 <div>---form 들어갈 자리---</div>

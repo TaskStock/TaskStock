@@ -3,6 +3,7 @@
 <div class="login__header--signup">Sign up</div>
 <span>You're signing up as user@user.com</span>
 <form action="" class="signup2">
+    {% csrf_token %}
     <label for="username">Username</label>
     <input type="text" placeholder="user@user.com" id="email" name="email">
     <label for="signup2_pw">Set a password</label>

@@ -2,10 +2,12 @@
 
 <div class="login__header">Sign up</div>
 <form action="" class="auth-email">
+    {% csrf_token %}
     <label for="email">Email</label>
     <input type="text" placeholder="user@user.com" id="email" name="email">
 </form>
 <form action="/signup/step2/" class="signup-code">
+    {% csrf_token %}
     <span>
         We just sent you a temporary sign up code. Please check your inbox and paste the sign up code below.
     </span>
