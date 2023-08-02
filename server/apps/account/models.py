@@ -4,7 +4,7 @@ from django.db import models
 
 # User 모델은 추후 로그인 기능 때 구현 예정
 
-class Value():
+class Value(models.Model):
     # 이름, 점수, 아이디, 비밀번호, 이메일, 생일
     # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='value_user')
 
@@ -16,18 +16,18 @@ class Value():
     high = models.IntegerField()
     combo = models.IntegerField(null=True, default=0)
 
-class Todolist():
+class Todolist(models.Model):
     # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='todolist_user')
     
     # tmp는 임시 필드, user필드 넣으면 뺴야함
     tmp = models.IntegerField(null=True, default=0)
 
-class Todo():
+class Todo(models.Model):
     value = models.ForeignKey(Value, on_delete=models.CASCADE, related_name='todo_value')
     todolist = models.ForeignKey(Todolist, on_delete=models.CASCADE, related_name='todo_todolist')
     title = models.CharField(max_length=30)
     content = models.TextField()
-    check = models.BooleanField()
+    goal_check = models.BooleanField()
     level = models.IntegerField()
 
     created_time = models.DateTimeField(auto_now_add=True)
