@@ -1,41 +1,17 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- font : pretendard -->
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
-    <!-- icon : css.gg -->
-    <link href="https://css.gg/css" rel="stylesheet" />
-    <link href="https://unpkg.com/css.gg/icons/icons.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/css.gg/icons/icons.css" rel="stylesheet"/>
-    <!-- css -->
-    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
-    <title>Document</title>
-</head>
-<body>
-    <header>
-        <h1>TASKSTOCK</h1>
-    </header>
-    <main class="Flex_cc">
-        <div class="login__header">Log in</div>
-        <div class="login__google Flex_cc">
-            <i class="gg-google"></i>  
-            <span>Login via Google</span>
-        </div>
-        <div class="bar"></div>
-        <!-- form -->
-        <div>---form 들어갈 자리---</div>
-        <div class="login__forgot-pw"><a href="">Forgot password?</a></div>        
-        <div class="login__signup">Not a member? <a href="">Create an account</a></div>
+{% extends './base_login.html' %} {% load static %} {% block content %}
+
+<div class="login__header">Log in</div>
+<button class="login__google Flex_cc">
+    <i class="gg-google"></i>  
+    <span>Login via Google</span>
+</button>
+<div class="bar"></div>
+<!-- form -->
+<div>---form 들어갈 자리---</div>
+<div class="login__forgot-pw"><a href="">Forgot password?</a></div>        
+<div class="login__signup">Not a member? <a href="/signup/step1/">Create an account</a></div>
        
-        
+
+{% endblock %}
 
 
-
-    </main>
-</body>
-</html>

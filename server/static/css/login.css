@@ -22,6 +22,7 @@
     /* grey */
     --grey_bg: #FBFBFA;
     --grey_border: rgba(233, 233, 231);
+    --grey_400: rgba(55, 53, 47, 0.65);
 
     /* font */
     --hero: 50px;
@@ -71,14 +72,26 @@ header h1{
     font-weight: bold;
 }
 main{
-    height: calc(100vh);
+    height: calc(80vh);
     gap: var(--gutter);
     flex-direction: column;
+    width: 320px;
+    margin: auto;
 }
 .login__header{
     font-size: var(--hero);
     font-weight: 700;
     margin-bottom: 24px; 
+}
+.login__header--signup{
+    font-size: var(--hero);
+    font-weight: 700;
+}
+.login__header--signup + span{
+    font-size: var(--heading3);
+    width: 400px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 .login__google{
     width: 320px;
@@ -100,4 +113,49 @@ main{
 .login__signup a{
     text-decoration: underline;
     cursor: pointer;
+}
+.auth-email,
+.signup-code,
+.signup2{
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    gap: 8px;
+}
+.auth-email label,
+.signup-code label,
+.signup2 label{
+    font-size: var(--caption);
+    color: var(--grey_400);
+    
+}
+.auth-email input,
+.signup-code input,
+.signup2 input{
+    width: 320px;
+    height: 34px;
+    border-radius: var(--border-r);
+    border: 1px solid var(--grey_border);
+    background-color: var(--grey_bg);
+    padding: 0 var(--gutter);
+
+}
+.signup-code span{
+    color: var(--grey_400);
+    font-size: var(--body2);
+    text-align: center;
+}
+.signup1-btn,
+.signup2-btn{
+    width: 320px;
+    height: 36px;
+    white-space: nowrap;
+    border-radius: var(--border-r);
+    border: 1px solid var(--green_200);
+    color: var(--green_700);
+    background-color: var(--green_100);
+    margin-top: 10px;
+    font-size: var(--body2);
+    box-shadow: rgba(17, 171, 73, 0.1) 0px 1px 2px, 
+    rgba(17, 171, 73, 0.1) 0px 0px 0px 1px
 }
