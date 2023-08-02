@@ -14,3 +14,10 @@ def logout(request):
     auth.logout(request)
 
     return redirect("/login")
+  
+def signup1(request):
+    return render(request, 'account/signup1.html')
+
+
+def signup2(request):
+    return render(request, 'account/signup2.html')
