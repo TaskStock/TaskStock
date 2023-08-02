@@ -7,7 +7,8 @@ from django.shortcuts import render
 def hello():
     pass
 #---세원 작업---#
-
+def task_compelete(request):
+    
 #---지수 작업---#
 
 #---선우 작업---#
