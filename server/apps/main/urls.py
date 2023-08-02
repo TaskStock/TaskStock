@@ -3,6 +3,7 @@ from .views import *
 
 urlpatterns = [
     path('', hello),
-    path('task_complete/', task_compelete),
+    path('add_task/', add_todo),
+    path('task_complete/', complete_task),
 ]
 
