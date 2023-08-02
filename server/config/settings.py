@@ -150,3 +150,34 @@ AUTHENTICATION_BACKENDS = (
 SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'	### 오류가 나면 로그인 화면으로 돌아간다.
+
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# reading .env file
+environ.Env.read_env(BASE_DIR / '../.env')
+
+SOCIAL_AUTH_GOOGLE_CLIENT_ID=env('SOCIAL_AUTH_GOOGLE_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_SECRET=env('SOCIAL_AUTH_GOOGLE_SECRET')
+API_KEY=env('API_KEY')
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': SOCIAL_AUTH_GOOGLE_CLIENT_ID,
+            'secret': SOCIAL_AUTH_GOOGLE_SECRET,
+            'key': API_KEY,
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
