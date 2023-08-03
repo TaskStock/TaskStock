@@ -30,7 +30,6 @@ class Todolist(models.Model):
 class Todo(models.Model):
     value = models.ForeignKey(Value, on_delete=models.CASCADE, related_name='todo_value')
     todolist = models.ForeignKey(Todolist, on_delete=models.CASCADE, related_name='todo_todolist')
-    title = models.CharField(max_length=30)
     content = models.TextField()
     goal_check = models.BooleanField()
     level = models.IntegerField()
