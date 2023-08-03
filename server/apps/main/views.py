@@ -17,3 +17,6 @@ def home(request):
 
 def search(request):
     return render(request, 'main/search.html')
+
+def settings(request):
+    return render(request, 'main/settings.html')
