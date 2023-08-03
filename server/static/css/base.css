@@ -112,11 +112,12 @@ main{
     border-radius: var(--border-r);
     background-color: var(--grey_bg);
     box-shadow: var(--box-shadow);
+    padding: var(--gutter);
 }
 .main__box--header{
     font-size: 28px;
     font-weight: 600;
-    padding: var(--gutter);
+    margin-bottom: var(--gutter);
 }
 .menu-right{
     display: flex;

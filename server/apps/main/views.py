@@ -7,7 +7,7 @@ from django.shortcuts import render
 
 
 def home(request):
-    return render(request, 'base.html')
+    return render(request, 'main/home.html')
 # ---세원 작업---#
 
 # ---지수 작업---#

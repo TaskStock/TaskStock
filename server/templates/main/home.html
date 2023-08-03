@@ -1,0 +1,74 @@
+{% extends '../base.html' %} {% load static %} {% block content %}
+
+<main>
+    <div class="main-top">
+        <div class="main-left">
+            <div class="main__current main__box">
+                <div class="main__box--header main__current--header">
+                    <h2>Current Status</h2>
+                </div>
+            </div>
+            <div class="main__badge main__box">
+                <div class="main__box--header main__badge--header">
+                    <h2>Aquired Badges</h2>
+                </div>
+            </div>
+            
+        </div>
+        <div class="main__todo main__box">
+            <div class="main__box--header main__todo--header">
+                <h2>Todo</h2>
+            </div>
+            <div class="main__todo--week">
+                <div class="main__todo--week-cont">
+                    <div class="main__todo--day">
+                        <div></div>
+                        <div class="main__todo--day-n">31</div>
+                    </div>
+                    <div class="main__todo--day">
+                        <div></div>
+                        <div class="main__todo--day-n">1</div>
+                    </div>
+                    <div class="main__todo--day">
+                        <div></div>
+                        <div class="main__todo--day-n">2</div>
+                    </div>
+                    <div class="main__todo--day">
+                        <div></div>
+                        <div class="main__todo--day-n">3</div>
+                    </div>
+                    <div class="main__todo--day">
+                        <div></div>
+                        <div class="main__todo--day-n">4</div>
+                    </div>
+                    <div class="main__todo--day">
+                        <div></div>
+                        <div class="main__todo--day-n">5</div>
+                    </div>
+                    <div class="main__todo--day">
+                        <div></div>
+                        <div class="main__todo--day-n">6</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main__todo--lists">
+                <div class="list__btn"><i class="gg-math-plus"></i></div>
+                <!-- form? -->
+                <div class="list__list-cont">
+                    <!-- {% csrf_token %}  -->
+                    <!-- <to-do></to-do> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-bottom">
+        <div class="main__graph main__box">
+            <div class="main__box--header main__graph--header">
+                <h2>Candle</h2>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="{% static 'js/todo.js' %}"></script>
+
+{% endblock %}
