@@ -14,7 +14,7 @@
     <!-- css -->
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
     <title>TaskStock</title>
 </head>
 <body>
@@ -23,44 +23,61 @@
             <!-- 작업공간 -->
             <h1>LOGO</h1>
         </div>
-        <div class="menu-left__my-info menu-left__box"><!-- 작업공간 --></div>
-        <div class="menu-left__follower menu-left__box"><!-- 작업공간 --></div>
+
+    <!-- my-info 부분  -->
+        <div class="menu-left__my-info menu-left__box">
+            <div class="menu-left__upper-info-container">
+                <img src="https://placekitten.com/100/100" alt="profile image">
+                <div class="menu-left__upper-info-description-container">
+                    <h2>User</h2>
+                    <h3>Hi! nece to meet you</h3>
+                </div>
+            </div>
+            <div class="menu-left__lower-info-container">
+                <div class="menu-left__lower-stock-info-container menu-left__lower-container">
+                    <div class="menu-left__image-container">
+                        <img src="https://placekitten.com/30/30" alt="stock trend image">
+                    </div>
+                    <p>13%</p>
+                </div>
+                <div class="menu-left__lower-following-info-container menu-left__lower-container">
+                    <a href="/" class="menu-left__following-link">
+                        <div class="menu-left__image-container">
+                            <h2>23</h2>
+                        </div>
+                    </a>    
+                    <p>following</p>
+                </div>
+                <div class="menu-left__lower-followers-info-container menu-left__lower-container">
+                    <a href="/" class="menu-left__following-link">
+                        <div class="menu-left__image-container">
+                            <h2>23</h2>
+                        </div>
+                    </a>    
+                    <p>followers</p>
+                </div>
+            </div> 
+        </div>
+
+        <!-- my-info 하단 팔로우 목록 -->
+        <div class="menu-left__follower menu-left__box">
+            <div class="menu-left__follower-user-container">
+                <img src="https://placekitten.com/100/100" alt="profile image">
+                <div class="menu-left__follower-user-description-container">
+                    <h2>User2</h2>
+                    <p>5시간 전 완료</p>
+                </div>
+                <div class="menu-left__follower-user-stock-container">
+                    <img src="https://placekitten.com/40/40" alt="stock trend image">
+                    <p>13%</p>
+                </div>
+            </div>
+        </div>
         <!-- <div class="menu-left__following menu-left__box"></div> -->
     </div>
     <div class="main-container">
-        <main>
-            <div class="main-top">
-                <div class="main-left">
-                    <div class="main__current main__box">
-                        <div class="main__box--header main__current--header">
-                            <!-- 작업공간 -->
-                            <h2>Current Status</h2>
-                        </div>
-                    </div>
-                    <div class="main__badge main__box">
-                        <div class="main__box--header main__badge--header">
-                            <!-- 작업공간 -->
-                            <h2>Aquired Badges</h2>
-                        </div>
-                    </div>
-                    
-                </div>
-                <div class="main__todo main__box">
-                    <div class="main__box--header main__todo--header">
-                        <!-- 작업 공간 -->
-                        <h2>Todo</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="main-bottom">
-                <div class="main__graph main__box">
-                    <div class="main__box--header main__graph--header">
-                        <!-- 작업공간 -->
-                        <h2>Candle</h2>
-                    </div>
-                </div>
-            </div>
-        </main>
+        {% block content %}
+        {% endblock %}
         <!-- hamburger -->
         <div class="menu-right__hamburger">
             <div></div>                
