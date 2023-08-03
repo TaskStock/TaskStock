@@ -22,8 +22,14 @@ from datetime import datetime
 # ---환희 작업---#
 
 def home(request):
-    return render(request, 'base.html')
+    return render(request, 'main/home.html')
 
+def hello(request):
+    context = {
+                
+            }
+    return render(request, 'base.html', context=context)
+  
 #---세원 작업---#
 
 """

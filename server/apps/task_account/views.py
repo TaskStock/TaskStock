@@ -11,16 +11,19 @@ def login(request):
         if form.is_valid():
             user = form.get_user()
             auth.login(request, user)
-            print('form is valid')
-            return redirect('/')
+            
+            if request.user.email == '':
+                return redirect('/signup/step2/')
+            else:
+                return redirect('/main/')
         else:
-            print('form isnt valid')
             context = {
                 'form': form,
             }
             return render(request, 'account/login.html', context=context)
     else:
-        print("form print")
+        auth.logout(request)
+
         form = AuthenticationForm()
         context = {
             'form': form,
@@ -31,12 +34,9 @@ def logout(request):
     auth.logout(request)
 
     return redirect("/login/")
-  
+
+
 def signup1(request):
-    return render(request, 'account/signup1.html')
-
-
-def signup2(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -45,20 +45,28 @@ def signup2(request):
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth.login(request, user)
 
-            print('signup is valid')
-
-            return redirect('/login/')
+            return redirect('/signup/step2/')
         else:
-            print('signup is invalid')
             
             ctx={
                 'form':form,
             }
-            return render(request, 'account/signup2.html',context=ctx)
+            return render(request, 'account/signup1.html',context=ctx)
     else:
         form = SignupForm()
-        print('signup page')
         ctx = {
             'form': form,
         }
-        return render(request, template_name='account/signup2.html', context=ctx)
+        return render(request, template_name='account/signup1.html', context=ctx)
+
+def signup2(request):
+
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        request.user.email = email
+        request.user.save()
+
+        return redirect('/main/')
+
+
+    return render(request, 'account/signup2.html')
