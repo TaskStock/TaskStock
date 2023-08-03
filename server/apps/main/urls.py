@@ -2,8 +2,9 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('add_task/', add_todo),
-    path('check_task/', check_task),
+    path('add_todo/', add_todo),
+    path('delete_todo', delete_todo),
+    path('check_todo/', check_todo),
     path('', home),
     path('search/', search),
 ]
