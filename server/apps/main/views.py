@@ -14,6 +14,12 @@ from datetime import datetime
 def home(request):
     return render(request, 'base.html')
 
+def hello(request):
+    context = {
+                
+            }
+    return render(request, 'base.html', context=context)
+  
 #---세원 작업---#
 """
 날마다 유저마다 하나씩 value 객체를 생성해줌

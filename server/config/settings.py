@@ -154,7 +154,8 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-LOGIN_REDIRECT_URL = '/'	### 오류가 나면 로그인 화면으로 돌아간다.
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/main/'	# 로그인 후 리다이렉트 되는 곳
 
 import environ
 
