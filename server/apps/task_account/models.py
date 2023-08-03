@@ -1,8 +1,13 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
-
-# User 모델은 추후 로그인 기능 때 구현 예정
+class User(AbstractUser):
+    first_name=None
+    last_name=None
+    name = models.CharField(max_length=30, default="닉네임")
+    
+    def __str__(self):
+        return self.username
 
 class Value(models.Model):
     # 이름, 점수, 아이디, 비밀번호, 이메일, 생일

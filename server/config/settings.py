@@ -38,9 +38,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'server.apps.account',
+    'server.apps.task_account',
     'server.apps.main',
+
+    # 소셜로그인(allauth)
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    # provider
+    'allauth.socialaccount.providers.google',
 ]
+
+# user 모델이 사용자 인증 모델이라고 알림
+AUTH_USER_MODEL = 'task_account.User'
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -126,3 +140,49 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# 소셜 로그인 설정
+AUTHENTICATION_BACKENDS = (
+	# Needed to login by username in Django admin, regardless of 'allauth'
+	'django.contrib.auth.backends.ModelBackend',
+
+	# 'allauth' specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'	### 오류가 나면 로그인 화면으로 돌아간다.
+
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# reading .env file
+environ.Env.read_env(BASE_DIR / '../.env')
+
+SOCIAL_AUTH_GOOGLE_CLIENT_ID=env('SOCIAL_AUTH_GOOGLE_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_SECRET=env('SOCIAL_AUTH_GOOGLE_SECRET')
+API_KEY=env('API_KEY')
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': SOCIAL_AUTH_GOOGLE_CLIENT_ID,
+            'secret': SOCIAL_AUTH_GOOGLE_SECRET,
+            'key': API_KEY,
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}

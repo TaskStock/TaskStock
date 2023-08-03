@@ -7,11 +7,13 @@ from datetime import datetime
 
 
 # Create your views here.
-#---정근 작업---#
+# ---정근 작업---#
 
-#---환희 작업---#
-def hello():
-    pass
+# ---환희 작업---#
+
+def home(request):
+    return render(request, 'base.html')
+
 #---세원 작업---#
 """
 날마다 유저마다 하나씩 value 객체를 생성해줌
@@ -90,8 +92,10 @@ def check_task(request):
     
         #가치 상승
         if todo.goal_check:
-            return
+            pass
 
-#---지수 작업---#
+
+def search(request):
+    return render(request, 'main/search.html')
 
 #---선우 작업---#
