@@ -1,4 +1,4 @@
 from django.db import models
-from server.apps.account.models import *
+from server.apps.task_account.models import *
 
 
