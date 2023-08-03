@@ -53,7 +53,7 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .search-result__container {
@@ -63,7 +63,8 @@
     background-color: var(--green_100);
     border-radius: var(--border-r);
     margin: 10px;
-    padding: 10px;   
+    padding: 10px;
+    overflow: auto;  
 }
 
 .search-result__container > img {

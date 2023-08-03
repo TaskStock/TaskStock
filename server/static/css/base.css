@@ -84,7 +84,7 @@ body{
     background-color: white;
     height: 100vh;
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
     display: flex;
     justify-content: center;
 }
@@ -202,7 +202,7 @@ body{
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 /* 김선우 작업 css */
@@ -335,3 +335,20 @@ body{
     font-size: var(--caption);
     font-weight: 400;
 }
+
+/* 스크롤 */
+
+.Scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+.Scroll::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+.Scroll::-webkit-scrollbar-track {
+    background-color: grey;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 5px white;
+  }
