@@ -2,13 +2,15 @@
 
 <div class="login__header--signup">Sign up</div>
 <span>You're signing up as user@user.com</span>
-<form action="" class="signup2">
+<form action="" method="post" class="signup2">
     {% csrf_token %}
-    <label for="username">Username</label>
+    <!-- <label for="username">Username</label>
     <input type="text" placeholder="user@user.com" id="email" name="email">
     <label for="signup2_pw">Set a password</label>
     <input type="text" placeholder="New password" id="signup2_pw" name="signup2_pw">
-    <button class="signup2-btn" formaction="/main/">Create new account</button>
+    <button class="signup2-btn" formaction="/main/">Create new account</button> -->
+    {{ form }}
+    <input class="signup-btn hover-black" type="submit" value="SignUp">
 </form>
 
 

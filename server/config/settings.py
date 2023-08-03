@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 ]
 
+# user 모델이 사용자 인증 모델이라고 알림
+AUTH_USER_MODEL = 'task_account.User'
+
 SOCIALACCOUNT_AUTO_SIGNUP = True
 
 MIDDLEWARE = [
