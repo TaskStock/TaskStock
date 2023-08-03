@@ -14,6 +14,7 @@
     <!-- css -->
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home_main-section.css' %}">
     
     <title>TaskStock</title>
 </head>
@@ -27,47 +28,42 @@
         <div class="menu-left__follower menu-left__box"><!-- 작업공간 --></div>
         <!-- <div class="menu-left__following menu-left__box"></div> -->
     </div>
-    <div class="main-container">
-        <main>
-            <div class="main-top">
-                <div class="main-left">
-                    <div class="main__current main__box">
-                        <div class="main__box--header main__current--header">
-                            <!-- 작업공간 -->
-                            <h2>Current Status</h2>
-                        </div>
-                    </div>
-                    <div class="main__badge main__box">
-                        <div class="main__box--header main__badge--header">
-                            <!-- 작업공간 -->
-                            <h2>Aquired Badges</h2>
-                        </div>
-                    </div>
-                    
+        <div class="main-container">
+            {% block content %}
+                <div class="main-container__current-status">
+                    <h1>Current Status</h1>
+                    <p>
+                        <span>2023. 08. 01</span>
+                        <span>16:01:10</span>
+                    </p>
+                    <h3>37,000 KRW</h3>
                 </div>
-                <div class="main__todo main__box">
-                    <div class="main__box--header main__todo--header">
-                        <!-- 작업공간 -->
-                        <h2>Todo</h2>
-                    </div>
+                <div class="main-container__badges">
+                    <h1>Acquired Badges</h1>
+                    <ul class="main-container__badges-list">
+                        <li>
+                            <span>프로개근러</span>
+                            <i class="gg-check"></i>
+                        </li>
+                        <li>
+                            <span>올빼미</span>
+                        </li>
+                        <li>
+                            <span>화성으로</span>
+                        </li>
+                        <li>
+                            <span>아침새</span>
+                        </li>
+                    </ul>
                 </div>
+            {% endblock %}
+            <!-- hamburger -->
+            <div class="menu-right__hamburger">
+                <div></div>                
+                <div></div>                
+                <div></div>                
             </div>
-            <div class="main-bottom">
-                <div class="main__graph main__box">
-                    <div class="main__box--header main__graph--header">
-                        <!-- 작업공간 -->
-                        <h2>Candle</h2>
-                    </div>
-                </div>
-            </div>
-        </main>
-        <!-- hamburger -->
-        <div class="menu-right__hamburger">
-            <div></div>                
-            <div></div>                
-            <div></div>                
         </div>
-    </div>
     <div class="menu-right active">
         <div class="menu-right__wrap">
             <a href="/" class="menu-right__home">
