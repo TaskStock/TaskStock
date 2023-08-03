@@ -60,7 +60,7 @@
     grid-template-columns: repeat(var(--columns), 1fr);
     grid-auto-rows: minmax(100px, auto);
     gap: var(--gutter);
-    margin: 0 var(--offset);
+    padding: 0 var(--offset);
 }
 
 /* start */
@@ -193,7 +193,145 @@ body{
 }
 .menu-left__my-info{
     height: 150px;
+    display: flex;
+    flex-direction: column;
 }
 .menu-left__follower{
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+/* 김선우 작업 css */
+
+/* menu-left 나의 프로필 부분 */
+.menu-left__upper-info-container {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.menu-left__upper-info-container > img {
+    width: 90px;
+    height: 90px;
+    padding: 10px 10px;
+    border-radius: 50%;
+}
+
+.menu-left__upper-info-description-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--gutter);
+}
+
+.menu-left__upper-info-description-container > h2 {
+    font-size: var(--subheading);
+    font-weight: 600;
+    margin: 5px;
+}
+
+.menu-left__upper-info-description-container > h3 {
+    font-size: var(--caption);
+    font-weight: 400;
+    margin: 5px;
+}
+
+
+.menu-left__lower-info-container {
+    display: flex;
+    justify-content: space-evenly;
+    height: 100%;
+}
+
+.menu-left__lower-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 58px;
+}
+
+.menu-left__lower-container> h2 {
+    font-size: var(--subheading);
+    font-weight: 600;
+    margin: 3px;
+}
+
+.menu-left__lower-container> p {
+    font-size: var(--caption);
+    font-weight: 400;
+    margin: 5px;
+}
+
+.menu-left__image-container {
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-left__lower-container>img {
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+}
+
+
+/* 팔로워 부분 수정 */
+
+/* 일단 색 몰라서 green_100 */
+.menu-left__follower-user-container {
+    border-radius: var(--border-r);
+    background-color: var(--green_100);
+    height: 70px;
+    width: 200px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.menu-left__follower-user-container > img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.menu-left__follower-user-description-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.menu-left__follower-user-description-container> h2 {
+    font-size: var(--body1);
+    font-weight: 600;
+}
+
+.menu-left__follower-user-description-container > p {
+    font-size: var(--caption);
+    font-weight: 400;
+}
+
+.menu-left__follower-user-stock-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-left__follower-user-stock-container > img {
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+}
+
+.menu-left__follower-user-stock-container > p {
+    font-size: var(--caption);
+    font-weight: 400;
 }
