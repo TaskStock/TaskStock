@@ -1,0 +1,99 @@
+/* main__todo */
+
+.main__todo--week{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+
+}
+.main__todo--week-cont{
+    width: min(100%, 600px);
+    display: grid;
+    grid-template-columns: repeat(7, auto);
+    gap: var(--gutter);
+}
+.main__todo--day{
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.main__todo--day > div:first-child{
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    background-color: var(--green_200);    
+}
+.main__todo--day-n{
+    font-size: var(--body2);
+}
+.main__todo--lists .list__btn{
+    background-color: var(--grey_border);
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    margin-top: 30px;
+    margin: 30px var(--gutter) var(--gutter);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.main__todo--lists .list__list-cont{
+    width: 100%;
+    height: 400px;
+}
+.list__list{
+    width: 100%;
+    display: flex;
+    padding: 0 0 0 var(--gutter);
+    margin-bottom: var(--gutter);
+}
+.todo-checkbox{
+    width: 35px;
+    height: 35px;
+    background-color: var(--grey_border);
+    border-radius: var(--border-r);
+    margin-right: var(--gutter);
+    cursor: pointer;
+    position: relative;
+}
+.list__list input{
+    flex-grow: 1;
+    border: none;
+    padding: 0 var(--gutter);
+    font-size: var(--body1);
+    background-color: transparent;
+}
+.list__list input:focus{
+    border-bottom: 2px solid var(--green_400);
+}
+.todo-more{
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.todo-checkbox{
+    background-color: var(--grey_border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.todo-checkbox i{
+    display: none;
+}
+.todo-checkbox.active{
+    background-color: var(--green_400);
+    color: var(--grey_bg);
+    --ggs: 1.5;
+}
+.todo-checkbox.active i{
+    display: block;
+}
