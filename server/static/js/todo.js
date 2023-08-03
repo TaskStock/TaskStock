@@ -1,23 +1,43 @@
 // custom element - todo
 class cTodo extends HTMLElement {
-    
     connectedCallback() {
-        let todo_container = document.createElement('div');
+        const todo_container = document.createElement('div');
         todo_container.classList.add('list__list');
+
+        const todo_checkbox = document.createElement('div');
+        todo_checkbox.classList.add('todo-checkbox');
         
-        todo_container.innerHTML = `
-            <div class="todo-checkbox" onclick="addTodoHandler()"><i class="gg-check"></i></div>
-            <input type="text" class="todo-content" autofocus>
-            <div class="todo-more"><i class="gg-more-alt"></i></div>
-        `
+        const todo_content = document.createElement('input');
+        todo_content.classList.add('todo-content');
+        todo_content.type = "text";
+        
+        const todo_more = document.createElement('div');
+        todo_more.classList.add('todo-more');
+
+        const todo_i = document.createElement('i');
+        todo_i.classList.add('gg-more-alt');
+
+        todo_more.appendChild(todo_i);
+
+        todo_container.appendChild(todo_checkbox);
+        todo_container.appendChild(todo_content);
+        todo_container.appendChild(todo_more);
+
         this.appendChild(todo_container);
         
+        // set attribute (content, level, status)
+        this.setAttribute('content', `${todo_content.value}`);
+        this.setAttribute('level', 1);
+        this.setAttribute('status', 'unchecked');
     }
     static get observedAttributes() {
-        return ['value']
+        return ['content', 'level', 'status'];
     }
-    attributeChangedCallback(attrName, oldVal, newVal) {
-        this[attrName] = newVal;
+    attributeChangedCallback() {
+        todo_content = this.querySelector('.todo-content');
+        console.log(todo_content);
+
+        this['content'] = todo_content.value;
     }
 }
 
@@ -30,9 +50,10 @@ addBtn = document.querySelector('.list__btn');
 addBtn.addEventListener('click', () => {
     const newTodo = document.createElement('to-do');
     document.querySelector('.list__list-cont').appendChild(newTodo);
+    const newTodo_input = newTodo.querySelector('input');
+    newTodo_input.focus();
 
-    const newTodo_input = document.querySelector('to-do input');
-    console.log(newTodo_input);
+
     
 })
 
