@@ -116,7 +116,7 @@ main{
 }
 .auth-email,
 .signup-code,
-.signup2{
+.signup1{
     display: flex;
     flex-direction: column;
     /* align-items: center; */
@@ -124,14 +124,14 @@ main{
 }
 .auth-email label,
 .signup-code label,
-.signup2 label{
+.signup1 label{
     font-size: var(--caption);
     color: var(--grey_400);
     
 }
 .auth-email input,
 .signup-code input,
-.signup2 input{
+.signup1 input{
     width: 320px;
     height: 34px;
     border-radius: var(--border-r);

@@ -1,15 +1,20 @@
 {% extends './base_login.html' %} {% load static %} {% block content %}
 
-<div class="login__header--signup">Sign up</div>
-<span>You're signing up as user@user.com</span>
-<form action="" class="signup2">
+<div class="login__header">Sign up</div>
+<form action="/signup/step2/" method="post" class="auth-email">
     {% csrf_token %}
-    <label for="username">Username</label>
+    <label for="email">Email</label>
     <input type="text" placeholder="user@user.com" id="email" name="email">
-    <label for="signup2_pw">Set a password</label>
-    <input type="text" placeholder="New password" id="signup2_pw" name="signup2_pw">
-    <button class="signup2-btn" formaction="/main/">Create new account</button>
+    <button type="submit" class="signup1-btn">임시 이메일 설정 버튼</button>
 </form>
-
+<form action="/signup/step2/" class="signup-code">
+    {% csrf_token %}
+    <span>
+        We just sent you a temporary sign up code. Please check your inbox and paste the sign up code below.
+    </span>
+    <label for="signup-code">Sign up Code</label>
+    <input type="text" placeholder="Paste sign up code" id="signup-code" name="signup-code">
+    <button type="submit" class="signup1-btn">Create new account</button>
+</form>   
 
 {% endblock %}
