@@ -5,7 +5,7 @@ class User(AbstractUser):
     first_name=None
     last_name=None
     name = models.CharField(max_length=30, default="닉네임")
-    
+
     def __str__(self):
         return self.username
 
