@@ -11,10 +11,12 @@
     <link href="https://css.gg/css" rel="stylesheet" />
     <link href="https://unpkg.com/css.gg/icons/icons.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/css.gg/icons/icons.css" rel="stylesheet"/>
+    <script src="{% static 'js/settings.js' %}"></script>
     <!-- css -->
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/search.css' %}">
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <title>TaskStock</title>
 </head>
@@ -61,7 +63,7 @@
         </div>
 
         <!-- my-info 하단 팔로우 목록 -->
-        <div class="menu-left__follower menu-left__box">
+        <div class="menu-left__follower menu-left__box Scroll">
             <div class="menu-left__follower-user-container">
                 <img src="https://placekitten.com/100/100" alt="profile image">
                 <div class="menu-left__follower-user-description-container">
@@ -76,7 +78,7 @@
         </div>
         <!-- <div class="menu-left__following menu-left__box"></div> -->
     </div>
-    <div class="main-container">
+    <div class="main-container Scroll">
         {% block content %}
         {% endblock %}
         <!-- hamburger -->

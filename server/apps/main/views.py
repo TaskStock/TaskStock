@@ -155,3 +155,6 @@ def check_todo(request):
 #---선우 작업---#
 def search(request):
     return render(request, 'main/search.html')
+
+def settings(request):
+    return render(request, 'main/settings.html')

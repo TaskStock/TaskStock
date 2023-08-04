@@ -7,5 +7,6 @@ urlpatterns = [
     path('check_todo/', check_todo),
     path('', home),
     path('search/', search),
+    path('settings/', settings),
 ]
 

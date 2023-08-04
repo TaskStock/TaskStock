@@ -1,0 +1,133 @@
+{% extends '../base.html' %} {% load static %}
+{%block content%}
+<main>
+    <div class="settings-container">
+        <div class="settigs-header">
+            <h1>Setings</h1>
+        </div>
+        <div class="settings-content">
+            <div class="settings-menu">
+                <div class="settings-menu__container">
+                    <div class="settings-menu__edit-profile">
+                        <!-- <i></i> -->
+                        <a href="#edit-profile">
+                            <h3>Edit Profile</h3>
+                        </a>
+                    </div>
+                    <div class="settings-menu__notification">
+                        <a href="#set-alarm">
+                            <h3>Notification</h3>
+                        </a>
+                    </div>
+                    <div class="settings-menu__switch-to-private">
+                        <a href="#public-private">
+                            <h3>Switch to private</h3>
+                        </a>
+                    </div>
+                    <div class="settings-menu__language">
+                        <a href="#language">
+                            <h3>Language</h3>
+                        </a>
+                    </div>
+                    <div class="settings-menu__password">
+                        <a href="#reset-password">
+                            <h3>Password</h3>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- edit profile부분만 예시적으로 detail페이지를 만들어 놓겠음 -->
+            <div class="settings-detail Scroll">
+                <div class="settings-detail__edit-profile settings-detail-element">
+                    <h1 id="edit-profile">프로필 편집</h1>
+                    <div class="settings-detail__profile-container">
+                        <img src="https://placekitten.com/100/100" alt="">
+                        <div class="settings-detail__description-container">
+                            <h3>User</h3>
+                            <a href="">프로필 사진 바꾸기</a>
+                        </div>
+                    </div>
+                        <form action="" class="profile-description__form">
+                            <div class="profile-description__textarea">
+                                <h3>소개</h3>
+                                <textarea name="proflie-description" id="proflie-description" cols="30" rows="10"></textarea>
+                                <label class="profile-description__label" for="profile-description"><p>0/100</p></label>
+                            </div>
+                            <button type="submit">완료</button>
+
+                            
+                        </form>
+                </div>
+                <div class="settings-detail__set-alarm settings-detail-element">
+                    <h1 id="set-alarm">알림 설정</h1>
+                    <div class="settings-detail__container">
+                        <h3>이메일 알림</h3>
+                        <form action="" class="email-alarm__form">
+                            <div class="radio__set">
+                                <input type="radio" name="radio_answer" value="alarm-set" checked />
+                                <label>설정</label>
+                            </div>
+                            <div class="radio__set">
+                                <input type="radio" name="radio_answer" value="alarm-reset" id="radio" />
+                                <label>해제</label>
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+                <div class="settings-detail__set-public-private settings-detail-element">
+                    <h1 id="public-private">계정 공개 범위</h1>
+                    <div class="settings-detail__container">
+                        <form action="" class="public-private__form">
+                            <div class="radio__set">
+                                <input type="radio" name="radio_answer" value="public" checked />
+                                <label>공개</label>
+                            </div>
+                            <div class="radio__set">
+                                <input type="radio" name="radio_answer" value="private" id="radio" />
+                                <label>비공개</label>
+                            </div>
+                        </form>
+                    </div>      
+                </div>
+                <div class="settings-detail__set-language settings-detail-element">
+                    <h1 id="language">언어</h1>
+                    <div class="settings-detail__container">
+                        <form action="" class="language__form">
+                            <div class="radio__set">
+                                <input type="radio" name="radio_answer" value="korean" checked />
+                                <label>한국어</label>
+                            </div>
+                            <div class="radio__set">
+                                <input type="radio" name="radio_answer" value="englist" id="radio" />
+                                <label>영어</label>
+                            </div>
+                        </form>
+                    </div>      
+                </div>
+                <div class="settings-detail__set-password settings-detail-element">
+                    <h1 id="reset-password">비밀번호 바꾸기</h1>
+                    <div class="settings-detail__container">
+                        <form action="" class="reset-password__form">
+                            <div class="reset-password__comtainer">
+                                <p>현재 비번</p>
+                                <input type="password" name="current-password" id="current-password">
+                            </div>
+                            <div class="reset-password__comtainer">
+                                <p>새 비번</p>
+                                <input type="password" name="new-password" id="new-password">
+                            </div>
+                            <div class="reset-password__comtainer">
+                                <p>새 비번 확인</p>
+                                <input type="password" name="new-password-check" id="new-password-check">
+                            </div>
+                        </form>
+                    </div>      
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
