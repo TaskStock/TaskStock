@@ -102,20 +102,21 @@ Todo 삭제 하는 함수
 @csrf_exempt
 def delete_todo(request, pk):
     if request.method == 'POST':
-        req =  json.loads(request.body)
-        todo_id = req['id']
+        req = json.loads(request.body)
+        todo_id = req['todo_id']
         
         todo = Todo.objects.get(pk=todo_id)
         #todo 삭제하기 전 연결된 value의 high값 업데이트
-        todo.value.high -= 1000*todo.level
+        # todo.value.high -= 1000*todo.level
         #todo 삭제하기 전 연결된 value의 low값 업데이트
-        todo.value.low += 1000*todo.level
+        # todo.value.low += 1000*todo.level
         #저장
-        todo.value.save()
+        # todo.value.save()
         #todo삭제
         todo.delete()
+        value = get_todayValue()
         
-    return JsonResponse({'todo_id':todo_id})
+    return JsonResponse({'id':todo_id, 'd_id': value.id})
 
 
 """
