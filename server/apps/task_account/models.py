@@ -14,9 +14,9 @@ class Value(models.Model):
     date = models.DateTimeField(auto_created=True, auto_now_add=True)
     percentage = models.FloatField()
     start = models.IntegerField()
-    end = models.IntegerField(null=True)
-    low = models.IntegerField(null=True)
-    high = models.IntegerField(null=True)
+    end = models.IntegerField(null=True, default=0)
+    low = models.IntegerField(null=True, default=0)
+    high = models.IntegerField(null=True, default=0)
     combo = models.IntegerField(null=True, default=0)
 
 class Category(models.Model):

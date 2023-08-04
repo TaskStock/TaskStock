@@ -56,17 +56,9 @@
                 <!-- form? -->
                 <div class="list__list-cont">
                     <div class="todo-list-cont">
-                        <!-- <template id="todo-item-template">
-                            <li>
-                              <div class="todo-checkbox">
-                                <i class="gg-check"></i>
-                              </div>
-                              <input type="text" class="todo-content">
-                              <div class="todo-more">
-                                <i class="gg-more-alt"></i>
-                              </div>
-                            </li>
-                        </template> -->
+                        {% for todo in todos %}
+                        <todo-item status="{{todo.status}}" level="{{todo.level}}">{{todo.content}}</todo-item>
+                        {% endfor %}
                         <!-- <todo-item class="todo-item-1"></todo-item>
                         <todo-item class="todo-item-2"></todo-item> -->
                     </div>
