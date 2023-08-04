@@ -81,15 +81,56 @@
 
 
 // add todo
-const addBtn = document.querySelector('.list__btn');
+const handleAdd = (date_id) => {
+    document.querySelector('.todo-list-cont').innerHTML +=  `
+    <div class="todo-item day${date_id}">
+        <div class="todo-checkbox" data-status="False" onclick="handleCheck(event)">
+            <i class="gg-check"></i>
+        </div>
+        <input type="text" class="todo-content" autofocus onblur="handleTodo()">
+        <div class="todo-more">
+            <i class="gg-erase"></i>
+        </div>
+    </div>
+    `;
 
-addBtn.addEventListener('click', () => {
-    const newTodo = document.createElement('todo-item');
-    document.querySelector('.todo-list-cont').appendChild(newTodo);
-    const newTodo_input = newTodo.querySelector('input');
-    newTodo_input.focus();
+}
+
+const handleTodo = async() => {
+    const url = '/main/';
+    const inputVal = document.querySelector('.todo-item:last-child input').value;
+    const data = { inputVal };
     
-})
+    const res = await fetch(url, {
+        method: 'POST', 
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+    const {date_id: date_id, todo_id: todo_id, content: content} = await res.json();
+    handleTodoResponse(date_id, todo_id, content);
+}
+const handleTodoResponse = async(date_id, todo_id, content) => {
+    document.querySelector('.todo-list-cont').innerHTML +=  `
+    <div class="todo-item day${date_id}-todo${todo.id}">
+        <div class="todo-checkbox" data-status="False" onclick="handleCheck(event)">
+            <i class="gg-check"></i>
+        </div>
+        <input type="text" class="todo-content" autofocus onblur="handleTodo()" value="${content}">
+        <div class="todo-more">
+            <i class="gg-erase"></i>
+        </div>
+    </div>
+    `;
+
+
+}   
+
+
+
+
+
 
 // blur일 때 input에 아무것도 없으면 지우기
 // document.querySelector('.list__btn').addEventListener('click', () => {
@@ -106,29 +147,14 @@ addBtn.addEventListener('click', () => {
 //     })
 // })
 
-// const todo_container = document.querySelector('.todo-list-cont');
-// todo_container.addEventListener('click', (e) => {
-//     console.log(e.target.getAttribute('data-status'));
-//     if(e.target.classList.contains('todo-checkbox')){
-//         // if()
-//         const btn = e.target;
-//         btn.classList.add('active');
-        
 
-
-
-//     }else if(e.target.classList.contains('gg-check')){
-//         const btn = e.target.parentNode;
-//         btn.classList.remove('active');
-//     }  
-    
-// })
 
 function handleCheck(event) {
     event.stopPropagation();
-    console.log(event.target);
     let btn = event.currentTarget;
     btn.classList.toggle('active');
+    console.log(event.target);
+
 }
 // const onClickLike = async (id, type) => {
 //     const url = '/like_ajax/';
