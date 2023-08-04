@@ -22,7 +22,9 @@ from datetime import datetime, timedelta
 # ---환희 작업---#
 
 def home(request):
-    return render(request, 'main/home.html')
+    value = get_todayValue()
+    todos = Todo.objects.filter(value=value)
+    return render(request, 'main/home.html', {'todos':todos})
 
 def hello(request):
     context = {
@@ -38,7 +40,7 @@ def hello(request):
 def get_todayValue():
     today = datetime.now().strftime('%Y-%m-%d')
     start_date = today + ' 06:00:00' #이상
-    end_date = start_date + timedelta(days=1)
+    end_date = start_date + str(timedelta(days=1))
     value_object = Value.objects.get(date__gte=start_date, date__lt=end_date)
 
     return value_object
