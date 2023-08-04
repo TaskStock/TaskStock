@@ -24,6 +24,7 @@ from datetime import datetime, timedelta
 def home(request):
     value = get_todayValue()
     todos = Todo.objects.filter(value=value)
+    
     return render(request, 'main/home.html', {'todos':todos})
 
 def hello(request):
@@ -35,15 +36,22 @@ def hello(request):
 #---세원 작업---#
 
 """
-오늘 06:00:00이랑 다음날 06:00:00까지의 value객체 가져오는 함수
+오늘 06:00:00이랑 다음날 06:00:00까지의 value객체 가져오는 함수 
 """
+from datetime import datetime, timedelta
+
 def get_todayValue():
-    today = datetime.now().strftime('%Y-%m-%d')
-    start_date = today + ' 06:00:00' #이상
-    end_date = start_date + str(timedelta(days=1))
+    # 현재 시간을 가져온 후, 오늘 날짜의 06:00:00으로 설정
+    today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
+    # start_date는 오늘 날짜의 06:00:00
+    start_date = today_date
+    # end_date는 start_date에서 1일 후 (즉, 내일의 06:00:00)
+    end_date = start_date + timedelta(days=1)
+    # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
     value_object = Value.objects.get(date__gte=start_date, date__lt=end_date)
 
     return value_object
+
 
 
 """
@@ -133,9 +141,8 @@ def check_todo(request):
         
         #value의 percentage값 업데이트
         value.percentage = int((value.end-value.start)/value.start *100)
-        if value.percentage < 0:
+        if value.percentage > 0:
             color = 'blue'
-            value.percentage = abs(value.percentage)
         else:
             color = 'red'
             
