@@ -17,3 +17,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+function smoothScrollToElement(elementId, event) {
+  event.preventDefault();
+  const targetElement = document.getElementById(elementId);
+  if (targetElement) {
+    targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
