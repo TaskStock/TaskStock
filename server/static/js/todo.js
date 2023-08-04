@@ -54,7 +54,6 @@ class TodoItem extends HTMLElement {
         this.appendChild(todo_content);
         this.appendChild(todo_more);
         this.classList.add('todo-item');
-       
         
         
         

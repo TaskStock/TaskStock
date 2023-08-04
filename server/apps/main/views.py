@@ -81,7 +81,8 @@ def add_todo(request):
             level=level,
             goal_check=False
         )
-        todos = Todo.objects.filter(value=value)
+        todo = Todo.objects.filter(value=value).last()
+        todo_id = todo.pk
         
         #todo의 high값 업데이트
         value.low += level*1000
@@ -91,7 +92,7 @@ def add_todo(request):
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
-        return JsonResponse({'todos':todos})
+        return JsonResponse({'todo_id':todo_id})
 
 """
 Todo 삭제 하는 함수
@@ -149,7 +150,7 @@ def check_todo(request):
         todo.save()
         value.save
         
-        return JsonResponse({'color':color, 'value':value})
+        return JsonResponse({'color':color, 'value':value, 'todo':todo})
 
 
 #---선우 작업---#
