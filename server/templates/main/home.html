@@ -52,20 +52,22 @@
                 </div>
             </div>
             <div class="main__todo--lists">
-                <div class="list__btn"><i class="gg-math-plus"></i></div>
+                <div class="list__btn" onclick="handleAdd({{ date_id }})"><i class="gg-math-plus"></i></div>
                 <!-- form? -->
                 <div class="list__list-cont">
                     <div class="todo-list-cont">
                         {% for todo in todos %}
-                        <div class="todo-item">
+                        <div class="todo-item day{{date_id}}-todo{{todo.pk}}">
                             <div class="todo-checkbox" data-status="{{todo.goal_check}}" onclick="handleCheck(event)">
                                 <i class="gg-check"></i>
                             </div>
                             <input type="text" class="todo-content" value="{{todo.content}} {{todo.goal_check}} {{todo.level}}">
                             <div class="todo-more">
-                                <i class="gg-more-alt"></i>
+                                <i class="gg-erase"></i>
                             </div>
                         </div>
+
+
                         {% endfor %}
                         
                     </div>
