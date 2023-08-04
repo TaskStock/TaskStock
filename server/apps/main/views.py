@@ -4,6 +4,8 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta
+from django.utils import timezone
+
 """
 사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update
 할일 추가 함수
@@ -42,17 +44,15 @@ from datetime import datetime, timedelta
 
 def get_todayValue():
     # 현재 시간을 가져온 후, 오늘 날짜의 06:00:00으로 설정
-    today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
+    #today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
+    today_date = timezone.now().replace(hour=6, minute=0, second=0, microsecond=0)
     # start_date는 오늘 날짜의 06:00:00
     start_date = today_date
     # end_date는 start_date에서 1일 후 (즉, 내일의 06:00:00)
-    end_date = start_date + timedelta(days=1)
+    end_date = start_date + timezone.timedelta(days=1)
     # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
     value_object = Value.objects.get(date__gte=start_date, date__lt=end_date)
-
     return value_object
-
-
 
 """
 Todo 추가 하는 함수

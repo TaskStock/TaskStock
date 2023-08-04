@@ -24,7 +24,7 @@ class Category(models.Model):
 
 class Todo(models.Model):
     value = models.ForeignKey(Value, on_delete=models.CASCADE, related_name='todo_value')
-    todolist = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='todo_category')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='todo_category', null=True)
     content = models.TextField()
     goal_check = models.BooleanField()
     level = models.IntegerField()
