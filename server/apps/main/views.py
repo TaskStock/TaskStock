@@ -25,7 +25,7 @@ def home(request):
     value = get_todayValue()
     todos = Todo.objects.filter(value=value)
     
-    return render(request, 'main/home.html', {'todos':todos})
+    return render(request, 'main/home.html', {'date_id':value.id, 'todos':todos})
 
 def hello(request):
     context = {
@@ -63,7 +63,7 @@ def add_todo(request):
     if request.method == 'POST':
         req = json.loads(request.body)
         content = req['content']
-        level = req['level']
+        #level = req['level']
         #현재 user 객체 가져오기
         current_user = request.user
         
@@ -78,21 +78,22 @@ def add_todo(request):
             value = value,
             category=category,
             content=content,
-            level=level,
+            level=3,
             goal_check=False
         )
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
         #todo의 high값 업데이트
-        value.low += level*1000
+        value.low += 3*1000
         
         #todo의 low값 업데이트
-        value.high -= level*1000
+        value.high -= 3*1000
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
-        return JsonResponse({'todo_id':todo_id})
+
+        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'content': content})
 
 """
 Todo 삭제 하는 함수
