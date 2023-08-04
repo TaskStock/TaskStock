@@ -3,7 +3,8 @@ from .models import *
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime, timedelta
+from django.utils import timezone
+
 """
 사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update
 할일 추가 함수
@@ -38,15 +39,14 @@ def hello(request):
 """
 오늘 06:00:00이랑 다음날 06:00:00까지의 value객체 가져오는 함수 
 """
-from datetime import datetime, timedelta
-
 def get_todayValue():
     # 현재 시간을 가져온 후, 오늘 날짜의 06:00:00으로 설정
-    today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
+    #today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
+    today_date = timezone.localtime().replace(hour=6, minute=0, second=0, microsecond=0)
     # start_date는 오늘 날짜의 06:00:00
     start_date = today_date
     # end_date는 start_date에서 1일 후 (즉, 내일의 06:00:00)
-    end_date = start_date + timedelta(days=1)
+    end_date = start_date + timezone.timedelta(days=1)
     # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
     value_object = Value.objects.get(date__gte=start_date, date__lt=end_date)
 
@@ -63,7 +63,7 @@ def add_todo(request):
     if request.method == 'POST':
         req = json.loads(request.body)
         content = req['content']
-        level = req['level']
+        #level = req['level']
         #현재 user 객체 가져오기
         current_user = request.user
         
@@ -78,17 +78,17 @@ def add_todo(request):
             value = value,
             category=category,
             content=content,
-            level=level,
+            level=1,
             goal_check=False
         )
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
         #todo의 high값 업데이트
-        value.low += level*1000
+        value.low += 3*1000
         
         #todo의 low값 업데이트
-        value.high -= level*1000
+        value.high -= 3*1000
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
@@ -99,7 +99,7 @@ Todo 삭제 하는 함수
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
 """
 @csrf_exempt
-def delete_todo(request, pk):
+def delete_todo(request):
     if request.method == 'POST':
         req =  json.loads(request.body)
         todo_id = req['id']
