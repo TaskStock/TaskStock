@@ -1,3 +1,44 @@
+:root {
+    --offset: 40px; /*양쪽마진*/
+    --max_width: 1440px; /*컨테이너폭*/
+    --columns: 12; /*컬럼갯수*/
+    --gutter: 16px; /*거터폭*/
+    /* color */
+    --black: #37352F;
+
+    /* main : green */
+    --green_50: #E8F5E9;
+    --green_100: #C8E6C9;
+    --green_200: #A5D6A7;
+    --green_300: #81C784;
+    --green_400: #66BB6A;
+    --green_500: #4CAf50;
+    --green_600: #43A047;
+    --green_700: #388E3C;
+    --green_800: #2E7D32;
+    --green_900: #1B5E20;
+    
+    /* grey */
+    --grey_bg: #FBFBFA;
+    --grey_border: rgba(233, 233, 231);
+
+    /* font */
+    --hero: 50px;
+    --heading1: 38px;
+    --heading2: 28px;
+    --heading3: 22px;
+    --subheading: 18px;
+    --body1: 16px;
+    --body2: 14px;
+    --caption: 12px;
+
+    /* border-radius */
+    --border-r: 8px;
+    /* shadow */
+    --box-shadow: rgba(233, 233, 231) 1.95px 1.95px 2.6px;
+}
+
+
 .settings-container {
     display: flex;
     flex-direction: column;
@@ -7,7 +48,6 @@
 
 .settigs-header {
     height: 100px;
-    background-color: brown;
 }
 
 .settigs-header > h1 {
@@ -20,16 +60,29 @@
     display: flex;
     width: 100%;
     height: 100%;
+    border-radius: var(--border-r);
+    background-color: var(--grey_bg);
+    box-shadow: var(--box-shadow);
+    padding: var(--gutter);
+    margin-top: 50px;
 }
 
 .settings-menu {
     width: 30%;
-    background-color: blanchedalmond;
+    border-radius: var(--border-r);
+    background-color: var(--grey_bg);
+    box-shadow: var(--box-shadow);
+    padding: var(--gutter);
+    border: 1px solid var(--grey_border);
 }
 
 .settings-detail {
     width: 70%;
-    background-color: rgb(131, 131, 176);
+    border-radius: var(--border-r);
+    background-color: var(--grey_bg);
+    box-shadow: var(--box-shadow);
+    padding: var(--gutter);
+    border: 1px solid var(--grey_border);
     overflow-y: scroll;
 }
 
@@ -40,6 +93,16 @@
     flex-direction: column;
     justify-content: space-around;
     padding: 20px;
+}
+.settings-menu__h3 {
+    font-size: var(--heading3);
+    font-weight: 600;
+    margin: 5px;
+    transition: 0.3s;
+}
+
+.settings-menu__h3:hover {
+    color: var(--grey_border); /* hover 시 배경색 추가 */
 }
 
 .settings-detail__edit-profile {
@@ -134,10 +197,16 @@
 }
 
 .profile-description__form > button {
-    background-color: greenyellow;
+    background-color: var(--grey_border);
     margin-top: 20px;
     border-radius: 20px;
-    width: 50px;
+    width: 20%;
+    height: 20px;
+}
+
+.profile-description__form > button:hover {
+    background-color: var(--hover_color); /* hover 시 배경색 변경 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
 }
 
 
@@ -169,5 +238,14 @@ input[type="radio"] {
 
 .radio__set  {
     margin-left: 50px;
+    margin-top: var(--gutter);
 }
 
+.reset-password__comtainer {
+    display: flex;
+    flex-direction: column;
+    margin: 16px;
+    width: 30%;
+    height: 60px;
+    justify-content: space-around;
+}

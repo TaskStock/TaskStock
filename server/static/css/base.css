@@ -287,7 +287,8 @@ body{
 /* 일단 색 몰라서 green_100 */
 .menu-left__follower-user-container {
     border-radius: var(--border-r);
-    background-color: var(--green_100);
+    background-color: var(--grey_bg);
+    border: 1px solid var(--grey_border);
     height: 70px;
     width: 200px;
     display: flex;

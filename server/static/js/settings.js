@@ -8,11 +8,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const remainingChars = text.length;
 
     // 남은 글자 수를 업데이트
-    label.textContent = `${remainingChars}/100`;
+    label.textContent = `${remainingChars}/50`;
 
     // 글자 수가 100자를 초과하면 입력을 막음
     if (remainingChars < 0) {
-      textarea.value = text.slice(0, 100);
+      textarea.value = text.slice(0, 50);
       label.textContent = "0/100";
     }
   });
