@@ -11,7 +11,6 @@
     <link href="https://css.gg/css" rel="stylesheet" />
     <link href="https://unpkg.com/css.gg/icons/icons.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/css.gg/icons/icons.css" rel="stylesheet"/>
-    <script src="{% static 'js/settings.js' %}"></script>
     <!-- css -->
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -64,17 +63,19 @@
 
         <!-- my-info 하단 팔로우 목록 -->
         <div class="menu-left__follower menu-left__box Scroll">
-            <div class="menu-left__follower-user-container">
-                <img src="https://placekitten.com/100/100" alt="profile image">
-                <div class="menu-left__follower-user-description-container">
-                    <h2>User2</h2>
-                    <p>5시간 전 완료</p>
+            <a href="">
+                <div class="menu-left__follower-user-container">
+                    <img src="https://placekitten.com/100/100" alt="profile image">
+                    <div class="menu-left__follower-user-description-container">
+                        <h2>User2</h2>
+                        <p>5시간 전 완료</p>
+                    </div>
+                    <div class="menu-left__follower-user-stock-container">
+                        <img src="https://placekitten.com/40/40" alt="stock trend image">
+                        <p>13%</p>
+                    </div>
                 </div>
-                <div class="menu-left__follower-user-stock-container">
-                    <img src="https://placekitten.com/40/40" alt="stock trend image">
-                    <p>13%</p>
-                </div>
-            </div>
+            </a>
         </div>
         <!-- <div class="menu-left__following menu-left__box"></div> -->
     </div>
@@ -117,5 +118,6 @@
         </div>
     </div>
     <script src="{% static 'js/hamburger.js' %}"></script>
+    <script src="{% static 'js/settings.js' %}"></script>
 </body>
 </html>

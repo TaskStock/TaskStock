@@ -10,28 +10,28 @@
                 <div class="settings-menu__container">
                     <div class="settings-menu__edit-profile">
                         <!-- <i></i> -->
-                        <a href="#edit-profile">
-                            <h3>Edit Profile</h3>
+                        <a href="#edit-profile" onclick="smoothScrollToElement('edit-profile',event)">
+                            <h3 class="settings-menu__h3">Edit Profile</h3>
                         </a>
                     </div>
                     <div class="settings-menu__notification">
-                        <a href="#set-alarm">
-                            <h3>Notification</h3>
+                        <a href="#set-alarm" onclick="smoothScrollToElement('set-alarm',event)"> 
+                            <h3 class="settings-menu__h3">Notification</h3>
                         </a>
                     </div>
                     <div class="settings-menu__switch-to-private">
-                        <a href="#public-private">
-                            <h3>Switch to private</h3>
+                        <a href="#public-private" onclick="smoothScrollToElement('public-private',event)">
+                            <h3 class="settings-menu__h3">Switch to private</h3>
                         </a>
                     </div>
                     <div class="settings-menu__language">
-                        <a href="#language">
-                            <h3>Language</h3>
+                        <a href="#language" onclick="smoothScrollToElement('language',event)">
+                            <h3 class="settings-menu__h3">Language</h3>
                         </a>
                     </div>
                     <div class="settings-menu__password">
-                        <a href="#reset-password">
-                            <h3>Password</h3>
+                        <a href="#reset-password" onclick="smoothScrollToElement('reset-password',event)">
+                            <h3 class="settings-menu__h3">Password</h3>
                         </a>
                     </div>
                 </div>
@@ -50,8 +50,8 @@
                         <form action="" class="profile-description__form">
                             <div class="profile-description__textarea">
                                 <h3>소개</h3>
-                                <textarea name="proflie-description" id="proflie-description" cols="30" rows="10"></textarea>
-                                <label class="profile-description__label" for="profile-description"><p>0/100</p></label>
+                                <textarea name="proflie-description" id="proflie-description" cols="40" rows="5" placeholder="50자 이내로 입력"></textarea>
+                                <label class="profile-description__label" for="profile-description"><p>0/50</p></label>
                             </div>
                             <button type="submit">완료</button>
 
@@ -111,15 +111,15 @@
                     <div class="settings-detail__container">
                         <form action="" class="reset-password__form">
                             <div class="reset-password__comtainer">
-                                <p>현재 비번</p>
+                                <p>현재 비밀번호</p>
                                 <input type="password" name="current-password" id="current-password">
                             </div>
                             <div class="reset-password__comtainer">
-                                <p>새 비번</p>
+                                <p>새 비밀번호</p>
                                 <input type="password" name="new-password" id="new-password">
                             </div>
                             <div class="reset-password__comtainer">
-                                <p>새 비번 확인</p>
+                                <p>새 비밀번호 확인</p>
                                 <input type="password" name="new-password-check" id="new-password-check">
                             </div>
                         </form>
