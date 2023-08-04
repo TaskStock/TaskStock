@@ -1,4 +1,4 @@
-{% extends '../base.html' %} {% load static %} {% block content %}
+    {% extends '../base.html' %} {% load static %} {% block content %}
 
 <main>
     <div class="main-top">
@@ -52,18 +52,25 @@
                 </div>
             </div>
             <div class="main__todo--lists">
-                <div class="list__btn"><i class="gg-math-plus"></i></div>
+                <div class="list__btn" onclick="handleAdd({{ date_id }})"><i class="gg-math-plus"></i></div>
                 <!-- form? -->
                 <div class="list__list-cont">
                     <div class="todo-list-cont">
                         {% for todo in todos %}
-                        <todo-item status="{{todo.status}}" level="{{todo.level}}">{{todo.content}}</todo-item>
+                        <div class="todo-item day{{date_id}}-todo{{todo.pk}}">
+                            <div class="todo-checkbox" data-status="{{todo.goal_check}}" onclick="handleCheck(event)">
+                                <i class="gg-check"></i>
+                            </div>
+                            <input type="text" class="todo-content" value="{{todo.content}} {{todo.goal_check}} {{todo.level}}">
+                            <div class="todo-more">
+                                <i class="gg-erase"></i>
+                            </div>
+                        </div>
+
+
                         {% endfor %}
-                        <!-- <todo-item class="todo-item-1"></todo-item>
-                        <todo-item class="todo-item-2"></todo-item> -->
+                        
                     </div>
-                    <!-- {% csrf_token %}  -->
-                    <!-- <to-do content="" level="" status=""></to-do> -->
                 </div>
             </div>
         </div>
@@ -78,4 +85,4 @@
 </main>
 <script src="{% static 'js/todo.js' %}"></script>
 
-{% endblock %}
+    {% endblock %}

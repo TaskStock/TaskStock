@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 글자 수가 100자를 초과하면 입력을 막음
     if (remainingChars < 0) {
       textarea.value = text.slice(0, 50);
-      label.textContent = "0/100";
+      label.textContent = "0/50";
     }
   });
 });
