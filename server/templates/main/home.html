@@ -3,15 +3,37 @@
 <main>
     <div class="main-top">
         <div class="main-left">
-            <div class="main__current main__box">
+            <div class="main__current main__box ">
                 <div class="main__box--header main__current--header">
-                    <h2>Current Status</h2>
+                    {% comment %} <h2>Current Status</h2> {% endcomment %}
+                    <h1>Current Status</h1>
                 </div>
+                <p>
+                    <span>2023. 08. 01</span>
+                    <span>16:01:10</span>
+                </p>
+                <h3>37,000 KRW</h3>
             </div>
+
             <div class="main__badge main__box">
                 <div class="main__box--header main__badge--header">
                     <h2>Aquired Badges</h2>
                 </div>
+                <ul class="main-container__badges-list">
+                    <li>
+                        <span>프로개근러</span>
+                        <i class="gg-check"></i>
+                    </li>
+                    <li>
+                        <span>올빼미</span>
+                    </li>
+                    <li>
+                        <span>화성으로</span>
+                    </li>
+                    <li>
+                        <span>아침새</span>
+                    </li>
+                </ul>
             </div>
             
         </div>
@@ -52,7 +74,7 @@
                 </div>
             </div>
             <div class="main__todo--lists">
-                <div class="list__btn" onclick="handleAdd({{ date_id }})"><i class="gg-math-plus"></i></div>
+                <div class="list__btn" onclick="handleAdd({{ date_id }}, {{ todo.pk }})"><i class="gg-math-plus"></i></div>
                 <!-- form? -->
                 <div class="list__list-cont">
                     <div class="todo-list-cont">
@@ -62,7 +84,7 @@
                                 <i class="gg-check"></i>
                             </div>
                             <input type="text" class="todo-content" value="{{todo.content}} {{todo.goal_check}} {{todo.level}}">
-                            <div class="todo-more">
+                            <div class="todo-more" onclick="handleDeleteTodo({{todo.pk}})">
                                 <i class="gg-erase"></i>
                             </div>
                         </div>

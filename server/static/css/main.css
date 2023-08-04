@@ -97,3 +97,61 @@
 .todo-checkbox.active i{
     display: block;
 }
+
+/* 지수언니 */
+
+
+/* 현재 상태 - 오늘의 날씨, 시각*/
+.main__current > p {
+    margin: 15px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 현재 상태 - 현재 */
+.main__current > h3 {
+    color: var(--green_400);
+    font-size: var(--body2);
+}
+
+
+
+/* 뱃지 파트 - 각 뱃지 */
+.main-container__badges-list > li {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    padding: 5px 0px 5px 8px;
+    border-radius: var(--border-r);
+}
+
+/* 뱃지 hover 애니메이션 최적화
+.main-container__badges-list > li::after {
+    box-shadow: var(--box-shadow);
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+.main-container__badges-list > li:hover::after {
+    opacity: 1;
+} */
+
+/* 뱃지 파트 - 첫번째 뱃지 */
+.main-container__badges-list > li:nth-of-type(1) {
+    background-color: var(--green_50);
+    width: 120px; /* 자동으로 텍스트 길이만큼 지정이 안됨 */
+    color: var(--green_400);    
+}
+
+/* 뱃지 파트 - 뱃지 아이콘 */
+.main-container__badges-list > li > i {
+    display: inline;
+    width: 22px;
+    height: 22px;
+}
+
+/* 
+폰트사이즈 ㄱㅊ?
+아이콘 크기 설정이 안됨
+폰트 굵기
+wrapper로 한번 감싸야할듯 
+*/

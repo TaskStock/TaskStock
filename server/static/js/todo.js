@@ -95,10 +95,8 @@ const handleAdd = (date_id) => {
     `;
     let inputTag = document.querySelector('.todo-item:last-child input');
     inputTag.focus();
-
+    
 }
-
-
 
 
 const handleTodo = async() => {
@@ -130,17 +128,36 @@ const handleTodoResponse = async(date_id, todo_id, content) => {
             <i class="gg-check"></i>
         </div>
         <input type="text" class="todo-content" value="${content}">
-        <div class="todo-more">
+        <div class="todo-more" onclick="handleDeleteTodo(${todo_id})">
             <i class="gg-erase"></i>
         </div>
     </div>
     `;
+
 }   
 
+// delete todo
+const handleDeleteTodo = async(todo_id) => {
+    const url = `/main/delete_todo/${todo_id}/`;
+    const res = await fetch(url, {
+        method: 'POST', 
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: JSON.stringify({todo_id}),
+    })
+    const {id: id, d_id: d_id} = await res.json();
+    handleDelTodoRes(id, d_id);
+}
+
+const handleDelTodoRes = async(todo_id, date_id) => {
+    // delete container
+    const container = document.querySelector(`.day${date_id}-todo${todo_id}`);
+    container.remove();
+}
 
 
-
-
+// check
 function handleCheck(event) {
     event.stopPropagation();
     let btn = event.currentTarget;
