@@ -1,15 +1,91 @@
 {% extends './base_login.html' %} {% load static %} {% block content %}
 
-<div class="login__header--signup">Sign up</div>
-<span>You're signing up as user@user.com</span>
-<form action="" class="signup2">
+<div class="login__header">Sign up</div>
+<form class="auth-email" onsubmit="emailValidation(event)">
     {% csrf_token %}
-    <label for="username">Username</label>
+    <label for="email">Email</label>
     <input type="text" placeholder="user@user.com" id="email" name="email">
-    <label for="signup2_pw">Set a password</label>
-    <input type="text" placeholder="New password" id="signup2_pw" name="signup2_pw">
-    <button class="signup2-btn" formaction="/main/">Create new account</button>
+    <div id="error-message" style="color: red;"></div>
+    <button type="submit" class="signup1-btn">인증코드 전송하기</button>
 </form>
+<form class="signup-code" onsubmit="codeCheck(event)">
+    {% csrf_token %}
+    <span>
+        We just sent you a temporary sign up code. Please check your inbox and paste the sign up code below.
+    </span>
+    <label for="signup-code">Sign up Code</label>
+    <input type="text" placeholder="Paste sign up code" id="signup-code" name="signup-code">
+    <div id="error-message-code" style="color: red;"></div>
+    <button type="submit" class="signup1-btn">인증코드 입력 완료</button>
+</form>   
 
+{% endblock %}
 
+{% block extra %}
+<script>
+    let check_code='';
+    let check_email='';
+
+    const emailValidation = async (event) =>{
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+        // csrf 보안 토큰
+        // const csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        // formData.append('csrfmiddlewaretoken', csrftoken);
+
+        const url = "/email_validation/"
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {error: validation, code: email_code, email: email}=await res.json();
+
+        const emailInput = document.querySelector('#email');
+        const errorMessageElement = document.querySelector('#error-message');
+
+        if(validation){
+            errorMessageElement.textContent = '올바른 이메일 형식이 아닙니다.';
+            emailInput.classList.add('error');
+            // 오류 발생했을 때 error 클래스 css 추가 필요
+        }else{
+            errorMessageElement.textContent = ''; // 오류 메시지 초기화
+            emailInput.classList.remove('error');
+        }
+
+        if(!validation){
+            check_code=email_code;
+            check_email=email;
+        }
+    }
+
+    const codeCheck = async (event) =>{
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        formData.append('check_code', check_code);
+        formData.append('check_email', check_email);
+
+        const url = "/signup/step2/"
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {error_message: message, redirect}=await res.json();
+
+        if(redirect){
+            window.location.href = redirect;
+        }else{
+            const codeInput = document.querySelector('#signup-code');
+            const errorMessageCodeElement = document.querySelector('#error-message-code');
+
+            errorMessageCodeElement.textContent = message;
+            codeInput.classList.add('error');
+        }
+
+    }
+</script>
 {% endblock %}

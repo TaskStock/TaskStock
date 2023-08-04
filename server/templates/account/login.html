@@ -8,10 +8,40 @@
     <i class="gg-google"></i>  
     <button type="submit">Login via Google</button>
 </form>
-<div class="bar"></div>
+<div class="bar">
+    
+</div>
 <!-- form -->
-<div>---form 들어갈 자리---</div>
-<div class="login__forgot-pw"><a href="">Forgot password?</a></div>        
+<div>
+    <form method="post" action="/login/">
+        {% csrf_token %}
+        <table>
+            <tr>
+            <td>
+                <label class="f30" for="username">사용자ID</label>
+            </td>
+            <td>
+                <input type="text" class="form-control" name="username" id="username">
+            </td>
+            </tr>
+        
+            <tr>
+            <td>
+                <label class="f30" for="password">비밀번호</label>
+            </td>
+            <td>
+                <input type="password" class="form-control" name="password" id="password">
+            </td>
+            </tr>
+            <tr>
+            <td colspan="2" class="login-btn-td">
+                <button type="submit" class="login-btn hover-black">로그인</button>
+            </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="login__forgot-pw"><a href="/logout/">Forgot password?</a></div>        
 <div class="login__signup">Not a member? <a href="/signup/step1/">Create an account</a></div>
       
 
