@@ -1,3 +1,4 @@
+// 글자수세기 기능
 document.addEventListener("DOMContentLoaded", function () {
   const textarea = document.getElementById("proflie-description");
   const label = document.querySelector(".profile-description__label p");

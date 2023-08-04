@@ -140,7 +140,9 @@
     width: 50px;
 }
 
+
 /* set-alarm */
+/* 라디오 체크 부분 css로 활용함 */
 .settings-detail__set-alarm {
     display: flex;
     flex-direction: column;
