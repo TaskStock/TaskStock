@@ -71,15 +71,10 @@ class TodoItem extends HTMLElement {
         // checked or unchecked
         const checkBox = this.querySelector('.todo-checkbox');
         checkBox.addEventListener('click', () => {
-
             checkBox.classList.toggle('active');
         })
-
-
-       
     }
 }
-
 customElements.define("todo-item", TodoItem);
 
 
