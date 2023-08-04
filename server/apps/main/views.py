@@ -92,6 +92,7 @@ def add_todo(request):
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
+
         return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'content': content})
 
 """
@@ -150,7 +151,7 @@ def check_todo(request):
         todo.save()
         value.save
         
-        return JsonResponse({'color':color, 'value':value})
+        return JsonResponse({'color':color, 'value':value, 'todo':todo})
 
 
 #---선우 작업---#
