@@ -6,7 +6,7 @@
     <label for="email">Email</label>
     <input type="text" placeholder="user@user.com" id="email" name="email">
     <div id="error-message" style="color: red;"></div>
-    <button type="submit" class="signup1-btn">임시 이메일 설정 버튼</button>
+    <button type="submit" class="signup1-btn">인증코드 전송하기</button>
 </form>
 <form class="signup-code" onsubmit="codeCheck(event)">
     {% csrf_token %}
@@ -16,7 +16,7 @@
     <label for="signup-code">Sign up Code</label>
     <input type="text" placeholder="Paste sign up code" id="signup-code" name="signup-code">
     <div id="error-message-code" style="color: red;"></div>
-    <button type="submit" class="signup1-btn">Create new account</button>
+    <button type="submit" class="signup1-btn">인증코드 입력 완료</button>
 </form>   
 
 {% endblock %}
