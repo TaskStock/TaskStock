@@ -187,3 +187,18 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+
+# 이메일 인증(이메일 보내기)
+
+# 이메일 보낼 계정
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+# 앱 비밀번호
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
