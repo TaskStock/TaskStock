@@ -5,5 +5,5 @@ from .models import *
 
 admin.site.register(User)
 admin.site.register(Value)
-admin.site.register(Todolist)
+admin.site.register(Category)
 admin.site.register(Todo)

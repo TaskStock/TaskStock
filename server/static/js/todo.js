@@ -54,7 +54,6 @@ addBtn.addEventListener('click', () => {
     newTodo_input.focus();
 
 
-    
 })
 
 // 
