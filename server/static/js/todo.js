@@ -1,12 +1,43 @@
+
+// const handleBlur = () => {
+//     const todoContent = document.querySelector('.todo-content');
+//     if (!todoContent.value.trim()) {
+//         this.parentNode.remove();
+//     }
+// }
+// const todo_items = document.querySelectorAll('todo-item');
+
 // custom element - todo
-class cTodo extends HTMLElement {
+class TodoItem extends HTMLElement {
+    constructor() {
+        super();
+    }
     connectedCallback() {
-        const todo_container = document.createElement('div');
-        todo_container.classList.add('list__list');
+        this.render();
+        const todoContent = document.querySelector('.todo-content');
+        todoContent.addEventListener('blur', this.handleBlur);
+    }
+    static get observedAttributes() {
+        return ['content', 'level', 'status', 'date'];
+    }
+    attributeChangedCallback(atrb, oldV, newV) {
+        if (atrb === 'content'){
+            this.render();
+            // ajax 값 보내기 
+        }
+    }
+    
+    render(){
+        // innerHTML 구성
 
         const todo_checkbox = document.createElement('div');
         todo_checkbox.classList.add('todo-checkbox');
-        
+        // todo_checkbox.onclick = addTodoHandler;
+
+        const todo_ci = document.createElement('i');
+        todo_ci.classList.add('gg-check');
+        todo_checkbox.appendChild(todo_ci);
+
         const todo_content = document.createElement('input');
         todo_content.classList.add('todo-content');
         todo_content.type = "text";
@@ -19,56 +50,64 @@ class cTodo extends HTMLElement {
 
         todo_more.appendChild(todo_i);
 
-        todo_container.appendChild(todo_checkbox);
-        todo_container.appendChild(todo_content);
-        todo_container.appendChild(todo_more);
-
-        this.appendChild(todo_container);
+        this.appendChild(todo_checkbox);
+        this.appendChild(todo_content);
+        this.appendChild(todo_more);
+        this.classList.add('todo-item');
+       
         
-        // set attribute (content, level, status)
-        this.setAttribute('content', `${todo_content.value}`);
-        this.setAttribute('level', 1);
-        this.setAttribute('status', 'unchecked');
-    }
-    static get observedAttributes() {
-        return ['content', 'level', 'status'];
-    }
-    attributeChangedCallback() {
-        todo_content = this.querySelector('.todo-content');
-        console.log(todo_content);
+        
+        
+        // const todo = this.getAttribute('content');
+        // todo_content.value = `${todo}`;
 
-        this['content'] = todo_content.value;
+
+        // 임시 remove 버튼
+        const removeBtn = this.querySelector('.todo-more');
+        removeBtn.addEventListener('click', () => {
+            this.remove();
+        });
+
+        // checked or unchecked
+        const checkBox = this.querySelector('.todo-checkbox');
+        checkBox.addEventListener('click', () => {
+
+            checkBox.classList.toggle('active');
+        })
+
+
+       
     }
 }
 
-customElements.define("to-do", cTodo);
+customElements.define("todo-item", TodoItem);
+
 
 
 
 // add todo
-addBtn = document.querySelector('.list__btn');
+const addBtn = document.querySelector('.list__btn');
+
 addBtn.addEventListener('click', () => {
-    const newTodo = document.createElement('to-do');
-    document.querySelector('.list__list-cont').appendChild(newTodo);
+    const newTodo = document.createElement('todo-item');
+    document.querySelector('.todo-list-cont').appendChild(newTodo);
     const newTodo_input = newTodo.querySelector('input');
     newTodo_input.focus();
-
-
     
 })
 
-// 
+// blur일 때 input에 아무것도 없으면 지우기
+// document.querySelector('.list__btn').addEventListener('click', () => {
+//     document.querySelectorAll('todo-item input').forEach(item => {
+//         console.log(item);
+        
+//     })
+// })
 
-const addTodoHandler = () => {
-    checkBoxes = document.querySelectorAll('.todo-checkbox');
-
-    checkBoxes.forEach((checkBox) => {
-        checkBox.addEventListener('click', () => {
-            checkBox.classList.toggle('active');
-            console.log('clicked');
-            console.log(document.querySelector('to-do input').value);
-        })
-    })
-}
-
+// set attribute
+// document.querySelectorAll('todo-item').forEach(item => {
+//     item.addEventListener('change', () => {
+//         console.log(item);
+//     })
+// })
 
