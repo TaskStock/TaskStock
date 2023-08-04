@@ -47,7 +47,7 @@
     width: 100%;
     height: 400px;
 }
-.list__list{
+todo-item{
     width: 100%;
     display: flex;
     padding: 0 0 0 var(--gutter);
@@ -62,14 +62,14 @@
     cursor: pointer;
     position: relative;
 }
-.list__list input{
+todo-item input{
     flex-grow: 1;
     border: none;
     padding: 0 var(--gutter);
     font-size: var(--body1);
     background-color: transparent;
 }
-.list__list input:focus{
+todo-item input:focus{
     border-bottom: 2px solid var(--green_400);
 }
 .todo-more{
