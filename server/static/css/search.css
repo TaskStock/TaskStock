@@ -110,6 +110,11 @@
     margin: var(--gutter) 0;
     padding: var(--gutter);
     overflow: auto;  
+    transition: background-color 0.3s ease-in-out;
+}
+
+.search-result__container:hover {
+    border: 1px solid var(--green_100);
 }
 
 .search-result__container > img {
