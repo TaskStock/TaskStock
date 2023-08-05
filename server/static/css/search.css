@@ -102,15 +102,20 @@
 
 .search-result__container {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     border: 1px solid var(--grey_border);
     background-color: var(--grey_bg);
     border-radius: var(--border-r);
     margin: var(--gutter) 0;
     padding: var(--gutter);
-    overflow: auto;  
     transition: background-color 0.3s ease-in-out;
+}
+
+.search-result__right--container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .search-result__container:hover {
@@ -147,7 +152,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-left: 300px;
 }
 
 .search-result__info {
