@@ -17,6 +17,12 @@ class User(AbstractUser):
     )
     language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, null=True, default='KR')
 
+    # 팔로잉/팔로워
+    # null=True를 넣을 수 없어 최소 한명을 설정해야하나?
+    # 만약 그렇다면 자기자신으로 설정하여 해결
+    # 추후에 오류 발생하면 생각
+    followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
+
     def __str__(self):
         return self.username
 
