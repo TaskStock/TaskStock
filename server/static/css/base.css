@@ -344,7 +344,7 @@ body{
 
 /* 스크롤 */
 
-.Scroll::-webkit-scrollbar {
+/* .Scroll::-webkit-scrollbar {
     width: 10px;
   }
 .Scroll::-webkit-scrollbar-thumb {
@@ -357,4 +357,6 @@ body{
     background-color: grey;
     border-radius: 10px;
     box-shadow: inset 0px 0px 5px white;
-  }
+  } */
+
+  
