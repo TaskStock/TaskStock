@@ -81,6 +81,7 @@
     cursor: pointer;
     display: flex;
 }
+
 .todo-level{
     padding-right: 10px;
     gap: 5px;
@@ -91,7 +92,8 @@
 }
 .sel-todo-level i,
 .todo-level i, 
-.todo-level div{
+.todo-level div,
+.edit-todo-level i{
     color: var(--yellow_star);
 }
 
@@ -128,10 +130,7 @@
     height: 100%;
 
 }
-.todo-item input:focus,
-.todo-item input:focus + .todo-level{
-    border-bottom: 2px solid var(--green_400);
-}
+
 .todo-input-cont{
     position: relative;
 }
@@ -169,6 +168,29 @@
 .todo-checkbox.active i{
     display: block;
 }
+.todo-edit{
+    display: flex;
+    gap: var(--gutter);
+    align-items: center;
+    padding-right: var(--gutter);
+    display: none;
+}
+.todo-edit i{
+    cursor: pointer;
+}
+.gg-check{
+    --ggs: 1.5;
+    color: var(--green_400);
+}
+
+
+
+
+
+
+
+
+
 
 /* 지수언니 */
 
