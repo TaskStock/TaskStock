@@ -8,7 +8,7 @@ import pytz
 
 
 """
-사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update
+사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update //만드는 중
 할일 추가 함수 //만듬
 할일 삭제 함수 //만듬
 체크 상태에 따라 가치 계산하는 함수 //만듬
@@ -95,10 +95,8 @@ def add_todo(request):
         
         #todo의 high값 업데이트
         value.low += level*1000
-        value.low += level*1000
         
         #todo의 low값 업데이트
-        value.high -= level*1000
         value.high -= level*1000
         value.save()
         
@@ -161,9 +159,11 @@ def check_todo(request):
             color = 'red'
             
         todo.save()
-        value.save
+        value.save()
         
         return JsonResponse({'color':color, 'value':value, 'todo':todo})
+
+
 
 
 #---선우 작업---#
