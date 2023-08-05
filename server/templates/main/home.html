@@ -57,7 +57,7 @@
                 <div class="list__list-cont">
                     <div class="todo-list-cont">
                         {% for todo in todos %}
-                        <div class="todo-item day{{date_id}}-todo{{todo.pk}}">
+                        <div class="todo-item day{{date_id}}-todo{{todo.id}}">
                             <div class="todo-checkbox" data-status="{{todo.goal_check}}" onclick="handleCheck(event)">
                                 <i class="gg-check"></i>
                             </div>
@@ -66,7 +66,6 @@
                                 <i class="gg-erase"></i>
                             </div>
                         </div>
-
 
                         {% endfor %}
                         

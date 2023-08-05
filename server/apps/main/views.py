@@ -25,8 +25,9 @@ from django.utils import timezone
 def home(request):
     value = get_todayValue()
     todos = Todo.objects.filter(value=value)
+    date_id = value.pk
     
-    return render(request, 'main/home.html', {'date_id':value.id, 'todos':todos})
+    return render(request, 'main/home.html', {'date_id':date_id, 'todos':todos})
 
 def hello(request):
     context = {
@@ -42,14 +43,13 @@ def hello(request):
 def get_todayValue():
     # 현재 시간을 가져온 후, 오늘 날짜의 06:00:00으로 설정
     #today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
-    today_date = timezone.localtime().replace(hour=6, minute=0, second=0, microsecond=0)
+    today_date = timezone.now().replace(hour=6, minute=0, second=0, microsecond=0)
     # start_date는 오늘 날짜의 06:00:00
     start_date = today_date
     # end_date는 start_date에서 1일 후 (즉, 내일의 06:00:00)
     end_date = start_date + timezone.timedelta(days=1)
     # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
     value_object = Value.objects.get(date__gte=start_date, date__lt=end_date)
-
     return value_object
 
 
@@ -73,6 +73,7 @@ def add_todo(request):
         
         #현재 user의 todolist 객체 가져오기
         category = Category.objects.get(user=current_user)
+        print(category)
         
         #투두 객체 생성
         Todo.objects.create(

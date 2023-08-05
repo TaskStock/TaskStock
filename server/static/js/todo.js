@@ -93,13 +93,12 @@ const handleAdd = (date_id) => {
         </div>
     </div>
     `;
-
 }
 
 const handleTodo = async() => {
-    const url = '/main/';
+    const url = '/main/add_todo/';
     const inputVal = document.querySelector('.todo-item:last-child input').value;
-    const data = { inputVal };
+    const data = { content: inputVal };
     
     const res = await fetch(url, {
         method: 'POST', 
@@ -107,13 +106,15 @@ const handleTodo = async() => {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-    });
+    })
+    
     const {date_id: date_id, todo_id: todo_id, content: content} = await res.json();
     handleTodoResponse(date_id, todo_id, content);
 }
+
 const handleTodoResponse = async(date_id, todo_id, content) => {
     document.querySelector('.todo-list-cont').innerHTML +=  `
-    <div class="todo-item day${date_id}-todo${todo.id}">
+    <div class="todo-item day${date_id}-todo${todo_id}">
         <div class="todo-checkbox" data-status="False" onclick="handleCheck(event)">
             <i class="gg-check"></i>
         </div>
@@ -123,8 +124,6 @@ const handleTodoResponse = async(date_id, todo_id, content) => {
         </div>
     </div>
     `;
-
-
 }   
 
 
