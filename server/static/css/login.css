@@ -124,14 +124,16 @@ main{
 }
 .auth-email label,
 .signup-code label,
-.signup1 label{
+.signup1 label,
+.login-form td label{
     font-size: var(--caption);
     color: var(--grey_400);
     
 }
 .auth-email input,
 .signup-code input,
-.signup1 input{
+.signup1 input:not(.signup1-btn),
+.login-form td input{
     width: 320px;
     height: 34px;
     border-radius: var(--border-r);
@@ -146,16 +148,33 @@ main{
     text-align: center;
 }
 .signup1-btn,
-.signup2-btn{
+.signup2-btn,
+.login-btn-td button{
+    transition: 0.3s;
     width: 320px;
     height: 36px;
     white-space: nowrap;
     border-radius: var(--border-r);
     border: 1px solid var(--green_200);
     color: var(--green_700);
-    background-color: var(--green_100);
+    background-color: var(--grey_bg);
     margin-top: 10px;
     font-size: var(--body2);
     box-shadow: rgba(17, 171, 73, 0.1) 0px 1px 2px, 
     rgba(17, 171, 73, 0.1) 0px 0px 0px 1px
+}
+.signup1-btn:hover,
+.signup2-btn:hover,
+.login-btn-td button:hover{
+    background-color: var(--green_100);
+    border: 1px solid var(--green_200);
+    box-shadow: rgba(17, 171, 73, 0.1) 0px 1px 2px, 
+    rgba(17, 171, 73, 0.1) 0px 0px 0px 1px;
+}
+.login-form table tr{
+    display: flex;
+    flex-direction: column;
+}
+.login-form td input{
+    margin-bottom: var(--gutter);
 }

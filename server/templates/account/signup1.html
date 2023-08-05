@@ -1,7 +1,7 @@
 {% extends './base_login.html' %} {% load static %} {% block content %}
 
 <div class="login__header--signup">Sign up</div>
-<span>You're signing up as user@user.com</span>
+<span>Welcome to TaskStock!</span>
 <form action="" method="post" class="signup1">
     {% csrf_token %}
     <!-- <label for="username">Username</label>
@@ -10,7 +10,7 @@
     <input type="text" placeholder="New password" id="signup1_pw" name="signup1_pw">
     <button class="signup1-btn" formaction="/main/">Create new account</button> -->
     {{ form }}
-    <input class="signup-btn hover-black" type="submit" value="SignUp">
+    <input class="signup1-btn hover-black" type="submit" value="SignUp">
 </form>
 
 
