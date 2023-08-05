@@ -49,13 +49,16 @@ const handleTodoResponse = async(date_id, todo_id, level, content) => {
         </div>
         <div class="todo-input-cont">
             <input type="text" class="todo-content" value="${content}" readonly>
-            <div class="todo-level">
+            <div class="todo-level todo-level-${todo_id}">
                 <i class="fa-solid fa-star"></i>
                 <div>${level}</div>
-                
             </div>
         </div>
-        <div class="todo-more" onclick="handleDeleteTodo(${todo_id})">
+        <div class="todo-edit todo-edit-${todo_id}">
+            <i class="gg-edit-markup"></i>
+            <i class="gg-trash" onclick="handleDeleteTodo(${todo_id})"></i>
+        </div>
+        <div class="todo-more todo-more-${todo_id}" onclick="handleMore(${todo_id})">
             <i class="gg-more-alt"></i>
         </div>
     </div>
@@ -92,5 +95,51 @@ function handleCheck(event) {
     console.log(event.target);
 
 }
+function epaintStar(todo_id, level){
+    const editCon = document.querySelector(`.todo-edit-${todo_id}`);
+    editCon.querySelectorAll('.edit-todo-level i').forEach(star => {
+        if (star.getAttribute('level') <= level){
+            star.classList.remove('fa-regular');
+            star.classList.add('fa-solid');
+        } else{
+            star.classList.remove('fa-solid');
+            star.classList.add('fa-regular');
+        }
+    })
+}
+// more
+function handleMore(todo_id){
+    const more_container = document.querySelector(`.todo-edit-${todo_id}`);
+    const more_btn = document.querySelector(`.todo-more-${todo_id}`);
+    const more_btn_i = more_btn.querySelector('i');
+    const prev_level = document.querySelector(`.todo-level-${todo_id}`);
+    let curr_level = more_container.querySelector('.edit-todo-level').getAttribute('curr-level');
+    epaintStar(todo_id, curr_level);
+    if (more_btn.classList.contains('active')){
+        more_container.style.display = 'none';
+        more_btn.classList.remove('active');
+        more_btn_i.classList.remove('gg-check');
+        more_btn_i.classList.add('gg-more-alt');
+        prev_level.style.display = 'flex';
 
-// level
+        
+    }else{
+        more_container.style.display = 'flex';
+        more_btn.classList.add('active');
+        more_btn_i.classList.remove('gg-more-alt');
+        more_btn_i.classList.add('gg-check');
+        prev_level.style.display = 'none';
+
+        
+
+        // level
+        const elevel_stars = more_container.querySelectorAll('.edit-todo-level i');
+        elevel_stars.forEach(star => {
+            star.addEventListener('click', () => {
+                level = star.getAttribute('level');
+                epaintStar(todo_id, level);
+            }
+        )})
+
+    }
+}
