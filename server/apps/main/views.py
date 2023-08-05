@@ -3,14 +3,15 @@ from .models import *
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime, timedelta
 from django.utils import timezone
+import pytz
+
 
 """
 사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update
-할일 추가 함수
-할일 삭제 함수
-체크 상태에 따라 가치 계산하는 함수
+할일 추가 함수 //만듬
+할일 삭제 함수 //만듬
+체크 상태에 따라 가치 계산하는 함수 //만듬
 난이도 변경에 따라 가치 계산하는 함수
 할일 수정 함수
 팔로잉 검색하는 함수
@@ -37,24 +38,30 @@ def hello(request):
     return render(request, 'base.html', context=context)
 
 #---세원 작업---#
+#시간 디버깅용 함수
+def time():
+    print(timezone.now())   #UTC 기준으로 가져옴
+    print(timezone.localtime()) #Asia/Seoul 기준으로 가져옴
+
 
 """
-오늘 06:00:00이랑 다음날 06:00:00까지의 value객체 가져오는 함수 
+오늘 자정이랑 다음날 자정까지의 value객체 가져오는 함수 
 """
 def get_todayValue():
-    # 현재 시간을 가져온 후, 오늘 날짜의 06:00:00으로 설정
-    #today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
-    today_date = timezone.now().replace(hour=6, minute=0, second=0, microsecond=0)
-    #today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
-    today_date = timezone.now().replace(hour=6, minute=0, second=0, microsecond=0)
-    # start_date는 오늘 날짜의 06:00:00
-    start_date = today_date
-    # end_date는 start_date에서 1일 후 (즉, 내일의 06:00:00)
+    # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
+    today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
+    print(today_date)
+    # start_date는 오늘 날짜의 자정(DB에 UTC 기준으로 저장되어 있으니까 UTC로 변환)
+    start_date = today_date.astimezone(pytz.UTC)
+    print(start_date)
+    # end_date는 start_date에서 1일 후 (UTC로 변환)
     end_date = start_date + timezone.timedelta(days=1)
-    end_date = start_date + timezone.timedelta(days=1)
+    print(end_date)
     # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
     value_object = Value.objects.get(date__gte=start_date, date__lt=end_date)
+        
     return value_object
+
 
 """
 Todo 추가 하는 함수
@@ -65,36 +72,34 @@ def add_todo(request):
     if request.method == 'POST':
         req = json.loads(request.body)
         content = req['content']
-        #level = req['level']
-        #level = req['level']
+        level = req['level']
         #현재 user 객체 가져오기
         current_user = request.user
         
-        #date 일치하는 value 객체 가져오기 YYYY-MM-DD HH:MM:SS
+        #date 일치하는 value 객체 가져오기
         value = get_todayValue()
         
         #현재 user의 todolist 객체 가져오기
         category = Category.objects.get(user=current_user)
-        print(category)
         
         #투두 객체 생성
         Todo.objects.create(
             value = value,
             category=category,
             content=content,
-            level=3,
-            goal_check=False
+            level=level,
+            goal_check=False,
         )
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
         #todo의 high값 업데이트
-        value.low += 3*1000
-        value.low += 3*1000
+        value.low += level*1000
+        value.low += level*1000
         
         #todo의 low값 업데이트
-        value.high -= 3*1000
-        value.high -= 3*1000
+        value.high -= level*1000
+        value.high -= level*1000
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄

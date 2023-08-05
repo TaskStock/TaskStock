@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 class User(AbstractUser):
     first_name=None
@@ -29,5 +30,5 @@ class Todo(models.Model):
     goal_check = models.BooleanField()
     level = models.IntegerField()
 
-    created_time = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     finish_time = models.DateTimeField(null=True)
