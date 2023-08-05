@@ -44,14 +44,15 @@
                         <div class="settings-detail__profile-container">
                             <img src="https://placekitten.com/100/100" alt="">
                             <div class="settings-detail__description-container">
-                                <h3>User</h3>
+                                <h3>{{ user.name }}</h3>
                                 <a href="">Change profile picture</a>
                             </div>
                         </div>
-                        <form action="" class="profile-description__form">
+                        <form onsubmit="introduceUpdate(event)" class="profile-description__form">
+                            {% csrf_token %}
                             <div class="profile-description__textarea">
                                 <label for="proflie-description">소개</label>
-                                <textarea name="proflie-description" id="proflie-description" cols="40" rows="5" placeholder="50자 이내로 입력"></textarea>
+                                <textarea name="proflie-description" id="proflie-description" cols="40" rows="5" placeholder="50자 이내로 입력">{% if user.introduce %}{{ user.introduce }}{% endif %}</textarea>
                                 <p>0/50</p>
                             </div>
                             <button type="submit">Done</button>
@@ -63,12 +64,13 @@
                     <div class="settings-detail__container">
                         <h3>Email</h3>
                         <form action="" class="email-alarm__form">
+                            {% csrf_token %}
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="alarm-set" checked />
+                                <input type="radio" name="radio_answer" value="alarm-set" onchange="updateEmailAlarm(this)" {% if user.email_alarm %} checked {% endif %} />
                                 <label>설정</label>
                             </div>
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="alarm-reset" id="radio" />
+                                <input type="radio" name="radio_answer" value="alarm-reset" onchange="updateEmailAlarm(this)" {% if not user.email_alarm %} checked {% endif %} />
                                 <label>해제</label>
                             </div>
                         </form>
@@ -78,14 +80,15 @@
                     <h1 id="public-private">Switch to private</h1>
                     <div class="settings-detail__container">
                         <form action="" class="public-private__form">
+                            {% csrf_token %}
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="public" checked />
+                                <input type="radio" name="radio_answer" value="public" onchange="updateHide(this)" {% if not user.hide %} checked {% endif %} />
                                 <label>public</label>
                             </div>
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="private" id="radio" />
+                                <input type="radio" name="radio_answer" value="private" onchange="updateHide(this)" {% if user.hide %} checked {% endif %} />
                                 <label>private</label>
-                            </div>
+                            </div>                            
                         </form>
                     </div>      
                 </div>
@@ -93,14 +96,27 @@
                     <h1 id="language">Language</h1>
                     <div class="settings-detail__container">
                         <form action="" class="language__form">
+                            {% csrf_token %}
+                            {% if user.language == 'KR' %}
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="korean" checked />
+                                <input type="radio" name="radio_answer" value="KR" onchange="updateLanguage(this)" checked />
                                 <label>한국어</label>
                             </div>
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="englist" id="radio" />
+                                <input type="radio" name="radio_answer" value="EN" onchange="updateLanguage(this)" />
                                 <label>English</label>
                             </div>
+                            {% elif user.language == 'EN' %}
+                            <div class="radio__set">
+                                <input type="radio" name="radio_answer" value="KR" onchange="updateLanguage(this)" />
+                                <label>한국어</label>
+                            </div>
+                            <div class="radio__set">
+                                <input type="radio" name="radio_answer" value="EN" onchange="updateLanguage(this)" checked />
+                                <label>English</label>
+                            </div>
+                            {% endif %}
+                            
                         </form>
                     </div>      
                 </div>
@@ -108,6 +124,7 @@
                     <h1 id="reset-password">비밀번호 바꾸기</h1>
                     <div class="settings-detail__container">
                         <form action="" class="reset-password__form">
+                            {% csrf_token %}
                             <div class="reset-password__comtainer">
                                 <label for="current-password">현재 비밀번호</label>
                                 <input type="password" name="current-password" id="current-password">
@@ -129,4 +146,77 @@
     </div>
 </main>
 
+{% endblock %}
+
+
+
+{% block extra %}
+<script>
+    // 소개란 수정 시 ajax 처리
+    const introduceUpdate = async (event) =>{
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const introduceArea = document.querySelector('#proflie-description');
+    formData.append('proflie-description', introduceArea.value);
+
+    const url = "/main/settings/update_introduce/";
+    const res = await fetch(url, {
+        method:"POST",
+        headers:{},
+        body: formData,
+    });
+    const {result: result} = await res.json();
+    
+    }
+
+    // 이메일 알람 ajax 처리
+    const updateEmailAlarm = async (inputElement) =>{
+        const value = inputElement.value;
+        const formData = new FormData();
+        formData.append("radio",value);
+
+        const url = "/main/settings/update_emailalarm/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {result: result} = await res.json();
+    
+    }
+
+    // 계정 공개 여부 ajax 처리
+    const updateHide = async (inputElement) =>{
+        const value = inputElement.value;
+        const formData = new FormData();
+        formData.append("radio",value);
+
+        const url = "/main/settings/update_hide/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {result: result} = await res.json();
+    
+    }
+
+    // 계정 공개 여부 ajax 처리
+    const updateLanguage = async (inputElement) =>{
+        const value = inputElement.value;
+        const formData = new FormData();
+        formData.append("radio",value);
+
+        const url = "/main/settings/update_language/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {result: result} = await res.json();
+    
+    }
+    
+</script>
 {% endblock %}

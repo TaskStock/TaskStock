@@ -4,7 +4,18 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     first_name=None
     last_name=None
-    name = models.CharField(max_length=30, default="닉네임")
+    name = models.CharField(max_length=30, default="닉네임을 설정하세요")
+    introduce = models.CharField(max_length=50, null=True, blank=True)
+    email_alarm = models.BooleanField(null=True, default=False)
+
+    # false = public, true = private
+    hide = models.BooleanField(null=True, default=False)
+
+    LANGUAGE_CHOICES=(
+        ('KR', '한국어'),
+        ('EN', 'English'),
+    )
+    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, null=True, default='KR')
 
     def __str__(self):
         return self.username
