@@ -140,11 +140,11 @@ def add_todo(request):
     if request.method == 'POST':
         req = json.loads(request.body)
         content = req['content']
-        #level = req['level']
+        my_level = req['level']
         #현재 user 객체 가져오기
         current_user = request.user
         
-        #date 일치하는 value 객체 가져오기 YYYY-MM-DD HH:MM:SS
+        #date 일치하는 value 객체 가져오기
         value = get_todayValue()
         
         #현재 user의 todolist 객체 가져오기
@@ -155,23 +155,22 @@ def add_todo(request):
             value = value,
             category=category,
             content=content,
-            level=3,
-            goal_check=False
+            level=my_level,
+            goal_check=False,
         )
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
         #todo의 high값 업데이트
-        value.low += 3*1000
+        value.low += my_level*1000
         
         #todo의 low값 업데이트
-        value.high -= 3*1000
+        value.high -= my_level*1000
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
 
-        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'content': content})
-
+        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content})
 """
 Todo 삭제 하는 함수
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
