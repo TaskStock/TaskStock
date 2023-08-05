@@ -80,6 +80,24 @@ def update_language(request):
 
     return JsonResponse({"result": True})
 
+def following_list(request):
+    user=request.user
+    followings = user.followings.all()
+
+    ctx ={ 
+        'followings':followings,
+    }
+    return render(request, 'main/settings.html', context=ctx)
+
+def follower_list(request):
+    user=request.user
+    followers = user.followers.all()
+
+    ctx ={ 
+        'followers':followers,
+    }
+    return render(request, 'main/settings.html', context=ctx)
+
 # ---환희 작업---#
 
 def home(request):
