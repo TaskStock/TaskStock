@@ -21,6 +21,65 @@ from django.utils import timezone
 # Create your views here.
 # ---정근 작업---#
 
+def settings(request):
+    user=request.user
+    # 한 유저가 다른 유저의 프로필을 방문했을 때의 경우도 설계해야함
+    
+    ctx ={ 
+        'user':user,
+    }
+    return render(request, 'main/settings.html', context=ctx)
+
+@csrf_exempt
+def update_introduce(request):
+    introduce = request.POST.get("proflie-description")
+
+    user=request.user
+    user.introduce=introduce
+    user.save()
+
+    return JsonResponse({"result": True})
+
+@csrf_exempt
+def update_emailalarm(request):
+    emailalarm = request.POST.get("radio")
+
+    if emailalarm=="alarm-set":
+        alarm=True
+    elif emailalarm=="alarm-reset":
+        alarm=False
+
+    user=request.user
+    user.email_alarm=alarm
+    user.save()
+
+    return JsonResponse({"result": True})
+
+@csrf_exempt
+def update_hide(request):
+    hiderange = request.POST.get("radio")
+
+    if hiderange=="public":
+        hide=False
+    elif hiderange=="private":
+        hide=True
+
+    user=request.user
+    user.hide=hide
+    user.save()
+
+    return JsonResponse({"result": True})
+
+@csrf_exempt
+def update_language(request):
+    language = request.POST.get("radio")
+
+    user=request.user
+    user.language=language
+    user.save()
+
+    return JsonResponse({"result": True})
+
 # ---환희 작업---#
 
 def home(request):
@@ -159,5 +218,5 @@ def check_todo(request):
 def search(request):
     return render(request, 'main/search.html')
 
-def settings(request):
-    return render(request, 'main/settings.html')
+# def settings(request):
+#     return render(request, 'main/settings.html')
