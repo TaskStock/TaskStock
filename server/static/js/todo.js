@@ -84,70 +84,83 @@
 const handleAdd = (date_id) => {
     document.querySelector('.todo-list-cont').innerHTML +=  `
     <div class="todo-item day${date_id}">
-        <div class="todo-checkbox" data-status="False" onclick="handleCheck(event)">
+        <div class="todo-checkbox new-todo-checkbox" data-status="False" onclick="handleCheck(event)">
             <i class="gg-check"></i>
         </div>
-        <input type="text" class="todo-content" autofocus onblur="handleTodo()">
+        <input type="text" class="todo-content" onblur="handleTodo()">
         <div class="todo-more">
             <i class="gg-erase"></i>
         </div>
     </div>
     `;
+    let inputTag = document.querySelector('.todo-item:last-child input');
+    inputTag.focus();
+    
 }
+
 
 const handleTodo = async() => {
     const url = '/main/add_todo/';
-    const inputVal = document.querySelector('.todo-item:last-child input').value;
+    let inputTag = document.querySelector('.todo-item:last-child input');
+    let inputVal = inputTag.value;
+
     const data = { content: inputVal };
-    
-    const res = await fetch(url, {
-        method: 'POST', 
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    })
-    
-    const {date_id: date_id, todo_id: todo_id, content: content} = await res.json();
-    handleTodoResponse(date_id, todo_id, content);
+    if (inputVal !== ''){
+        const res = await fetch(url, {
+            method: 'POST', 
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+        const {date_id: date_id, todo_id: todo_id, content: content} = await res.json();
+        handleTodoResponse(date_id, todo_id, content);
+        document.querySelector('.new-todo-checkbox').parentNode.remove();
+    }else{
+        inputTag.parentNode.remove();
+    }
 }
+
 
 const handleTodoResponse = async(date_id, todo_id, content) => {
     document.querySelector('.todo-list-cont').innerHTML +=  `
     <div class="todo-item day${date_id}-todo${todo_id}">
+    <div class="todo-item day${date_id}-todo${todo_id}">
         <div class="todo-checkbox" data-status="False" onclick="handleCheck(event)">
             <i class="gg-check"></i>
         </div>
-        <input type="text" class="todo-content" autofocus onblur="handleTodo()" value="${content}">
-        <div class="todo-more">
+        <input type="text" class="todo-content" value="${content}">
+        <div class="todo-more" onclick="handleDeleteTodo(${todo_id})">
             <i class="gg-erase"></i>
         </div>
     </div>
     `;
+
+
 }   
 
+// delete todo
+const handleDeleteTodo = async(todo_id) => {
+    const url = `/main/delete_todo/${todo_id}/`;
+    const res = await fetch(url, {
+        method: 'POST', 
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: JSON.stringify({todo_id}),
+    })
+    const {id: id, d_id: d_id} = await res.json();
+    handleDelTodoRes(id, d_id);
+}
+
+const handleDelTodoRes = async(todo_id, date_id) => {
+    // delete container
+    const container = document.querySelector(`.day${date_id}-todo${todo_id}`);
+    container.remove();
+}
 
 
-
-
-
-// blur일 때 input에 아무것도 없으면 지우기
-// document.querySelector('.list__btn').addEventListener('click', () => {
-//     document.querySelectorAll('todo-item input').forEach(item => {
-//         console.log(item);
-        
-//     })
-// })
-
-// set attribute
-// document.querySelectorAll('todo-item').forEach(item => {
-//     item.addEventListener('change', () => {
-//         console.log(item);
-//     })
-// })
-
-
-
+// check
 function handleCheck(event) {
     event.stopPropagation();
     let btn = event.currentTarget;
@@ -155,15 +168,4 @@ function handleCheck(event) {
     console.log(event.target);
 
 }
-// const onClickLike = async (id, type) => {
-//     const url = '/like_ajax/';
-//     const res = await fetch(url, {
-//         method: 'POST', 
-//         headers: {
-//             "Content-Type": "application/x-www-form-urlencoded",
-//         },
-//         body: JSON.stringify({id: id, type: type}),
-//     });
-//     const {id: postId, type: button} = await res.json();
-//     likeHandleResponse(postId, button);
-// }
+

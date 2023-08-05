@@ -1,46 +1,111 @@
+:root {
+    --offset: 40px; /*양쪽마진*/
+    --max_width: 1440px; /*컨테이너폭*/
+    --columns: 12; /*컬럼갯수*/
+    --gutter: 16px; /*거터폭*/
+    /* color */
+    --black: #37352F;
+
+    /* main : green */
+    --green_50: #E8F5E9;
+    --green_100: #C8E6C9;
+    --green_200: #A5D6A7;
+    --green_300: #81C784;
+    --green_400: #66BB6A;
+    --green_500: #4CAf50;
+    --green_600: #43A047;
+    --green_700: #388E3C;
+    --green_800: #2E7D32;
+    --green_900: #1B5E20;
+    
+    /* grey */
+    --grey_bg: #FBFBFA;
+    --grey_border: rgba(233, 233, 231);
+
+    /* font */
+    --hero: 50px;
+    --heading1: 38px;
+    --heading2: 28px;
+    --heading3: 22px;
+    --subheading: 18px;
+    --body1: 16px;
+    --body2: 14px;
+    --caption: 12px;
+
+    /* border-radius */
+    --border-r: 8px;
+    /* shadow */
+    --box-shadow: rgba(233, 233, 231) 1.95px 1.95px 2.6px;
+}
+
+.main--settings{
+    padding: var(--gutter) var(--gutter);
+
+}
+
 .settings-container {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100vh;
+    overflow: hidden;
+    gap: var(--gutter);
+    padding-bottom: var(--gutter);
+    
 }
-
-.settigs-header {
-    height: 100px;
-    background-color: brown;
+.settigs-header{
+    padding-left: var(--offset);
+    padding-top: var(--gutter);
 }
-
 .settigs-header > h1 {
     font-size: var(--heading1);
     font-weight: 600;
-    margin: 5px;
 }
-
 .settings-content {
     display: flex;
     width: 100%;
-    height: 100%;
+    /* flex-grow: 1; */
+    overflow: hidden;
+    border-radius: var(--border-r);
+    background-color: var(--grey_bg);
+    box-shadow: var(--box-shadow);
+    padding: var(--gutter);
 }
-
 .settings-menu {
-    width: 30%;
-    background-color: blanchedalmond;
+    width: 200px;
+    border-radius: var(--border-r);
+    background-color: var(--grey_bg);
+    box-shadow: var(--box-shadow);
+    padding: var(--gutter);
+    border: 1px solid var(--grey_border);
 }
-
 .settings-detail {
-    width: 70%;
-    background-color: rgb(131, 131, 176);
+    flex-grow: 1;
+    border-radius: var(--border-r);
+    background-color: var(--grey_bg);
+    box-shadow: var(--box-shadow);
+    padding: var(--gutter);
+    border: 1px solid var(--grey_border);
     overflow-y: scroll;
+    scroll-padding-top: var(--gutter);
 }
 
 .settings-menu__container {
-    margin-top: 30px;
-    height: 50%;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    padding: 20px;
+    gap: var(--gutter);
 }
+
+.settings-menu__h3 {
+    font-size: var(--subheading);
+    font-weight: 600;
+    margin: 5px;
+    transition: 0.3s;
+}
+ 
+.settings-menu__h3:hover {
+    color: var(--green_500); 
+} 
 
 .settings-detail__edit-profile {
     display: flex;
@@ -48,7 +113,7 @@
     margin: 16px;
 }
 
-.settings-detail__edit-profile > h1 {
+.settings-detail-element > h1 {
     font-size: var(--heading2);
     font-weight: 600;
     margin: 5px;
@@ -59,36 +124,6 @@
     height: 100px;
     border-radius: 50%;
     margin: 10px;
-}
-
-.Scroll::-webkit-scrollbar {
-    width: 10px;
-  }
-
-.Scroll::-webkit-scrollbar-thumb {
-    background-color: #2f3542;
-    border-radius: 10px;
-    background-clip: padding-box;
-    border: 2px solid transparent;
-  }
-
-.Scroll::-webkit-scrollbar-track {
-    background-color: grey;
-    border-radius: 10px;
-    box-shadow: inset 0px 0px 5px white;
-  }
-
-.settings-detail-element {
-    display: flex;
-    flex-direction: column;
-    margin: 16px;
-    margin-top: 100px;
-}
-.settings-detail-element > h1 {
-    font-size: var(--heading2);
-    font-weight: 600;
-    margin: 5px;
-    margin-bottom: 50px;
 }
 
 /* edit-profile */
@@ -118,26 +153,63 @@
     margin: 5px;
 }
 
-.profile-description__form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
+.profile-description__form,
 .profile-description__textarea {
-    margin-top: 30px;
-    width: 55%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    gap: var(--gutter);
+    flex-direction: column;
 }
+.profile-description__textarea{
+    gap: 5px;
+}
+.profile-description__textarea p{
+    margin-left: auto;
+    font-size: var(--body2);
+    color: var(--grey_400);
 
-.profile-description__form > button {
-    background-color: greenyellow;
-    margin-top: 20px;
-    border-radius: 20px;
-    width: 50px;
+}
+.profile-description__form label,
+.reset-password__comtainer label{
+    font-size: var(--body2);
+    color: var(--grey_400);
+}
+.profile-description__form textarea,
+.reset-password__comtainer input{
+    width: 100%;
+    /* height: 34px; */
+    border-radius: var(--border-r);
+    border: 1px solid var(--grey_border);
+    background-color: var(--grey_bg);
+    padding: var(--gutter);
+    resize: none;
+}
+.reset-password__comtainer input{
+    padding: 0 var(--gutter);
+    height: 34px;
+    max-width: 400px;
+}
+.profile-description__form button,
+.reset-password__form button{
+    margin-left: auto;
+    width: 120px;
+    height: 36px;
+    white-space: nowrap;
+    border-radius: var(--border-r);
+    border: 1px solid var(--green_200);
+    color: var(--green_700);
+    background-color: var(--grey_bg);
+    margin-top: 10px;
+    font-size: var(--body2);
+    box-shadow: rgba(17, 171, 73, 0.1) 0px 1px 2px, 
+    rgba(17, 171, 73, 0.1) 0px 0px 0px 1px;
+    transition: 0.3s;
+}
+.profile-description__form button:hover,
+.reset-password__form button:hover{
+    background-color: var(--green_100);
+    border: 1px solid var(--green_200);
+    box-shadow: rgba(17, 171, 73, 0.1) 0px 1px 2px, 
+    rgba(17, 171, 73, 0.1) 0px 0px 0px 1px;
 }
 
 
@@ -146,20 +218,13 @@
 .settings-detail__set-alarm {
     display: flex;
     flex-direction: column;
-    height: 200px;
-    margin: 16px;
 }
-
-.settings-detail__container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: space-around;
+.settings-detail__container{
+    padding: var(--gutter) 0 var(--offset) var(--gutter);
 }
-
-.settings-detail__container> h3 {
+.settings-detail__container > h3 {
     font-size: var(--body1);
-    font-weight: 400;
+    font-weight: 600;
     margin: 5px;
 }
 
@@ -169,5 +234,15 @@ input[type="radio"] {
 
 .radio__set  {
     margin-left: 50px;
+    margin-top: var(--gutter);
+}
+.reset-password__comtainer{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: var(--gutter);
+}
+.settings-detail__set-password {
+    margin-bottom: 250px;
 }
 

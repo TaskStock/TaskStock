@@ -3,6 +3,7 @@ from .models import *
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime, timedelta
 from django.utils import timezone
 
 """
@@ -44,15 +45,16 @@ def get_todayValue():
     # 현재 시간을 가져온 후, 오늘 날짜의 06:00:00으로 설정
     #today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
     today_date = timezone.now().replace(hour=6, minute=0, second=0, microsecond=0)
+    #today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
+    today_date = timezone.now().replace(hour=6, minute=0, second=0, microsecond=0)
     # start_date는 오늘 날짜의 06:00:00
     start_date = today_date
     # end_date는 start_date에서 1일 후 (즉, 내일의 06:00:00)
     end_date = start_date + timezone.timedelta(days=1)
+    end_date = start_date + timezone.timedelta(days=1)
     # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
     value_object = Value.objects.get(date__gte=start_date, date__lt=end_date)
     return value_object
-
-
 
 """
 Todo 추가 하는 함수
@@ -106,20 +108,21 @@ Todo 삭제 하는 함수
 @csrf_exempt
 def delete_todo(request):
     if request.method == 'POST':
-        req =  json.loads(request.body)
-        todo_id = req['id']
+        req = json.loads(request.body)
+        todo_id = req['todo_id']
         
         todo = Todo.objects.get(pk=todo_id)
         #todo 삭제하기 전 연결된 value의 high값 업데이트
-        todo.value.high -= 1000*todo.level
+        # todo.value.high -= 1000*todo.level
         #todo 삭제하기 전 연결된 value의 low값 업데이트
-        todo.value.low += 1000*todo.level
+        # todo.value.low += 1000*todo.level
         #저장
-        todo.value.save()
+        # todo.value.save()
         #todo삭제
         todo.delete()
+        value = get_todayValue()
         
-    return JsonResponse({'todo_id':todo_id})
+    return JsonResponse({'id':todo_id, 'd_id': value.id})
 
 
 """

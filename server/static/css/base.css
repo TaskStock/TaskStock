@@ -287,7 +287,8 @@ body{
 /* 일단 색 몰라서 green_100 */
 .menu-left__follower-user-container {
     border-radius: var(--border-r);
-    background-color: var(--green_100);
+    background-color: var(--grey_bg);
+    border: 1px solid var(--grey_border);
     height: 70px;
     width: 200px;
     display: flex;
@@ -299,6 +300,10 @@ body{
     width: 50px;
     height: 50px;
     border-radius: 50%;
+}
+
+.menu-left__follower-user-container:hover {
+    border: 1px solid var(--green_100);
 }
 
 .menu-left__follower-user-description-container {
@@ -339,7 +344,7 @@ body{
 
 /* 스크롤 */
 
-.Scroll::-webkit-scrollbar {
+/* .Scroll::-webkit-scrollbar {
     width: 10px;
   }
 .Scroll::-webkit-scrollbar-thumb {
@@ -352,4 +357,6 @@ body{
     background-color: grey;
     border-radius: 10px;
     box-shadow: inset 0px 0px 5px white;
-  }
+  } */
+
+  
