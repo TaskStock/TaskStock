@@ -80,7 +80,7 @@
 
 .search-label {
     height: 100px;
-    width: 80%;
+    width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
@@ -95,8 +95,8 @@
 .search-result {
     display: flex;
     flex-direction: column;
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
     overflow-y: auto;
 }
 
@@ -122,7 +122,7 @@
     border: 1px solid var(--green_100);
 }
 
-.search-result__container > img {
+.search-result__right--container > img {
     width: 70px;
     height: 70px;
     border-radius: 50%;
@@ -176,4 +176,27 @@
     font-size: var(--subheading);
     font-weight: 600;
     margin: 3px;
+}
+
+
+
+.live-chart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 80%;
+    overflow-y: auto;
+}
+
+
+.search-users{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 80%;
+    overflow-y: auto;
 }

@@ -232,8 +232,20 @@ def check_todo(request):
 
 
 #---선우 작업---#
+
 def search(request):
-    return render(request, 'main/search.html')
+    search_content = request.GET.get('search_content','')
+    users = User.objects.all()
+    filtered_users = users
+    if search_content:
+        filtered_users = User.objects.all().filter(name__contains=search_content)
+
+    ctx = {
+        'users': users,
+        'filtered_users': filtered_users,
+    }
+
+    return render(request, 'main/search.html',context=ctx)
 
 # def settings(request):
 #     return render(request, 'main/settings.html')
