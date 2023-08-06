@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 class User(AbstractUser):
     first_name=None
     last_name=None
@@ -26,6 +29,25 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+# User 모델 객체가 생성될 때 실행할 함수
+@receiver(post_save, sender=User)
+def user_created(sender, instance, created, **kwargs):
+    if created:
+        Value.objects.create(
+            user=instance,
+            date=instance.date_joined,
+            percentage=0,
+            start=50000,
+            end=0,
+            low=0,
+            high=0,
+            combo=0,
+        )
+        Category.objects.create(
+            user=instance,
+        )
+
 
 class Value(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='value_user')
