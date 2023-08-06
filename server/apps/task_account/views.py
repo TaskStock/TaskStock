@@ -5,6 +5,12 @@ from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import SignupForm
 
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+from .models import Value, Category
+
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
@@ -59,9 +65,6 @@ def signup1(request):
         }
         return render(request, template_name='account/signup1.html', context=ctx)
 
-import json
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def signup2(request):

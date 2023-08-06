@@ -5,7 +5,9 @@
     height: 50px;
     display: flex;
     justify-content: center;
-
+    padding: 0 40px;
+    align-items: center;
+    gap: 30px;
 }
 .main__todo--week-cont{
     width: min(100%, 600px);
@@ -21,7 +23,17 @@
     gap: 5px;
     cursor: pointer;
 }
-
+.fa-chevron-left, 
+.fa-chevron-right{
+    font-size: 20px;
+    color: var(--grey_400);
+    cursor: pointer;
+    transition: 0.3s;
+}
+.fa-chevron-left:hover, 
+.fa-chevron-right:hover{
+    color: var(--green_500);
+}
 .main__todo--day > div:first-child{
     width: 40px;
     height: 40px;
@@ -160,6 +172,7 @@
     align-items: center;
     cursor: pointer;
 }
+
 .todo-checkbox{
     background-color: var(--grey_border);
     display: flex;

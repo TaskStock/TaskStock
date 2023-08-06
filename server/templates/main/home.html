@@ -5,8 +5,7 @@
         <div class="main-left">
             <div class="main__current main__box ">
                 <div class="main__box--header main__current--header">
-                    {% comment %} <h2>Current Status</h2> {% endcomment %}
-                    <h1>Current Status</h1>
+                    
                 </div>
                 <p>
                     <span>2023. 08. 01</span>
@@ -39,9 +38,11 @@
         </div>
         <div class="main__todo main__box">
             <div class="main__box--header main__todo--header">
-                <h2>Todo</h2>
+                {% comment %} <h2>Todo</h2> {% endcomment %}
             </div>
+            <div class="main__todo--month">2023.08</div>
             <div class="main__todo--week">
+                <i class="fa-solid fa-chevron-left"></i>
                 <div class="main__todo--week-cont">
                     <div class="main__todo--day">
                         <div></div>
@@ -72,6 +73,7 @@
                         <div class="main__todo--day-n">6</div>
                     </div>
                 </div>
+                <i class="fa-solid fa-chevron-right"></i>
             </div>
             <div class="main__todo--lists">
                 <div class="list__input-cont">
@@ -131,14 +133,20 @@
     </div>
     <div class="main-bottom">
         <div class="main__graph main__box">
-            <div class="main__box—header main__graph—header">
-                <h2>Candle</h2>
-                <div id="chart"></div>
+            <div class="main__graph--header main__graph--header">
+                <div class="chart-btn chart-week">1 day</div>
+                <div class="chart-btn chart-month">1 month</div>
+                <div class="chart-btn chart-3month">3 month</div>
+                <div class="chart-btn chart-6month">6 month</div>
+                <div class="chart-btn chart-year">1 year</div>
             </div>
+            <div id="chart"></div>
         </div>
     </div>
 </main>
 <script src="{% static 'js/todo.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<script src="{% static 'js/data.js' %}"></script>
 <script src="{% static 'js/chart.js' %}"></script>
-{% endblock %}
+    {% endblock %}
