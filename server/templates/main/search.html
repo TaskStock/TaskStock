@@ -5,50 +5,92 @@
         <div class="search-form-container">
             <form action="/" method="GET" class="search-form">
                 <input type="text" placeholder="Search">
-                <button type="submit">
+                <button type="submit" onclick="onClickSearch()">
                     <i class="gg-search"></i>
                 </button>
             </form>
         </div>
-        <div class="search-label">
-            <h3>실시간 차트</h3>
-        </div>
-        <div class="search-result Scroll">
-            <!-- for start -->
-            <a href="/">
-                <div class="search-result__container">
-                    <div class="search-result__right--container">
-                        <img src="https://placekitten.com/50/50" alt="user image">
-                        <div class="search-result__name-container">
-                            <h2>User</h2>
-                            <p>Hi</p>
+        <div class="live-chart">
+            <div class="search-label">
+                <h3>실시간 차트</h3>
+            </div>
+            <div class="search-result Scroll">
+                {% for user in users %}
+                <a href="/">
+                    <div class="search-result__container">
+                        <div class="search-result__right--container">
+                            <img src="https://placekitten.com/50/50" alt="user image">
+                            <div class="search-result__name-container">
+                                <h2>{{user.name}}</h2>
+                                <p>Hi</p>
+                            </div>
                         </div>
+                        <div class="search-result__right-container">
+                            <div class="search-result__info">
+                                <div class="search-result__right-upper-container">
+                                    <img src="https://placekitten.com/30/30" alt="">
+                                </div>
+                                <p>13%</p>
+                            </div>
+                            <div class="search-result__info">
+                                <div class="search-result__right-upper-container">
+                                    <h2>23</h2>
+                                </div>
+                                <p>following</p>
+                            </div>
+                            <div class="search-result__info">
+                                <div class="search-result__right-upper-container">
+                                    <h2>23</h2>
+                                </div>
+                                <p>follower</p>
+                            </div>
+                        </div>    
                     </div>
-                    <div class="search-result__right-container">
-                        <div class="search-result__info">
-                            <div class="search-result__right-upper-container">
-                                <img src="https://placekitten.com/30/30" alt="">
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="search-users">
+            <div class="search-label">
+                <h3>검색 결과</h3>
+            </div>
+            <div class="search-result Scroll">
+                {% for user in users %}
+                <a href="/">
+                    <div class="search-result__container">
+                        <div class="search-result__right--container">
+                            <img src="https://placekitten.com/50/50" alt="user image">
+                            <div class="search-result__name-container">
+                                <h2>{{user.name}}</h2>
+                                <p>Hi</p>
                             </div>
-                            <p>13%</p>
                         </div>
-                        <div class="search-result__info">
-                            <div class="search-result__right-upper-container">
-                                <h2>23</h2>
+                        <div class="search-result__right-container">
+                            <div class="search-result__info">
+                                <div class="search-result__right-upper-container">
+                                    <img src="https://placekitten.com/30/30" alt="">
+                                </div>
+                                <p>13%</p>
                             </div>
-                            <p>following</p>
-                        </div>
-                        <div class="search-result__info">
-                            <div class="search-result__right-upper-container">
-                                <h2>23</h2>
+                            <div class="search-result__info">
+                                <div class="search-result__right-upper-container">
+                                    <h2>23</h2>
+                                </div>
+                                <p>following</p>
                             </div>
-                            <p>follower</p>
-                        </div>
-                    </div>    
-                </div>
-            </a>
-            <!-- for end -->
+                            <div class="search-result__info">
+                                <div class="search-result__right-upper-container">
+                                    <h2>23</h2>
+                                </div>
+                                <p>follower</p>
+                            </div>
+                        </div>    
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </main>
-
+<script src="{% static 'js/search.js' %}"></script>
 {% endblock %}

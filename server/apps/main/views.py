@@ -156,8 +156,19 @@ def check_todo(request):
 
 
 #---선우 작업---#
+
+@csrf_exempt
+def search_users(request):
+    if request.method == 'POST':
+        req = json.loads(request.body)
+        search_content = req['search_content']
+        filtered_users = User.objects.all().filter(name__contains=search_content)
+
+    return JsonResponse({'filtered_users':filtered_users})
+
 def search(request):
-    return render(request, 'main/search.html')
+    users = User.objects.all()
+    return render(request, 'main/search.html',{'users':users})
 
 def settings(request):
     return render(request, 'main/settings.html')
