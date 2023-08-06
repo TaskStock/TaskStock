@@ -9,8 +9,6 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from django.utils import timezone
-
 from .models import Value, Category
 
 def login(request):
@@ -52,22 +50,6 @@ def signup1(request):
 
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth.login(request, user)
-
-            today = timezone.now()
-
-            Value.objects.create(
-                user=user,
-                date=today,
-                percentage=0,
-                start=50000,
-                end=0,
-                low=0,
-                high=0,
-                combo=0,
-            )
-            Category.objects.create(
-                user=user,
-            )
 
             return redirect('/signup/step2/')
         else:
