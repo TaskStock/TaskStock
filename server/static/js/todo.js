@@ -5,10 +5,23 @@ level_stars.forEach(star => {
         level = star.getAttribute('level');
         paintStar(level);
         document.querySelector('.todo-error').style.display = 'none';
+        document.querySelector('.todo-error').style.display = 'none';
     }
 )})
 function paintStar(level){
     document.querySelectorAll('.sel-todo-level i').forEach(star => {
+        if (star.getAttribute('level') <= level){
+            star.classList.remove('fa-regular');
+            star.classList.add('fa-solid');
+        } else{
+            star.classList.remove('fa-solid');
+            star.classList.add('fa-regular');
+        }
+    })
+}
+function epaintStar(todo_id, level){
+    const editCon = document.querySelector(`.todo-edit-${todo_id}`);
+    editCon.querySelectorAll('.edit-todo-level i').forEach(star => {
         if (star.getAttribute('level') <= level){
             star.classList.remove('fa-regular');
             star.classList.add('fa-solid');
@@ -60,7 +73,6 @@ const handleAddTodo = async(date_id) => {
     } 
 }
 
-
 const handleTodoResponse = async(date_id, todo_id, level, content) => {
     document.querySelector('.todo-list-cont').innerHTML +=  `
     <div class="todo-item day${date_id}-todo${todo_id}">
@@ -87,6 +99,14 @@ const handleTodoResponse = async(date_id, todo_id, level, content) => {
                 <i class="fa-regular fa-star" level="5"></i>
             </div>
             <i class="gg-edit-markup" onclick="handleEditInput(${todo_id})"></i>
+            <div class="edit-todo-level" curr-level="${level}">
+                <i class="fa-regular fa-star" level="1"></i>
+                <i class="fa-regular fa-star" level="2"></i>
+                <i class="fa-regular fa-star" level="3"></i>
+                <i class="fa-regular fa-star" level="4"></i>
+                <i class="fa-regular fa-star" level="5"></i>
+            </div>
+            <i class="gg-edit-markup" onclick="handleEditInput(${todo_id})"></i>
             <i class="gg-trash" onclick="handleDeleteTodo(${todo_id})"></i>
         </div>
         <div class="todo-more todo-more-${todo_id}" onclick="handleMore(${todo_id})">
@@ -94,7 +114,6 @@ const handleTodoResponse = async(date_id, todo_id, level, content) => {
         </div>
     </div>
     `;
-
 
 }   
 
@@ -153,7 +172,15 @@ const handleCheck = async(todo_id) => {
 
 
 
+
+
+
+
+
 // more
+let updated_level = 0;
+let edited_star = false;
+const handleMore = async(todo_id) => {
 let updated_level = 0;
 let edited_star = false;
 const handleMore = async(todo_id) => {
@@ -170,12 +197,41 @@ const handleMore = async(todo_id) => {
     
     
 
+    
+    const content_container = document.querySelector(`.todo-input-cont-${todo_id}`);
+    const content = content_container.querySelector(`input`);
+    
+    
+
     if (more_btn.classList.contains('active')){
         more_container.style.display = 'none';
         more_btn.classList.remove('active');
         more_btn_i.classList.remove('gg-check');
         more_btn_i.classList.add('gg-more-alt');
         prev_level.style.display = 'flex';
+        content.readOnly = true;
+        content.blur();
+        // content_container.style.borderBottom = 'none';
+        if (edited_star === true){
+            curr_level = updated_level
+            // 초기화 
+            updated_level = 0;
+            edited_star = false;
+        }
+        const curr_content = content.value;
+
+        // ajax        
+        const url = `/main/update_todo/${todo_id}/`;
+        const res = await fetch(url, {
+            method: 'POST', 
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({todo_id, curr_level, curr_content}),
+        })
+        
+        const {t_id: t_id, c_level: c_level, c_content: c_content} = await res.json();
+        handleUpdateTodoRes(t_id, c_level, c_content);
         content.readOnly = true;
         content.blur();
         // content_container.style.borderBottom = 'none';
@@ -217,6 +273,10 @@ const handleMore = async(todo_id) => {
                 epaintStar(todo_id, updated_level);
                 edited_star = true;
                 
+                updated_level = star.getAttribute('level');
+                epaintStar(todo_id, updated_level);
+                edited_star = true;
+                
             }
         )})
     }
@@ -237,7 +297,7 @@ function handleEditInput(todo_id){
     const content = container.querySelector(`input`);
     content.readOnly = false;
     content.focus();
-    // container.style.borderBottom = '2px solid var(--green_400)';
+    // container.style.borderBottom = '2px solid var(—green_400)';
 
     // 커서 뒤로
     let prev_value = content.value;
