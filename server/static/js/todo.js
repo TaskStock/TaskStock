@@ -60,7 +60,6 @@ const handleAddTodo = async(date_id) => {
     } 
 }
 
-
 const handleTodoResponse = async(date_id, todo_id, level, content) => {
     document.querySelector('.todo-list-cont').innerHTML +=  `
     <div class="todo-item day${date_id}-todo${todo_id}">
@@ -94,7 +93,6 @@ const handleTodoResponse = async(date_id, todo_id, level, content) => {
         </div>
     </div>
     `;
-
 
 }   
 
@@ -237,7 +235,7 @@ function handleEditInput(todo_id){
     const content = container.querySelector(`input`);
     content.readOnly = false;
     content.focus();
-    // container.style.borderBottom = '2px solid var(--green_400)';
+    // container.style.borderBottom = '2px solid var(—green_400)';
 
     // 커서 뒤로
     let prev_value = content.value;

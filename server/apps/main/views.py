@@ -214,7 +214,7 @@ Todo 삭제 하는 함수
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
 """
 @csrf_exempt
-def delete_todo(request):
+def delete_todo(request, pk):
     if request.method == 'POST':
         req = json.loads(request.body)
         todo_id = req['todo_id']
