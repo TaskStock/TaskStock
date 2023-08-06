@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -69,5 +70,5 @@ class Todo(models.Model):
     goal_check = models.BooleanField()
     level = models.IntegerField()
 
-    created_time = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     finish_time = models.DateTimeField(null=True)
