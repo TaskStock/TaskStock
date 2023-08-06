@@ -21,7 +21,8 @@ class User(AbstractUser):
     # null=True를 넣을 수 없어 최소 한명을 설정해야하나?
     # 만약 그렇다면 자기자신으로 설정하여 해결
     # 추후에 오류 발생하면 생각
-    followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
+    # 검색 기능 완성 시 다시 개발
+    # followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
     def __str__(self):
         return self.username
