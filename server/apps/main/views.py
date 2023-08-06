@@ -326,6 +326,7 @@ def days_since_joined(user):
 차트로 보낼 data준비하는 함수
 """
 def values_for_chart(user, term):
+    kst = pytz.timezone('Asia/Seoul')
     max_date = days_since_joined(user)  #int
     #db에 UTC기준으로 저장되어있으니까 now()사용
     utc_datetime = timezone.now()
@@ -365,7 +366,7 @@ def values_for_chart(user, term):
 
             # 이 범위를 사용하여 Value 객체를 필터링합니다.
             latest_value = Value.objects.filter(user=user, date__range=(previous_date_start, previous_date_end)).first()
-
+            #missing_date의 UST기준 날짜 넣는데 이건 또 kst로 들어가서 ust로 바꿔줌
             Value.objects.create(
                 user=user,
                 date=missing_date + timedelta(days=1),
@@ -381,7 +382,8 @@ def values_for_chart(user, term):
     values = Value.objects.filter(user=user, date__range=(start_datetime, utc_datetime))
     print(values)
     values = list(values)
-    dataset = [[int(value.date.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()*1000), value.start, value.high, value.low, value.end] for value in values]
+    
+    dataset = [[int((value.date.replace(hour=0, minute=0, second=0, microsecond=0)+timedelta(days=1)).timestamp()*1000), value.start, value.high, value.low, value.end] for value in values]
         
     return dataset
 
