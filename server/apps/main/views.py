@@ -11,6 +11,8 @@ import pytz
 from django.contrib.auth.hashers import check_password
 from django.contrib import auth
 
+from django.core.exceptions import ObjectDoesNotExist
+
 """
 사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update //만드는 중
 할일 추가 함수 //만듬
@@ -128,10 +130,37 @@ def follower_list(request):
     }
     return render(request, 'main/settings.html', context=ctx)
 
+def createValue(user):
+    last_value=Value.objects.filter(user=user).order_by('-date').first()
+    # 마지막 생성된 value 기준으로 새로운 value 값들을 계산하는 로직 필요
+    # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
+    percentage=0
+    start=50000
+    end=0
+    low=0
+    high=0
+    combo=0
+    value = Value.objects.create(
+        user=user,
+        date=timezone.now(),
+        percentage=percentage,
+        start=start,
+        end=end,
+        low=low,
+        high=high,
+        combo=combo,
+    )
+    return value
+
 # ---환희 작업---#
 
 def home(request):
-    value = get_todayValue()
+    current_user = request.user
+    value = get_todayValue(current_user)
+    if value is None:
+        # 로그인 했을 때 value가 없는 경우
+        value = createValue(request.user)
+        
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
     
@@ -153,7 +182,7 @@ def time():
 """
 오늘 자정이랑 다음날 자정까지의 value객체 가져오는 함수 
 """
-def get_todayValue():
+def get_todayValue(user):
     # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
     today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
     print(today_date)
@@ -164,7 +193,10 @@ def get_todayValue():
     end_date = start_date + timezone.timedelta(days=1)
     print(end_date)
     # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
-    value_object = Value.objects.get(date__gte=start_date, date__lt=end_date)
+    try:
+        value_object = Value.objects.get(user=user, date__gte=start_date, date__lt=end_date)
+    except ObjectDoesNotExist:
+        value_object = None
         
     return value_object
 
@@ -183,7 +215,7 @@ def add_todo(request):
         current_user = request.user
         
         #date 일치하는 value 객체 가져오기
-        value = get_todayValue()
+        value = get_todayValue(current_user)
         
         #현재 user의 todolist 객체 가져오기
         category = Category.objects.get(user=current_user)
@@ -221,14 +253,15 @@ def delete_todo(request, pk):
         
         todo = Todo.objects.get(pk=todo_id)
         #todo 삭제하기 전 연결된 value의 high값 업데이트
-        # todo.value.high -= 1000*todo.level
+        todo.value.high -= 1000*todo.level
         #todo 삭제하기 전 연결된 value의 low값 업데이트
-        # todo.value.low += 1000*todo.level
+        todo.value.low += 1000*todo.level
         #저장
-        # todo.value.save()
+        todo.value.save()
         #todo삭제
         todo.delete()
-        value = get_todayValue()
+        current_user=request.user
+        value = get_todayValue(current_user)
         
     return JsonResponse({'id':todo_id, 'd_id': value.id})
 
@@ -263,7 +296,7 @@ def check_todo(request, pk):
         #해당되는 Todo 객체 가져오기
         todo = Todo.objects.get(pk=todo_id)
         #오늘의 value 가져오기
-        # value = todo.value
+        value = todo.value
         
         #status에 따라 goal_check와 value의 end값 업데이트
         if todo_status == 'checked':
