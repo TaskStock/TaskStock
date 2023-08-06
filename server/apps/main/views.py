@@ -3,14 +3,19 @@ from .models import *
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime, timedelta
 from django.utils import timezone
+import pytz
+
+
+# 비밀번호 변경 위한 라이브러리
+from django.contrib.auth.hashers import check_password
+from django.contrib import auth
 
 """
-사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update
-할일 추가 함수
-할일 삭제 함수
-체크 상태에 따라 가치 계산하는 함수
+사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update //만드는 중
+할일 추가 함수 //만듬
+할일 삭제 함수 //만듬
+체크 상태에 따라 가치 계산하는 함수 //만듬
 난이도 변경에 따라 가치 계산하는 함수
 할일 수정 함수
 팔로잉 검색하는 함수
@@ -80,6 +85,31 @@ def update_language(request):
 
     return JsonResponse({"result": True})
 
+@csrf_exempt
+def change_password(request):
+    current_password = request.POST.get("current-password")
+
+    user=request.user
+    if user.is_authenticated:
+        if check_password(current_password,user.password):
+            new_password = request.POST.get("new-password")
+            new_password_check = request.POST.get("new-password-check")
+            if new_password == new_password_check:
+                user.set_password(new_password)
+                user.save()
+                auth.login(request,user, backend='django.contrib.auth.backends.ModelBackend')
+                result=0
+            else:
+                result=2
+        else:
+            result=1
+    else:
+        result=-1
+        
+    # result
+    # 0 : 정상적으로 변경됨, 1 : 현재 비밀번호와 다름, 2 : 새로운 비밀번호 확인이 틀림
+    return JsonResponse({"result": result})
+
 def following_list(request):
     user=request.user
     followings = user.followings.all()
@@ -103,8 +133,9 @@ def follower_list(request):
 def home(request):
     value = get_todayValue()
     todos = Todo.objects.filter(value=value)
+    date_id = value.pk
     
-    return render(request, 'main/home.html', {'date_id':value.id, 'todos':todos})
+    return render(request, 'main/home.html', {'date_id':date_id, 'todos':todos})
 
 def hello(request):
     context = {
@@ -113,23 +144,30 @@ def hello(request):
     return render(request, 'base.html', context=context)
 
 #---세원 작업---#
+#시간 디버깅용 함수
+def time():
+    print(timezone.now())   #UTC 기준으로 가져옴
+    print(timezone.localtime()) #Asia/Seoul 기준으로 가져옴
+
 
 """
-오늘 06:00:00이랑 다음날 06:00:00까지의 value객체 가져오는 함수 
+오늘 자정이랑 다음날 자정까지의 value객체 가져오는 함수 
 """
-from datetime import datetime, timedelta
-
 def get_todayValue():
-    # 현재 시간을 가져온 후, 오늘 날짜의 06:00:00으로 설정
-    #today_date = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
-    today_date = timezone.localtime().replace(hour=6, minute=0, second=0, microsecond=0)
-    # start_date는 오늘 날짜의 06:00:00
-    start_date = today_date
-    # end_date는 start_date에서 1일 후 (즉, 내일의 06:00:00)
+    # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
+    today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
+    print(today_date)
+    # start_date는 오늘 날짜의 자정(DB에 UTC 기준으로 저장되어 있으니까 UTC로 변환)
+    start_date = today_date.astimezone(pytz.UTC)
+    print(start_date)
+    # end_date는 start_date에서 1일 후 (UTC로 변환)
     end_date = start_date + timezone.timedelta(days=1)
+    print(end_date)
     # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
     value_object = Value.objects.get(date__gte=start_date, date__lt=end_date)
+        
     return value_object
+
 
 """
 Todo 추가 하는 함수
@@ -176,7 +214,7 @@ Todo 삭제 하는 함수
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
 """
 @csrf_exempt
-def delete_todo(request, pk):
+def delete_todo(request):
     if request.method == 'POST':
         req = json.loads(request.body)
         todo_id = req['todo_id']
@@ -248,9 +286,23 @@ def check_todo(request, pk):
         return JsonResponse({'color':color, 'value':value, 'todo':todo})
 
 
+
+
 #---선우 작업---#
+
 def search(request):
-    return render(request, 'main/search.html')
+    search_content = request.GET.get('search_content','')
+    users = User.objects.all()
+    filtered_users = users
+    if search_content:
+        filtered_users = User.objects.all().filter(name__contains=search_content)
+
+    ctx = {
+        'users': users,
+        'filtered_users': filtered_users,
+    }
+
+    return render(request, 'main/search.html',context=ctx)
 
 # def settings(request):
 #     return render(request, 'main/settings.html')

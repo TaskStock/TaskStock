@@ -60,6 +60,7 @@ const handleAddTodo = async(date_id) => {
     } 
 }
 
+
 const handleTodoResponse = async(date_id, todo_id, level, content) => {
     document.querySelector('.todo-list-cont').innerHTML +=  `
     <div class="todo-item day${date_id}-todo${todo_id}">
@@ -93,6 +94,7 @@ const handleTodoResponse = async(date_id, todo_id, level, content) => {
         </div>
     </div>
     `;
+
 
 }   
 

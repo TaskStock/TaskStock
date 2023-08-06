@@ -35,7 +35,7 @@
         // const csrftoken = $("[name=csrfmiddlewaretoken]").val();
         // formData.append('csrfmiddlewaretoken', csrftoken);
 
-        const url = "/email_validation/"
+        const url = "/email_validation/";
         const res = await fetch(url, {
             method:"POST",
             headers:{},
@@ -47,14 +47,15 @@
     const sendCodeResponse = (validation, email_code, email) => {
         const emailInput = document.querySelector('#email');
         const errorMessageElement = document.querySelector('#error-message');
+
+        errorMessageElement.textContent = ''; // 오류 메시지 초기화
+        emailInput.classList.remove('error');
         
         if(validation){
             errorMessageElement.textContent = '올바른 이메일 형식이 아닙니다.';
             emailInput.classList.add('error');
             // 오류 발생했을 때 error 클래스 css 추가 필요
         }else{
-            errorMessageElement.textContent = ''; // 오류 메시지 초기화
-            emailInput.classList.remove('error');
             check_code=email_code;
             check_email=email;
         }
@@ -67,7 +68,7 @@
         formData.append('check_code', check_code);
         formData.append('check_email', check_email);
 
-        const url = "/signup/step2/"
+        const url = "/signup/step2/";
         const res = await fetch(url, {
             method:"POST",
             headers:{},
