@@ -234,21 +234,38 @@ def delete_todo(request):
         
     return JsonResponse({'id':todo_id, 'd_id': value.id})
 
+@csrf_exempt
+def update_todo(request, pk):
+    if request.method == "POST":
+        req = json.loads(request.body)
+        todo_id = req['todo_id']
+        updated_level = req['curr_level']
+        updated_content = req['curr_content']
+        todo = Todo.objects.get(pk=todo_id)
+        todo.level = updated_level
+        todo.content = updated_content
+
+        todo.save()
+
+    return JsonResponse({'t_id': todo_id, 'c_level': updated_level, 'c_content': updated_content})
+
+
+
 
 """
 할일 완료에 체크 표시/해제 -> 가치 등락 계산 -> end, percentage 업데이트
 """
 @csrf_exempt
-def check_todo(request):
+def check_todo(request, pk):
     if request.method == "POST":
         req = json.loads(request.body)
-        todo_id = req['id']
+        todo_id = req['todo_id']
         todo_status = req['status']
         
         #해당되는 Todo 객체 가져오기
-        todo = Todo.objects.get(id=todo_id)
+        todo = Todo.objects.get(pk=todo_id)
         #오늘의 value 가져오기
-        value = todo.value
+        # value = todo.value
         
         #status에 따라 goal_check와 value의 end값 업데이트
         if todo_status == 'checked':

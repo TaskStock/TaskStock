@@ -128,7 +128,16 @@
     background-color: transparent;
     width: 100%;
     height: 100%;
-
+}
+.todo-input-cont input{
+    margin-right: var(--gutter);
+}
+.todo-input-cont input:focus{
+    border-radius: var(--border-r);
+    background-color: var(--green_100);
+    border: 1px solid var(--green_200);
+    box-shadow: rgba(17, 171, 73, 0.1) 0px 1px 2px, 
+    rgba(17, 171, 73, 0.1) 0px 0px 0px 1px;
 }
 
 .todo-input-cont{
@@ -165,8 +174,9 @@
     color: var(--grey_bg);
     --ggs: 1.5;
 }
-.todo-checkbox.active i{
+.todo-checkbox.active .gg-check{
     display: block;
+    color: var(--grey_bg);
 }
 .todo-edit{
     display: flex;
@@ -178,12 +188,17 @@
 .todo-edit i{
     cursor: pointer;
 }
-.gg-check{
+.todo-more .gg-check{
     --ggs: 1.5;
     color: var(--green_400);
 }
 
-
+.todo-error{
+    font-size: var(--caption);
+    color: var(--red_error);
+    margin: 0 0 var(--gutter) var(--gutter);
+    display: none;
+}
 
 
 
