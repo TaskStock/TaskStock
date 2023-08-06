@@ -356,6 +356,8 @@ def values_for_chart(user, term):
     missing_dates = list(all_dates - value_dates) #set으로 차집합 구하고 list로 변환
     missing_dates.sort() #날짜순으로 정렬
     print('없는 datetime:', missing_dates)
+    
+    #없는 날짜가 있는경우
     if missing_dates:
         for missing_date in missing_dates:
             latest_value = Value.objects.get(user=user, date=missing_date - timedelta(days=1))
@@ -369,12 +371,11 @@ def values_for_chart(user, term):
                 high=latest_value.end,
                 combo=latest_value.combo,
             )
-    else:
-        pass    
+
     #새로 만든 value들 포함해서 가져오기
     values = Value.objects.filter(user=user, date__range=(start_datetime, utc_datetime))
     values = list(values)
-    dataset = [[int(value.date.timestamp()*1000), value.start, value.high, value.low, value.end] for value in values]
+    dataset = [[int(value.date.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()*1000), value.start, value.high, value.low, value.end] for value in values]
         
     return dataset
 
