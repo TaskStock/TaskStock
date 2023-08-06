@@ -109,6 +109,14 @@ main{
 }
 .main__todo{
     flex-grow: 1;
+    
+}
+.main__todo--month{
+    display: flex;
+    justify-content: center;
+    font-size: var(--heading2);
+    font-weight: 600;
+    margin-bottom: 26px;
 }
 .main__box{
     border-radius: var(--border-r);
@@ -154,6 +162,7 @@ body{
 }
 .menu-right{
     transition: 1s;
+    width: 0;
 }
 .menu-right__hamburger{
     z-index: 1000;
