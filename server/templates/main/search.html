@@ -4,7 +4,7 @@
     <div class="search-container">
         <div class="search-form-container">
             <form action="/main/search/" class="search-form" method="GET">
-                <input type="text" placeholder="Search" name="search_content">
+                <input type="text" placeholder="Search" name="search_content" id="search_content">
                 <button type="submit">
                     <i class="gg-search"></i>
                 </button>
@@ -92,4 +92,34 @@
         </div>
     </div>
 </main>
+{% endblock %}
+
+{% block extra %}
+<script>
+    // 검색 창에 입력할 때마다 ajax로 유저 목록
+    // document.addEventListener("DOMContentLoaded", function(){
+    //     const textarea = document.querySelector("#search_content");
+
+    //     textarea.addEventListener("input", function () {
+            
+    //     });
+    // });
+    
+    // const introduceUpdate = async (event) =>{
+    // event.preventDefault();
+
+    // const formData = new FormData(event.target);
+    // const introduceArea = document.querySelector('#proflie-description');
+    // formData.append('proflie-description', introduceArea.value);
+
+    // const url = "/main/settings/update_introduce/";
+    // const res = await fetch(url, {
+    //     method:"POST",
+    //     headers:{},
+    //     body: formData,
+    // });
+    // const {result: result} = await res.json();
+    
+    // }
+</script>
 {% endblock %}
