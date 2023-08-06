@@ -11,6 +11,8 @@ import pytz
 from django.contrib.auth.hashers import check_password
 from django.contrib import auth
 
+from django.core.exceptions import ObjectDoesNotExist
+
 """
 사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update //만드는 중
 할일 추가 함수 //만듬
@@ -128,11 +130,37 @@ def follower_list(request):
     }
     return render(request, 'main/settings.html', context=ctx)
 
+def createValue(user):
+    last_value=Value.objects.filter(user=user).order_by('-date').first()
+    # 마지막 생성된 value 기준으로 새로운 value 값들을 계산하는 로직 필요
+    # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
+    percentage=0
+    start=50000
+    end=0
+    low=0
+    high=0
+    combo=0
+    value = Value.objects.create(
+        user=user,
+        date=timezone.now(),
+        percentage=percentage,
+        start=start,
+        end=end,
+        low=low,
+        high=high,
+        combo=combo,
+    )
+    return value
+
 # ---환희 작업---#
 
 def home(request):
     current_user = request.user
     value = get_todayValue(current_user)
+    if value is None:
+        # 로그인 했을 때 value가 없는 경우
+        value = createValue(request.user)
+        
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
     
@@ -165,7 +193,10 @@ def get_todayValue(user):
     end_date = start_date + timezone.timedelta(days=1)
     print(end_date)
     # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
-    value_object = Value.objects.get(user=user, date__gte=start_date, date__lt=end_date)
+    try:
+        value_object = Value.objects.get(user=user, date__gte=start_date, date__lt=end_date)
+    except ObjectDoesNotExist:
+        value_object = None
         
     return value_object
 

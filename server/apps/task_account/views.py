@@ -5,6 +5,14 @@ from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import SignupForm
 
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+from django.utils import timezone
+
+from .models import Value, Category
+
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
@@ -45,6 +53,22 @@ def signup1(request):
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth.login(request, user)
 
+            today = timezone.now()
+
+            Value.objects.create(
+                user=user,
+                date=today,
+                percentage=0,
+                start=50000,
+                end=0,
+                low=0,
+                high=0,
+                combo=0,
+            )
+            Category.objects.create(
+                user=user,
+            )
+
             return redirect('/signup/step2/')
         else:
             
@@ -59,9 +83,6 @@ def signup1(request):
         }
         return render(request, template_name='account/signup1.html', context=ctx)
 
-import json
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def signup2(request):
