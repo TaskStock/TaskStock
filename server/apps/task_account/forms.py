@@ -12,14 +12,6 @@ class SignupForm(UserCreationForm):
             }
         )
     )
-    name = forms.CharField(
-        label='닉네임',
-        widget=forms.TextInput(
-            attrs={
-                'class' : 'signup-input'
-            }
-        )
-    )
     password1 = forms.CharField(
         label='비밀번호',
         widget=forms.PasswordInput(
@@ -36,6 +28,14 @@ class SignupForm(UserCreationForm):
             }
         )
     )
+    name = forms.CharField(
+        label='닉네임',
+        widget=forms.TextInput(
+            attrs={
+                'class' : 'signup-input'
+            }
+        )
+    )
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['username', 'password1', 'password2', 'name']

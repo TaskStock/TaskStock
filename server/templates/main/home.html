@@ -74,18 +74,44 @@
                 </div>
             </div>
             <div class="main__todo--lists">
-                <div class="list__btn" onclick="handleAdd({{ date_id }}, {{ todo.pk }})"><i class="gg-math-plus"></i></div>
-                <!-- form? -->
+                <div class="list__input-cont">
+                    <input type="text" name="day{{date_id}}--todo" class="day{{date_id}}--todo" placeholder="Write a todo here" autofocus>
+                    <div class="sel-todo-level">
+                        <i class="fa-regular fa-star" level="1"></i>
+                        <i class="fa-regular fa-star" level="2"></i>
+                        <i class="fa-regular fa-star" level="3"></i>
+                        <i class="fa-regular fa-star" level="4"></i>
+                        <i class="fa-regular fa-star" level="5"></i>
+                    </div>
+                    <div class="list__btn" onclick="handleAddTodo({{ date_id }})"><i class="gg-math-plus"></i></div>
+                </div>
                 <div class="list__list-cont">
-                    <div class="todo-list-cont">
+                    <div class="todo-list-cont">                   
                         {% for todo in todos %}
                         <div class="todo-item day{{date_id}}-todo{{todo.id}}">
                             <div class="todo-checkbox" data-status="{{todo.goal_check}}" onclick="handleCheck(event)">
                                 <i class="gg-check"></i>
                             </div>
-                            <input type="text" class="todo-content" value="{{todo.content}} {{todo.goal_check}} {{todo.level}}">
-                            <div class="todo-more" onclick="handleDeleteTodo({{todo.pk}})">
-                                <i class="gg-erase"></i>
+                            <div class="todo-input-cont">
+                                <input type="text" class="todo-content" value="{{todo.content}}" readonly>
+                                <div class="todo-level todo-level-{{todo.pk}}">
+                                    <i class="fa-solid fa-star"></i>
+                                    <div>{{todo.level}}</div>
+                                </div>
+                            </div>
+                            <div class="todo-edit todo-edit-{{todo.pk}}">
+                                <div class="edit-todo-level" curr-level="{{todo.level}}">
+                                    <i class="fa-regular fa-star" level="1"></i>
+                                    <i class="fa-regular fa-star" level="2"></i>
+                                    <i class="fa-regular fa-star" level="3"></i>
+                                    <i class="fa-regular fa-star" level="4"></i>
+                                    <i class="fa-regular fa-star" level="5"></i>
+                                </div>
+                                <i class="gg-edit-markup"></i>
+                                <i class="gg-trash" onclick="handleDeleteTodo({{todo.pk}})"></i>
+                            </div>
+                            <div class="todo-more todo-more-{{todo.pk}}" onclick="handleMore({{todo.pk}})">
+                                <i class="gg-more-alt"></i>
                             </div>
                         </div>
 

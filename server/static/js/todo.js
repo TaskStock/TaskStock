@@ -1,111 +1,31 @@
-
-// // const handleBlur = () => {
-// //     const todoContent = document.querySelector('.todo-content');
-// //     if (!todoContent.value.trim()) {
-// //         this.parentNode.remove();
-// //     }
-// // }
-// // const todo_items = document.querySelectorAll('todo-item');
-
-// // custom element - todo
-// class TodoItem extends HTMLElement {
-//     constructor() {
-//         super();
-//     }
-//     connectedCallback() {
-//         this.render();
-//         const todoContent = document.querySelector('.todo-content');
-//         todoContent.addEventListener('blur', this.handleBlur);
-//     }
-//     static get observedAttributes() {
-//         return ['content', 'level', 'status', 'date'];
-//     }
-//     attributeChangedCallback(atrb, oldV, newV) {
-//         if (atrb === 'content'){
-//             this.render();
-//             // ajax 값 보내기 
-//         }
-//     }
-    
-//     render(){
-//         // innerHTML 구성
-
-//         const todo_checkbox = document.createElement('div');
-//         todo_checkbox.classList.add('todo-checkbox');
-//         // todo_checkbox.onclick = addTodoHandler;
-
-//         const todo_ci = document.createElement('i');
-//         todo_ci.classList.add('gg-check');
-//         todo_checkbox.appendChild(todo_ci);
-
-//         const todo_content = document.createElement('input');
-//         todo_content.classList.add('todo-content');
-//         todo_content.type = "text";
-        
-//         const todo_more = document.createElement('div');
-//         todo_more.classList.add('todo-more');
-
-//         const todo_i = document.createElement('i');
-//         todo_i.classList.add('gg-more-alt');
-
-//         todo_more.appendChild(todo_i);
-
-//         this.appendChild(todo_checkbox);
-//         this.appendChild(todo_content);
-//         this.appendChild(todo_more);
-//         this.classList.add('todo-item');
-       
-        
-        
-        
-//         // const todo = this.getAttribute('content');
-//         // todo_content.value = `${todo}`;
-
-
-//         // 임시 remove 버튼
-//         const removeBtn = this.querySelector('.todo-more');
-//         removeBtn.addEventListener('click', () => {
-//             this.remove();
-//         });
-
-//         // checked or unchecked
-//         const checkBox = this.querySelector('.todo-checkbox');
-//         checkBox.addEventListener('click', () => {
-//             checkBox.classList.toggle('active');
-//         })
-//     }
-// }
-// customElements.define("todo-item", TodoItem);
-
-
-
-
-// add todo
-const handleAdd = (date_id) => {
-    document.querySelector('.todo-list-cont').innerHTML +=  `
-    <div class="todo-item day${date_id}">
-        <div class="todo-checkbox new-todo-checkbox" data-status="False" onclick="handleCheck(event)">
-            <i class="gg-check"></i>
-        </div>
-        <input type="text" class="todo-content" onblur="handleTodo()">
-        <div class="todo-more">
-            <i class="gg-erase"></i>
-        </div>
-    </div>
-    `;
-    let inputTag = document.querySelector('.todo-item:last-child input');
-    inputTag.focus();
-    
+let level = '0';
+const level_stars = document.querySelectorAll('.sel-todo-level i');
+level_stars.forEach(star => {
+    star.addEventListener('click', () => {
+        level = star.getAttribute('level');
+        paintStar(level);
+    }
+)})
+function paintStar(level){
+    document.querySelectorAll('.sel-todo-level i').forEach(star => {
+        if (star.getAttribute('level') <= level){
+            star.classList.remove('fa-regular');
+            star.classList.add('fa-solid');
+        } else{
+            star.classList.remove('fa-solid');
+            star.classList.add('fa-regular');
+        }
+    })
 }
 
-
-const handleTodo = async() => {
+const handleAddTodo = async(date_id) => {
     const url = '/main/add_todo/';
-    let inputTag = document.querySelector('.todo-item:last-child input');
+    let inputTag = document.querySelector('.list__input-cont input');
     let inputVal = inputTag.value;
 
-    const data = { content: inputVal };
-    if (inputVal !== ''){
+
+    const data = { content: inputVal, level: parseInt(level)};
+    if (inputVal !== '' && level !== '0'){
         const res = await fetch(url, {
             method: 'POST', 
             headers: {
@@ -113,25 +33,35 @@ const handleTodo = async() => {
             },
             body: JSON.stringify(data),
         })
-        const {date_id: date_id, todo_id: todo_id, content: content} = await res.json();
-        handleTodoResponse(date_id, todo_id, content);
-        document.querySelector('.new-todo-checkbox').parentNode.remove();
-    }else{
-        inputTag.parentNode.remove();
+        const {date_id: date_id, todo_id: todo_id, my_level: my_level, content: content} = await res.json();
+        handleTodoResponse(date_id, todo_id, my_level, content);
+        document.querySelector(`.day${date_id}--todo`).value = '';
+        level = '0';
+        paintStar('0');
     }
 }
 
 
-const handleTodoResponse = async(date_id, todo_id, content) => {
+const handleTodoResponse = async(date_id, todo_id, level, content) => {
     document.querySelector('.todo-list-cont').innerHTML +=  `
     <div class="todo-item day${date_id}-todo${todo_id}">
     <div class="todo-item day${date_id}-todo${todo_id}">
-        <div class="todo-checkbox" data-status="False" onclick="handleCheck(event)">
+        <div class="todo-checkbox" data-status="todo.goal_check" onclick="handleCheck(event)">
             <i class="gg-check"></i>
         </div>
-        <input type="text" class="todo-content" value="${content}">
-        <div class="todo-more" onclick="handleDeleteTodo(${todo_id})">
-            <i class="gg-erase"></i>
+        <div class="todo-input-cont">
+            <input type="text" class="todo-content" value="${content}" readonly>
+            <div class="todo-level todo-level-${todo_id}">
+                <i class="fa-solid fa-star"></i>
+                <div>${level}</div>
+            </div>
+        </div>
+        <div class="todo-edit todo-edit-${todo_id}">
+            <i class="gg-edit-markup"></i>
+            <i class="gg-trash" onclick="handleDeleteTodo(${todo_id})"></i>
+        </div>
+        <div class="todo-more todo-more-${todo_id}" onclick="handleMore(${todo_id})">
+            <i class="gg-more-alt"></i>
         </div>
     </div>
     `;
@@ -168,4 +98,51 @@ function handleCheck(event) {
     console.log(event.target);
 
 }
+function epaintStar(todo_id, level){
+    const editCon = document.querySelector(`.todo-edit-${todo_id}`);
+    editCon.querySelectorAll('.edit-todo-level i').forEach(star => {
+        if (star.getAttribute('level') <= level){
+            star.classList.remove('fa-regular');
+            star.classList.add('fa-solid');
+        } else{
+            star.classList.remove('fa-solid');
+            star.classList.add('fa-regular');
+        }
+    })
+}
+// more
+function handleMore(todo_id){
+    const more_container = document.querySelector(`.todo-edit-${todo_id}`);
+    const more_btn = document.querySelector(`.todo-more-${todo_id}`);
+    const more_btn_i = more_btn.querySelector('i');
+    const prev_level = document.querySelector(`.todo-level-${todo_id}`);
+    let curr_level = more_container.querySelector('.edit-todo-level').getAttribute('curr-level');
+    epaintStar(todo_id, curr_level);
+    if (more_btn.classList.contains('active')){
+        more_container.style.display = 'none';
+        more_btn.classList.remove('active');
+        more_btn_i.classList.remove('gg-check');
+        more_btn_i.classList.add('gg-more-alt');
+        prev_level.style.display = 'flex';
 
+        
+    }else{
+        more_container.style.display = 'flex';
+        more_btn.classList.add('active');
+        more_btn_i.classList.remove('gg-more-alt');
+        more_btn_i.classList.add('gg-check');
+        prev_level.style.display = 'none';
+
+        
+
+        // level
+        const elevel_stars = more_container.querySelectorAll('.edit-todo-level i');
+        elevel_stars.forEach(star => {
+            star.addEventListener('click', () => {
+                level = star.getAttribute('level');
+                epaintStar(todo_id, level);
+            }
+        )})
+
+    }
+}

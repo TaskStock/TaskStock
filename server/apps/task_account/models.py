@@ -5,7 +5,25 @@ from django.utils import timezone
 class User(AbstractUser):
     first_name=None
     last_name=None
-    name = models.CharField(max_length=30, default="닉네임")
+    name = models.CharField(max_length=30, default="닉네임을 설정하세요")
+    introduce = models.CharField(max_length=50, null=True, blank=True)
+    email_alarm = models.BooleanField(null=True, default=False)
+
+    # false = public, true = private
+    hide = models.BooleanField(null=True, default=False)
+
+    LANGUAGE_CHOICES=(
+        ('KR', '한국어'),
+        ('EN', 'English'),
+    )
+    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, null=True, default='KR')
+
+    # 팔로잉/팔로워
+    # null=True를 넣을 수 없어 최소 한명을 설정해야하나?
+    # 만약 그렇다면 자기자신으로 설정하여 해결
+    # 추후에 오류 발생하면 생각
+    # 검색 기능 완성 시 다시 개발
+    # followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
     def __str__(self):
         return self.username

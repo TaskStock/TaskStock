@@ -7,6 +7,10 @@ from django.utils import timezone
 import pytz
 
 
+# 비밀번호 변경 위한 라이브러리
+from django.contrib.auth.hashers import check_password
+from django.contrib import auth
+
 """
 사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update //만드는 중
 할일 추가 함수 //만듬
@@ -21,6 +25,108 @@ import pytz
 
 # Create your views here.
 # ---정근 작업---#
+
+def settings(request):
+    user=request.user
+    # 한 유저가 다른 유저의 프로필을 방문했을 때의 경우도 설계해야함
+    
+    ctx ={ 
+        'user':user,
+    }
+    return render(request, 'main/settings.html', context=ctx)
+
+@csrf_exempt
+def update_introduce(request):
+    introduce = request.POST.get("proflie-description")
+
+    user=request.user
+    user.introduce=introduce
+    user.save()
+
+    return JsonResponse({"result": True})
+
+@csrf_exempt
+def update_emailalarm(request):
+    emailalarm = request.POST.get("radio")
+
+    if emailalarm=="alarm-set":
+        alarm=True
+    elif emailalarm=="alarm-reset":
+        alarm=False
+
+    user=request.user
+    user.email_alarm=alarm
+    user.save()
+
+    return JsonResponse({"result": True})
+
+@csrf_exempt
+def update_hide(request):
+    hiderange = request.POST.get("radio")
+
+    if hiderange=="public":
+        hide=False
+    elif hiderange=="private":
+        hide=True
+
+    user=request.user
+    user.hide=hide
+    user.save()
+
+    return JsonResponse({"result": True})
+
+@csrf_exempt
+def update_language(request):
+    language = request.POST.get("radio")
+
+    user=request.user
+    user.language=language
+    user.save()
+
+    return JsonResponse({"result": True})
+
+@csrf_exempt
+def change_password(request):
+    current_password = request.POST.get("current-password")
+
+    user=request.user
+    if user.is_authenticated:
+        if check_password(current_password,user.password):
+            new_password = request.POST.get("new-password")
+            new_password_check = request.POST.get("new-password-check")
+            if new_password == new_password_check:
+                user.set_password(new_password)
+                user.save()
+                auth.login(request,user, backend='django.contrib.auth.backends.ModelBackend')
+                result=0
+            else:
+                result=2
+        else:
+            result=1
+    else:
+        result=-1
+        
+    # result
+    # 0 : 정상적으로 변경됨, 1 : 현재 비밀번호와 다름, 2 : 새로운 비밀번호 확인이 틀림
+    return JsonResponse({"result": result})
+
+def following_list(request):
+    user=request.user
+    followings = user.followings.all()
+
+    ctx ={ 
+        'followings':followings,
+    }
+    return render(request, 'main/settings.html', context=ctx)
+
+def follower_list(request):
+    user=request.user
+    followers = user.followers.all()
+
+    ctx ={ 
+        'followers':followers,
+    }
+    return render(request, 'main/settings.html', context=ctx)
 
 # ---환희 작업---#
 
@@ -72,7 +178,7 @@ def add_todo(request):
     if request.method == 'POST':
         req = json.loads(request.body)
         content = req['content']
-        level = req['level']
+        my_level = req['level']
         #현재 user 객체 가져오기
         current_user = request.user
         
@@ -87,23 +193,22 @@ def add_todo(request):
             value = value,
             category=category,
             content=content,
-            level=level,
+            level=my_level,
             goal_check=False,
         )
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
         #todo의 high값 업데이트
-        value.low += level*1000
+        value.low += my_level*1000
         
         #todo의 low값 업데이트
-        value.high -= level*1000
+        value.high -= my_level*1000
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
 
-        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'content': content})
-
+        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content})
 """
 Todo 삭제 하는 함수
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
@@ -167,8 +272,20 @@ def check_todo(request):
 
 
 #---선우 작업---#
-def search(request):
-    return render(request, 'main/search.html')
 
-def settings(request):
-    return render(request, 'main/settings.html')
+def search(request):
+    search_content = request.GET.get('search_content','')
+    users = User.objects.all()
+    filtered_users = users
+    if search_content:
+        filtered_users = User.objects.all().filter(name__contains=search_content)
+
+    ctx = {
+        'users': users,
+        'filtered_users': filtered_users,
+    }
+
+    return render(request, 'main/search.html',context=ctx)
+
+# def settings(request):
+#     return render(request, 'main/settings.html')

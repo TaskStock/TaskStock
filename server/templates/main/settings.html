@@ -44,14 +44,15 @@
                         <div class="settings-detail__profile-container">
                             <img src="https://placekitten.com/100/100" alt="">
                             <div class="settings-detail__description-container">
-                                <h3>User</h3>
+                                <h3>{{ user.name }}</h3>
                                 <a href="">Change profile picture</a>
                             </div>
                         </div>
-                        <form action="" class="profile-description__form">
+                        <form onsubmit="introduceUpdate(event)" class="profile-description__form">
+                            {% csrf_token %}
                             <div class="profile-description__textarea">
                                 <label for="proflie-description">소개</label>
-                                <textarea name="proflie-description" id="proflie-description" cols="40" rows="5" placeholder="50자 이내로 입력"></textarea>
+                                <textarea name="proflie-description" id="proflie-description" cols="40" rows="5" placeholder="50자 이내로 입력">{% if user.introduce %}{{ user.introduce }}{% endif %}</textarea>
                                 <p>0/50</p>
                             </div>
                             <button type="submit">Done</button>
@@ -63,12 +64,13 @@
                     <div class="settings-detail__container">
                         <h3>Email</h3>
                         <form action="" class="email-alarm__form">
+                            {% csrf_token %}
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="alarm-set" checked />
+                                <input type="radio" name="radio_answer" value="alarm-set" onchange="updateEmailAlarm(this)" {% if user.email_alarm %} checked {% endif %} />
                                 <label>설정</label>
                             </div>
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="alarm-reset" id="radio" />
+                                <input type="radio" name="radio_answer" value="alarm-reset" onchange="updateEmailAlarm(this)" {% if not user.email_alarm %} checked {% endif %} />
                                 <label>해제</label>
                             </div>
                         </form>
@@ -78,14 +80,15 @@
                     <h1 id="public-private">Switch to private</h1>
                     <div class="settings-detail__container">
                         <form action="" class="public-private__form">
+                            {% csrf_token %}
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="public" checked />
+                                <input type="radio" name="radio_answer" value="public" onchange="updateHide(this)" {% if not user.hide %} checked {% endif %} />
                                 <label>public</label>
                             </div>
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="private" id="radio" />
+                                <input type="radio" name="radio_answer" value="private" onchange="updateHide(this)" {% if user.hide %} checked {% endif %} />
                                 <label>private</label>
-                            </div>
+                            </div>                            
                         </form>
                     </div>      
                 </div>
@@ -93,21 +96,36 @@
                     <h1 id="language">Language</h1>
                     <div class="settings-detail__container">
                         <form action="" class="language__form">
+                            {% csrf_token %}
+                            {% if user.language == 'KR' %}
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="korean" checked />
+                                <input type="radio" name="radio_answer" value="KR" onchange="updateLanguage(this)" checked />
                                 <label>한국어</label>
                             </div>
                             <div class="radio__set">
-                                <input type="radio" name="radio_answer" value="englist" id="radio" />
+                                <input type="radio" name="radio_answer" value="EN" onchange="updateLanguage(this)" />
                                 <label>English</label>
                             </div>
+                            {% elif user.language == 'EN' %}
+                            <div class="radio__set">
+                                <input type="radio" name="radio_answer" value="KR" onchange="updateLanguage(this)" />
+                                <label>한국어</label>
+                            </div>
+                            <div class="radio__set">
+                                <input type="radio" name="radio_answer" value="EN" onchange="updateLanguage(this)" checked />
+                                <label>English</label>
+                            </div>
+                            {% endif %}
+                            
                         </form>
                     </div>      
                 </div>
+                {% if not user.socialaccount_set.exists %}
                 <div class="settings-detail__set-password settings-detail-element">
                     <h1 id="reset-password">비밀번호 바꾸기</h1>
                     <div class="settings-detail__container">
-                        <form action="" class="reset-password__form">
+                        <form onsubmit="changePassword(event)" class="reset-password__form">
+                            {% csrf_token %}
                             <div class="reset-password__comtainer">
                                 <label for="current-password">현재 비밀번호</label>
                                 <input type="password" name="current-password" id="current-password">
@@ -120,13 +138,138 @@
                                 <label for="new-password-check">새 비밀번호 확인</label>
                                 <input type="password" name="new-password-check" id="new-password-check">
                             </div>
+                            <div id="cpw-error-message" style="color: red;"></div>
+                            <div id="cpw-success-message" style="color: lightgreen;"></div>
                             <button type="submit">완료</button>
                         </form>
                     </div>      
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
 </main>
 
+{% endblock %}
+
+
+
+{% block extra %}
+<script>
+    // 소개란 수정 시 ajax 처리
+    const introduceUpdate = async (event) =>{
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const introduceArea = document.querySelector('#proflie-description');
+    formData.append('proflie-description', introduceArea.value);
+
+    const url = "/main/settings/update_introduce/";
+    const res = await fetch(url, {
+        method:"POST",
+        headers:{},
+        body: formData,
+    });
+    const {result: result} = await res.json();
+    
+    }
+
+    // 이메일 알람 ajax 처리
+    const updateEmailAlarm = async (inputElement) =>{
+        const value = inputElement.value;
+        const formData = new FormData();
+        formData.append("radio",value);
+
+        const url = "/main/settings/update_emailalarm/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {result: result} = await res.json();
+    
+    }
+
+    // 계정 공개 여부 ajax 처리
+    const updateHide = async (inputElement) =>{
+        const value = inputElement.value;
+        const formData = new FormData();
+        formData.append("radio",value);
+
+        const url = "/main/settings/update_hide/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {result: result} = await res.json();
+    
+    }
+
+    // 계정 공개 여부 ajax 처리
+    const updateLanguage = async (inputElement) =>{
+        const value = inputElement.value;
+        const formData = new FormData();
+        formData.append("radio",value);
+
+        const url = "/main/settings/update_language/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {result: result} = await res.json();
+    
+    }
+
+    // 비밀번호 변경 ajax
+    const changePassword = async (event) =>{
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+        const url = "/main/settings/change_password/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {result} = await res.json();
+        changepwError(result);
+    }
+    const changepwError = (result) => {
+        const current_input = document.querySelector('#current-password');
+        const new_input = document.querySelector('#new-password');
+        const new_check_input = document.querySelector('#new-password-check');
+        const errorMessageCodeElement = document.querySelector('#cpw-error-message');
+        const successMessageCodeElement = document.querySelector('#cpw-success-message');
+
+        errorMessageCodeElement.textContent = '';
+        successMessageCodeElement.textContent = '';
+        current_input.classList.remove('error');
+        current_input.classList.remove('success');
+        new_input.classList.remove('error');
+        new_input.classList.remove('success');
+        new_check_input.classList.remove('error');
+        new_check_input.classList.remove('success');
+        
+        if(result==-1){
+            errorMessageCodeElement.textContent = '유효하지 않은 사용자입니다.';
+        }
+        else if(result==0){
+            successMessageCodeElement.textContent = '비밀번호가 변경되었습니다!';
+            current_input.classList.add('success');
+            new_input.classList.add('success');
+            new_check_input.classList.add('success');
+        }else if(result==1){
+            errorMessageCodeElement.textContent = '현재 비밀번호와 다릅니다.';
+            current_input.classList.add('error');
+        }else if(result==2){
+            errorMessageCodeElement.textContent = '비밀번호가 틀립니다.';
+            new_input.classList.add('error');
+            new_check_input.classList.add('error');
+        }
+    }
+    
+</script>
 {% endblock %}
