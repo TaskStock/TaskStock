@@ -30,7 +30,7 @@ class User(AbstractUser):
 
 class Value(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='value_user')
-    date = models.DateTimeField(auto_created=True, auto_now_add=True)
+    date = models.DateTimeField()
     percentage = models.FloatField()
     start = models.IntegerField()
     end = models.IntegerField(null=True, default=0)

@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import pytz
+from datetime import timedelta
 
 
 # 비밀번호 변경 위한 라이브러리
@@ -155,20 +156,23 @@ def time():
 오늘 자정이랑 다음날 자정까지의 value객체 가져오는 함수 
 """
 def get_todayValue(user):
-    # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
-    today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
-    print(today_date)
-    # start_date는 오늘 날짜의 자정(DB에 UTC 기준으로 저장되어 있으니까 UTC로 변환)
-    start_date = today_date.astimezone(pytz.UTC)
-    print(start_date)
-    # end_date는 start_date에서 1일 후 (UTC로 변환)
-    end_date = start_date + timezone.timedelta(days=1)
-    print(end_date)
-    # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
-    value_object = Value.objects.get(user=user, date__gte=start_date, date__lt=end_date)
-        
-    return value_object
-
+    try:
+        # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
+        today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
+        print(today_date)
+        # start_date는 오늘 날짜의 자정(DB에 UTC 기준으로 저장되어 있으니까 UTC로 변환)
+        start_date = today_date.astimezone(pytz.UTC)
+        print(start_date)
+        # end_date는 start_date에서 1일 후 (UTC로 변환)
+        end_date = start_date + timezone.timedelta(days=1)
+        print(end_date)
+        # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
+        value_object = Value.objects.get(user=user, date__gte=start_date, date__lt=end_date)
+            
+        return value_object
+    except:
+        print('get_todayValue()에서 error: value가 없거나 두개 이상임')
+    
 
 """
 Todo 추가 하는 함수
@@ -250,8 +254,6 @@ def update_todo(request, pk):
     return JsonResponse({'t_id': todo_id, 'c_level': updated_level, 'c_content': updated_content})
 
 
-
-
 """
 할일 완료에 체크 표시/해제 -> 가치 등락 계산 -> end, percentage 업데이트
 """
@@ -270,10 +272,10 @@ def check_todo(request, pk):
         #status에 따라 goal_check와 value의 end값 업데이트
         if todo_status == 'checked':
             todo.goal_check = True
-            value.end = value.start + 1000*todo.level
+            value.end += 1000*todo.level
         else:
             todo.goal_check = False
-            value.end = value.start - 1000*todo.level
+            value.end -= 1000*todo.level
         
         #value의 percentage값 업데이트
         value.percentage = int((value.end-value.start)/value.start *100)
@@ -287,8 +289,62 @@ def check_todo(request, pk):
         
         return JsonResponse({'color':color, 'value':value, 'todo':todo})
 
+#유저의 최초회원가입 날짜로부터 경과한 날짜 반환하는 함수
+def days_since_joined(user):
+    delta = timezone.now() - user.date_joined
+    return delta.days   #int자료형으로 반환
 
 
+"""
+차트로 보낼 data준비하는 함수
+"""
+def values_for_chart(request, term):
+    user = request.user
+    max_date = days_since_joined(user)  #int
+    
+    # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
+    today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
+    # utc_date는 오늘 날짜의 자정(DB에 UTC 기준으로 저장되어 있으니까 UTC로 변환)
+    utc_date = today_date.astimezone(pytz.UTC)
+    
+    #회원가입 후 지난 기간 == 유저의 최대 value 개수
+    #유저의 최대 value개수가 프론트에서 요청한 term보다 적을 경우 그냥 최대 value개수 만큼만 보냄
+    if max_date < term:
+        start =  utc_date - timedelta(days=term)#원래는 days=max_date
+    #그렇지 않을 경우 요청한 term만큼의 value데이터 보냄(비어있는 date의 value는 만들어서)
+    else:
+        start = utc_date - timedelta(days=term)
+    
+    #모든 날짜 집합
+    all_dates = {start + timedelta(days=i) for i in range((utc_date-start).days)}
+    
+    #이미 존재하는 날짜
+    #value객체 필터링
+    range_values = Value.objects.filter(user=user, date__range=(start, utc_date))
+    #value객체에서 datetime만 뽑아오기
+    value_dates = set(range_values.values_list('date', utc_date))
+    
+    #없는 날짜 처리
+    missing_dates = list(all_dates - value_dates) #set으로 차집합 구하고 list로 변환
+    missing_dates.sort() #날짜순으로 정렬
+    
+    for missing_date in missing_dates:
+        latest_value = Value.objects.get(user=user, date=missing_date - timedelta(days=1))
+        Value.objects.create(
+            user=user,
+            date=missing_date,
+            percentage=0,
+            start=latest_value.end,
+            end=latest_value.end,
+            low=latest_value.end - 1000,
+            combo=latest_value.combo,
+        )
+    
+    #새로 만든 value들 포함해서 가져오기
+    values = Value.objects.filter(user=user, date__range=(start, utc_date))
+    values = list(values)
+    
+    print(values)
 
 #---선우 작업---#
 
