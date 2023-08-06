@@ -265,7 +265,7 @@ def check_todo(request, pk):
         #해당되는 Todo 객체 가져오기
         todo = Todo.objects.get(pk=todo_id)
         #오늘의 value 가져오기
-        # value = todo.value
+        value = todo.value
         
         #status에 따라 goal_check와 value의 end값 업데이트
         if todo_status == 'checked':
