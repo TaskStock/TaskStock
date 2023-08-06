@@ -75,7 +75,12 @@
             </div>
             <div class="main__todo--lists">
                 <div class="list__input-cont">
-                    <input type="text" name="day{{date_id}}--todo" class="day{{date_id}}--todo" placeholder="Write a todo here" autofocus>
+                    <input type="text" 
+                           name="day{{date_id}}--todo" 
+                           class="day{{date_id}}--todo" 
+                           placeholder="Write a todo here"
+                           onkeypress="if(event.keyCode==13) {handleAddTodo({{ date_id }})}" 
+                           autofocus>
                     <div class="sel-todo-level">
                         <i class="fa-regular fa-star" level="1"></i>
                         <i class="fa-regular fa-star" level="2"></i>
@@ -85,15 +90,22 @@
                     </div>
                     <div class="list__btn" onclick="handleAddTodo({{ date_id }})"><i class="gg-math-plus"></i></div>
                 </div>
+                <div class="todo-error">
+                    난이도를 선택하세요
+                </div>
                 <div class="list__list-cont">
                     <div class="todo-list-cont">                   
                         {% for todo in todos %}
                         <div class="todo-item day{{date_id}}-todo{{todo.pk}}">
-                            <div class="todo-checkbox" data-status="{{todo.goal_check}}" onclick="handleCheck(event)">
+                            <div class="todo-checkbox todo-checkbox-{{todo.pk}}" data-status="{{todo.goal_check}}" onclick="handleCheck({{todo.pk}})">
                                 <i class="gg-check"></i>
                             </div>
-                            <div class="todo-input-cont">
-                                <input type="text" class="todo-content" value="{{todo.content}}" readonly>
+                            <div class="todo-input-cont todo-input-cont-{{todo.pk}}">
+                                <input type="text" 
+                                       class="todo-content" 
+                                       value="{{todo.content}}" 
+                                       onkeypress="if(event.keyCode==13) {handleMore({{todo.pk}})}" 
+                                       readonly>
                                 <div class="todo-level todo-level-{{todo.pk}}">
                                     <i class="fa-solid fa-star"></i>
                                     <div>{{todo.level}}</div>
@@ -107,7 +119,7 @@
                                     <i class="fa-regular fa-star" level="4"></i>
                                     <i class="fa-regular fa-star" level="5"></i>
                                 </div>
-                                <i class="gg-edit-markup"></i>
+                                <i class="gg-edit-markup" onclick="handleEditInput({{todo.pk}})"></i>
                                 <i class="gg-trash" onclick="handleDeleteTodo({{todo.pk}})"></i>
                             </div>
                             <div class="todo-more todo-more-{{todo.pk}}" onclick="handleMore({{todo.pk}})">
