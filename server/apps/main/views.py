@@ -131,7 +131,8 @@ def follower_list(request):
 # ---환희 작업---#
 
 def home(request):
-    value = get_todayValue()
+    current_user = request.user
+    value = get_todayValue(current_user)
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
     
@@ -153,7 +154,7 @@ def time():
 """
 오늘 자정이랑 다음날 자정까지의 value객체 가져오는 함수 
 """
-def get_todayValue():
+def get_todayValue(user):
     # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
     today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
     print(today_date)
@@ -164,7 +165,7 @@ def get_todayValue():
     end_date = start_date + timezone.timedelta(days=1)
     print(end_date)
     # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
-    value_object = Value.objects.get(date__gte=start_date, date__lt=end_date)
+    value_object = Value.objects.get(user=user, date__gte=start_date, date__lt=end_date)
         
     return value_object
 
@@ -183,7 +184,7 @@ def add_todo(request):
         current_user = request.user
         
         #date 일치하는 value 객체 가져오기
-        value = get_todayValue()
+        value = get_todayValue(current_user)
         
         #현재 user의 todolist 객체 가져오기
         category = Category.objects.get(user=current_user)
@@ -221,14 +222,15 @@ def delete_todo(request):
         
         todo = Todo.objects.get(pk=todo_id)
         #todo 삭제하기 전 연결된 value의 high값 업데이트
-        # todo.value.high -= 1000*todo.level
+        todo.value.high -= 1000*todo.level
         #todo 삭제하기 전 연결된 value의 low값 업데이트
-        # todo.value.low += 1000*todo.level
+        todo.value.low += 1000*todo.level
         #저장
-        # todo.value.save()
+        todo.value.save()
         #todo삭제
         todo.delete()
-        value = get_todayValue()
+        current_user=request.user
+        value = get_todayValue(current_user)
         
     return JsonResponse({'id':todo_id, 'd_id': value.id})
 
