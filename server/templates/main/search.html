@@ -3,9 +3,9 @@
 <main class="search-main">
     <div class="search-container">
         <div class="search-form-container">
-            <form action="/" method="GET" class="search-form">
-                <input type="text" placeholder="Search">
-                <button type="submit" onclick="onClickSearch()">
+            <form action="/main/search/" class="search-form" method="GET">
+                <input type="text" placeholder="Search" name="search_content">
+                <button type="submit">
                     <i class="gg-search"></i>
                 </button>
             </form>
@@ -54,14 +54,14 @@
             <div class="search-label">
                 <h3>검색 결과</h3>
             </div>
-            <div class="search-result Scroll">
-                {% for user in users %}
+            <div class="search-result Scroll" id="search-users__result-container">
+                {% for filtered_user in filtered_users %}
                 <a href="/">
                     <div class="search-result__container">
                         <div class="search-result__right--container">
                             <img src="https://placekitten.com/50/50" alt="user image">
                             <div class="search-result__name-container">
-                                <h2>{{user.name}}</h2>
+                                <h2>{{filtered_user.name}}</h2>
                                 <p>Hi</p>
                             </div>
                         </div>
@@ -92,5 +92,4 @@
         </div>
     </div>
 </main>
-<script src="{% static 'js/search.js' %}"></script>
 {% endblock %}

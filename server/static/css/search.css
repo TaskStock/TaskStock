@@ -122,7 +122,7 @@
     border: 1px solid var(--green_100);
 }
 
-.search-result__container > img {
+.search-result__right--container > img {
     width: 70px;
     height: 70px;
     border-radius: 50%;
