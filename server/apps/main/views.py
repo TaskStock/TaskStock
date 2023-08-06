@@ -6,6 +6,10 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta
 from django.utils import timezone
 
+# 비밀번호 변경 위한 라이브러리
+from django.contrib.auth.hashers import check_password
+from django.contrib import auth
+
 """
 사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update
 할일 추가 함수
@@ -79,6 +83,31 @@ def update_language(request):
     user.save()
 
     return JsonResponse({"result": True})
+
+@csrf_exempt
+def change_password(request):
+    current_password = request.POST.get("current-password")
+
+    user=request.user
+    if user.is_authenticated:
+        if check_password(current_password,user.password):
+            new_password = request.POST.get("new-password")
+            new_password_check = request.POST.get("new-password-check")
+            if new_password == new_password_check:
+                user.set_password(new_password)
+                user.save()
+                auth.login(request,user, backend='django.contrib.auth.backends.ModelBackend')
+                result=0
+            else:
+                result=2
+        else:
+            result=1
+    else:
+        result=-1
+        
+    # result
+    # 0 : 정상적으로 변경됨, 1 : 현재 비밀번호와 다름, 2 : 새로운 비밀번호 확인이 틀림
+    return JsonResponse({"result": result})
 
 def following_list(request):
     user=request.user

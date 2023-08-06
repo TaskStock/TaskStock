@@ -18,6 +18,9 @@
     --green_700: #388E3C;
     --green_800: #2E7D32;
     --green_900: #1B5E20;
+
+    /* 회원가입 실패 css */
+    --red: #d30808;
     
     /* grey */
     --grey_bg: #FBFBFA;
@@ -177,4 +180,9 @@ main{
 }
 .login-form td input{
     margin-bottom: var(--gutter);
+}
+
+/* 회원가입 실패 css */
+.error{
+    border: 1px solid var(--red) !important;
 }
