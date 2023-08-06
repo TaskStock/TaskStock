@@ -136,7 +136,7 @@ def createValue(user):
     # 마지막 생성된 value 기준으로 새로운 value 값들을 계산하는 로직 필요
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
     percentage=0
-    start=50000
+    start_datetime=50000
     end=0
     low=0
     high=0
@@ -145,7 +145,7 @@ def createValue(user):
         user=user,
         date=timezone.now(),
         percentage=percentage,
-        start=start,
+        start_datetime=start_datetime,
         end=end,
         low=low,
         high=high,
@@ -165,7 +165,9 @@ def home(request):
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
     
-    return render(request, 'main/home.html', {'date_id':date_id, 'todos':todos})
+    #데이터
+    dataset = values_for_chart(current_user, 5)
+    return render(request, 'main/home.html', {'date_id':date_id, 'todos':todos, 'dataset':dataset})
 
 def hello(request):
     context = {
@@ -187,14 +189,14 @@ def get_todayValue(user):
     # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
     today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
     print(today_date)
-    # start_date는 오늘 날짜의 자정(DB에 UTC 기준으로 저장되어 있으니까 UTC로 변환)
-    start_date = today_date.astimezone(pytz.UTC)
-    print(start_date)
-    # end_date는 start_date에서 1일 후 (UTC로 변환)
-    end_date = start_date + timezone.timedelta(days=1)
+    # start_datetime_date는 오늘 날짜의 자정(DB에 UTC 기준으로 저장되어 있으니까 UTC로 변환)
+    start_datetime_date = today_date.astimezone(pytz.UTC)
+    print(start_datetime_date)
+    # end_date는 start_datetime_date에서 1일 후 (UTC로 변환)
+    end_date = start_datetime_date + timezone.timedelta(days=1)
     print(end_date)
     # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
-    value_object = Value.objects.get(user=user, date__gte=start_date, date__lt=end_date)
+    value_object = Value.objects.get(user=user, date__gte=start_datetime_date, date__lt=end_date)
         
     return value_object
 
@@ -303,7 +305,7 @@ def check_todo(request, pk):
             value.end -= 1000*todo.level
         
         #value의 percentage값 업데이트
-        value.percentage = int((value.end-value.start)/value.start *100)
+        value.percentage = int((value.end-value.start_datetime)/value.start_datetime *100)
         if value.percentage > 0:
             color = 'blue'
         else:
@@ -323,53 +325,58 @@ def days_since_joined(user):
 """
 차트로 보낼 data준비하는 함수
 """
-def values_for_chart(request, term):
-    user = request.user
+def values_for_chart(user, term):
     max_date = days_since_joined(user)  #int
-    
-    # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
-    today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
-    # utc_date는 오늘 날짜의 자정(DB에 UTC 기준으로 저장되어 있으니까 UTC로 변환)
-    utc_date = today_date.astimezone(pytz.UTC)
-    
+    #db에 UTC기준으로 저장되어있으니까 now()사용
+    utc_datetime = timezone.now()
+    print('utc_datetime:', utc_datetime)
+
     #회원가입 후 지난 기간 == 유저의 최대 value 개수
     #유저의 최대 value개수가 프론트에서 요청한 term보다 적을 경우 그냥 최대 value개수 만큼만 보냄
     if max_date < term:
-        start =  utc_date - timedelta(days=term)#원래는 days=max_date
+        start_datetime =  utc_datetime - timedelta(days=term)#원래는 days=max_date
+        print('start_datetime', start_datetime)
     #그렇지 않을 경우 요청한 term만큼의 value데이터 보냄(비어있는 date의 value는 만들어서)
     else:
-        start = utc_date - timedelta(days=term)
+        start_datetime = utc_datetime - timedelta(days=term)
+        print('start_datetime', start_datetime)
     
-    #모든 날짜 집합
-    all_dates = {start + timedelta(days=i) for i in range((utc_date-start).days)}
+    #사용자가 요청한 범위의 date
+    all_dates = {start_datetime.date() + timedelta(days=i) for i in range(1, term+1)}
+    print('사용자가 요청한 datetime:', all_dates)
     
     #이미 존재하는 날짜
     #value객체 필터링
-    range_values = Value.objects.filter(user=user, date__range=(start, utc_date))
+    range_values = Value.objects.filter(user=user, date__range=(start_datetime, utc_datetime))
     #value객체에서 datetime만 뽑아오기
-    value_dates = set(range_values.values_list('date', utc_date))
+    value_dates = set(d.date() for d in range_values.values_list('date', flat=True))
+    print('db에 있는 datetime:', value_dates)
     
     #없는 날짜 처리
     missing_dates = list(all_dates - value_dates) #set으로 차집합 구하고 list로 변환
     missing_dates.sort() #날짜순으로 정렬
-    
-    for missing_date in missing_dates:
-        latest_value = Value.objects.get(user=user, date=missing_date - timedelta(days=1))
-        Value.objects.create(
-            user=user,
-            date=missing_date,
-            percentage=0,
-            start=latest_value.end,
-            end=latest_value.end,
-            low=latest_value.end - 1000,
-            combo=latest_value.combo,
-        )
-    
+    print('없는 datetime:', missing_dates)
+    if missing_dates:
+        for missing_date in missing_dates:
+            latest_value = Value.objects.get(user=user, date=missing_date - timedelta(days=1))
+            Value.objects.create(
+                user=user,
+                date=missing_date,
+                percentage=0,
+                start_datetime=latest_value.end,
+                end=latest_value.end,
+                low=latest_value.end - 1000,
+                high=latest_value.end,
+                combo=latest_value.combo,
+            )
+    else:
+        pass    
     #새로 만든 value들 포함해서 가져오기
-    values = Value.objects.filter(user=user, date__range=(start, utc_date))
+    values = Value.objects.filter(user=user, date__range=(start_datetime, utc_datetime))
     values = list(values)
-    
-    print(values)
+    dataset = [[int(value.date.timestamp()*1000), value.start, value.high, value.low, value.end] for value in values]
+        
+    return dataset
 
 #---선우 작업---#
 
