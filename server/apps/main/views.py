@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import pytz
-from datetime import timedelta
+from datetime import timedelta, datetime, time
 
 
 # 비밀번호 변경 위한 라이브러리
@@ -345,7 +345,7 @@ def values_for_chart(user, term):
     all_dates = {start_datetime.date() + timedelta(days=i) for i in range(1, term+1)}
     print('사용자가 요청한 datetime:', all_dates)
     
-    #이미 존재하는 날짜
+    #이미 db에 존재하는 date들
     #value객체 필터링
     range_values = Value.objects.filter(user=user, date__range=(start_datetime, utc_datetime))
     #value객체에서 datetime만 뽑아오기
@@ -360,12 +360,17 @@ def values_for_chart(user, term):
     #없는 날짜가 있는경우
     if missing_dates:
         for missing_date in missing_dates:
-            latest_value = Value.objects.get(user=user, date=missing_date - timedelta(days=1))
+            previous_date_start = datetime.combine(missing_date - timedelta(days=1), datetime.min.time())
+            previous_date_end = datetime.combine(missing_date - timedelta(days=1), datetime.max.time())
+
+            # 이 범위를 사용하여 Value 객체를 필터링합니다.
+            latest_value = Value.objects.filter(user=user, date__range=(previous_date_start, previous_date_end)).first()
+
             Value.objects.create(
                 user=user,
-                date=missing_date,
+                date=missing_date + timedelta(days=1),
                 percentage=0,
-                start_datetime=latest_value.end,
+                start=latest_value.end,
                 end=latest_value.end,
                 low=latest_value.end - 1000,
                 high=latest_value.end,
@@ -374,6 +379,7 @@ def values_for_chart(user, term):
 
     #새로 만든 value들 포함해서 가져오기
     values = Value.objects.filter(user=user, date__range=(start_datetime, utc_datetime))
+    print(values)
     values = list(values)
     dataset = [[int(value.date.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()*1000), value.start, value.high, value.low, value.end] for value in values]
         
