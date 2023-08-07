@@ -256,7 +256,10 @@ def delete_todo(request, pk):
         value = get_value_for_date(current_user)
         
     return JsonResponse({'id':todo_id, 'd_id': value.id})
-
+"""
+Todo 업데이트 하는 함수
+content, level 업데이트 -> high, low 업데이트
+"""
 @csrf_exempt
 def update_todo(request, pk):
     if request.method == "POST":
@@ -264,11 +267,22 @@ def update_todo(request, pk):
         todo_id = req['todo_id']
         updated_level = req['curr_level']
         updated_content = req['curr_content']
+        
         todo = Todo.objects.get(pk=todo_id)
+        #value의 high, low add_todo실행 이전 값으로 돌리기 
+        todo.value.high -= todo.level * 1000
+        todo.value.low += todo.level *1000
+        
+        #todo 내용 update
         todo.level = updated_level
         todo.content = updated_content
-
+        
+        #value의 high, low updated_level 반영해서 다시 넣기
+        todo.value.high += updated_level * 1000
+        todo.value.low -= updated_level * 1000
+        
         todo.save()
+        todo.value.save()
 
     return JsonResponse({'t_id': todo_id, 'c_level': updated_level, 'c_content': updated_content})
 
@@ -297,7 +311,7 @@ def check_todo(request, pk):
             value.end -= 1000*todo.level
         
         #value의 percentage값 업데이트
-        value.percentage = int((value.end-value.start_datetime)/value.start_datetime *100)
+        value.percentage = int((value.end-value.start)/value.start *100)
         if value.percentage > 0:
             color = 'blue'
         else:
