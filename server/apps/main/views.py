@@ -337,8 +337,8 @@ def search(request):
 
     return render(request, 'main/search.html',context=ctx)
 
-def randing_page(request):
-    return render(request, 'main/randing_page.html')
+def landing_page(request):
+    return render(request, 'main/landing_page.html')
 
 # def settings(request):
 #     return render(request, 'main/settings.html')

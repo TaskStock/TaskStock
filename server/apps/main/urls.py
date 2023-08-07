@@ -17,6 +17,6 @@ urlpatterns = [
     path('settings/update_language/', update_language), # /main/settings/update_language/
     path('settings/change_password/', change_password), # /main/settings/change_password/
 
-    path('randing_page/', randing_page), # /main/randing_page/
+    path('landing_page/', landing_page), # /main/landing_page/
 ] 
 

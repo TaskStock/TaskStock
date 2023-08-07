@@ -11,6 +11,7 @@
   --heading1:min(11vh, min(15vw, 116px));
   --heading2:min(7vh, min(10.5vw, 72px));
   --heding3:min(5vh, min(7vw, 48px));
+  --body1:min(4vh, min(5vw, 28px));
   --paragraph: min(2.8vh, min(3.8vw, 16px));
 }
 
@@ -130,6 +131,28 @@ main {
   opacity: 0.8;
 }
 
+.page-rule__header >h1 {
+  font-size: var(--heading1);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  padding: var(--padding);
+}
+
+.page-rule__content > h2 {
+  font-size: var(--heading2);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  padding: var(--padding);
+}
+
+.page-rule__content > p {
+  font-size: var(--paragraph);
+  font-weight: 400;
+  line-height: 1.5;
+  padding: var(--padding);
+}
 /* container-box */
 #container-box {
   display: flex;
@@ -142,10 +165,12 @@ main {
   background-color: rgb(112, 105, 105);
 }
 
+
+
+/* introduction-rules */
 #introduction-rules {
   display: flex;
   position: relative;
-  flex-direction: column;
   min-height: 100vh;
   width: 100%;
   justify-content: flex-start;
@@ -153,6 +178,21 @@ main {
   background-color: rgb(204, 188, 188);
 }
 
+.page-rule__container {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--padding);
+  gap: var(--gutter);
+}
+
+.introduction-rules__image {
+  width: 50%;
+  height: 100%;
+  object-fit: contain;
+}
 /* footer */
 footer {
   background-color: var(--msk-bg);
