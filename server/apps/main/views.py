@@ -186,7 +186,6 @@ def time():
 user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으면 그날의 date 가져오는 함수
 """
 def get_value_for_date(user, target_date=None):
-    #현재 로컬 날짜를 가져옴
     if not target_date:
         target_date = timezone.localtime(timezone.now()).date()
         
@@ -314,7 +313,6 @@ def days_since_joined(user):
     delta = timezone.now() - user.date_joined
     return delta.days   #int자료형으로 반환
 
-
 """
 차트로 보낼 data준비하는 함수
 """
@@ -364,8 +362,7 @@ def values_for_chart(user, term):
     # 최종 데이터 가져오기
     values = Value.objects.filter(user=user, date__range=(start_date, kst_date)).order_by('date')
     print(values)
-
-    # assuming a mechanism to convert date to timestamp is present
+    
     dataset = [[date_to_timestamp(value.date), value.start, value.high, value.low, value.end] for value in values]
         
     return dataset
