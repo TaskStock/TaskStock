@@ -154,6 +154,20 @@ def createValue(user):
 
 # ---환희 작업---#
 
+# def home(request):
+#     current_user = request.user
+#     value = get_todayValue(current_user)
+#     if value is None:
+#         # 로그인 했을 때 value가 없는 경우
+#         value = createValue(request.user)
+        
+#     todos = Todo.objects.filter(value=value)
+#     date_id = value.pk
+    
+
+#     return render(request, 'main/home2.html', {'date_id':date_id, 'todos':todos})
+
+
 def home(request):
     current_user = request.user
     value = get_todayValue(current_user)
@@ -163,14 +177,26 @@ def home(request):
         
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
-    
-    return render(request, 'main/home.html', {'date_id':date_id, 'todos':todos})
 
-def hello(request):
+    todos_levels_dict = {}
+    for todo in todos:
+        todos_levels_dict[todo.id] = todo.level
+
+    todos_sub_dict = {}
+    for todo in todos:
+        todos_sub_dict[todo.pk] = 5 - todo.level
+
+    
+    #데이터
+    # dataset = values_for_chart(current_user, 7)
     context = {
-                
-            }
-    return render(request, 'base.html', context=context)
+        'todos_levels_dict': todos_levels_dict,
+        'date_id':date_id, 
+        'todos':todos,
+        'todos_sub_dict': todos_sub_dict,
+    }
+    return render(request, 'main/home2.html', context)
+
 
 #---세원 작업---#
 #시간 디버깅용 함수
@@ -339,3 +365,4 @@ def search(request):
 
 # def settings(request):
 #     return render(request, 'main/settings.html')
+

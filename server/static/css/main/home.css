@@ -1,0 +1,256 @@
+main{
+    display: flex;
+
+}
+.main-left{
+    width: 60%;
+    height: 100%;
+    border-right: 1px solid black;
+    padding: var(--gutter);
+    
+}
+.main-right{
+    width: 40%;
+    height: 100vh;
+    padding: 0 var(--gutter);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.main-right::-webkit-scrollbar {
+    display: none;
+}
+.main-right--container{
+    padding: var(--gutter) 0;
+}
+.chart-btn--container{
+    display: flex;
+    gap: var(--gutter);
+    justify-content: center;
+    align-items: center;
+}
+.chart-btn{
+    padding: 7px 10px;
+    border-radius: var(--border-r);
+    border: 1px solid white;
+    cursor: pointer;
+    font-size: var(--caption);
+    transition: var(--transition);
+}
+.chart-btn:hover{
+    border: 1px solid rgb(177, 176, 176);
+}
+.chart-btn.active{
+    border: 1px solid var(--bg-1);
+
+}
+.todo-plus--btn{
+    cursor: pointer;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    transition: var(--transition);
+}
+.todo-plus{
+    position: relative;
+
+}
+.todo-plus--btn:hover{
+    background-color: var(--bg-3);
+}
+.todo-plus--btn i{
+    font-size: 24px;
+
+}
+.todo-add--container{
+    background-color: var(--bg-1);
+    position: absolute;
+    border-radius: var(--border-r);
+    padding: var(--gutter);
+    color: white;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gutter);
+    display: flex;
+    transition: var(--transition);
+    opacity: 0;
+    visibility: hidden;
+    top: -125px;
+    z-index: 2000;
+}
+.todo-item--edit{
+    padding: var(--gutter);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+}
+
+
+.todo-plus.active .todo-add--container{
+    visibility: visible;
+    opacity: 1;
+}
+.todo-plus.active .todo-plus--btn{
+    transform: rotate(45deg);
+}
+.todo-add--container::before{
+    content: '';
+    position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-right-color: var(--bg-1);
+	border-left: 0;
+	margin-top: -20px;
+	margin-left: -20px;
+}
+.todo-add--input input,
+.todo-item--edit .todo-item--input input{
+    width: 100%;
+    color: white;
+    height: 34px;
+    border-radius: var(--border-r);
+    border: 1px solid white;
+    background-color: transparent;
+    padding: var(--gutter);
+    margin-top: 10px;
+    
+}
+.todo-add--date,
+.todo-item--date{
+    padding-top: var(--gutter);
+    font-size: var(--body1);
+    margin: auto;
+}
+.todo-add--input,
+.todo-item--input{
+    width: 100%;
+}
+.todo-add--input span,
+.todo-add--level span,
+.todo-item--input span,
+.todo-item--level span{
+    font-size: var(--caption);
+}
+.sel-todo-level,
+.edit-todo-level{
+    margin-top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    gap: 5px;
+}
+
+.sel-todo-level div,
+.edit-todo-level div{
+    width: 20px;
+    height: 28px;
+    border: 1px solid white;
+    border-radius: var(--border-r);
+
+}
+.sel-todo-level div.active,
+.edit-todo-level div.active{
+    background-color: var(--red-1);
+
+    border: none;
+}
+.todo-add--submit-btn,
+.todo-edit--submit-btn{
+    width: 100%;
+    height: 34px;
+    border-radius: var(--border-r);
+    border: 1px solid white;
+    padding: var(--gutter);
+    margin: var(--gutter) 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.todo-paint{
+    margin-top: var(--gutter);
+}
+.todo-item{
+    width: 100%;
+    box-shadow: var(--shadow);
+    border-radius: var(--border-r);
+    display: flex;
+    gap: 5px;
+    padding: 7px 10px;
+    margin-bottom: var(--gutter);
+    position: relative;
+    align-items: center;
+
+}
+.todo-checkbox{
+    width: 20px;
+    border: 2px solid var(--red-1);
+    border-radius: var(--border-r);
+    height: 28px;
+    flex-shrink: 0;
+
+}
+.todo-checkbox.done{
+    background-color: var(--red-1);
+}
+.todo-item input{
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;   
+    padding: 7px 10px;
+    font-size: var(--body2);
+
+}
+.todo-item--edit{
+    width: 400px;
+    /* height: 300px; */
+    background-color: var(--bg-1);
+    border-radius: var(--border-r);
+    position: absolute;  
+    left: 30px;
+    top: 80px;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+.todo-item--edit::before{
+    content: '';
+    position: absolute;
+	top: 0;
+	left: 20%;
+	width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-bottom-color: var(--bg-1);
+	border-top: 0;
+	margin-top: -20px;
+	margin-left: -20px;
+
+}
+.todo-item--edit.active{
+    opacity: 1;
+    visibility: visible;
+}
+.todo-level{
+    display: flex;
+    gap: 5px;
+}
+.todo-level div{
+    width: 7px;
+    height: 20px;
+    background-color: var(--bg-3);
+    border-radius: var(--border-r);
+}
+.todo-level div.active{
+    background-color: var(--red-1);
+}
+

@@ -99,10 +99,11 @@ import random
 import string
 
 from django.core.mail import EmailMessage
+import ssl
+# from django.core.mail.backends.smtp import EmailBackend
 
 @csrf_exempt
 def email_validation(request):
-
     email = request.POST.get("email")
 
     # 이메일 형식 검증
@@ -117,12 +118,23 @@ def email_validation(request):
     # 이메일 중복 허용할 것인지?
 
     code = ''.join(random.choices(string.digits, k=6))
-
+    # smtp_connection = EmailBackend(
+    #         host=EMAIL_HOST,
+    #         port=EMAIL_PORT,
+    #         username=EMAIL_HOST_USER,
+    #         password=EMAIL_HOST_PASSWORD,
+    #         use_tls=EMAIL_USE_TLS,
+    #         use_ssl=EMAIL_USE_SSL,
+    #     )
+    # context=ssl._create_unverified_context()
     # 이메일 보내기
+    ssl._create_default_https_context = ssl._create_unverified_context
     email_send = EmailMessage(
         'TaskStock 이메일 인증 코드',
         '안녕하세요! TaskStock에 오신 것을 환영합니다! 다음 인증 코드를 입력해주세요.\n'+code,
         to=[email],
+        # connection=None,
+        # context=context,
     )
     email_send.send()
 
