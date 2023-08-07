@@ -13,6 +13,8 @@ from django.contrib import auth
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from django.core import serializers
+
 """
 사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update //만드는 중
 할일 추가 함수 //만듬
@@ -111,6 +113,27 @@ def change_password(request):
     # result
     # 0 : 정상적으로 변경됨, 1 : 현재 비밀번호와 다름, 2 : 새로운 비밀번호 확인이 틀림
     return JsonResponse({"result": result})
+
+@csrf_exempt
+def search_ajax(request):
+    search_content = request.POST.get("text")
+
+    if search_content is not None:
+        find_users = User.objects.filter(name__contains=search_content).exclude(pk=request.user.pk)
+    else:
+        find_users = User.objects.all().exclude(pk=request.user.pk)
+
+    users=[]
+
+    for user in find_users:
+        user_data={
+            "name":user.name,
+            "introduce":user.introduce,
+            # 추후 필요한 필드 추가
+        }
+        users.append(user_data)
+
+    return JsonResponse({"users": users})
 
 def following_list(request):
     user=request.user
