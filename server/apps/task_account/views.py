@@ -23,8 +23,10 @@ def login(request):
             else:
                 return redirect('/main/')
         else:
+            error_message = "로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요."
             context = {
                 'form': form,
+                'error_message': error_message,
             }
             return render(request, 'account/login.html', context=context)
     else:

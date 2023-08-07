@@ -31,6 +31,9 @@
             </td>
             <td>
                 <input type="password" class="form-control" name="password" id="password">
+                {% if error_message %}
+                <div style="color: red;">{{ error_message }}</div>
+                {% endif %}
             </td>
             </tr>
             <tr>
