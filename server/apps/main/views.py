@@ -177,20 +177,6 @@ def createValue(user):
 
 # ---환희 작업---#
 
-# def home(request):
-#     current_user = request.user
-#     value = get_todayValue(current_user)
-#     if value is None:
-#         # 로그인 했을 때 value가 없는 경우
-#         value = createValue(request.user)
-        
-#     todos = Todo.objects.filter(value=value)
-#     date_id = value.pk
-    
-
-#     return render(request, 'main/home2.html', {'date_id':date_id, 'todos':todos})
-
-
 def home(request):
     current_user = request.user
     value = get_todayValue(current_user)
