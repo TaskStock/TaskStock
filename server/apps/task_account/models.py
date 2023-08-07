@@ -52,7 +52,7 @@ def user_created(sender, instance, created, **kwargs):
 
 class Value(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='value_user')
-    date = models.DateTimeField()
+    date = models.DateField()
     percentage = models.FloatField()
     start = models.IntegerField()
     end = models.IntegerField(null=True, default=0)

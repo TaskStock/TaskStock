@@ -157,7 +157,7 @@ def createValue(user):
 
 def home(request):
     current_user = request.user
-    value = get_todayValue(current_user)
+    value = get_value_for_date(current_user)
     if value is None:
         # 로그인 했을 때 value가 없는 경우
         value = createValue(request.user)
@@ -166,7 +166,7 @@ def home(request):
     date_id = value.pk
     
     #데이터
-    dataset = values_for_chart(current_user, 5)
+    dataset = values_for_chart(current_user, 7)
     return render(request, 'main/home.html', {'date_id':date_id, 'todos':todos, 'dataset':dataset})
 
 def hello(request):
@@ -183,21 +183,14 @@ def time():
 
 
 """
-오늘 자정이랑 다음날 자정까지의 value객체 가져오는 함수 
+user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으면 그날의 date 가져오는 함수
 """
-def get_todayValue(user):
-    # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
-    today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
-    print(today_date)
-    # start_datetime_date는 오늘 날짜의 자정(DB에 UTC 기준으로 저장되어 있으니까 UTC로 변환)
-    start_datetime_date = today_date.astimezone(pytz.UTC)
-    print(start_datetime_date)
-    # end_date는 start_datetime_date에서 1일 후 (UTC로 변환)
-    end_date = start_datetime_date + timezone.timedelta(days=1)
-    print(end_date)
-    # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
-    value_object = Value.objects.get(user=user, date__gte=start_datetime_date, date__lt=end_date)
+def get_value_for_date(user, target_date=None):
+    #현재 로컬 날짜를 가져옴
+    if not target_date:
+        target_date = timezone.localtime(timezone.now()).date()
         
+    value_object = Value.objects.get(user=user, date=target_date)
     return value_object
 
 
@@ -215,7 +208,7 @@ def add_todo(request):
         current_user = request.user
         
         #date 일치하는 value 객체 가져오기
-        value = get_todayValue(current_user)
+        value = get_value_for_date(current_user)
         
         #현재 user의 todolist 객체 가져오기
         category = Category.objects.get(user=current_user)
@@ -261,7 +254,7 @@ def delete_todo(request, pk):
         #todo삭제
         todo.delete()
         current_user=request.user
-        value = get_todayValue(current_user)
+        value = get_value_for_date(current_user)
         
     return JsonResponse({'id':todo_id, 'd_id': value.id})
 
@@ -325,65 +318,55 @@ def days_since_joined(user):
 """
 차트로 보낼 data준비하는 함수
 """
+def date_to_timestamp(date_obj):
+    
+    return int(datetime.combine(date_obj, datetime.min.time()).timestamp() * 1000)
+
 def values_for_chart(user, term):
     kst = pytz.timezone('Asia/Seoul')
-    max_date = days_since_joined(user)  #int
-    #db에 UTC기준으로 저장되어있으니까 now()사용
-    utc_datetime = timezone.now()
-    print('utc_datetime:', utc_datetime)
+    max_date = days_since_joined(user)  
 
-    #회원가입 후 지난 기간 == 유저의 최대 value 개수
-    #유저의 최대 value개수가 프론트에서 요청한 term보다 적을 경우 그냥 최대 value개수 만큼만 보냄
-    if max_date < term:
-        start_datetime =  utc_datetime - timedelta(days=term)#원래는 days=max_date
-        print('start_datetime', start_datetime)
-    #그렇지 않을 경우 요청한 term만큼의 value데이터 보냄(비어있는 date의 value는 만들어서)
-    else:
-        start_datetime = utc_datetime - timedelta(days=term)
-        print('start_datetime', start_datetime)
-    
-    #사용자가 요청한 범위의 date
-    all_dates = {start_datetime.date() + timedelta(days=i) for i in range(1, term+1)}
+    # 현재 날짜를 KST로 설정
+    kst_date = timezone.now().astimezone(kst).date()
+
+    # term 값을 조절
+    term = min(max_date, term)
+    start_date = kst_date - timedelta(days=term-1)
+
+    # 사용자가 요청한 범위의 date
+    all_dates = {start_date + timedelta(days=i) for i in range(term)}
     print('사용자가 요청한 datetime:', all_dates)
-    
-    #이미 db에 존재하는 date들
-    #value객체 필터링
-    range_values = Value.objects.filter(user=user, date__range=(start_datetime, utc_datetime))
-    #value객체에서 datetime만 뽑아오기
-    value_dates = set(d.date() for d in range_values.values_list('date', flat=True))
+
+    # DB에서 존재하는 date들을 가져옴
+    range_values = Value.objects.filter(user=user, date__range=(start_date, kst_date))
+    value_dates = set(range_values.values_list('date', flat=True))
     print('db에 있는 datetime:', value_dates)
     
-    #없는 날짜 처리
-    missing_dates = list(all_dates - value_dates) #set으로 차집합 구하고 list로 변환
-    missing_dates.sort() #날짜순으로 정렬
+    # 없는 날짜 처리
+    missing_dates = sorted(list(all_dates - value_dates))
     print('없는 datetime:', missing_dates)
     
-    #없는 날짜가 있는경우
-    if missing_dates:
-        for missing_date in missing_dates:
-            previous_date_start = datetime.combine(missing_date - timedelta(days=1), datetime.min.time())
-            previous_date_end = datetime.combine(missing_date - timedelta(days=1), datetime.max.time())
-
-            # 이 범위를 사용하여 Value 객체를 필터링합니다.
-            latest_value = Value.objects.filter(user=user, date__range=(previous_date_start, previous_date_end)).first()
-            #missing_date의 UST기준 날짜 넣는데 이건 또 kst로 들어가서 ust로 바꿔줌
+    # 없는 날짜에 대한 처리
+    for missing_date in missing_dates:
+        previous_value = Value.objects.filter(user=user, date=missing_date - timedelta(days=1)).first()
+        if previous_value:
             Value.objects.create(
                 user=user,
-                date=missing_date + timedelta(days=1),
+                date=missing_date,
                 percentage=0,
-                start=latest_value.end,
-                end=latest_value.end,
-                low=latest_value.end - 1000,
-                high=latest_value.end,
-                combo=latest_value.combo,
+                start=previous_value.end,
+                end=previous_value.end,
+                low=previous_value.end - 1000,
+                high=previous_value.end,
+                combo=previous_value.combo,
             )
 
-    #새로 만든 value들 포함해서 가져오기
-    values = Value.objects.filter(user=user, date__range=(start_datetime, utc_datetime))
+    # 최종 데이터 가져오기
+    values = Value.objects.filter(user=user, date__range=(start_date, kst_date)).order_by('date')
     print(values)
-    values = list(values)
-    
-    dataset = [[int((value.date.replace(hour=0, minute=0, second=0, microsecond=0)+timedelta(days=1)).timestamp()*1000), value.start, value.high, value.low, value.end] for value in values]
+
+    # assuming a mechanism to convert date to timestamp is present
+    dataset = [[date_to_timestamp(value.date), value.start, value.high, value.low, value.end] for value in values]
         
     return dataset
 
