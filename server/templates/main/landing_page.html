@@ -45,13 +45,13 @@
       <main>
         <section id="page-banner">
           <div class="page-banner__container">
-            <div class="page-banner__heading">
+            <div class="page-banner__heading opacity-text">
               <h1>Watch Your Task</h1>
               <h1>As Stock.</h1>
             </div>
             <div class="page-banner__start-btn">
               <a href="">
-                <span>Get Started</span>
+                <span class="opacity-text">Get Started</span>
               </a>
             </div>
           </div>
@@ -60,28 +60,61 @@
         <section id="introduction-rules">
           <div class="page-rule__container">
             <div class="page-rule__header">
-              <h1>Stock System?</h1>
+              <h1 class="opacity-text">Stock System?</h1>
+            </div>
+            <div class="page-rule__content opacity-banner">
+              <h2 class="opacity-text">Add your task todo.</h2>
+              <p class="opacity-text">Stock price will be risen, if you finish yout task</p>
             </div>
             <div class="page-rule__content">
-              <h2>Add your task todo.</h2>
-              <p>Stock price will be risen, if you finish yout task</p>
-            </div>
-            <div class="page-rule__content">
-              <h2>Meet yout friend.</h2>
-              <p>You can meet your friend's todo list & stock price.</p>
+              <h2 class="opacity-text">Meet yout friend.</h2>
+              <p class="opacity-text">You can meet your friend's todo list & stock price.</p>
             </div>
             <div class="page-rule__description">
-              <p>more information.</p>
+              <p class="opacity-text">→ more information.</p>
             </div>
           </div>
-          <div class="introduction-rules__image">
-            <img src="https://placekitten.com/120/120" alt="rule image">
+          <div class="introduction-rules__image opacity-text">
+            <img src="https://placekitten.com/300/500" alt="rule image">
           </div>
         </section>
-        <section></section>
+        <section></section> 
       </main>
       <footer></footer>
-
     </div>
+
+    <script>
+      const opacityElements = document.querySelectorAll(".opacity-text");
+    
+      // 초기값으로 텍스트를 불투명하게 설정 (opacity를 1로 변경)
+      opacityElements.forEach((element) => {
+        element.style.opacity = "1";
+      });
+    
+      // 스크롤 이벤트 감지
+      window.addEventListener("scroll", function () {
+        // 스크롤 위치를 가져옴
+        const scrollPosition = window.scrollY;
+    
+        // 페이지 배너의 높이를 가져옴
+        const bannerElement = document.getElementById("page-banner");
+        const bannerHeight = bannerElement.offsetHeight;
+    
+        // 텍스트가 완전 투명해지는 지점을 정의 (여기서는 배너의 높이의 60% 지점)
+        const fadeOutPoint = bannerHeight * 0.6;
+    
+        // 스크롤 위치에 따라 opacity 값을 조정
+        opacityElements.forEach((element) => {
+          if (scrollPosition < fadeOutPoint) {
+            // 스크롤 위치가 fadeOutPoint보다 작으면 텍스트를 불투명하게 설정
+            element.style.opacity = "1";
+          } else {
+            // 스크롤 위치가 fadeOutPoint 이상이면 점점 투명하게 설정
+            const opacityValue = (scrollPosition - fadeOutPoint) / (bannerHeight - fadeOutPoint)-1;
+            element.style.opacity = opacityValue.toString();
+          }
+        });
+      });
+    </script>
   </body>
 </html>
