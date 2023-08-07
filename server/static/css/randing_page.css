@@ -80,7 +80,8 @@ main {
   overflow-x: hidden;
 }
 
-#page_banner {
+/* page-banner */
+#page-banner {
   display: flex;
     position: relative;
     flex-direction: column;
@@ -89,10 +90,48 @@ main {
     width: 100%;
     justify-content: center;
     align-items: center;
-    background-color: rgb(143, 151, 151);
+    background-color: var(--msk-bg);
 }
 
-#container_box {
+.page-banner__container {
+  display: flex;
+  flex: 0 0 auto;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-banner__heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: var(--heading1);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  padding: var(--padding);
+}
+
+.page-banner__start-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 50px;
+  background-color: #000;
+  color: #fff;
+  border-radius: 20px;
+  margin: var(--gutter);
+  transition: opacity 0.1s ease-in-out 0s;
+}
+
+.page-banner__start-btn:hover {
+  opacity: 0.8;
+}
+
+/* container-box */
+#container-box {
   display: flex;
   position: relative;
   flex-direction: column;
@@ -103,7 +142,7 @@ main {
   background-color: rgb(112, 105, 105);
 }
 
-#introduction_rules {
+#introduction-rules {
   display: flex;
   position: relative;
   flex-direction: column;
