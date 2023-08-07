@@ -31,18 +31,6 @@ function epaintStar(todo_id, level){
         }
     })
 }
-function epaintStar(todo_id, level){
-    const editCon = document.querySelector(`.todo-edit-${todo_id}`);
-    editCon.querySelectorAll('.edit-todo-level i').forEach(star => {
-        if (star.getAttribute('level') <= level){
-            star.classList.remove('fa-regular');
-            star.classList.add('fa-solid');
-        } else{
-            star.classList.remove('fa-solid');
-            star.classList.add('fa-regular');
-        }
-    })
-}
 const handleAddTodo = async(date_id) => {
     const url = '/main/add_todo/';
     let inputTag = document.querySelector('.list__input-cont input');
@@ -228,10 +216,6 @@ const handleMore = async(todo_id) => {
         // level
         elevel_stars.forEach(star => {
             star.addEventListener('click', () => {
-                updated_level = star.getAttribute('level');
-                epaintStar(todo_id, updated_level);
-                edited_star = true;
-                
                 updated_level = star.getAttribute('level');
                 epaintStar(todo_id, updated_level);
                 edited_star = true;

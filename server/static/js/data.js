@@ -245,18 +245,28 @@ var options = {
   ]
 }],
   chart: {
-  height: 350,
+  height: '50%',
   type: 'candlestick',
+  zoom: {
+    enabled: false,
+  }
+
 },
-// title: {
-//   text: 'CandleStick Chart - Category X-axis',
-//   align: 'left'
-// },
+plotOptions: {
+  candlestick: {
+    colors: {
+      upward: 'red',
+      downward: 'blue',
+    }
+  }
+},
+
 annotations: {
   xaxis: [
     {
-      x: 'Oct 06 14:00',
-      borderColor: '#00E396',
+      // x: 'Oct 06 14:00',
+      // borderColor: '#00E396',
+      borderColor: '#000',
       label: {
         borderColor: '#00E396',
         style: {
@@ -266,7 +276,7 @@ annotations: {
         },
         orientation: 'horizontal',
         offsetY: 7,
-        text: 'Annotation Test'
+        // text: 'Annotation Test'
       }
     }
   ]
@@ -277,9 +287,10 @@ tooltip: {
 xaxis: {
   type: 'category',
   labels: {
-    formatter: function(val) {
-      return dayjs(val).format('MMM DD HH:mm')
-    }
+    // formatter: function(val) {
+    //   return dayjs(val).format('MMM DD HH:mm')
+    // }
+    show: false,
   }
 },
 yaxis: {
