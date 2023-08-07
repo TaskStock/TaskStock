@@ -7,6 +7,11 @@
   background-color: var(--msk-bg);
   --gutter: 16px;
   --padding: 16px 36px;
+
+  --heading1:min(11vh, min(15vw, 116px));
+  --heading2:min(7vh, min(10.5vw, 72px));
+  --heding3:min(5vh, min(7vw, 48px));
+  --paragraph: min(2.8vh, min(3.8vw, 16px));
 }
 
 /* layout */
@@ -41,10 +46,31 @@ nav {
   -webkit-box-align: center;
   align-items: center;
   -webkit-box-pack: center;
-  justify-content: center;
-  background-color: bisque;
-  height: 10vh;
+  justify-content: space-between;
+  height: 80px;
   box-sizing: border-box;
+  padding: var(--padding);
+}
+
+.page-nav__logo-container > img {
+  width: 120px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.page-nav__button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gutter);
+}
+
+.page-nav__button-container--support > a:hover {
+  opacity: 0.8;
+}
+
+.page-nav__button-container--login > a:hover {
+  opacity: 0.8;
 }
 /* main */
 main {
