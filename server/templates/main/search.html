@@ -128,8 +128,11 @@
                 }else{
                     tmpintrodue=user.introduce;
                 }
+                
+                atagInput = document.createElement('a');
+                atagInput.href="/";
 
-                currentInput.innerHTML = `
+                atagInput.innerHTML = `
                 <a href="/">
                     <div class="search-result__container">
                         <div class="search-result__right--container">
@@ -162,7 +165,7 @@
                     </div>
                 </a>
                 `;
-
+                currentInput.appendChild(atagInput);
             }
         }
     }
