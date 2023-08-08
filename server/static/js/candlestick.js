@@ -1,99 +1,114 @@
+document.addEventListener("DOMContentLoaded", function(){
+  // 팔로우 목록 click 이벤트
+  const one_week = document.querySelector("#one_week");
+  const one_month = document.querySelector("#one_month");
+  const three_month = document.querySelector("#three_month");
+  const six_month = document.querySelector("#six_month");
+  const one_year = document.querySelector("#one_year");
 
-
-
-var options = {
-  series: [{
-  name: 'candle',
-  data: [
-    {
-      x: 1545000000000, // Wednesday
-      y: []
-    },
-      {
-        x: 1546275600000, // Wednesday
-        y: [6629.81, 6650.5, 6623.04, 6633.33]
-      },
-      {
-        x: 1546362000000, // Thursday
-        y: [6632.01, 6643.59, 6620, 6630.11]
-      },
-      {
-        x: 1546448400000, // Friday
-        y: [6630.71, 6648.95, 6623.34, 6635.65]
-      },
-      // { // SATURDAY : NO DATA
-      //   x: 1546534800000,
-      //   y: [6635.65, 6651, 6629.67, 6638.24]
-      // },
-      // { // SUNDAY : NO DATA
-      //   x: 1546621200000,
-      //   y: [6624.53, 6636.03, 6621.68, 6624.31]
-      // },
-      {
-        x: 1546707600000, // Monday
-        y: [6624.61, 6632.2, 6617, 6626.02]
-      },
-      {
-        x: 1546794000000, // Tuesday
-        y: [6635.65, 6651, 6629.67, 6638.24]
-      },]
-
-}],
-  chart: {
-  height: '50%',
-  type: 'candlestick',
-  zoom: {
-    enabled: false,
+  if(one_week){
+    one_week.addEventListener("click", function(){
+      request_chart("7");
+    });
+    one_month.addEventListener("click", function(){
+      request_chart("30");
+    });
+    three_month.addEventListener("click", function(){
+      request_chart("90");
+    });
+    six_month.addEventListener("click", function(){
+      request_chart("180");
+    });
+    one_year.addEventListener("click", function(){
+      request_chart("365");
+    });
+  
+    one_week.click();
   }
+});
 
-},
-plotOptions: {
-  candlestick: {
-    colors: {
-      upward: 'red',
-      downward: 'blue',
+const request_chart = async (day) =>{
+  const formData = new FormData();
+  formData.append("day", day);
+
+  const username = document.querySelector("#username_save");
+  formData.append("username", username.textContent);
+
+  const url = "/main/chart_ajax/";
+  const res = await fetch(url, {
+      method:"POST",
+      headers:{},
+      body: formData,
+  });
+  const {dataset: dataset} = await res.json();
+  showChart(dataset);
+}
+
+const showChart = (dataset) => {
+  const chartdiv = document.querySelector("#chart");
+  chartdiv.innerHTML="";
+
+  var options = {
+    series: [{
+    name: 'candle',
+    data: dataset  
+  }],
+    chart: {
+    height: '50%',
+    type: 'candlestick',
+    zoom: {
+      enabled: false,
     }
-  }
-},
-
-annotations: {
-  xaxis: [
-    {
-      // x: 'Oct 06 14:00',
-      // borderColor: '#00E396',
-      borderColor: '#000',
-      label: {
-        borderColor: '#00E396',
-        style: {
-          fontSize: '12px',
-          color: '#fff',
-          background: '#00E396'
-        },
-        orientation: 'horizontal',
-        offsetY: 7,
-        // text: 'Annotation Test'
+  
+  },
+  plotOptions: {
+    candlestick: {
+      colors: {
+        upward: 'red',
+        downward: 'blue',
       }
     }
-  ]
-},
-tooltip: {
-  enabled: true,
-},
-xaxis: {
-  type: 'category',
-  labels: {
-    // formatter: function(val) {
-    //   return dayjs(val).format('MMM DD HH:mm')
-    // }
-    show: false,
-  }
-},
-yaxis: {
+  },
+  
+  annotations: {
+    xaxis: [
+      {
+        // x: 'Oct 06 14:00',
+        // borderColor: '#00E396',
+        borderColor: '#000',
+        label: {
+          borderColor: '#00E396',
+          style: {
+            fontSize: '12px',
+            color: '#fff',
+            background: '#00E396'
+          },
+          orientation: 'horizontal',
+          offsetY: 7,
+          // text: 'Annotation Test'
+        }
+      }
+    ]
+  },
   tooltip: {
-    enabled: true
+    enabled: true,
+  },
+  xaxis: {
+    type: 'category',
+    labels: {
+      // formatter: function(val) {
+      //   return dayjs(val).format('MMM DD HH:mm')
+      // }
+      show: false,
+    }
+  },
+  yaxis: {
+    tooltip: {
+      enabled: true
+    }
   }
-}
-};
+  };
 
-var chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();
+  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  chart.render();
+}
