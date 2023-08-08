@@ -5,7 +5,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import pytz
-
+from datetime import timedelta, datetime
+from django.db import transaction
 
 # 비밀번호 변경 위한 라이브러리
 from django.contrib.auth.hashers import check_password
@@ -161,7 +162,7 @@ def createValue(user):
     # 마지막 생성된 value 기준으로 새로운 value 값들을 계산하는 로직 필요
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
     percentage=0
-    start=50000
+    start_datetime=50000
     end=0
     low=0
     high=0
@@ -170,7 +171,7 @@ def createValue(user):
         user=user,
         date=timezone.now(),
         percentage=percentage,
-        start=start,
+        start_datetime=start_datetime,
         end=end,
         low=low,
         high=high,
@@ -182,14 +183,13 @@ def createValue(user):
 
 def home(request):
     current_user = request.user
-    value = get_todayValue(current_user)
+    value = get_value_for_date(current_user)
     if value is None:
         # 로그인 했을 때 value가 없는 경우
         value = createValue(request.user)
         
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
-
     todos_levels_dict = {}
     for todo in todos:
         todos_levels_dict[todo.id] = todo.level
@@ -197,10 +197,10 @@ def home(request):
     todos_sub_dict = {}
     for todo in todos:
         todos_sub_dict[todo.pk] = 5 - todo.level
-
     
     #데이터
     # dataset = values_for_chart(current_user, 7)
+
     context = {
         'todos_levels_dict': todos_levels_dict,
         'date_id':date_id, 
@@ -213,29 +213,18 @@ def home(request):
 #---세원 작업---#
 #시간 디버깅용 함수
 def time():
-    print(timezone.now())   #UTC 기준으로 가져옴
-    print(timezone.localtime()) #Asia/Seoul 기준으로 가져옴
+    print('utc시간: ', timezone.now())   #UTC 기준으로 가져옴
+    print('kst시간: ', timezone.localtime()) #Asia/Seoul 기준으로 가져옴
 
 
 """
-오늘 자정이랑 다음날 자정까지의 value객체 가져오는 함수 
+user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으면 그날의 date 가져오는 함수
 """
-def get_todayValue(user):
-    # 현재 시간을 가져온 후, 한국 기준오늘 날짜의 00:00:00으로 설정
-    today_date = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
-    print(today_date)
-    # start_date는 오늘 날짜의 자정(DB에 UTC 기준으로 저장되어 있으니까 UTC로 변환)
-    start_date = today_date.astimezone(pytz.UTC)
-    print(start_date)
-    # end_date는 start_date에서 1일 후 (UTC로 변환)
-    end_date = start_date + timezone.timedelta(days=1)
-    print(end_date)
-    # date__gte와 date__lt를 사용하여 해당 범위 내의 Value 객체 가져오기
-    try:
-        value_object = Value.objects.get(user=user, date__gte=start_date, date__lt=end_date)
-    except ObjectDoesNotExist:
-        value_object = None
+def get_value_for_date(user, target_date=None):
+    if not target_date:
+        target_date = timezone.localtime(timezone.now()).date()
         
+    value_object = Value.objects.get(user=user, date=target_date)
     return value_object
 
 
@@ -253,10 +242,11 @@ def add_todo(request):
         current_user = request.user
         
         #date 일치하는 value 객체 가져오기
-        value = get_todayValue(current_user)
+        value = get_value_for_date(current_user)
         
         #현재 user의 todolist 객체 가져오기
         category = Category.objects.get(user=current_user)
+        
         
         #투두 객체 생성
         Todo.objects.create(
@@ -284,25 +274,29 @@ Todo 삭제 하는 함수
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
 """
 @csrf_exempt
-def delete_todo(request, pk):
+def delete_todo(request):
     if request.method == 'POST':
         req = json.loads(request.body)
         todo_id = req['todo_id']
+        current_user = request.user
+        value = get_value_for_date(current_user)
         
-        todo = Todo.objects.get(pk=todo_id)
-        #todo 삭제하기 전 연결된 value의 high값 업데이트
-        todo.value.high -= 1000*todo.level
-        #todo 삭제하기 전 연결된 value의 low값 업데이트
-        todo.value.low += 1000*todo.level
-        #저장
-        todo.value.save()
-        #todo삭제
-        todo.delete()
-        current_user=request.user
-        value = get_todayValue(current_user)
+        with transaction.atomic():
+            todo = Todo.objects.get(value=value, pk=todo_id)
+            #todo 삭제하기 전 연결된 value의 high값 업데이트
+            todo.value.high -= 1000*todo.level
+            #todo 삭제하기 전 연결된 value의 low값 업데이트
+            todo.value.low += 1000*todo.level
+            #저장
+            todo.value.save()
+            #todo삭제
+            todo.delete()
         
     return JsonResponse({'id':todo_id, 'd_id': value.id})
-
+"""
+Todo 업데이트 하는 함수
+content, level 업데이트 -> high, low 업데이트
+"""
 @csrf_exempt
 def update_todo(request, pk):
     if request.method == "POST":
@@ -310,54 +304,148 @@ def update_todo(request, pk):
         todo_id = req['todo_id']
         updated_level = req['curr_level']
         updated_content = req['curr_content']
-        todo = Todo.objects.get(pk=todo_id)
-        todo.level = updated_level
-        todo.content = updated_content
-
-        todo.save()
+        
+        with transaction.atomic():
+            todo = Todo.objects.get(pk=todo_id)
+            #value의 high, low add_todo실행 이전 값으로 돌리기 
+            todo.value.high -= todo.level * 1000
+            todo.value.low += todo.level *1000
+            
+            #todo 내용 update
+            todo.level = updated_level
+            todo.content = updated_content
+            
+            #value의 high, low updated_level 반영해서 다시 넣기
+            todo.value.high += updated_level * 1000
+            todo.value.low -= updated_level * 1000
+            
+            todo.save()
+            todo.value.save()
 
     return JsonResponse({'t_id': todo_id, 'c_level': updated_level, 'c_content': updated_content})
-
-
 
 
 """
 할일 완료에 체크 표시/해제 -> 가치 등락 계산 -> end, percentage 업데이트
 """
 @csrf_exempt
-def check_todo(request, pk):
+def check_todo(request):
     if request.method == "POST":
         req = json.loads(request.body)
         todo_id = req['todo_id']
         todo_status = req['status']
         
-        #해당되는 Todo 객체 가져오기
-        todo = Todo.objects.get(pk=todo_id)
+        current_user = request.user
         #오늘의 value 가져오기
-        value = todo.value
+        value = get_value_for_date(current_user)
         
+        #해당되는 todo 가져오기
+        todo = Todo.objects.get(value=value, pk=todo_id)
+        
+        with transaction.atomic():
         #status에 따라 goal_check와 value의 end값 업데이트
-        if todo_status == 'checked':
-            todo.goal_check = True
-            value.end = value.start + 1000*todo.level
-        else:
-            todo.goal_check = False
-            value.end = value.start - 1000*todo.level
-        
-        #value의 percentage값 업데이트
-        value.percentage = int((value.end-value.start)/value.start *100)
-        if value.percentage > 0:
-            color = 'blue'
-        else:
-            color = 'red'
+            if todo_status == 'checked':
+                todo.goal_check = True
+                value.end += 1000*todo.level
+            else:
+                todo.goal_check = False
+                value.end -= 1000*todo.level
             
-        todo.save()
-        value.save()
-        
+            #value의 percentage값 업데이트
+            value.percentage = int((value.end-value.start)/value.start *100)
+            if value.percentage > 0:
+                color = 'blue'
+            else:
+                color = 'red'
+            
+            todo.save()
+            value.save()
+            
         return JsonResponse({'color':color, 'value':value, 'todo':todo})
 
 
+"""
+차트로 보낼 data준비하는 함수
+"""
+#유저의 최초회원가입 날짜로부터 경과한 날짜 반환하는 함수
+def days_since_joined(user):
+    delta = timezone.now() - user.date_joined
+    
+    return delta.days   #int자료형으로 반환
 
+def date_to_timestamp(date_obj):
+    
+    return int(datetime.combine(date_obj, datetime.min.time()).timestamp() * 1000)
+
+def values_for_chart(user, term):
+    kst = pytz.timezone('Asia/Seoul')
+    max_date = days_since_joined(user)  
+
+    # 현재 날짜를 KST로 설정
+    kst_date = timezone.now().astimezone(kst).date()
+
+    # term 값을 조절
+    term = min(max_date, term)
+    start_date = kst_date - timedelta(days=term-1)
+
+    # 사용자가 요청한 범위의 date
+    all_dates = {start_date + timedelta(days=i) for i in range(term)}
+    print('사용자가 요청한 datetime:', all_dates)
+
+    # DB에서 존재하는 date들을 가져옴
+    range_values = Value.objects.filter(user=user, date__range=(start_date, kst_date))
+    value_dates = set(range_values.values_list('date', flat=True))
+    print('db에 있는 datetime:', value_dates)
+    
+    # 없는 날짜 처리
+    missing_dates = sorted(list(all_dates - value_dates))
+    print('없는 datetime:', missing_dates)
+    
+    # 없는 날짜에 대한 처리
+    for missing_date in missing_dates:
+        previous_value = Value.objects.filter(user=user, date=missing_date - timedelta(days=1)).first()
+        if previous_value:
+            Value.objects.create(
+                user=user,
+                date=missing_date,
+                percentage=0,
+                start=previous_value.end,
+                end=previous_value.end,
+                low=previous_value.end - 1000,
+                high=previous_value.end,
+                combo=0,
+            )
+
+    # 최종 데이터 가져오기
+    values = Value.objects.filter(user=user, date__range=(start_date, kst_date)).order_by('date')
+    print(values)
+    
+    dataset = [[date_to_timestamp(value.date), value.start, value.high, value.low, value.end] for value in values]
+        
+    return dataset
+
+"""
+combo처리
+"""
+def process_combo(user):
+    #goal_check True개수 >= 1 이면 combo어제보다 1 증가
+    #당일 자정까지 goal_check전부 False면 combo 0으로 reset
+
+    values = Value.objects.filter(user=user)
+    yesterday_value = values[-2]
+    today_value = values[-1]
+    todos = Todo.objects.filter(value=today_value)
+    
+    checked_cnt = 0
+    for todo in todos:
+        if todo.goal_check:
+            checked_cnt += 1
+
+    if checked_cnt:
+        today_value.combo = yesterday_value.combo + 1
+        
+    else: 
+        today_value.combo = 0
 
 #---선우 작업---#
 
