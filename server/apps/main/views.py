@@ -7,6 +7,9 @@ from django.utils import timezone
 import pytz
 from datetime import timedelta, datetime
 from django.db import transaction
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 # 비밀번호 변경 위한 라이브러리
 from django.contrib.auth.hashers import check_password
@@ -435,28 +438,32 @@ def values_for_chart(user, term):
 combo처리하는 함수
 """
 def process_combo(user):
-    #goal_check True개수 >= 1 이면 combo어제보다 1 증가
-    #당일 자정까지 goal_check전부 False면 combo 0으로 reset
-    values = Value.objects.filter(user=user).order_by('-date')
+    #전체 기간의 value들을 내림차순으로 가져와서 goal_check=True인 todo가 있는지 확인
+    #date가 연속적이지 않을때까지 combo += 1
+    #goal_check=False인 todo가 나올때까지 combo += 1
+    #두 조건 and로 연결
+    values = Value.objects.filter(user=user).order_by('-date').prefetch_related('todo_set')
     
-    #가입한지 하루 된 회원은 value가 하나밖에 없으므로
-    if len(values) == 1:
-        return
-    
-    today_value, yesterday_value = values[:2]
-    checked_cnt = Todo.objects.filter(value=today_value, goal_check=True).count()
-    
-    if checked_cnt:
-        today_value.combo = yesterday_value.combo + 1
-    else:
-        today_value.combo = yesterday_value.combo
-    
-    #당일이면 여기 걸림
-    if datetime.now().date() == today_value.date and today_value.combo == yesterday_value.combo:
-        today_value.combo = 0
-            
-    today_value.save()
+    #역순으로 체크
+    combo = 0
+    previous_date = None
 
+    for value in values:
+        todos = value.todo_set.all()
+        
+        checked_day = any(todo.goal_check for todo in todos)
+        
+        if (previous_date and previous_date - value.date > timedelta(days=1)) or not checked_day:
+            break
+        print('previous_date:', previous_date)
+        print('valid_date:', value.date)
+        
+        combo += 1
+        previous_date = value.date
+        
+    user.combo = combo
+    user.save()
+        
     return
 #---선우 작업---#
 

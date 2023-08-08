@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class User(AbstractUser):
+    combo = models.IntegerField(null=True, default=0)
     first_name=None
     last_name=None
     name = models.CharField(max_length=30, default="닉네임을 설정하세요")
@@ -43,7 +44,6 @@ def user_created(sender, instance, created, **kwargs):
             end=0,
             low=0,
             high=0,
-            combo=0,
         )
         Category.objects.create(
             user=instance,
@@ -58,7 +58,6 @@ class Value(models.Model):
     end = models.IntegerField(null=True, default=0)
     low = models.IntegerField(null=True, default=0)
     high = models.IntegerField(null=True, default=0)
-    combo = models.IntegerField(null=True, default=0)
 
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='category_user')
