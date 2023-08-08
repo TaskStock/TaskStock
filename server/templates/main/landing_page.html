@@ -13,6 +13,11 @@
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
       rel="stylesheet"
     />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"
+  />
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/landing_page.css' %}">
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
@@ -44,77 +49,231 @@
       </header>
       <main>
         <section id="page-banner">
-          <div class="page-banner__container">
-            <div class="page-banner__heading opacity-text">
+          <div class="page-banner__container" data-aos="fade-up"
+          data-aos-duration="3000">
+            <div class="page-banner__heading">
               <h1>Watch Your Task</h1>
               <h1>As Stock.</h1>
             </div>
             <div class="page-banner__start-btn">
               <a href="">
-                <span class="opacity-text">Get Started</span>
+                <span>Get Started</span>
               </a>
             </div>
           </div>
         </section>
         <section id="container-box"></section>
-        <section id="introduction-rules">
-          <div class="page-rule__container">
-            <div class="page-rule__header">
-              <h1 class="opacity-text">Stock System?</h1>
+        <section id="advertise-box">
+          <div class="advertise-box__container">
+            <div class="advertise-box__heading" data-aos="fade-up">
+              <h1>Why TaskStock?</h1>
+              <h3>join us for your value up!</h3>
             </div>
-            <div class="page-rule__content opacity-banner">
-              <h2 class="opacity-text">Add your task todo.</h2>
-              <p class="opacity-text">Stock price will be risen, if you finish yout task</p>
+            <div class="advertise-box__image">
+              <img src="https://placekitten.com/200/200" alt="" id="image-one"  data-aos="fade-left">
+              <img src="https://placekitten.com/200/200" alt="" id="image-two"  data-aos="zoom-in">
+              <img src="https://placekitten.com/200/200" alt="" id="image-three"  data-aos="fade-right">
             </div>
-            <div class="page-rule__content">
-              <h2 class="opacity-text">Meet yout friend.</h2>
-              <p class="opacity-text">You can meet your friend's todo list & stock price.</p>
-            </div>
-            <div class="page-rule__description">
-              <p class="opacity-text">→ more information.</p>
+            <div class="advertise-box__description" data-aos="fade-up">
+              <h3>You can improve your value with taskStock.</h3>
+              <h3>You can also see your friends value.</h3>
             </div>
           </div>
-          <div class="introduction-rules__image opacity-text">
+        </section> 
+        <section id="introduction-vision">
+          <div class="page-vision__container">
+            <div class="page-vision__header" data-aos="fade-right">
+              <h1>Stock System?</h1>
+            </div>
+            <div class="page-vision__content" data-aos="fade-right">
+              <h2>Add your task todo.</h2>
+              <p>Stock price will be risen, if you finish your task</p>
+            </div>
+            <div class="page-vision__content" data-aos="fade-right">
+              <h2>Meet your friend.</h2>
+              <p>You can meet your friend's todo list & stock price.</p>
+            </div>
+            <div class="page-vision__description" data-aos="fade-right">
+              <p>→ more information.</p>
+            </div>
+          </div>
+          <div class="introduction-vision__image" data-aos="fade-up"> 
             <img src="https://placekitten.com/300/500" alt="rule image">
           </div>
         </section>
-        <section></section> 
+        <section class="introduction-rule">
+          <div class="introduction-rule__description" data-aos="zoom-in-right">
+            <h2>Level 1: You can do it easy</h2>
+            <h3>example: wash dishes, cleaning, eat vitamin</h3>
+          </div>
+          <div class="introduction-rule__image" data-aos="flip-right">
+          <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+          </div>
+        </section>
+        <section class="introduction-rule">
+          <div class="introduction-rule__description" data-aos="zoom-in-right">
+            <h2>Level 1: You can do it easy</h2>
+            <h3>example: wash dishes, cleaning, eat vitamin</h3>
+          </div>
+          <div class="introduction-rule__image" data-aos="flip-right">
+          <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+          </div>
+        </section>
+        <section class="introduction-rule">
+          <div class="introduction-rule__description" data-aos="zoom-in-right">
+            <h2>Level 2: You can do it easy</h2>
+            <h3>example: wash dishes, cleaning, eat vitamin</h3>
+          </div>
+          <div class="introduction-rule__image" data-aos="flip-right">
+          <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+          </div>
+        </section>
+        <section class="introduction-rule">
+          <div class="introduction-rule__description" data-aos="zoom-in-right">
+            <h2>Level 3: You can do it easy</h2>
+            <h3>example: wash dishes, cleaning, eat vitamin</h3>
+          </div>
+          <div class="introduction-rule__image" data-aos="flip-right">
+          <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+          </div>
+        </section>
+        <section class="introduction-rule">
+          <div class="introduction-rule__description" data-aos="zoom-in-right">
+            <h2>Level 4: You can do it easy</h2>
+            <h3>example: wash dishes, cleaning, eat vitamin</h3>
+          </div>
+          <div class="introduction-rule__image" data-aos="flip-right">
+          <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+          </div>
+        </section>
+        <section class="introduction-rule">
+          <div class="introduction-rule__description" data-aos="zoom-in-right">
+            <h2>Level 5: You can do it easy</h2>
+            <h3>example: wash dishes, cleaning, eat vitamin</h3>
+          </div>
+          <div class="introduction-rule__image" data-aos="flip-right">
+          <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+          </div>
+        </section>
+        <section>
+          <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <section class="introduction-rule">
+                  <div class="introduction-rule__description" data-aos="zoom-in-right">
+                    <h2>Level 5: You can do it easy</h2>
+                    <h3>example: wash dishes, cleaning, eat vitamin</h3>
+                  </div>
+                  <div class="introduction-rule__image" data-aos="flip-right">
+                  <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+                  </div>
+                </section>
+              </div>
+              <div class="swiper-slide">
+                <section class="introduction-rule">
+                  <div class="introduction-rule__description" data-aos="zoom-in-right">
+                    <h2>Level 5: You can do it easy</h2>
+                    <h3>example: wash dishes, cleaning, eat vitamin</h3>
+                  </div>
+                  <div class="introduction-rule__image" data-aos="flip-right">
+                  <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+                  </div>
+                </section>
+              </div>
+              <div class="swiper-slide">
+                <section class="introduction-rule">
+                  <div class="introduction-rule__description" data-aos="zoom-in-right">
+                    <h2>Level 5: You can do it easy</h2>
+                    <h3>example: wash dishes, cleaning, eat vitamin</h3>
+                  </div>
+                  <div class="introduction-rule__image" data-aos="flip-right">
+                  <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+                  </div>
+                </section>
+              </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+          </div>
+        </section>
       </main>
-      <footer></footer>
+      <footer>
+        <div class="footer-container">
+          <div class="logo-container">
+            <img src="https://placekitten.com/150/50" alt="logo image">
+          </div>
+          <div class="contact-container">
+            <p>contact us: instagram @011110kim</p>
+          </div>
+        </div>
+      </footer>
     </div>
-
-    <script>
+    <!-- <script>
+      // Opacity effect
       const opacityElements = document.querySelectorAll(".opacity-text");
-    
-      // 초기값으로 텍스트를 불투명하게 설정 (opacity를 1로 변경)
       opacityElements.forEach((element) => {
-        element.style.opacity = "1";
+        element.style.opacity = "0";
       });
-    
-      // 스크롤 이벤트 감지
+
+      const bannerElement = document.getElementById("page-banner");
+      const bannerHeight = bannerElement.offsetHeight;
+      const advertiseBoxElement = document.querySelector(".opacity-start");
+      const introductionRulesElement = document.querySelector(".opacity-break");
+      const advertiseBoxTop = advertiseBoxElement.offsetTop;
+      const introductionRulesTop = introductionRulesElement.offsetTop;
+      const windowHeight = window.innerHeight;
+      const fadeInPoint = bannerHeight * 0.6;
+      const fadeOutPoint = advertiseBoxTop - windowHeight * 0.3;
+      const introductionRulesFadeInPoint = introductionRulesTop - windowHeight * 0.3;
+      const stopPoint = introductionRulesTop;
+
+      // Scroll event detection
       window.addEventListener("scroll", function () {
-        // 스크롤 위치를 가져옴
+        // Get the scroll position
         const scrollPosition = window.scrollY;
-    
-        // 페이지 배너의 높이를 가져옴
-        const bannerElement = document.getElementById("page-banner");
-        const bannerHeight = bannerElement.offsetHeight;
-    
-        // 텍스트가 완전 투명해지는 지점을 정의 (여기서는 배너의 높이의 60% 지점)
-        const fadeOutPoint = bannerHeight * 0.6;
-    
-        // 스크롤 위치에 따라 opacity 값을 조정
+
+        // Adjust opacity based on scroll position for #advertise-box and #introduction-rules
         opacityElements.forEach((element) => {
-          if (scrollPosition < fadeOutPoint) {
-            // 스크롤 위치가 fadeOutPoint보다 작으면 텍스트를 불투명하게 설정
-            element.style.opacity = "1";
-          } else {
-            // 스크롤 위치가 fadeOutPoint 이상이면 점점 투명하게 설정
-            const opacityValue = (scrollPosition - fadeOutPoint) / (bannerHeight - fadeOutPoint)-1;
+          if (scrollPosition < fadeInPoint) {
+            element.style.opacity = "0";
+          } else if (scrollPosition >= fadeInPoint && scrollPosition < fadeOutPoint) {
+            const opacityValue = (scrollPosition - fadeInPoint) / (fadeOutPoint - fadeInPoint);
             element.style.opacity = opacityValue.toString();
+          } else if (scrollPosition >= fadeOutPoint && scrollPosition < introductionRulesFadeInPoint) {
+            element.style.opacity = "1";
+          } else if (scrollPosition >= introductionRulesFadeInPoint && scrollPosition < stopPoint) {
+            const opacityValue = (scrollPosition - introductionRulesFadeInPoint) / (stopPoint - introductionRulesFadeInPoint);
+            element.style.opacity = opacityValue.toString();
+          } else if (scrollPosition >= stopPoint) {
+            element.style.opacity = "1";
           }
         });
       });
+    </script> -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script>
+      var swiper = new Swiper(".mySwiper", {
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: {
+          delay: 2500,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      });
+
+    </script>
+    <script>
+      AOS.init();
     </script>
   </body>
 </html>
