@@ -151,3 +151,15 @@
 <script src="{% static 'js/data.js' %}"></script>
 <script src="{% static 'js/chart.js' %}"></script>
     {% endblock %}
+
+{% for todo in todos %}
+{% for idx, level in todo_zipped_list %}
+{% if forloop.counter == idx %}
+{% for _ in level%}
+<div></div>
+{% endfor %}
+
+{% endif %}
+{% endfor %}
+{% endfor %}
+
