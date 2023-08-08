@@ -198,8 +198,9 @@ def home(request):
     for todo in todos:
         todos_sub_dict[todo.pk] = 5 - todo.level
     
-    #데이터
+    # 데이터
     # dataset = values_for_chart(current_user, 7)
+    
 
     context = {
         'todos_levels_dict': todos_levels_dict,
@@ -292,6 +293,9 @@ def delete_todo(request):
             #todo삭제
             todo.delete()
         
+        #combo 변화 처리    
+        process_combo(current_user)
+            
     return JsonResponse({'id':todo_id, 'd_id': value.id})
 """
 Todo 업데이트 하는 함수
@@ -360,7 +364,10 @@ def check_todo(request):
             
             todo.save()
             value.save()
-            
+        
+        #combo변화 처리
+        process_combo(current_user)
+        
         return JsonResponse({'color':color, 'value':value, 'todo':todo})
 
 
@@ -425,28 +432,32 @@ def values_for_chart(user, term):
     return dataset
 
 """
-combo처리
+combo처리하는 함수
 """
 def process_combo(user):
     #goal_check True개수 >= 1 이면 combo어제보다 1 증가
     #당일 자정까지 goal_check전부 False면 combo 0으로 reset
-
-    values = Value.objects.filter(user=user)
-    yesterday_value = values[-2]
-    today_value = values[-1]
-    todos = Todo.objects.filter(value=today_value)
+    values = Value.objects.filter(user=user).order_by('-date')
     
-    checked_cnt = 0
-    for todo in todos:
-        if todo.goal_check:
-            checked_cnt += 1
-
+    #가입한지 하루 된 회원은 value가 하나밖에 없으므로
+    if len(values) == 1:
+        return
+    
+    today_value, yesterday_value = values[:2]
+    checked_cnt = Todo.objects.filter(value=today_value, goal_check=True).count()
+    
     if checked_cnt:
         today_value.combo = yesterday_value.combo + 1
-        
-    else: 
+    else:
+        today_value.combo = yesterday_value.combo
+    
+    #당일이면 여기 걸림
+    if datetime.now().date() == today_value.date and today_value.combo == yesterday_value.combo:
         today_value.combo = 0
+            
+    today_value.save()
 
+    return
 #---선우 작업---#
 
 def search(request):
