@@ -1,0 +1,37 @@
+{% extends '../base2.html' %} {% load static %}
+{%block page%}
+<!-- class, id 전부 싹 갈아엎어야 합니다!!!! -->
+<main class="main--settings">
+    <div class="settings-container">
+        <div class="settigs-header">
+            <h1>Show Other User Detail</h1>
+        </div>
+        <div class="settings-content">
+            <div class="settings-detail Scroll">
+                <div class="settings-detail__edit-profile settings-detail-element">
+                    <div class="settings-detail__container">
+                        <div class="settings-detail__profile-container">
+                            <img src="https://placekitten.com/100/100" alt="">
+                            <div class="settings-detail__description-container">
+                                <h3>{{ user.name }}</h3>
+                            </div>
+                        </div>
+                        <div class="profile-description__textarea">
+                            <label for="proflie-description">소개</label>
+                            <div>{% if user.introduce %}{{ user.introduce }}{% endif %}</div>
+                        </div>
+                    </div>
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
+
+
+
+{% block extra %}
+{% endblock %}

@@ -9,6 +9,8 @@ urlpatterns = [
     path('', home), # /main/
     path('search/', search), # /main/search/
     path('settings/', settings), # /main/settings/
+    # 다른 유저의 상세 페이지
+    path('profile/', profile), # /main/profile/
 
     # ajax 처리 url
     path('settings/update_introduce/', update_introduce), # /main/settings/update_introduce/

@@ -40,6 +40,25 @@ def settings(request):
     }
     return render(request, 'main/settings.html', context=ctx)
 
+# 내가 아닌 다른 유저의 프로필을 보는 함수
+def profile(request):
+    username=request.GET.get('username')
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect('/main/')
+    if user.is_superuser:
+        return redirect('/main/')
+
+    current_user=request.user
+    if user == current_user:
+        return redirect('/main/settings/')
+    
+    ctx ={ 
+        'user':user,
+    }
+    return render(request, 'main/profile.html', context=ctx)
+
 @csrf_exempt
 def update_introduce(request):
     introduce = request.POST.get("proflie-description")
@@ -153,6 +172,7 @@ def follow_list(request):
 
     for user in follow_list:
         user_data={
+            "username":user.username,
             "name":user.name,
             "introduce":user.introduce,
             # 추후 필요한 필드 추가
