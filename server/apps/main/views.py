@@ -43,6 +43,25 @@ def settings(request):
     }
     return render(request, 'main/settings.html', context=ctx)
 
+# 내가 아닌 다른 유저의 프로필을 보는 함수
+def profile(request):
+    username=request.GET.get('username')
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect('/main/')
+    if user.is_superuser:
+        return redirect('/main/')
+
+    current_user=request.user
+    if user == current_user:
+        return redirect('/main/settings/')
+    
+    ctx ={ 
+        'user':user,
+    }
+    return render(request, 'main/profile.html', context=ctx)
+
 @csrf_exempt
 def update_introduce(request):
     introduce = request.POST.get("proflie-description")
@@ -147,11 +166,16 @@ def follow_list(request):
         follow_list = current_user.followings.all()
     elif request.POST.get("type")=="follower":
         follow_list = current_user.followers.all()
+    elif request.POST.get("type")=="following_search":
+        follow_list = current_user.followings.filter(name__contains=request.POST.get("searchtext"))
+    elif request.POST.get("type")=="follower_search":
+        follow_list = current_user.followers.filter(name__contains=request.POST.get("searchtext"))
 
     users=[]
 
     for user in follow_list:
         user_data={
+            "username":user.username,
             "name":user.name,
             "introduce":user.introduce,
             # 추후 필요한 필드 추가
@@ -278,7 +302,7 @@ Todo 삭제 하는 함수
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
 """
 @csrf_exempt
-def delete_todo(request):
+def delete_todo(request, pk):
     if request.method == 'POST':
         req = json.loads(request.body)
         todo_id = req['todo_id']
@@ -309,7 +333,7 @@ def update_todo(request, pk):
     if request.method == "POST":
         req = json.loads(request.body)
         todo_id = req['todo_id']
-        updated_level = req['curr_level']
+        updated_level = int(req['curr_level'])
         updated_content = req['curr_content']
         
         with transaction.atomic():
@@ -336,7 +360,7 @@ def update_todo(request, pk):
 할일 완료에 체크 표시/해제 -> 가치 등락 계산 -> end, percentage 업데이트
 """
 @csrf_exempt
-def check_todo(request):
+def check_todo(request, pk):
     if request.method == "POST":
         req = json.loads(request.body)
         todo_id = req['todo_id']
@@ -347,11 +371,11 @@ def check_todo(request):
         value = get_value_for_date(current_user)
         
         #해당되는 todo 가져오기
-        todo = Todo.objects.get(value=value, pk=todo_id)
+        todo = Todo.objects.get(pk=todo_id)
         
         with transaction.atomic():
         #status에 따라 goal_check와 value의 end값 업데이트
-            if todo_status == 'checked':
+            if todo_status == 'True':
                 todo.goal_check = True
                 value.end += 1000*todo.level
             else:
@@ -367,6 +391,9 @@ def check_todo(request):
             
             todo.save()
             value.save()
+        
+        todo_status = str(todo_status)
+        return JsonResponse({'color':color, 'todo_status': todo_status, 't_id':todo.pk})
         
         #combo변화 처리
         process_combo(current_user)
