@@ -12,8 +12,8 @@
     </div>
     <div class="main-right">
         <div class="main-right--container">
-            <div class="calendar-container">
-                <div class="calendar jsCalendar"></div>
+            <div class="heatmap-container">
+                <div id="heatmap"></div>
             </div>
             <div class="todo-container">
                 <!-- 할 일 등록 -->
@@ -50,7 +50,8 @@
                     <div class="todo-item todo-item-{{todo.pk}}">
                         <div class="todo-checkbox todo-checkbox-{{todo.pk}}" onclick="check_todo({{todo.pk}})"></div>
                         
-                        <input type="text class todo-contents" 
+                        <input type="text" 
+                               class="todo-contents" 
                                onclick="edit_todo({{todo.pk}})"
                                value="{{todo.content}}"
                                readonly>
@@ -71,12 +72,6 @@
                             {% endfor %}
                          
                         {% endwith %} 
-
-                            <!-- <div level="1"></div>
-                            <div level="2"></div>
-                            <div level="3"></div>
-                            <div level="4"></div>
-                            <div level="5"></div> -->
                             
                         </div>
                         <!-- edit page -->
@@ -100,7 +95,10 @@
                                     <div level="5"></div>
                                 </div>
                             </div>
-                            <div class="todo-edit--submit-btn" onclick="update_todo({{todo.pk}})">완료</div>
+                            <div class="edit-btn--container">
+                                <div class="todo-edit--delete-btn" onclick="delete_todo({{todo.pk}})">삭제</div>
+                                <div class="todo-edit--submit-btn" onclick="update_todo({{todo.pk}})">완료</div>
+                            </div>
                         </div>
                     </div>
 
@@ -111,6 +109,7 @@
         </div>
     </div>
     <script src="{% static 'js/todo2.js' %}"></script>
+    
 </main>
 
 
