@@ -230,6 +230,7 @@ def home(request):
     
 
     context = {
+        'user': current_user,
         'todos_levels_dict': todos_levels_dict,
         'date_id':date_id, 
         'todos':todos,
@@ -385,20 +386,20 @@ def check_todo(request, pk):
             #value의 percentage값 업데이트
             value.percentage = int((value.end-value.start)/value.start *100)
             if value.percentage > 0:
-                color = 'blue'
-            else:
                 color = 'red'
+            else:
+                color = 'blue'
             
             todo.save()
             value.save()
-        
+            
+        #combo변화 처리
+        process_combo(current_user)
         todo_status = str(todo_status)
         return JsonResponse({'color':color, 'todo_status': todo_status, 't_id':todo.pk})
         
-        #combo변화 처리
-        process_combo(current_user)
+
         
-        return JsonResponse({'color':color, 'value':value, 'todo':todo})
 
 
 """
@@ -469,14 +470,14 @@ def process_combo(user):
     #date가 연속적이지 않을때까지 combo += 1
     #goal_check=False인 todo가 나올때까지 combo += 1
     #두 조건 and로 연결
-    values = Value.objects.filter(user=user).order_by('-date').prefetch_related('todo_set')
+    values = Value.objects.filter(user=user).order_by('-date')
     
     #역순으로 체크
     combo = 0
     previous_date = None
 
     for value in values:
-        todos = value.todo_set.all()
+        todos = Todo.objects.filter(value=value)
         
         checked_day = any(todo.goal_check for todo in todos)
         
