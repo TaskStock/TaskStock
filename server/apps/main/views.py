@@ -203,6 +203,17 @@ def createValue(user):
     )
     return value
 
+@csrf_exempt
+def chart_ajax(request):
+    day = int(request.POST.get("day"))
+    username = request.POST.get("username")
+
+    target_user = User.objects.get(username=username)
+
+    dataset = values_for_chart(target_user, day)
+
+    return JsonResponse({"dataset": dataset})
+
 # ---환희 작업---#
 
 def home(request):
@@ -249,6 +260,7 @@ def get_value_for_date(user, target_date=None):
         target_date = timezone.localtime(timezone.now()).date()
         
     value_object = Value.objects.get(user=user, date=target_date)
+
     return value_object
 
 
@@ -409,7 +421,7 @@ def values_for_chart(user, term):
     kst_date = timezone.now().astimezone(kst).date()
 
     # term 값을 조절
-    term = min(max_date, term)
+    # term = min(max_date, term)
     start_date = kst_date - timedelta(days=term-1)
 
     # 사용자가 요청한 범위의 date
