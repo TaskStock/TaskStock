@@ -135,23 +135,26 @@ def search_ajax(request):
 
     return JsonResponse({"users": users})
 
-def following_list(request):
-    user=request.user
-    followings = user.followings.all()
+@csrf_exempt
+def follow_list(request):
+    current_user=request.user
 
-    ctx ={ 
-        'followings':followings,
-    }
-    return render(request, 'main/settings.html', context=ctx)
+    if request.POST.get("type")=="following":
+        follow_list = current_user.followings.all()
+    elif request.POST.get("type")=="follower":
+        follow_list = current_user.followers.all()
 
-def follower_list(request):
-    user=request.user
-    followers = user.followers.all()
+    users=[]
 
-    ctx ={ 
-        'followers':followers,
-    }
-    return render(request, 'main/settings.html', context=ctx)
+    for user in follow_list:
+        user_data={
+            "name":user.name,
+            "introduce":user.introduce,
+            # 추후 필요한 필드 추가
+        }
+        users.append(user_data)
+
+    return JsonResponse({"users": users})
 
 def createValue(user):
     last_value=Value.objects.filter(user=user).order_by('-date').first()
