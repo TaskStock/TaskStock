@@ -17,5 +17,6 @@ urlpatterns = [
     path('settings/update_language/', update_language), # /main/settings/update_language/
     path('settings/change_password/', change_password), # /main/settings/change_password/
     path('search/ajax/', search_ajax), # /main/search/ajax/
+    path('follow_list/', follow_list), # /main/follow_list/
 ] 
 

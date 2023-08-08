@@ -74,23 +74,128 @@
                     </div>
                     <div class="my-info--sff sff-fg">
                         <span>Following</span>
-                        <span>34</span>
+                        <span id="following_list">34</span>
                     </div>
                     <div class="my-info--sff sff-fr">
                         <span>Follower</span>
-                        <span>30</span>
+                        <span id="follower_list">30</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="friends-info--container"></div>
+        <div id="follow-search-container">
+            <!-- input은 following 목록, follower 목록인지에 따라 name, id가 다름 -->
+            <input type="text" placeholder="Search" name="follow_search_content" id="follow_search_content" class="displayNone">
+        </div>
+        <div id="friends-info--container">
+            
+        </div>
     </section>
     {% block page %}
     {% endblock %}
 
     {% block extra %}
     {% endblock %}
+     
+    <script>
+        let follow_type
 
+        document.addEventListener("DOMContentLoaded", function(){
+            // 팔로우 목록 click 이벤트
+            const followingSpan = document.querySelector("#following_list");
+            const followerSpan = document.querySelector("#follower_list");
+            const followsearchInput = document.querySelector("#follow_search_content");
+
+            followingSpan.addEventListener("click", function(){
+                follow_type="following";
+                followsearchInput.classList.remove('displayNone');
+                followsearchInput.value='';
+                follow("following", null);
+            });
+            followerSpan.addEventListener("click", function(){
+                follow_type="follower";
+                followsearchInput.classList.remove('displayNone');
+                followsearchInput.value='';
+                follow("follower", null);
+            });
+
+            // 팔로우 목록 검색 input 이벤트
+            const follow_search = document.querySelector("#follow_search_content");
+            follow_search.addEventListener("input", function(){
+                follow(follow_type+"_search", follow_search.value);
+            });
+        });
+        const follow = async (type, searchtext) =>{
+
+            const formData = new FormData();
+            formData.append("type", type);
+
+            if(searchtext!=null){
+                formData.append("searchtext", searchtext);
+            }
+
+            const url = "/main/follow_list/";
+            const res = await fetch(url, {
+                method:"POST",
+                headers:{},
+                body: formData,
+            });
+            const {users: users} = await res.json();
+            showFollowList(users);
+        }
+        const showFollowList = (users) => {
+            const currentInput = document.querySelector('#friends-info--container');    
+            currentInput.innerHTML="";        
+
+            // users가 [] 인 경우 빈 배열이므로 null이 아님
+            if(users.length > 0){
+                for (const user of users) {
+                    if(user.introduce==null){
+                        tmpintrodue="";
+                    }else{
+                        tmpintrodue=user.introduce;
+                    }
+
+                    atagInput = document.createElement('a');
+                    atagInput.href="/";
+
+                    atagInput.innerHTML = `
+                        <div>
+                            <div class="search-result__right--container">
+                                <img src="https://placekitten.com/50/50" alt="user image">
+                                <div class="search-result__name-container">
+                                    <h2>${user.name}</h2>
+                                    <p>${tmpintrodue}</p>
+                                </div>
+                            </div>
+                            <div class="search-result__right-container">
+                                <div class="search-result__info">
+                                    <div class="search-result__right-upper-container">
+                                        <img src="https://placekitten.com/30/30" alt="">
+                                    </div>
+                                    <p>13%</p>
+                                </div>
+                                <div class="search-result__info">
+                                    <div class="search-result__right-upper-container">
+                                        <h2>23</h2>
+                                    </div>
+                                    <p>following</p>
+                                </div>
+                                <div class="search-result__info">
+                                    <div class="search-result__right-upper-container">
+                                        <h2>23</h2>
+                                    </div>
+                                    <p>follower</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    currentInput.appendChild(atagInput);
+
+                }
+            }
+        }
+    </script>
 
     <script src="{% static 'js/hamburger.js' %}"></script>
     <script src="https://kit.fontawesome.com/6fbcf91afd.js" crossorigin="anonymous"></script>

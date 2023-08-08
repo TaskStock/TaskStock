@@ -26,7 +26,7 @@ class User(AbstractUser):
     # 만약 그렇다면 자기자신으로 설정하여 해결
     # 추후에 오류 발생하면 생각
     # 검색 기능 완성 시 다시 개발
-    # followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
+    followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
     def __str__(self):
         return self.username
@@ -52,7 +52,7 @@ def user_created(sender, instance, created, **kwargs):
 
 class Value(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='value_user')
-    date = models.DateTimeField(auto_created=True, auto_now_add=True)
+    date = models.DateField()
     percentage = models.FloatField()
     start = models.IntegerField()
     end = models.IntegerField(null=True, default=0)

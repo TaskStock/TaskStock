@@ -7,7 +7,7 @@
                 <input type="text" placeholder="Search" name="search_content" id="search_content">
             </form>
         </div>
-        <div class="live-chart">
+        <div id="live-chart" class="live-chart">
             <div class="search-label">
                 <h3>실시간 차트</h3>
             </div>
@@ -98,12 +98,16 @@
         const textarea = document.querySelector("#search_content");
 
         textarea.addEventListener("input", function(){
+            const liveChartInput = document.querySelector('#live-chart');
+            if(textarea.value=="")
+                liveChartInput.classList.remove('displayNone');
+            else
+                liveChartInput.classList.add('displayNone');
             searchAjax(textarea.value);
         });
     });
     
     const searchAjax = async (text) =>{
-
         const formData = new FormData();
         formData.append("text", text);
 
@@ -128,8 +132,11 @@
                 }else{
                     tmpintrodue=user.introduce;
                 }
+                
+                atagInput = document.createElement('a');
+                atagInput.href="/";
 
-                currentInput.innerHTML = `
+                atagInput.innerHTML = `
                 <a href="/">
                     <div class="search-result__container">
                         <div class="search-result__right--container">
@@ -162,7 +169,7 @@
                     </div>
                 </a>
                 `;
-
+                currentInput.appendChild(atagInput);
             }
         }
     }
