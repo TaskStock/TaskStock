@@ -48,8 +48,9 @@
                 <div class="todo-paint">
                     {% for todo in todos %}
                     
-                    <div class="todo-item todo-item-{{todo.pk}}">
-                        <div class="todo-checkbox todo-checkbox-{{todo.pk}}" onclick="check_todo({{todo.pk}})"></div>
+                    <div class="todo-item todo-item-{{todo.pk}} ">
+                        
+                        <div class="todo-checkbox todo-checkbox-{{todo.pk}} {{todo.goal_check}}" onclick="check_todo({{todo.pk}})"></div>
                         
                         <input type="text" 
                                class="todo-contents" 
