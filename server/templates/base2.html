@@ -84,30 +84,56 @@
                 </div>
             </div>
         </div>
-        <div id="friends-info--container"></div>
+        <div id="follow-search-container">
+            <!-- input은 following 목록, follower 목록인지에 따라 name, id가 다름 -->
+            <input type="text" placeholder="Search" name="follow_search_content" id="follow_search_content" class="displayNone">
+        </div>
+        <div id="friends-info--container">
+            
+        </div>
     </section>
     {% block page %}
     {% endblock %}
 
     {% block extra %}
     {% endblock %}
-    
+     
     <script>
+        let follow_type
+
         document.addEventListener("DOMContentLoaded", function(){
+            // 팔로우 목록 click 이벤트
             const followingSpan = document.querySelector("#following_list");
             const followerSpan = document.querySelector("#follower_list");
+            const followsearchInput = document.querySelector("#follow_search_content");
 
             followingSpan.addEventListener("click", function(){
-                follow("following");
+                follow_type="following";
+                followsearchInput.classList.remove('displayNone');
+                followsearchInput.value='';
+                follow("following", null);
             });
             followerSpan.addEventListener("click", function(){
-                follow("follower");
+                follow_type="follower";
+                followsearchInput.classList.remove('displayNone');
+                followsearchInput.value='';
+                follow("follower", null);
+            });
+
+            // 팔로우 목록 검색 input 이벤트
+            const follow_search = document.querySelector("#follow_search_content");
+            follow_search.addEventListener("input", function(){
+                follow(follow_type+"_search", follow_search.value);
             });
         });
-        const follow = async (type) =>{
+        const follow = async (type, searchtext) =>{
 
             const formData = new FormData();
             formData.append("type", type);
+
+            if(searchtext!=null){
+                formData.append("searchtext", searchtext);
+            }
 
             const url = "/main/follow_list/";
             const res = await fetch(url, {
@@ -119,8 +145,8 @@
             showFollowList(users);
         }
         const showFollowList = (users) => {
-            const currentInput = document.querySelector('#friends-info--container');
-            currentInput.innerHTML="";
+            const currentInput = document.querySelector('#friends-info--container');    
+            currentInput.innerHTML="";        
 
             // users가 [] 인 경우 빈 배열이므로 null이 아님
             if(users.length > 0){

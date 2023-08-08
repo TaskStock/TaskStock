@@ -143,6 +143,10 @@ def follow_list(request):
         follow_list = current_user.followings.all()
     elif request.POST.get("type")=="follower":
         follow_list = current_user.followers.all()
+    elif request.POST.get("type")=="following_search":
+        follow_list = current_user.followings.filter(name__contains=request.POST.get("searchtext"))
+    elif request.POST.get("type")=="follower_search":
+        follow_list = current_user.followers.filter(name__contains=request.POST.get("searchtext"))
 
     users=[]
 
