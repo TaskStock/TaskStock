@@ -14,6 +14,8 @@ from django.contrib import auth
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from django.core import serializers
+
 """
 사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update //만드는 중
 할일 추가 함수 //만듬
@@ -113,23 +115,47 @@ def change_password(request):
     # 0 : 정상적으로 변경됨, 1 : 현재 비밀번호와 다름, 2 : 새로운 비밀번호 확인이 틀림
     return JsonResponse({"result": result})
 
-def following_list(request):
-    user=request.user
-    followings = user.followings.all()
+@csrf_exempt
+def search_ajax(request):
+    search_content = request.POST.get("text")
 
-    ctx ={ 
-        'followings':followings,
-    }
-    return render(request, 'main/settings.html', context=ctx)
+    if search_content is not None:
+        find_users = User.objects.filter(name__contains=search_content).exclude(pk=request.user.pk)
+    else:
+        find_users = User.objects.all().exclude(pk=request.user.pk)
 
-def follower_list(request):
-    user=request.user
-    followers = user.followers.all()
+    users=[]
 
-    ctx ={ 
-        'followers':followers,
-    }
-    return render(request, 'main/settings.html', context=ctx)
+    for user in find_users:
+        user_data={
+            "name":user.name,
+            "introduce":user.introduce,
+            # 추후 필요한 필드 추가
+        }
+        users.append(user_data)
+
+    return JsonResponse({"users": users})
+
+@csrf_exempt
+def follow_list(request):
+    current_user=request.user
+
+    if request.POST.get("type")=="following":
+        follow_list = current_user.followings.all()
+    elif request.POST.get("type")=="follower":
+        follow_list = current_user.followers.all()
+
+    users=[]
+
+    for user in follow_list:
+        user_data={
+            "name":user.name,
+            "introduce":user.introduce,
+            # 추후 필요한 필드 추가
+        }
+        users.append(user_data)
+
+    return JsonResponse({"users": users})
 
 def createValue(user):
     last_value=Value.objects.filter(user=user).order_by('-date').first()
@@ -164,24 +190,25 @@ def home(request):
         
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
-    
     todos_levels_dict = {}
     for todo in todos:
-        todos_levels_dict[todo.pk] = todo.level
-        
+        todos_levels_dict[todo.id] = todo.level
+
     todos_sub_dict = {}
     for todo in todos:
-        todos_levels_dict[todo.pk] = 5 - todo.level
-        
+        todos_sub_dict[todo.pk] = 5 - todo.level
+    
     #데이터
-    dataset = values_for_chart(current_user, 7)
-    return render(request, 'main/home.html', {'todo_levels':todo_levels, 'sub_levels':sub_levels, 'date_id':date_id, 'todos':todos, 'dataset':dataset})
+    # dataset = values_for_chart(current_user, 7)
 
-def hello(request):
     context = {
-                
-            }
-    return render(request, 'base.html', context=context)
+        'todos_levels_dict': todos_levels_dict,
+        'date_id':date_id, 
+        'todos':todos,
+        'todos_sub_dict': todos_sub_dict,
+    }
+    return render(request, 'main/home2.html', context)
+
 
 #---세원 작업---#
 #시간 디버깅용 함수
@@ -438,3 +465,4 @@ def search(request):
 
 # def settings(request):
 #     return render(request, 'main/settings.html')
+

@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- font : pretendard -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <!-- icon : css.gg -->
+    <link href="https://css.gg/css" rel="stylesheet" />
+    <link href="https://unpkg.com/css.gg/icons/icons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/css.gg/icons/icons.css" rel="stylesheet"/>
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main/calendar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chart.css' %}">
+    
+    
+    <title>TaskStock</title>
+</head>
+<body>
+    <section>
+        <header>
+            <h1>TASKSTOCK
+                <img src="{% static 'img/logo-3.png' %}" alt="">
+            </h1>
+            <div class="hamburger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="hamburger-contents">
+                <a href="/main/">
+                    <div><i class="gg-home"></i></div>
+                    <span>Home</span>
+                </a>
+                <a href="/main/search/" class="menu-right__search">
+                    <div><i class="gg-search"></i></div>
+                    <span>Search</span>
+                </a>
+                <a href="/main/settings/" class="menu-right__settings">
+                    <div><i class="gg-options"></i></div>
+                    <span>Settings</span>
+                </a>
+                <a href="/" class="menu-right__primium">
+                    <div><i class="gg-crown"></i></div>
+                    <span>Premium</span>
+                </a>
+                <a href="/" class="menu-right__invite">
+                    <div><i class="gg-user-add"></i></div>
+                    <span>Invite Friends</span>
+                </a>
+                <a href="/" class="menu-right__logout">
+                    <div><i class="gg-log-off"></i></div>
+                    <span>Log out</span>
+                </a>
+            </div>
+
+        </header>
+        
+        <div class="my-info--container">
+            <div class="my-info--pic"></div>
+            <div class="my-info--about">
+                <div class="my-info--name">User</div>
+                <div class="my-info--comment">Hello World!</div>
+                <div class="my-info--sff__container">
+                    <div class="my-info--sff sff-s">
+                        <span>Today</span>
+                        <span>4.7%</span>
+                    </div>
+                    <div class="my-info--sff sff-fg">
+                        <span>Following</span>
+                        <span id="following_list">34</span>
+                    </div>
+                    <div class="my-info--sff sff-fr">
+                        <span>Follower</span>
+                        <span id="follower_list">30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="friends-info--container"></div>
+    </section>
+    {% block page %}
+    {% endblock %}
+
+    {% block extra %}
+    {% endblock %}
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            const followingSpan = document.querySelector("#following_list");
+            const followerSpan = document.querySelector("#follower_list");
+
+            followingSpan.addEventListener("click", function(){
+                follow("following");
+            });
+            followerSpan.addEventListener("click", function(){
+                follow("follower");
+            });
+        });
+        const follow = async (type) =>{
+
+            const formData = new FormData();
+            formData.append("type", type);
+
+            const url = "/main/follow_list/";
+            const res = await fetch(url, {
+                method:"POST",
+                headers:{},
+                body: formData,
+            });
+            const {users: users} = await res.json();
+            showFollowList(users);
+        }
+        const showFollowList = (users) => {
+            const currentInput = document.querySelector('#friends-info--container');
+            currentInput.innerHTML="";
+
+            // users가 [] 인 경우 빈 배열이므로 null이 아님
+            if(users.length > 0){
+                for (const user of users) {
+                    if(user.introduce==null){
+                        tmpintrodue="";
+                    }else{
+                        tmpintrodue=user.introduce;
+                    }
+
+                    atagInput = document.createElement('a');
+                    atagInput.href="/";
+
+                    atagInput.innerHTML = `
+                        <div>
+                            <div class="search-result__right--container">
+                                <img src="https://placekitten.com/50/50" alt="user image">
+                                <div class="search-result__name-container">
+                                    <h2>${user.name}</h2>
+                                    <p>${tmpintrodue}</p>
+                                </div>
+                            </div>
+                            <div class="search-result__right-container">
+                                <div class="search-result__info">
+                                    <div class="search-result__right-upper-container">
+                                        <img src="https://placekitten.com/30/30" alt="">
+                                    </div>
+                                    <p>13%</p>
+                                </div>
+                                <div class="search-result__info">
+                                    <div class="search-result__right-upper-container">
+                                        <h2>23</h2>
+                                    </div>
+                                    <p>following</p>
+                                </div>
+                                <div class="search-result__info">
+                                    <div class="search-result__right-upper-container">
+                                        <h2>23</h2>
+                                    </div>
+                                    <p>follower</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    currentInput.appendChild(atagInput);
+
+                }
+            }
+        }
+    </script>
+
+    <script src="{% static 'js/hamburger.js' %}"></script>
+    <script src="https://kit.fontawesome.com/6fbcf91afd.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="{% static 'js/data.js' %}"></script>
+    <script src="{% static 'js/calendar.js' %}"></script>
+    
+</body>
+</html>

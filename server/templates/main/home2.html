@@ -1,0 +1,119 @@
+{% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
+<main>
+    <div class="main-left">
+        <div id="chart"></div>
+        <div class="chart-btn--container">
+            <div class="chart-btn active chart-week">1 week</div>
+            <div class="chart-btn chart-month">1 month</div>
+            <div class="chart-btn chart-3month">3 months</div>
+            <div class="chart-btn chart-6month">6 months</div>
+            <div class="chart-btn chart-year">1 year</div>
+        </div>
+    </div>
+    <div class="main-right">
+        <div class="main-right--container">
+            <div class="calendar-container">
+                <div class="calendar jsCalendar"></div>
+            </div>
+            <div class="todo-container">
+                <!-- 할 일 등록 -->
+                <div class="todo-plus">
+                    <div class="todo-plus--btn"><i class="fa-solid fa-plus"></i></div>
+                    <div class="todo-add--container day{{date_id}}--todo">
+                        <div class="todo-add--date">8월 7일 월요일</div>
+                        <div class="todo-add--input">
+                            <span>할 일을 입력하세요</span>
+                            <input type="text"
+                            placeholder="헬스장 가기"
+                            autofocus
+                            >
+                        </div>
+                        <div class="todo-add--level">
+                            <span>난이도를 설정하세요</span>
+                            <div class="sel-todo-level">
+                                <div level="1"></div>
+                                <div level="2"></div>
+                                <div level="3"></div>
+                                <div level="4"></div>
+                                <div level="5"></div>
+                            </div>
+                        </div>
+                        <div class="todo-add--submit-btn" onclick="add_todo({{ date_id }})">완료</div>
+
+                    </div>
+                </div>
+
+                <!-- paint todo -->
+                <div class="todo-paint">
+                    {% for todo in todos %}
+                    
+                    <div class="todo-item todo-item-{{todo.pk}}">
+                        <div class="todo-checkbox todo-checkbox-{{todo.pk}}" onclick="check_todo({{todo.pk}})"></div>
+                        
+                        <input type="text class todo-contents" 
+                               onclick="edit_todo({{todo.pk}})"
+                               value="{{todo.content}}"
+                               readonly>
+                        <div class="todo-level todo-level-{{todo.pk}}">
+                      
+                         
+          
+                        {% with level=todos_levels_dict|get_item:todo.id %}
+                            {% for i in level|to_range %}
+                                <div level="{{level}}" class="active"></div>
+                            {% endfor %}
+                         
+                        {% endwith %} 
+
+                        {% with sub=todos_sub_dict|get_item:todo.id %}
+                            {% for i in sub|to_range %}
+                                <div level="{{sub}}"></div>
+                            {% endfor %}
+                         
+                        {% endwith %} 
+
+                            <!-- <div level="1"></div>
+                            <div level="2"></div>
+                            <div level="3"></div>
+                            <div level="4"></div>
+                            <div level="5"></div> -->
+                            
+                        </div>
+                        <!-- edit page -->
+                        <div class="todo-item--edit todo-item--edit-{{todo.pk}}">
+                            <div class="todo-item--date">8월 7일 월요일</div>
+                            <div class="todo-item--input">
+                                <span>할 일을 수정하세요</span>
+                                <input type="text"
+                                placeholder="{{todo.content}}"
+                                value="{{todo.content}}"
+                                
+                                >
+                            </div>
+                            <div class="todo-item--level">
+                                <span>난이도를 수정하세요</span>
+                                <div class="edit-todo-level" curr-level="{{todo.level}}">
+                                    <div level="1"></div>
+                                    <div level="2"></div>
+                                    <div level="3"></div>
+                                    <div level="4"></div>
+                                    <div level="5"></div>
+                                </div>
+                            </div>
+                            <div class="todo-edit--submit-btn" onclick="update_todo({{todo.pk}})">완료</div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/todo2.js' %}"></script>
+</main>
+
+
+
+
+{% endblock %}
