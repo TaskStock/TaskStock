@@ -1,0 +1,330 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Favicons -->
+    <link href="./images/favicon.png" rel="icon" />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"
+  />
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/landing_page.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <title>TaskStock</title>
+  </head>
+  <body>
+    <header>
+      <nav class="page-nav">
+        <div class="page-nav__logo-container">
+          <a href="/">
+            <img src="https://placekitten.com/120/30" alt="logo image">
+          </a>
+        </div>
+        <div class="page-nav__button-container">
+          <div class="page-nav__button-container--support">
+            <a href="">
+              <span>Support</span>
+            </a>              
+          </div>
+          <div class="page-nav__button-container--login">
+            <a href="/login/">
+              <span>Login</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section id="page-banner">
+        <div class="container">
+          <div class="page-banner__container" data-aos="fade-up"
+          data-aos-duration="3000">
+            <div class="page-banner__heading">
+              <span>할일을 완료해 보세요</span>
+              <span>당신의 주식창에서.</span>
+            </div>
+            <a href="/login/" class="page-banner__start-btn">
+              <div>               
+                  <span>시작하기</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- 지수누나 -->
+      <section id="container-box">
+        <!-- 웹사이트 실행 이미지 -->
+        <div class="container">
+          <div class="container-box__container">
+            <div class="container-box__imgs">
+              <div class="container-box__imgs__img" data-aos="fade-left">
+                <img src="https://url.kr/dulgac" alt="containers first image">
+              </div>
+              <div class="container-box__imgs__img" data-aos="zoom-in">
+                <img src="https://url.kr/dulgac" alt="containers second image">
+              </div>
+              <div class="container-box__imgs__img" data-aos="fade-right">
+                <img src="https://url.kr/dulgac" alt="containers second image">
+              </div>
+            </div>
+          <!-- 두번째 섹션; 설명 -->
+            <div class="container-box__text" data-aos="fade-up">
+              <h3>Stay on top of your week.</h3>
+              <p>The timeline shows your week and beyond.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- 세번째 섹션 - FnQ -->
+      <section id="fnq">
+        <div class="container">
+          <div class="fnq-container">
+            <h2 data-aos="fade-up">How TaskStock works</h2>
+            <div class="introduction-rules__faq-container" data-aos="fade-up">
+              <div class="introduction-rules__image-container">
+                <img src="https://url.kr/dulgac" alt="containers first image">
+              </div>  
+              <ul class="introduction-rules__faq-container__faq-list">
+                <li class="introduction-rules__faq-container__faq-list__question">
+                  <h3>01</h3>
+                  <p>
+                    See your graph as your check your task and see it changing
+                  </p>
+                </li>
+                <li class="introduction-rules__faq-container__faq-list__question">
+                  <h3>02</h3>
+                  <p>
+                    See your graph as your check your task and see it changing
+                  </p>
+                </li>
+                <li class="introduction-rules__faq-container__faq-list__question">
+                  <h3>03</h3>
+                  <p>
+                    See your graph as your check your task and see it changing
+                  </p>
+                </li>
+                <li class="introduction-rules__faq-container__faq-list__question">
+                  <h3>04</h3>
+                  <p>
+                    See your graph as your check your task and see it changing
+                  </p>
+                </li>
+              </ul>
+            </div>
+          </div>
+      </div>
+      </section>
+      <!-- 지수 누나 끝 -->
+      <section id="advertise-box">
+        <div class="container">   
+          <div class="advertise-box__container">
+            <div class="advertise-box__heading" data-aos="fade-up">
+              <h1>Why TaskStock?</h1>
+              <h3>join us for your value up!</h3>
+            </div>
+            <div class="advertise-box__image">
+              <img src="https://placekitten.com/200/200" alt="" id="image-one"  data-aos="fade-left">
+              <img src="https://placekitten.com/200/200" alt="" id="image-two"  data-aos="zoom-in">
+              <img src="https://placekitten.com/200/200" alt="" id="image-three"  data-aos="fade-right">
+            </div>
+            <div class="advertise-box__description" data-aos="fade-up">
+              <h3>You can improve your value with taskStock.</h3>
+              <h3>You can also see your friends value.</h3>
+            </div>
+          </div>
+        </div>
+      </section> 
+      <section id="introduction-vision">
+        <div class="container">
+          <div class="page-vision__container">
+            <div class="page-vision__left-container">
+              <div class="page-vision__header" data-aos="fade-right">
+                <h1>Stock System?</h1>
+              </div>
+              <div class="page-vision__content" data-aos="fade-right">
+                <h2>Add your task todo.</h2>
+                <p>Stock price will be risen, if you finish your task</p>
+              </div>
+              <div class="page-vision__content" data-aos="fade-right">
+                <h2>Meet your friend.</h2>
+                <p>You can meet your friend's todo list & stock price.</p>
+              </div>
+              <div class="page-vision__description" data-aos="fade-right">
+                <p>→ more information.</p>
+              </div>
+            </div>
+            <div class="introduction-vision__image" data-aos="fade-up"> 
+              <img src="https://placekitten.com/300/500" alt="rule image">
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="introduction-rule">
+        <div class="container">
+          <div class="introduction-rule__container">
+            <div class="introduction-rule__description" data-aos="zoom-in-right">
+              <h2>Level 1: You can do it easy</h2>
+              <h3>example: wash dishes, cleaning, eat vitamin</h3>
+            </div>
+            <div class="introduction-rule__image" data-aos="flip-right">
+            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="introduction-rule">
+        <div class="container">
+          <div class="introduction-rule__container">
+            <div class="introduction-rule__description" data-aos="zoom-in-right">
+              <h2>Level 2: You can do it easy</h2>
+              <h3>example: wash dishes, cleaning, eat vitamin</h3>
+            </div>
+            <div class="introduction-rule__image" data-aos="flip-right">
+            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="introduction-rule">
+        <div class="container">
+          <div class="introduction-rule__container">
+            <div class="introduction-rule__description" data-aos="zoom-in-right">
+              <h2>Level 3: You can do it easy</h2>
+              <h3>example: wash dishes, cleaning, eat vitamin</h3>
+            </div>
+            <div class="introduction-rule__image" data-aos="flip-right">
+            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="introduction-rule">
+        <div class="container">
+          <div class="introduction-rule__container">
+            <div class="introduction-rule__description" data-aos="zoom-in-right">
+              <h2>Level 4: You can do it easy</h2>
+              <h3>example: wash dishes, cleaning, eat vitamin</h3>
+            </div>
+            <div class="introduction-rule__image" data-aos="flip-right">
+            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="introduction-rule">
+        <div class="container">
+          <div class="introduction-rule__container">
+            <div class="introduction-rule__description" data-aos="zoom-in-right">
+              <h2>Level 5: You can do it easy</h2>
+              <h3>example: wash dishes, cleaning, eat vitamin</h3>
+            </div>
+            <div class="introduction-rule__image" data-aos="flip-right">
+            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <section class="introduction-rule" style="background-color: black;">
+                <div class="container">
+                  <div class="introduction-rule__container">
+                    <div class="introduction-rule__description" data-aos="zoom-in-right">
+                      <h2>Level 1: You can do it easy</h2>
+                      <h3>example: wash dishes, cleaning, eat vitamin</h3>
+                    </div>
+                    <div class="introduction-rule__image" data-aos="flip-right">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+            <div class="swiper-slide">
+              <section class="introduction-rule" style="background-color: black;">
+                <div class="container">
+                  <div class="introduction-rule__container">
+                    <div class="introduction-rule__description" data-aos="zoom-in-right">
+                      <h2>Level 1: You can do it easy</h2>
+                      <h3>example: wash dishes, cleaning, eat vitamin</h3>
+                    </div>
+                    <div class="introduction-rule__image" data-aos="flip-right">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+            <div class="swiper-slide">
+              <section class="introduction-rule">
+                <div class="container">
+                  <div class="introduction-rule__container">
+                    <div class="introduction-rule__description" data-aos="zoom-in-right">
+                      <h2>Level 1: You can do it easy</h2>
+                      <h3>example: wash dishes, cleaning, eat vitamin</h3>
+                    </div>
+                    <div class="introduction-rule__image" data-aos="flip-right">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-pagination"></div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div class="footer-container">
+        <div class="logo-container">
+          <a href="/main/landing_page/">
+            <img src="https://placekitten.com/150/50" alt="logo image">
+          </a>
+        </div>
+        <div class="contact-container">
+          <p>contact us: instagram @011110kim</p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script>
+      var swiper = new Swiper(".mySwiper", {
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: {
+          delay: 2500,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      });
+    </script>
+    <script>
+      AOS.init();
+    </script>
+    <script src="{% static 'js/landing_page.js' %}"></script>
+  </body>
+</html>
