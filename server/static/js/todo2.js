@@ -12,8 +12,6 @@ edit_containers.forEach(box => {
     box.style.width = `${Edit_width}px`;
 })
 
-
-
 // add todo 
 let level = '0';
 const level_stars = document.querySelectorAll('.sel-todo-level div');
@@ -118,11 +116,7 @@ const handleTodoResponse = async(todo_id, level, content) => {
         </div>
     </div>
     `;
-
 }
-
-
-
 
 
 // edit todo
@@ -157,9 +151,6 @@ const edit_todo = (todo_id) => {
             }
         )})
     }
-    
-
-
 }
 
 // 문서 전체에 클릭 이벤트 리스너 추가
@@ -169,7 +160,6 @@ document.addEventListener('click', (event) => {
     const editContainers = container.querySelectorAll(`.todo-item--edit`);
     
     let clickedInsideEditContainer = false;
-    
     
     containers.forEach((container) => {
         const editContainer = container.querySelector(`.todo-item--edit`);
@@ -200,7 +190,6 @@ const update_todo = async(todo_id) => {
         updated_level = 0;
         edited_star = false;
     }
-
     const curr_content = content.value;
 
     // ajax
@@ -234,7 +223,6 @@ const handleUpdateTodoRes = async(todo_id, level, content) => {
     const container = document.querySelector(`.todo-level-${todo_id}`);
     const edit_container = document.querySelector(`.todo-item--edit-${todo_id} .edit-todo-level`);
     edit_container.setAttribute('curr-level', level);
-    console.log(edit_container);
     console.log(level);
     container.innerHTML = `
             ${paintedLevel}
@@ -244,15 +232,7 @@ const handleUpdateTodoRes = async(todo_id, level, content) => {
             ${paintedLevel}
             ${emptyLevel}
     `;
-    console.log(edit_container);
-
-    
-
-    
-
 }
-
-
 
 function epaintStar(todo_id, level){
     const edit_stars = document.querySelectorAll(`.todo-item--edit-${todo_id} .edit-todo-level div`);
@@ -264,7 +244,9 @@ function epaintStar(todo_id, level){
         }
     })
 }
+
 // delete todo
+
 const delete_todo = async(todo_id) => {
     const url = `/main/delete_todo/${todo_id}/`;
     const res = await fetch(url, {
@@ -277,7 +259,6 @@ const delete_todo = async(todo_id) => {
     const {id: id, d_id: d_id} = await res.json();
     handleDelTodoRes(id, d_id);
 }
-
 const handleDelTodoRes = async(todo_id, date_id) => {
     // delete container
     const container = document.querySelector(`.todo-item-${todo_id}`);
@@ -285,11 +266,41 @@ const handleDelTodoRes = async(todo_id, date_id) => {
 }
 
 
+
 // check todo
-const check_todo = (todo_id) => {
-    document.querySelector(`.todo-checkbox-${todo_id}`).classList.toggle('done');
+const check_todo = async(todo_id) => {
+    const checkBox = document.querySelector(`.todo-checkbox-${todo_id}`);
+    checkBox.classList.toggle('True');
+    let status = '';
+    // True || False
+    if(checkBox.classList.contains('True')){
+        status = 'True';
+        
+    }else{
+        status = 'False';
+    }
+    
+    const url = `/main/check_todo/${todo_id}/`;
+    const res = await fetch(url, {
+        method: 'POST', 
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({todo_id, status}),
+    })
+    
+    const {'color': color, 'todo_status': todo_status, 't_id': t_id} = await res.json();
+    handleCheckTodoRes(color, todo_status, t_id);
 }
 
-
+function handleCheckTodoRes(color, status, todo_id){
+    const checkBox = document.querySelector(`.todo-checkbox-${todo_id}`);
+    if (status == 'True'){
+        checkBox.classList.add('True');
+    } else{
+        checkBox.classList.remove('True');
+    }
+    
+}
 
 
