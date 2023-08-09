@@ -117,7 +117,7 @@ main {
   padding: var(--padding);
 }
 
-.page-banner__start-btn {
+#page-banner__start-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,8 +130,7 @@ main {
   transition: opacity 0.1s ease-in-out 0s;
 }
 
-
-.page-banner__start-btn:hover {
+#page-banner__start-btn:hover {
   opacity: 0.8;
 }
 
@@ -308,8 +307,8 @@ main {
   padding-top: 70px;
 }
 
-.advertise-box__heading > h1 {
-  font-size: var(--heading1);
+.advertise-box__heading > h2 {
+  font-size: var(--heading2);
   font-weight: 700;
   line-height: 1.2;
   text-align: center;
@@ -375,7 +374,7 @@ main {
 }
 
 .page-vision__left-container {
-  width: 50%;
+  width: 40%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -387,7 +386,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50%;
+  width: 40%;
   height: 100%;
   object-fit: contain;
 }
@@ -398,7 +397,7 @@ main {
 }
 
 .page-vision__header >h1 {
-  font-size: var(--heading1);
+  font-size: var(--heading2);
   font-weight: 700;
   line-height: 1.2;
   text-align: center;
@@ -415,7 +414,7 @@ main {
 }
 
 .page-vision__content > h2 {
-  font-size: var(--heading2);
+  font-size: var(--heading3);
   font-weight: 700;
   line-height: 1.2;
   padding: var(--padding);
@@ -459,7 +458,7 @@ main {
 }
 
 .introduction-rule__description > h2 {
-  font-size: var(--heading2);
+  font-size: var(--heading3);
   font-weight: 700;
   line-height: 1.2;
   padding: var(--padding);
