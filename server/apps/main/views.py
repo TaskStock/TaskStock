@@ -442,28 +442,18 @@ def values_for_chart(user, term):
     value_dates = set(range_values.values_list('date', flat=True))
     
     #첫 시작 날짜에 대한 더미데이터 처리
-    if start_date not in value_dates:
-        Value.objects.create(
-            user=user,
-            date=start_date,
-            percentage=0,
-            start=0,
-            end=0,
-            high=0,
-            low=0,
-        )
-
-    next_date = start_date + timedelta(days=1)
-    if not Value.objects.filter(date=next_date).exists():
-        Value.objects.create(
-            user=user,
-            date=start_date + timedelta(days=1),
-            percentage=0,
-            start=0,
-            end=0,
-            high=0,
-            low=0,
-        )
+    date_list = [start_date, start_date + timedelta(days=1)]
+    for date in date_list:
+        if date not in value_dates:
+            Value.objects.create(
+                user=user,
+                date=date,
+                percentage=0,
+                start=0,
+                end=0,
+                high=0,
+                low=0,
+            )
 
     #최종 데이터 다시 쿼리하기
     values = Value.objects.filter(user=user, date__range=(start_date, kst_date))
