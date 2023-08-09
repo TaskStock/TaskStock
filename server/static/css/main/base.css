@@ -241,7 +241,6 @@ section header img{
     margin-right: var(--gutter);
 }
 .search-result__name-container h2{
-
     font-size: var(--body1);
     margin-bottom: 5px;
 }

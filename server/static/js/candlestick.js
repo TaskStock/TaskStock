@@ -64,9 +64,10 @@ const showChart = (dataset) => {
   plotOptions: {
     candlestick: {
       colors: {
-        upward: 'red',
-        downward: 'blue',
-      }
+        upward: '#DD1717',
+        downward: '#124392',
+      },
+      wick: { useFillColor: true },
     }
   },
   
