@@ -1,5 +1,6 @@
 {% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
 <main>
+    {{ user.combo }}
     <div class="main-left">
         <div id="username_save">{{user.username}}</div>
         <div id="chart"></div>

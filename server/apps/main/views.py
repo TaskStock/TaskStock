@@ -193,7 +193,6 @@ def createValue(user):
     end=0
     low=0
     high=0
-    combo=0
     value = Value.objects.create(
         user=user,
         date=timezone.now(),
@@ -202,7 +201,6 @@ def createValue(user):
         end=end,
         low=low,
         high=high,
-        combo=combo,
     )
     return value
 
@@ -411,8 +409,6 @@ def check_todo(request, pk):
         return JsonResponse({'color':color, 'todo_status': todo_status, 't_id':todo.pk})
         
 
-        
-
 
 """
 차트로 보낼 data준비하는 함수
@@ -455,6 +451,7 @@ def values_for_chart(user, term):
     for missing_date in missing_dates:
         previous_value = Value.objects.filter(user=user, date=missing_date - timedelta(days=1)).first()
         if previous_value:
+            #previous_value가 있으면 그 값을 기준으로 더미 데이터 생성
             Value.objects.create(
                 user=user,
                 date=missing_date,
@@ -463,8 +460,20 @@ def values_for_chart(user, term):
                 end=previous_value.end,
                 low=previous_value.end - 1000,
                 high=previous_value.end,
-                combo=0,
             )
+        print('만든 value 객체 date:', missing_date)
+        
+    else:
+        #previous_value가 없으면 기본 값으로 더미 데이터 생성
+        Value.objects.create(
+            user=user,
+            date=missing_date,
+            percentage=0,
+            start=0,
+            end=0,
+            low=0,
+            high=0,
+        )
 
     # 최종 데이터 가져오기
     values = Value.objects.filter(user=user, date__range=(start_date, kst_date)).order_by('date')
