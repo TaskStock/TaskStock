@@ -25,9 +25,11 @@
 <body>
     <section>
         <header>
-            <h1>TASKSTOCK
-                <img src="{% static 'img/logo-3.png' %}" alt="">
-            </h1>
+            <a href="/main/">
+                <h1>TASKSTOCK
+                    <img src="{% static 'img/logo-3.png' %}" alt="">
+                </h1>
+            </a>
             <div class="hamburger">
                 <div></div>
                 <div></div>
@@ -74,7 +76,7 @@
                     </div>
                     <div class="my-info--sff sff-fg">
                         <span>Following</span>
-                        <span id="following_list">34</span>
+                        <span id="following_list">{{followings}}</span>
                     </div>
                     <div class="my-info--sff sff-fr">
                         <span>Follower</span>

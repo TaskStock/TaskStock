@@ -67,7 +67,7 @@ const showChart = (dataset) => {
         upward: '#DD1717',
         downward: '#124392',
       },
-      wick: { useFillColor: true }
+      wick: { useFillColor: true },
     }
   },
   
