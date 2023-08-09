@@ -7,6 +7,9 @@ from django.utils import timezone
 import pytz
 from datetime import timedelta, datetime
 from django.db import transaction
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 # 비밀번호 변경 위한 라이브러리
 from django.contrib.auth.hashers import check_password
@@ -190,7 +193,6 @@ def createValue(user):
     end=0
     low=0
     high=0
-    combo=0
     value = Value.objects.create(
         user=user,
         date=timezone.now(),
@@ -199,9 +201,19 @@ def createValue(user):
         end=end,
         low=low,
         high=high,
-        combo=combo,
     )
     return value
+
+@csrf_exempt
+def chart_ajax(request):
+    day = int(request.POST.get("day"))
+    username = request.POST.get("username")
+
+    target_user = User.objects.get(username=username)
+
+    dataset = values_for_chart(target_user, day)
+
+    return JsonResponse({"dataset": dataset})
 
 # ---환희 작업---#
 
@@ -222,10 +234,12 @@ def home(request):
     for todo in todos:
         todos_sub_dict[todo.pk] = 5 - todo.level
     
-    #데이터
+    # 데이터
     # dataset = values_for_chart(current_user, 7)
+    
 
     context = {
+        'user': current_user,
         'todos_levels_dict': todos_levels_dict,
         'date_id':date_id, 
         'todos':todos,
@@ -249,6 +263,7 @@ def get_value_for_date(user, target_date=None):
         target_date = timezone.localtime(timezone.now()).date()
         
     value_object = Value.objects.get(user=user, date=target_date)
+
     return value_object
 
 
@@ -316,6 +331,9 @@ def delete_todo(request, pk):
             #todo삭제
             todo.delete()
         
+        #combo 변화 처리    
+        process_combo(current_user)
+            
     return JsonResponse({'id':todo_id, 'd_id': value.id})
 """
 Todo 업데이트 하는 함수
@@ -378,15 +396,18 @@ def check_todo(request, pk):
             #value의 percentage값 업데이트
             value.percentage = int((value.end-value.start)/value.start *100)
             if value.percentage > 0:
-                color = 'blue'
-            else:
                 color = 'red'
+            else:
+                color = 'blue'
             
             todo.save()
             value.save()
-        
+            
+        #combo변화 처리
+        process_combo(current_user)
         todo_status = str(todo_status)
         return JsonResponse({'color':color, 'todo_status': todo_status, 't_id':todo.pk})
+        
 
 
 """
@@ -410,7 +431,7 @@ def values_for_chart(user, term):
     kst_date = timezone.now().astimezone(kst).date()
 
     # term 값을 조절
-    term = min(max_date, term)
+    # term = min(max_date, term)
     start_date = kst_date - timedelta(days=term-1)
 
     # 사용자가 요청한 범위의 date
@@ -430,6 +451,7 @@ def values_for_chart(user, term):
     for missing_date in missing_dates:
         previous_value = Value.objects.filter(user=user, date=missing_date - timedelta(days=1)).first()
         if previous_value:
+            #previous_value가 있으면 그 값을 기준으로 더미 데이터 생성
             Value.objects.create(
                 user=user,
                 date=missing_date,
@@ -438,8 +460,20 @@ def values_for_chart(user, term):
                 end=previous_value.end,
                 low=previous_value.end - 1000,
                 high=previous_value.end,
-                combo=0,
             )
+        print('만든 value 객체 date:', missing_date)
+        
+    else:
+        #previous_value가 없으면 기본 값으로 더미 데이터 생성
+        Value.objects.create(
+            user=user,
+            date=missing_date,
+            percentage=0,
+            start=0,
+            end=0,
+            low=0,
+            high=0,
+        )
 
     # 최종 데이터 가져오기
     values = Value.objects.filter(user=user, date__range=(start_date, kst_date)).order_by('date')
@@ -450,28 +484,36 @@ def values_for_chart(user, term):
     return dataset
 
 """
-combo처리
+combo처리하는 함수
 """
 def process_combo(user):
-    #goal_check True개수 >= 1 이면 combo어제보다 1 증가
-    #당일 자정까지 goal_check전부 False면 combo 0으로 reset
-
-    values = Value.objects.filter(user=user)
-    yesterday_value = values[-2]
-    today_value = values[-1]
-    todos = Todo.objects.filter(value=today_value)
+    #전체 기간의 value들을 내림차순으로 가져와서 goal_check=True인 todo가 있는지 확인
+    #date가 연속적이지 않을때까지 combo += 1
+    #goal_check=False인 todo가 나올때까지 combo += 1
+    #두 조건 and로 연결
+    values = Value.objects.filter(user=user).order_by('-date')
     
-    checked_cnt = 0
-    for todo in todos:
-        if todo.goal_check:
-            checked_cnt += 1
+    #역순으로 체크
+    combo = 0
+    previous_date = None
 
-    if checked_cnt:
-        today_value.combo = yesterday_value.combo + 1
+    for value in values:
+        todos = Todo.objects.filter(value=value)
         
-    else: 
-        today_value.combo = 0
-
+        checked_day = any(todo.goal_check for todo in todos)
+        
+        if (previous_date and previous_date - value.date > timedelta(days=1)) or not checked_day:
+            break
+        print('previous_date:', previous_date)
+        print('valid_date:', value.date)
+        
+        combo += 1
+        previous_date = value.date
+        
+    user.combo = combo
+    user.save()
+        
+    return
 #---선우 작업---#
 
 def search(request):
@@ -487,6 +529,9 @@ def search(request):
     }
 
     return render(request, 'main/search.html',context=ctx)
+
+def landing_page(request):
+    return render(request, 'main/landing_page.html')
 
 # def settings(request):
 #     return render(request, 'main/settings.html')
