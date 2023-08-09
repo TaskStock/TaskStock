@@ -460,20 +460,20 @@ def values_for_chart(user, term):
                 end=previous_value.end,
                 low=previous_value.end - 1000,
                 high=previous_value.end,
+            )      
+        else:
+            #previous_value가 없으면 기본 값으로 더미 데이터 생성
+            Value.objects.create(
+                user=user,
+                date=missing_date,
+                percentage=0,
+                start=0,
+                end=0,
+                low=0,
+                high=0,
             )
+    
         print('만든 value 객체 date:', missing_date)
-        
-    else:
-        #previous_value가 없으면 기본 값으로 더미 데이터 생성
-        Value.objects.create(
-            user=user,
-            date=missing_date,
-            percentage=0,
-            start=0,
-            end=0,
-            low=0,
-            high=0,
-        )
 
     # 최종 데이터 가져오기
     values = Value.objects.filter(user=user, date__range=(start_date, kst_date)).order_by('date')
