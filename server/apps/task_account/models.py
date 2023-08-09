@@ -42,8 +42,8 @@ def user_created(sender, instance, created, **kwargs):
             percentage=0,
             start=0,
             end=50000,
-            low=0,
-            high=0,
+            low=50000,
+            high=50000,
         )
         Category.objects.create(
             user=instance,
@@ -58,6 +58,10 @@ class Value(models.Model):
     end = models.IntegerField(null=True, default=0)
     low = models.IntegerField(null=True, default=0)
     high = models.IntegerField(null=True, default=0)
+    
+    def __str__(self):
+        return self.date.strftime('%Y-%m-%d')
+
 
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='category_user')

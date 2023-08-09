@@ -187,15 +187,12 @@ def createValue(user):
     # 마지막 생성된 value 기준으로 새로운 value 값들을 계산하는 로직 필요
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
     percentage=0
-    start_datetime=50000
-    end=0
-    low=0
-    high=0
+    start = end = low = high = last_value.end
     value = Value.objects.create(
         user=user,
         date=timezone.now(),
         percentage=percentage,
-        start_datetime=start_datetime,
+        start=start,
         end=end,
         low=low,
         high=high,
@@ -217,10 +214,12 @@ def chart_ajax(request):
 
 def home(request):
     current_user = request.user
+    process_combo(current_user)
     value = get_value_for_date(current_user)
+    
     if value is None:
         # 로그인 했을 때 value가 없는 경우
-        value = createValue(request.user)
+        value = createValue(current_user)
         
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
@@ -255,8 +254,11 @@ user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으�
 def get_value_for_date(user, target_date=None):
     if not target_date:
         target_date = timezone.localtime(timezone.now()).date()
-        
-    value_object = Value.objects.get(user=user, date=target_date)
+    
+    try:    
+        value_object = Value.objects.get(user=user, date=target_date)
+    except:
+        value_object = None
 
     return value_object
 
@@ -277,9 +279,13 @@ def add_todo(request):
         #date 일치하는 value 객체 가져오기
         value = get_value_for_date(current_user)
         
+        #달력 연결 대비
+        # if value is None:
+        #     createValue(current_user)
+            
         #현재 user의 todolist 객체 가져오기
         category = Category.objects.get(user=current_user)
-        
+
         
         #투두 객체 생성
         Todo.objects.create(
@@ -331,7 +337,7 @@ def delete_todo(request, pk):
     return JsonResponse({'id':todo_id, 'd_id': value.id})
 """
 Todo 업데이트 하는 함수
-content, level 업데이트 -> high, low 업데이트
+content, level 업데이트 -> value high, low 업데이트
 """
 @csrf_exempt
 def update_todo(request, pk):
@@ -456,7 +462,7 @@ def values_for_chart(user, term):
                 percentage=0,
                 start=previous_value.end,
                 end=previous_value.end,
-                low=previous_value.end - 1000,
+                low=previous_value.end,
                 high=previous_value.end,
             )      
         else:
