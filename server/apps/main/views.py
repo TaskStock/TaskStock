@@ -7,8 +7,6 @@ from django.utils import timezone
 import pytz
 from datetime import timedelta, datetime
 from django.db import transaction
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 
 # 비밀번호 변경 위한 라이브러리
@@ -390,7 +388,11 @@ def check_todo(request, pk):
                 value.end -= 1000*todo.level
             
             #value의 percentage값 업데이트
-            value.percentage = int((value.end-value.start)/value.start *100)
+            if value.start == 0:
+                value.percentage = int((value.end - 50000)/50000 * 100)
+            else:
+                value.percentage = int((value.end-value.start)/value.start *100)
+                
             if value.percentage > 0:
                 color = 'red'
             else:
