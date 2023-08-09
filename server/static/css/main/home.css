@@ -16,9 +16,6 @@ main{
     overflow-y: scroll;
     overflow-x: hidden;
 }
-.main-right::-webkit-scrollbar {
-    display: none;
-}
 .main-right--container{
     padding: var(--gutter) 0;
 }
