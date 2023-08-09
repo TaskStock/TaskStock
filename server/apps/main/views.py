@@ -233,11 +233,7 @@ def home(request):
     todos_sub_dict = {}
     for todo in todos:
         todos_sub_dict[todo.pk] = 5 - todo.level
-    
-    # 데이터
-    # dataset = values_for_chart(current_user, 7)
-    
-
+        
     context = {
         'user': current_user,
         'todos_levels_dict': todos_levels_dict,
