@@ -33,5 +33,10 @@
 #monthDisplay{
     width: 200px;
     text-align: center;
-    padding: var(--gutter);
+    padding: 0 var(--gutter) 0 0;
+    display: flex;
+}
+.monthDisplay--month{
+    font-size: var(--heading2);
+    font-weight: 600;
 }

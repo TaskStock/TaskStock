@@ -31,7 +31,8 @@ function load() {
   
   const paddingDays = weekdays.indexOf(dateString.split('. ')[3]); // 2
   
-  document.getElementById('monthDisplay').innerText = `${year}년 ${month + 1}월`;
+  document.querySelector('.monthDisplay--month').innerText = `${month + 1}월`;
+  document.querySelector('.monthDisplay--year').innerText = `${year}`;
 
   calendar.innerHTML = '';
 
