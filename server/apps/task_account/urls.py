@@ -11,4 +11,5 @@ urlpatterns = [
     # ajax
     path('email_validation/', email_validation),
     path('check_id/', check_id),
+    path('activate/<str:username>/', activate_account),
 ]
