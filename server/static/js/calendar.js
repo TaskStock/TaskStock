@@ -30,9 +30,10 @@ function load() {
   }); // 2023. 8. 1. 화요일
   
   const paddingDays = weekdays.indexOf(dateString.split('. ')[3]); // 2
-  
-  document.querySelector('.monthDisplay--month').innerText = `${month + 1}월`;
-  document.querySelector('.monthDisplay--year').innerText = `${year}`;
+  const displayMonth = String(month + 1);
+  const ddisplayMonth = displayMonth.padStart(2, '0');
+  document.querySelector('.monthDisplay--month').innerText = `${ddisplayMonth}`;
+//   document.querySelector('.monthDisplay--year').innerText = `${year}`;
 
   calendar.innerHTML = '';
 
@@ -45,9 +46,13 @@ function load() {
         daySquare.innerText = i - paddingDays;
         daySquare.addEventListener('click', async() => {
             // 각 day 클릭할 때 발생한는 함수 
+
+
+            
+
+
+
             dayString = `${month+1}/${i-paddingDays}/${year}`; // '8/10/2023'
-            
-            
             
             // ajax로 dayString 보내기 
             const formData = new FormData();
@@ -62,8 +67,7 @@ function load() {
             handleDateResponse(todos);
 
         
-        }
-        )
+        })
         if (i - paddingDays === day && nav === 0) {
             daySquare.id = 'currentDay';
         }
@@ -87,6 +91,11 @@ function handleDateResponse(todos){
             let paintedLevel = '';
             let emptyLevel = '';
             todo.level = Number(todo.level);
+            if (todo.goal_check == true){
+                todo.goal_check = 'True';
+            }else{
+                todo.goal_check = 'False';
+            }
             for(p = 1; p < todo.level + 1; p++){
                 paintedLevel += `<div level="${p}" class="active"></div>`;
             }
@@ -154,3 +163,19 @@ function initButtons() {
 
 initButtons();
 load();
+
+
+
+document.querySelectorAll('.cal--calendar .day').forEach(day => {
+    day.addEventListener('click', () => {
+        const clicked_day = document.querySelectorAll('.clickedDay');
+        // console.log(clicked_day.length);
+        if(clicked_day.length !== 0){
+            clicked_day.forEach(c => {
+                c.classList.remove('clickedDay');
+            })
+            
+        }
+        day.classList.add('clickedDay');
+    })
+})
