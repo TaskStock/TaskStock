@@ -58,6 +58,7 @@ class Value(models.Model):
     end = models.IntegerField(null=True, default=0)
     low = models.IntegerField(null=True, default=0)
     high = models.IntegerField(null=True, default=0)
+    is_dummy = models.BooleanField(default=False)
     
     def __str__(self):
         return f'{self.date} - {self.user.username}'

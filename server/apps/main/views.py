@@ -183,7 +183,7 @@ def follow_list(request):
     return JsonResponse({"users": users})
 
 def createValue(user):
-    last_value=Value.objects.filter(user=user).order_by('-date').first()
+    last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
     # 마지막 생성된 value 기준으로 새로운 value 값들을 계산하는 로직 필요
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
     percentage=0
@@ -231,12 +231,12 @@ def home(request):
     for todo in todos:
         todos_sub_dict[todo.pk] = 5 - todo.level
     
-    # 데이터
-    # dataset = values_for_chart(current_user, 7)
+    followings_len = current_user.followings.count()
     
     context = {
         'user': current_user,
         'todos_levels_dict': todos_levels_dict,
+        'followings': followings_len,
         'date_id':date_id, 
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
@@ -245,12 +245,45 @@ def home(request):
 
 
 #---세원 작업---#
-#시간 디버깅용 함수
-def time():
-    print('utc시간: ', timezone.now())   #UTC 기준으로 가져옴
-    print('kst시간: ', timezone.localtime()) #Asia/Seoul 기준으로 가져옴
+@csrf_exempt
+def click_date(request, pk):
+    #자바스크립트에서 날짜를 전달한다
+    #views.py에서 그 날짜를 받고 날짜에 해당하는 value가 존재하는지 확인한다.
+    #존재하면 -> value에 해당하는 todos를 보낸다
+    #존재하지 않으면 -> todos == ''
+    date_str = request.POST.get('date') #'8/21/2023'
+    month_date_year = date_str.split('/')
+    
+    current_user = request.user
+    #date_str을 date 자료형으로 변환
+    date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
+    
+    todos = []
+    try:
+        value = Value.objects.get(user=current_user,date=date_object)
+        todo_objects = Todo.objects.filter(value=value)
+        
+        for todo in todo_objects:
+            todo_data={
+                'date_id':todo.value.pk,
+                'content':todo.content,
+                'goal_check':todo.goal_check,
+                'id':todo.pk,
+                'level':todo.level,
+                'month':month_date_year[0],
+                'date':month_date_year[1],
+                'year':month_date_year[2],
+            }
+            todos.append(todo_data)
+            
+    except Value.DoesNotExist:
+        todos = []
 
+    return JsonResponse({'todos':todos})
 
+#8월 1일 접속, 8월 3일 접속 -> 8월 3일의 value가 8월 1일 value를 기반으로 만들어져
+#8월 1일 체크하면 -> 8월 3일 값의 변동은 다 반영이 됨
+#8월 2일을 add_todo하고 check_todo -> 8월 2일도 8월 1일의 값을 기반으로 만들어졌기 때문에 8월 3일과 초깃값이 같고, 충돌
 """
 user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으면 그날의 date 가져오는 함수
 """
@@ -310,20 +343,26 @@ def add_todo(request):
         req = json.loads(request.body)
         content = req['content']
         my_level = req['level']
+        date_str = req['date_id']
+        target_date = datetime.strptime(date_str, '%m/%d/%Y').date()
+        
         #현재 user 객체 가져오기
         current_user = request.user
-        
         #date 일치하는 value 객체 가져오기
-        value = get_value_for_date(current_user)
+        value = get_value_for_date(current_user, target_date)
         
-        #달력 연결 대비
-        # if value is None:
-        #     createValue(current_user)
-            
-        #현재 user의 todolist 객체 가져오기
+        #value 없는 날-달력 연결 후 '완료'버튼 누르면 객체 생성
+        if value is None:
+            createValue(current_user)
+        
+        #value 있긴 한데 더미데이터 인 날
+        if value.is_dummy:
+            value.is_dummy = False
+            last_value = Value.objects.get(user=current_user, is_dummay=False).latest()
+        
+        #현재 user의 caregory 객체 가져오기
         category = Category.objects.get(user=current_user)
 
-        
         #투두 객체 생성
         Todo.objects.create(
             value = value,
@@ -343,7 +382,7 @@ def add_todo(request):
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
-
+        
         return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content})
 """
 Todo 삭제 하는 함수
@@ -355,18 +394,19 @@ def delete_todo(request, pk):
         req = json.loads(request.body)
         todo_id = req['todo_id']
         current_user = request.user
-        value = get_value_for_date(current_user)
         
-        with transaction.atomic():
-            todo = Todo.objects.get(value=value, pk=todo_id)
-            #todo 삭제하기 전 연결된 value의 high값 업데이트
-            todo.value.high -= 1000*todo.level
-            #todo 삭제하기 전 연결된 value의 low값 업데이트
-            todo.value.low += 1000*todo.level
-            #저장
-            todo.value.save()
-            #todo삭제
-            todo.delete()
+        todo = Todo.objects.get(pk=todo_id)
+        value = todo.value
+        
+        #todo 삭제하기 전 연결된 value의 high값 업데이트
+        value.high -= 1000*todo.level
+        #todo 삭제하기 전 연결된 value의 low값 업데이트
+        value.low += 1000*todo.level
+        
+        #저장
+        value.save()
+        #todo삭제
+        todo.delete()
         
         #combo 변화 처리    
         process_combo(current_user)
@@ -485,6 +525,7 @@ def values_for_chart(user, term):
                 end=0,
                 high=0,
                 low=0,
+                is_dummy=True,
             )
 
     #최종 데이터 다시 쿼리하기
@@ -499,6 +540,7 @@ def values_for_chart(user, term):
 combo처리하는 함수
 """
 def process_combo(user):
+    
     #전체 기간의 value들을 내림차순으로 가져와서 goal_check=True인 todo가 있는지 확인
     #date가 연속적이지 않을때까지 combo += 1
     #goal_check=False인 todo가 나올때까지 combo += 1

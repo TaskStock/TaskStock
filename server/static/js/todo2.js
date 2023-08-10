@@ -44,9 +44,14 @@ const add_todo = async(date_id) => {
 
     // 달력에서 클릭한 날짜. 클릭 안했으면 오늘날짜 
     let click_date = clickedDayString(dayString);
+    console.log(click_date);
     
     
-    const data = { content: inputVal, level: parseInt(level), click_date: click_date};
+    const data = { 
+        content: inputVal, 
+        level: parseInt(level), 
+        date_id: click_date,
+        };
     if (inputVal !== '' && level !== '0'){
         const res = await fetch(url, {
             method: 'POST', 
@@ -67,7 +72,6 @@ const add_todo = async(date_id) => {
     }else if (level == '0'){
         document.querySelector(`.day${date_id}--todo .todo-add--level span`).style.color = '#ff0033';
     } 
-   
 }
 
 const handleTodoResponse = async(todo_id, level, content) => {
@@ -256,26 +260,26 @@ function epaintStar(todo_id, level){
     })
 }
 
-// delete todo
+    // delete todo
 
-const delete_todo = async(todo_id) => {
-    const url = `/main/delete_todo/${todo_id}/`;
-    const res = await fetch(url, {
-        method: 'POST', 
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({todo_id}),
-    })
-    const {id: id, d_id: d_id} = await res.json();
-    handleDelTodoRes(id, d_id);
-}
-const handleDelTodoRes = async(todo_id, date_id) => {
-    // delete container
-    const container = document.querySelector(`.todo-item-${todo_id}`);
-    container.remove();
-    update_chart();
-}
+    const delete_todo = async(todo_id) => {
+        const url = `/main/delete_todo/${todo_id}/`;
+        const res = await fetch(url, {
+            method: 'POST', 
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({todo_id}),
+        })
+        const {id: id, d_id: d_id} = await res.json();
+        handleDelTodoRes(id, d_id);
+    }
+    const handleDelTodoRes = async(todo_id, date_id) => {
+        // delete container
+        const container = document.querySelector(`.todo-item-${todo_id}`);
+        container.remove();
+        update_chart();
+    }
 
 
 
