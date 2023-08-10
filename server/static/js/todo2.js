@@ -57,7 +57,6 @@ const add_todo = async(date_id) => {
         document.querySelector('.todo-plus').classList.remove('active');
         handleTodoResponse(todo_id, my_level, content);
 
-        
     }else if (inputVal === ''){
         document.querySelector(`.day${date_id}--todo .todo-add--input span`).style.color = '#ff0033';
     }else if (level == '0'){
@@ -116,6 +115,7 @@ const handleTodoResponse = async(todo_id, level, content) => {
         </div>
     </div>
     `;
+    update_chart();
 }
 
 
@@ -232,6 +232,7 @@ const handleUpdateTodoRes = async(todo_id, level, content) => {
             ${paintedLevel}
             ${emptyLevel}
     `;
+    update_chart();
 }
 
 function epaintStar(todo_id, level){
@@ -263,6 +264,7 @@ const handleDelTodoRes = async(todo_id, date_id) => {
     // delete container
     const container = document.querySelector(`.todo-item-${todo_id}`);
     container.remove();
+    update_chart();
 }
 
 
@@ -301,6 +303,31 @@ function handleCheckTodoRes(color, status, todo_id){
         checkBox.classList.remove('True');
     }
     
+    update_chart();
 }
 
+// 차트 다시 불러오기
+function update_chart(){
+    let chart_radio=localStorage.getItem('chart_radio');
 
+    let chart_period;
+    if(chart_radio=="7"){
+        chart_period="#one_week";
+    }else if(chart_radio=="30"){
+        chart_period="#one_month";
+    }else if(chart_radio=="90"){
+        chart_period="#three_month";
+    }else if(chart_radio=="180"){
+        chart_period="#six_month";
+    }else if(chart_radio=="365"){
+        chart_period="#one_year";
+    }
+
+    let chart_update;
+    if(chart_radio==null){
+        chart_update = document.querySelector("#one_week");
+    }else{
+        chart_update = document.querySelector(chart_period);
+    }
+    chart_update.click();
+}

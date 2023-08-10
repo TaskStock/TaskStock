@@ -5,11 +5,34 @@
         <div id="username_save">{{user.username}}</div>
         <div id="chart"></div>
         <div class="chart-btn--container">
-            <div id="one_week" class="chart-btn active chart-week">1 week</div>
+            <!-- <div id="one_week" class="chart-btn active chart-week">1 week</div>
             <div id="one_month" class="chart-btn chart-month">1 month</div>
             <div id="three_month" class="chart-btn chart-3month">3 months</div>
             <div id="six_month" class="chart-btn chart-6month">6 months</div>
-            <div id="one_year" class="chart-btn chart-year">1 year</div>
+            <div id="one_year" class="chart-btn chart-year">1 year</div> -->
+            <form>
+                <label>
+                    <input type="radio" name="chart_period" value="7" id="one_week">
+                    1 week
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="30" id="one_month">
+                    1 month
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="90" id="three_month">
+                    3 months
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="180" id="six_month">
+                    6 months
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="365" id="one_year">
+                    1 year
+                </label>
+                
+            </form>
         </div>
     </div>
     <div class="main-right">
