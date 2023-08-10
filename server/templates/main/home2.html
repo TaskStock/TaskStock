@@ -12,24 +12,24 @@
             <div id="one_year" class="chart-btn chart-year">1 year</div> -->
             <form>
                 <label>
-                    <input type="radio" name="chart_period" value="7" id="one_week">
-                    1 week
+                    <input type="radio" name="chart_period" value="7" id="one_week" checked>
+                    <div class="chart-btn">1 week</div>
                 </label>
                 <label>
                     <input type="radio" name="chart_period" value="30" id="one_month">
-                    1 month
+                    <div class="chart-btn">1 month</div>
                 </label>
                 <label>
                     <input type="radio" name="chart_period" value="90" id="three_month">
-                    3 months
+                    <div class="chart-btn">3 months</div>
                 </label>
                 <label>
                     <input type="radio" name="chart_period" value="180" id="six_month">
-                    6 months
+                    <div class="chart-btn">6 months</div>
                 </label>
                 <label>
                     <input type="radio" name="chart_period" value="365" id="one_year">
-                    1 year
+                    <div class="chart-btn">1 year</div>
                 </label>
                 
             </form>
@@ -57,18 +57,51 @@
         <div class="main-right--container">
             <div class="calendar-container">
                 <div class="cal--header">
-                    <button id="backButton"><i class="fa-solid fa-chevron-left"></i></button>
-                    <div id="monthDisplay"></div>
-                    <button id="nextButton"><i class="fa-solid fa-chevron-right"></i></button>     
+                    <div id="monthDisplay">
+                        <div class="monthDisplay--month"></div>
+                        <!-- <div class="monthDisplay--year"></div> -->
+                    </div>
+                    <div class="monthControl">
+                        <button id="nextButton"><i class="fa-solid fa-chevron-up"></i></button>
+                        <button id="backButton"><i class="fa-solid fa-chevron-down"></i></button>
+                    </div>
+                    <!-- 할 일 등록 -->
+                    <div class="todo-plus">
+                        <div class="todo-plus--btn"><i class="fa-solid fa-plus"></i></div>
+                        <div class="todo-add--container day{{date_id}}--todo">
+                            <div class="todo-add--date">8월 7일 월요일</div>
+                            <div class="todo-add--input">
+                                <span>할 일을 입력하세요</span>
+                                <input type="text"
+                                placeholder="헬스장 가기"
+                                onkeypress="if(event.keyCode==13) {add_todo({{ date_id }})}"
+                                autofocus
+                                >
+                            </div>
+                            <div class="todo-add--level">
+                                <span>난이도를 설정하세요</span>
+                                <div class="sel-todo-level">
+                                    <div level="1"></div>
+                                    <div level="2"></div>
+                                    <div level="3"></div>
+                                    <div level="4"></div>
+                                    <div level="5"></div>
+                                </div>
+                            </div>
+                            <div class="todo-add--submit-btn" onclick="add_todo({{ date_id }})">완료</div>
+
+                        </div>
+                    </div>
+                    
                 </div>
                 <div class="cal--weekdays">
-                    <div>Sun</div>
-                    <div>Mon</div>
-                    <div>Tue</div>
-                    <div>Wed</div>
-                    <div>Thu</div>
-                    <div>Fri</div>
-                    <div>Sat</div>
+                    <div>S</div>
+                    <div>M</div>
+                    <div>T</div>
+                    <div>W</div>
+                    <div>T</div>
+                    <div>F</div>
+                    <div>S</div>
                     
                 </div>
                 <div class="cal--calendar">
@@ -80,34 +113,6 @@
             </div> -->
             
             <div class="todo-container">
-                <!-- 할 일 등록 -->
-                <div class="todo-plus">
-                    <div class="todo-plus--btn"><i class="fa-solid fa-plus"></i></div>
-                    <div class="todo-add--container day{{date_id}}--todo">
-                        <div class="todo-add--date">8월 7일 월요일</div>
-                        <div class="todo-add--input">
-                            <span>할 일을 입력하세요</span>
-                            <input type="text"
-                            placeholder="헬스장 가기"
-                            onkeypress="if(event.keyCode==13) {add_todo({{ date_id }})}"
-                            autofocus
-                            >
-                        </div>
-                        <div class="todo-add--level">
-                            <span>난이도를 설정하세요</span>
-                            <div class="sel-todo-level">
-                                <div level="1"></div>
-                                <div level="2"></div>
-                                <div level="3"></div>
-                                <div level="4"></div>
-                                <div level="5"></div>
-                            </div>
-                        </div>
-                        <div class="todo-add--submit-btn" onclick="add_todo({{ date_id }})">완료</div>
-
-                    </div>
-                </div>
-
                 <!-- paint todo -->
 
                 <div class="todo-paint" id="todo-paint">
