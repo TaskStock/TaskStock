@@ -182,15 +182,17 @@ def follow_list(request):
 
     return JsonResponse({"users": users})
 
-def createValue(user):
+def createValue(user, target_date=None):
     last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
-    # 마지막 생성된 value 기준으로 새로운 value 값들을 계산하는 로직 필요
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
+    if target_date == None:
+        target_date = timezone.now().date()
+    
     percentage=0
     start = end = low = high = last_value.end
     value = Value.objects.create(
         user=user,
-        date=timezone.now(),
+        date=target_date,
         percentage=percentage,
         start=start,
         end=end,
@@ -353,12 +355,20 @@ def add_todo(request):
         
         #value 없는 날-달력 연결 후 '완료'버튼 누르면 객체 생성
         if value == None:
-            createValue(current_user)
-        
+            createValue(current_user, target_date)
+            value = get_value_for_date(current_user, target_date)
         #value 있긴 한데 더미데이터 인 날
         if value.is_dummy:
             value.is_dummy = False
-            last_value = Value.objects.get(user=current_user, is_dummay=False).latest()
+            last_value = Value.objects.filter(user=current_user, is_dummay=False, date__lt=target_date).order_by('-date').first()
+            if last_value:
+                value.start = value.end = value.low = value.high = last_value.end
+            else:
+                #만약 회원가입 일주일 전 ~ 회원가입날을 클릭한다면
+                value.start = 0
+                value.low = value.high = value.end = 50000
+
+            value.save()
         
         #현재 user의 caregory 객체 가져오기
         category = Category.objects.get(user=current_user)
@@ -385,7 +395,7 @@ def add_todo(request):
         
         return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content})
 """
-Todo 삭제 하는 함수
+Todo 삭제 하는 함수 
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
 """
 @csrf_exempt
