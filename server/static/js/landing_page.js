@@ -1,4 +1,4 @@
-// 두번째 섹션 - 기능설명
+// 두번째 섹션 - 기능설명 클릭 시 변경하는 함수
 const landingImgs = document.querySelectorAll(".container-box__imgs__img");
 const landingText = document.querySelector(".container-box__text");
 const header = landingText.querySelector("h3");

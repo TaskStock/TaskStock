@@ -56,11 +56,10 @@ nav {
   padding: var(--padding);
 }
 
-.page-nav__logo-container > img {
-  width: 120px;
+#logo-image {
   height: 30px;
-  object-fit: contain;
-}
+  filter: opacity(0.4) drop-shadow(0 0 0 rgb(0, 0, 0)); 
+  }
 
 .page-nav__button-container {
   display: flex;
@@ -69,13 +68,11 @@ nav {
   gap: var(--gutter);
 }
 
-.page-nav__button-container--support > a:hover {
+.page-nav__button-container--content > a:hover {
   opacity: 0.8;
 }
 
-.page-nav__button-container--login > a:hover {
-  opacity: 0.8;
-}
+
 /* main */
 main {
   display: flex;
@@ -213,9 +210,9 @@ main {
   line-height: 1.5;  
 }
 
-/* fnq */
+/* faq */
 
-.fnq-container {
+.faq-container {
   display: flex;
   position: relative;
   flex-direction: column;
@@ -226,7 +223,7 @@ main {
   background-color: var(--msk-bg);
 }
 
-.fnq-container > h2 {
+.faq-container > h2 {
   font-size: var(--heading2);
   font-weight: 700;
   line-height: 1.2;
