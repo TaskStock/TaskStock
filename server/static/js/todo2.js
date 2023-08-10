@@ -21,6 +21,8 @@ level_stars.forEach(star => {
         paintStar(level);
     }
 )})
+
+
 function paintStar(level){
     document.querySelectorAll('.sel-todo-level div').forEach(star => {
         if (star.getAttribute('level') <= level){
@@ -39,9 +41,12 @@ const add_todo = async(date_id) => {
     const url = '/main/add_todo/';
     let inputTag = document.querySelector('.todo-add--input input');
     let inputVal = inputTag.value;
-    
 
-    const data = { content: inputVal, level: parseInt(level)};
+    // 달력에서 클릭한 날짜. 클릭 안했으면 오늘날짜 
+    let click_date = clickedDayString(dayString);
+    
+    
+    const data = { content: inputVal, level: parseInt(level), click_date: click_date};
     if (inputVal !== '' && level !== '0'){
         const res = await fetch(url, {
             method: 'POST', 
@@ -117,6 +122,7 @@ const handleTodoResponse = async(todo_id, level, content) => {
     </div>
     `;
     update_chart();
+    
 }
 
 
