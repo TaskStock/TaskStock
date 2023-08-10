@@ -19,3 +19,20 @@ document.addEventListener('click', (event) => {
         hamburger.classList.remove('active');
     }
 });
+
+
+// dark mode toggle
+const darkBtn = document.querySelector('.menu-right__darkmode');
+
+darkBtn.addEventListener('click', () => {
+    darkBtn.classList.toggle('dark');
+    if(darkBtn.classList.contains('dark')){
+        darkBtn.querySelector('i').classList.remove('gg-moon');
+        darkBtn.querySelector('i').classList.add('gg-sun');
+        darkBtn.querySelector('span').innerHTML = 'Light Mode';
+    }else{
+        darkBtn.querySelector('i').classList.remove('gg-sun');
+        darkBtn.querySelector('i').classList.add('gg-moon');
+        darkBtn.querySelector('span').innerHTML = 'Dark Mode';
+    }
+})
