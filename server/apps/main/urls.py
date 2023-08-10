@@ -6,6 +6,7 @@ urlpatterns = [
     path('delete_todo/<int:pk>/', delete_todo), # /main/delete_todo/1/
     path('update_todo/<int:pk>/', update_todo), # /main/update_todo/1/
     path('check_todo/<int:pk>/', check_todo), # /main/check_todo/1/
+    path('click_date/', click_date), # /main/click_date/
     path('', home), # /main/
     path('search/', search), # /main/search/
     path('settings/', settings), # /main/settings/

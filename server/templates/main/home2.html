@@ -71,7 +71,9 @@
                     <div>Sat</div>
                     
                 </div>
-                <div class="cal--calendar"></div>
+                <div class="cal--calendar">
+
+                </div>
             </div>
             <!-- <div class="heatmap-container">
                 <div id="heatmap"></div>
@@ -107,7 +109,9 @@
                 </div>
 
                 <!-- paint todo -->
-                <div class="todo-paint">
+
+                <div class="todo-paint" id="todo-paint">
+                    
                     {% for todo in todos %}
                     
                     <div class="todo-item todo-item-{{todo.pk}} ">
@@ -180,7 +184,7 @@
 {% endblock %}
 
 {% block extra %}
+<script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
 <script src="{% static 'js/candlestick.js' %}"></script>
-<script src="{% static 'js/calendar.js' %}"></script>
 {% endblock %}
