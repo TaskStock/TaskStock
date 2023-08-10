@@ -548,3 +548,10 @@ def landing_page(request):
 # def settings(request):
 #     return render(request, 'main/settings.html')
 
+
+
+
+
+# alarm
+def alarm(request):
+    return render(request, 'main/alarm.html')

@@ -143,14 +143,16 @@ section header img{
     z-index: 1000;
     
 }
-.hamburger-contents a{
+.hamburger-contents a,
+.hamburger-contents .menu-right__darkmode{
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
     z-index: 1001;
 }
-.hamburger-contents div{
+.hamburger-contents a > div,
+.hamburger-contents > div{
     width: 30px;
     height: 30px;
     display: flex;
@@ -178,7 +180,8 @@ section header img{
     border-radius: var(--border-r);
     
 }
-.hamburger-contents a:hover span{
+.hamburger-contents a:hover span,
+.hamburger-contents > div:hover span{
     visibility: visible;
     left: 50px;
     opacity: 1;
