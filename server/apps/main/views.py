@@ -358,6 +358,7 @@ def add_todo(request):
         #value 있긴 한데 더미데이터 인 날
         if value.is_dummy:
             value.is_dummy = False
+            last_value = Value.objects.get(user=current_user, is_dummay=False).latest()
         
         #현재 user의 caregory 객체 가져오기
         category = Category.objects.get(user=current_user)
@@ -393,18 +394,19 @@ def delete_todo(request, pk):
         req = json.loads(request.body)
         todo_id = req['todo_id']
         current_user = request.user
-        value = get_value_for_date(current_user)
         
-        with transaction.atomic():
-            todo = Todo.objects.get(value=value, pk=todo_id)
-            #todo 삭제하기 전 연결된 value의 high값 업데이트
-            todo.value.high -= 1000*todo.level
-            #todo 삭제하기 전 연결된 value의 low값 업데이트
-            todo.value.low += 1000*todo.level
-            #저장
-            todo.value.save()
-            #todo삭제
-            todo.delete()
+        todo = Todo.objects.get(pk=todo_id)
+        value = todo.value
+        
+        #todo 삭제하기 전 연결된 value의 high값 업데이트
+        value.high -= 1000*todo.level
+        #todo 삭제하기 전 연결된 value의 low값 업데이트
+        value.low += 1000*todo.level
+        
+        #저장
+        value.save()
+        #todo삭제
+        todo.delete()
         
         #combo 변화 처리    
         process_combo(current_user)

@@ -260,26 +260,26 @@ function epaintStar(todo_id, level){
     })
 }
 
-// delete todo
+    // delete todo
 
-const delete_todo = async(todo_id) => {
-    const url = `/main/delete_todo/${todo_id}/`;
-    const res = await fetch(url, {
-        method: 'POST', 
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({todo_id}),
-    })
-    const {id: id, d_id: d_id} = await res.json();
-    handleDelTodoRes(id, d_id);
-}
-const handleDelTodoRes = async(todo_id, date_id) => {
-    // delete container
-    const container = document.querySelector(`.todo-item-${todo_id}`);
-    container.remove();
-    update_chart();
-}
+    const delete_todo = async(todo_id) => {
+        const url = `/main/delete_todo/${todo_id}/`;
+        const res = await fetch(url, {
+            method: 'POST', 
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({todo_id}),
+        })
+        const {id: id, d_id: d_id} = await res.json();
+        handleDelTodoRes(id, d_id);
+    }
+    const handleDelTodoRes = async(todo_id, date_id) => {
+        // delete container
+        const container = document.querySelector(`.todo-item-${todo_id}`);
+        container.remove();
+        update_chart();
+    }
 
 
 
