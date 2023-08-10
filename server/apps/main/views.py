@@ -234,10 +234,8 @@ def home(request):
     # 데이터
     # dataset = values_for_chart(current_user, 7)
     
-    followings_len = current_user.followings.count()
     context = {
         'user': current_user,
-        'followings': followings_len,
         'todos_levels_dict': todos_levels_dict,
         'date_id':date_id, 
         'todos':todos,
@@ -497,9 +495,6 @@ def process_combo(user):
 #---선우 작업---#
 
 def search(request):
-    current_user = request.user
-    followings_len = current_user.followings.count()
-    
     search_content = request.GET.get('search_content','')
     users = User.objects.all()
     filtered_users = users
@@ -508,7 +503,6 @@ def search(request):
 
     ctx = {
         'users': users,
-        'followings': followings_len,
         'filtered_users': filtered_users,
     }
 

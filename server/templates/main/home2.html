@@ -1,8 +1,8 @@
 {% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
 <main>
-    {{ user.combo }}
+ 
     <div class="main-left">
-        <div id="username_save">{{user.username}}</div>
+    
         <div id="chart"></div>
         <div class="chart-btn--container">
             <!-- <div id="one_week" class="chart-btn active chart-week">1 week</div>
@@ -34,12 +34,48 @@
                 
             </form>
         </div>
+        <div class="dashboard">
+            <div id="username_save" style="display:none;">{{user.username}}</div>
+            <div class="dashboard--achivements">
+                <h3>Achievements</h3>
+                <div class="dashboard--combo">
+                    <span>Combo: </span>
+                    <span>{{ user.combo }}</span>
+                </div>
+                <div class="dashboard--badge">
+                    
+                </div>
+                <div class="dashboard--totalValue">
+                    <span>가치종합지수: </span>
+                </div>
+            </div>
+            
+            
+        </div>
     </div>
     <div class="main-right">
         <div class="main-right--container">
-            <div class="heatmap-container">
-                <div id="heatmap"></div>
+            <div class="calendar-container">
+                <div class="cal--header">
+                    <div id="monthDisplay"></div>
+                    <div>
+                        <button id="backButton">Back</button>
+                        <button id="nextButton">Next</button>
+                    </div>
+                </div>
+                <div class="cal--weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                    
+                </div>
+                <div class="cal--calendar"></div>
             </div>
+            
             <div class="todo-container">
                 <!-- 할 일 등록 -->
                 <div class="todo-plus">
@@ -50,6 +86,7 @@
                             <span>할 일을 입력하세요</span>
                             <input type="text"
                             placeholder="헬스장 가기"
+                            onkeypress="if(event.keyCode==13) {add_todo({{ date_id }})}"
                             autofocus
                             >
                         </div>
@@ -132,14 +169,19 @@
                 </div>
                 
             </div>
+            <!-- <div class="heatmap-container">
+                <div id="heatmap"></div>
+            </div> -->
         </div>
     </div>
-    <script src="{% static 'js/todo2.js' %}"></script>
+    
     
 </main>
 
 {% endblock %}
 
 {% block extra %}
+<script src="{% static 'js/todo2.js' %}"></script>
 <script src="{% static 'js/candlestick.js' %}"></script>
+<script src="{% static 'js/calendar.js' %}"></script>
 {% endblock %}
