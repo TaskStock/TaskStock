@@ -555,7 +555,11 @@ def process_combo(user):
     #date가 연속적이지 않을때까지 combo += 1
     #goal_check=False인 todo가 나올때까지 combo += 1
     #두 조건 and로 연결
-    values = Value.objects.filter(user=user).order_by('-date')
+    kst = pytz.timezone('Asia/Seoul')
+    today = datetime.now(kst).date()
+
+    values = Value.objects.filter(user=user, date__lte=today).order_by('-date')
+
     
     #역순으로 체크
     combo = 0
@@ -563,15 +567,17 @@ def process_combo(user):
 
     for value in values:
         todos = Todo.objects.filter(value=value)
-        
-        checked_day = any(todo.goal_check for todo in todos)
-        
-        if (previous_date and previous_date - value.date > timedelta(days=1)) or not checked_day:
+        success_day = any(todo.goal_check for todo in todos)
+    
+        #previous_date가 설정되어 있고 그 간격이 1 이상이거나 체크한 날이 아니면 반복문 탈출
+        if (previous_date and previous_date - value.date > timedelta(days=1)) or not success_day:
+            print('탈출')
             break
         print('previous_date:', previous_date)
         print('valid_date:', value.date)
         
         combo += 1
+        print('combo 증가:', combo)
         previous_date = value.date
         
     user.combo = combo
