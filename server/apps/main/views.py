@@ -51,15 +51,16 @@ def profile(request):
     if user.is_superuser:
         return redirect('/main/')
 
-    current_user=request.user
-    if user == current_user:
+    if user == request.user:
         return redirect('/main/settings/')
     
-    ctx ={ 
+    ctx = { 
         'user':user,
     }
     return render(request, 'main/profile.html', context=ctx)
 
+# REVIEW : 업데이트 기능 코드가 너무 반복적이다.
+# REVIEW : 업데이트 함수를 하나로 통일하고, 전달받는 파라미터 기반으로 업데이트하도록 하는 것이 좋다.
 @csrf_exempt
 def update_introduce(request):
     introduce = request.POST.get("proflie-description")
