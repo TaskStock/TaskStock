@@ -105,7 +105,6 @@
     {% endblock %}
      
     <script>
-        let follow_type;
 
         document.addEventListener("DOMContentLoaded", function(){
             // 팔로우 목록 click 이벤트
@@ -114,13 +113,13 @@
             const followsearchInput = document.querySelector("#follow_search_content");
             
             followingSpan.addEventListener("click", function(){
-                follow_type="following";
+                localStorage.setItem('follow_type', "following");
                 followsearchInput.classList.remove('displayNone');
                 followsearchInput.value='';
                 follow("following", null);
             });
             followerSpan.addEventListener("click", function(){
-                follow_type="follower";
+                localStorage.setItem('follow_type', "follower");
                 followsearchInput.classList.remove('displayNone');
                 followsearchInput.value='';
                 follow("follower", null);
@@ -129,6 +128,7 @@
             // 팔로우 목록 검색 input 이벤트
             const follow_search = document.querySelector("#follow_search_content");
             follow_search.addEventListener("input", function(){
+                const follow_type=localStorage.getItem('follow_type');
                 follow(follow_type+"_search", follow_search.value);
             });
 
