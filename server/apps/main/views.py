@@ -183,7 +183,7 @@ def follow_list(request):
     return JsonResponse({"users": users})
 
 def createValue(user):
-    last_value=Value.objects.filter(user=user).order_by('-date').first()
+    last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
     # 마지막 생성된 value 기준으로 새로운 value 값들을 계산하는 로직 필요
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
     percentage=0
@@ -344,17 +344,21 @@ def add_todo(request):
         content = req['content']
         my_level = req['level']
         date_str = req['date_id']
-        target_date = datetime.strftime(date_str, '%Y/%m%d').date()
+        target_date = datetime.strptime(date_str, '%m/%d/%Y').date()
         
         #현재 user 객체 가져오기
         current_user = request.user
         #date 일치하는 value 객체 가져오기
         value = get_value_for_date(current_user, target_date)
         
-        #달력 연결 후 '완료'버튼 누르면 객체 생성
+        #value 없는 날-달력 연결 후 '완료'버튼 누르면 객체 생성
         if value is None:
-            createValue(value)
-    
+            createValue(current_user)
+        
+        #value 있긴 한데 더미데이터 인 날
+        if value.is_dummy:
+            value.is_dummy = False
+        
         #현재 user의 caregory 객체 가져오기
         category = Category.objects.get(user=current_user)
 
@@ -377,7 +381,7 @@ def add_todo(request):
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
-
+        
         return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content})
 """
 Todo 삭제 하는 함수
@@ -519,6 +523,7 @@ def values_for_chart(user, term):
                 end=0,
                 high=0,
                 low=0,
+                is_dummy=True,
             )
 
     #최종 데이터 다시 쿼리하기
