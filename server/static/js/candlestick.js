@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(){
-  // 팔로우 목록 click 이벤트
+  
   const one_week = document.querySelector("#one_week");
   const one_month = document.querySelector("#one_month");
   const three_month = document.querySelector("#three_month");
@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function(){
   
     one_week.click();
   }
+
 });
 
 const request_chart = async (day) =>{

@@ -7,6 +7,10 @@ main{
     height: 100%;
     border-right: 1px solid black;
     padding: var(--gutter);
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    
     
 }
 .main-right{
@@ -254,5 +258,12 @@ main{
 }
 .todo-level div.active{
     background-color: var(--red-1);
+}
+/* dashboard */
+.dashboard{
+    height: 40%;
+    padding: var(--gutter);
+    flex-grow: 1;
+    margin-bottom: var(--gutter);
 }
 
