@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{% static 'css/main/home.css' %}">
     <link rel="stylesheet" href="{% static 'css/main/search.css' %}">
     <link rel="stylesheet" href="{% static 'css/main/settings.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main/calendar.css' %}">
     <!-- <link rel="stylesheet" href="{% static 'css/chart.css' %}"> -->
     
     
@@ -44,6 +45,10 @@
                     <div><i class="gg-search"></i></div>
                     <span>Search</span>
                 </a>
+                <a href="/main/alarm/" class="menu-right__notif">
+                    <div><i class="gg-bell"></i></div>
+                    <span>Notification</span>
+                </a>
                 <a href="/main/settings/" class="menu-right__settings">
                     <div><i class="gg-options"></i></div>
                     <span>Settings</span>
@@ -56,6 +61,10 @@
                     <div><i class="gg-user-add"></i></div>
                     <span>Invite Friends</span>
                 </a>
+                <div class="menu-right__darkmode">
+                    <div><i class="gg-moon"></i></div>
+                    <span>Dark Mode</span>
+                </div>
                 <a href="/" class="menu-right__logout">
                     <div><i class="gg-log-off"></i></div>
                     <span>Log out</span>
@@ -68,7 +77,7 @@
             <div class="my-info--pic"></div>
             <div class="my-info--about">
                 <div class="my-info--name">{{user}}</div>
-                <div class="my-info--comment">Hello World!</div>
+                <div class="my-info--comment">{{user.textContent}}</div>
                 <div class="my-info--sff__container">
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
@@ -76,7 +85,7 @@
                     </div>
                     <div class="my-info--sff sff-fg">
                         <span>Following</span>
-                        <span id="following_list">{{followings}}</span>
+                        <span id="following_list">{{user.followings.all.count}}</span>
                     </div>
                     <div class="my-info--sff sff-fr">
                         <span>Follower</span>
@@ -104,22 +113,21 @@
     {% endblock %}
      
     <script>
-        let follow_type
 
         document.addEventListener("DOMContentLoaded", function(){
             // 팔로우 목록 click 이벤트
             const followingSpan = document.querySelector("#following_list");
             const followerSpan = document.querySelector("#follower_list");
             const followsearchInput = document.querySelector("#follow_search_content");
-
+            
             followingSpan.addEventListener("click", function(){
-                follow_type="following";
+                localStorage.setItem('follow_type', "following");
                 followsearchInput.classList.remove('displayNone');
                 followsearchInput.value='';
                 follow("following", null);
             });
             followerSpan.addEventListener("click", function(){
-                follow_type="follower";
+                localStorage.setItem('follow_type', "follower");
                 followsearchInput.classList.remove('displayNone');
                 followsearchInput.value='';
                 follow("follower", null);
@@ -128,8 +136,12 @@
             // 팔로우 목록 검색 input 이벤트
             const follow_search = document.querySelector("#follow_search_content");
             follow_search.addEventListener("input", function(){
+                const follow_type=localStorage.getItem('follow_type');
                 follow(follow_type+"_search", follow_search.value);
             });
+
+            followingSpan.click();
+
         });
         const follow = async (type, searchtext) =>{
 

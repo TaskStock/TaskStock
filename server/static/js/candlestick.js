@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(){
-  // 팔로우 목록 click 이벤트
+  
   const one_week = document.querySelector("#one_week");
   const one_month = document.querySelector("#one_month");
   const three_month = document.querySelector("#three_month");
@@ -9,22 +9,33 @@ document.addEventListener("DOMContentLoaded", function(){
   if(one_week){
     one_week.addEventListener("click", function(){
       request_chart("7");
+      localStorage.setItem('chart_radio', "7");
     });
     one_month.addEventListener("click", function(){
       request_chart("30");
+      localStorage.setItem('chart_radio', "30");
     });
     three_month.addEventListener("click", function(){
       request_chart("90");
+      localStorage.setItem('chart_radio', "90");
     });
     six_month.addEventListener("click", function(){
       request_chart("180");
+      localStorage.setItem('chart_radio', "180");
     });
     one_year.addEventListener("click", function(){
       request_chart("365");
+      localStorage.setItem('chart_radio', "365");
     });
   
-    one_week.click();
+    let chart_radio=localStorage.getItem('chart_radio');
+    if(chart_radio==null){
+      one_week.click();
+    }else{
+      request_chart(chart_radio);
+    }
   }
+
 });
 
 const request_chart = async (day) =>{

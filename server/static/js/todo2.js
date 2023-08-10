@@ -21,6 +21,8 @@ level_stars.forEach(star => {
         paintStar(level);
     }
 )})
+
+
 function paintStar(level){
     document.querySelectorAll('.sel-todo-level div').forEach(star => {
         if (star.getAttribute('level') <= level){
@@ -39,9 +41,12 @@ const add_todo = async(date_id) => {
     const url = '/main/add_todo/';
     let inputTag = document.querySelector('.todo-add--input input');
     let inputVal = inputTag.value;
-    
 
-    const data = { content: inputVal, level: parseInt(level)};
+    // 달력에서 클릭한 날짜. 클릭 안했으면 오늘날짜 
+    let click_date = clickedDayString(dayString);
+    
+    
+    const data = { content: inputVal, level: parseInt(level), click_date: click_date};
     if (inputVal !== '' && level !== '0'){
         const res = await fetch(url, {
             method: 'POST', 
@@ -57,12 +62,12 @@ const add_todo = async(date_id) => {
         document.querySelector('.todo-plus').classList.remove('active');
         handleTodoResponse(todo_id, my_level, content);
 
-        
     }else if (inputVal === ''){
         document.querySelector(`.day${date_id}--todo .todo-add--input span`).style.color = '#ff0033';
     }else if (level == '0'){
         document.querySelector(`.day${date_id}--todo .todo-add--level span`).style.color = '#ff0033';
     } 
+   
 }
 
 const handleTodoResponse = async(todo_id, level, content) => {
@@ -116,6 +121,8 @@ const handleTodoResponse = async(todo_id, level, content) => {
         </div>
     </div>
     `;
+    update_chart();
+    
 }
 
 
@@ -129,10 +136,12 @@ const edit_todo = (todo_id) => {
     document.querySelectorAll('.todo-item--edit').forEach(c => {
         c.classList.remove('active');
     })
+   
 
     // 열고 닫기
     const edit_container = document.querySelector(`.todo-item--edit-${todo_id}`);
     edit_container.classList.toggle('active');
+    edit_container.style.width = `${Edit_width}px`;
    
     let curr_level = edit_container.querySelector(`.edit-todo-level`).getAttribute('curr-level');
     epaintStar(todo_id, curr_level);
@@ -151,6 +160,7 @@ const edit_todo = (todo_id) => {
             }
         )})
     }
+   
 }
 
 // 문서 전체에 클릭 이벤트 리스너 추가
@@ -223,7 +233,7 @@ const handleUpdateTodoRes = async(todo_id, level, content) => {
     const container = document.querySelector(`.todo-level-${todo_id}`);
     const edit_container = document.querySelector(`.todo-item--edit-${todo_id} .edit-todo-level`);
     edit_container.setAttribute('curr-level', level);
-    console.log(level);
+    
     container.innerHTML = `
             ${paintedLevel}
             ${emptyLevel}
@@ -232,6 +242,7 @@ const handleUpdateTodoRes = async(todo_id, level, content) => {
             ${paintedLevel}
             ${emptyLevel}
     `;
+    update_chart();
 }
 
 function epaintStar(todo_id, level){
@@ -263,6 +274,7 @@ const handleDelTodoRes = async(todo_id, date_id) => {
     // delete container
     const container = document.querySelector(`.todo-item-${todo_id}`);
     container.remove();
+    update_chart();
 }
 
 
@@ -301,6 +313,31 @@ function handleCheckTodoRes(color, status, todo_id){
         checkBox.classList.remove('True');
     }
     
+    update_chart();
 }
 
+// 차트 다시 불러오기
+function update_chart(){
+    let chart_radio=localStorage.getItem('chart_radio');
 
+    let chart_period;
+    if(chart_radio=="7"){
+        chart_period="#one_week";
+    }else if(chart_radio=="30"){
+        chart_period="#one_month";
+    }else if(chart_radio=="90"){
+        chart_period="#three_month";
+    }else if(chart_radio=="180"){
+        chart_period="#six_month";
+    }else if(chart_radio=="365"){
+        chart_period="#one_year";
+    }
+
+    let chart_update;
+    if(chart_radio==null){
+        chart_update = document.querySelector("#one_week");
+    }else{
+        chart_update = document.querySelector(chart_period);
+    }
+    chart_update.click();
+}

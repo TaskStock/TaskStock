@@ -235,8 +235,8 @@ def home(request):
     
     context = {
         'user': current_user,
-        'followings': followings_len,
         'todos_levels_dict': todos_levels_dict,
+        'followings': followings_len,
         'date_id':date_id, 
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
@@ -298,7 +298,41 @@ def get_value_for_date(user, target_date=None):
 
     return value_object
 
+@csrf_exempt
+def click_date(request):
+    #자바스크립트에서 날짜를 전달한다
+    #views.py에서 그 날짜를 받고 날짜에 해당하는 value가 존재하는지 확인한다.
+    #존재하면 -> value에 해당하는 todos를 보낸다
+    #존재하지 않으면 -> todos == ''
+    date_str = request.POST.get('str') #'8/21/2023'
+    month_date_year = date_str.split('/')
+    
+    current_user = request.user
+    #date_str을 date 자료형으로 변환
+    date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
+    
+    todos = []
+    try:
+        value = Value.objects.get(date=date_object, user=current_user)
+        todo_objects = Todo.objects.filter(value=value)
+        
+        for todo in todo_objects:
+            todo_data={
+                'date_id':todo.value.pk,
+                'content':todo.content,
+                'goal_check':todo.goal_check,
+                'id':todo.pk,
+                'level':todo.level,
+                'month':month_date_year[0],
+                'date':month_date_year[1],
+                'year':month_date_year[2],
+            }
+            todos.append(todo_data)
+            
+    except Value.DoesNotExist:
+        todos = []
 
+    return JsonResponse({'todos':todos})
 """
 Todo 추가 하는 함수
 할 일 추가 버튼 누름 -> 새로운 Todo객체 생성(ajax로 구현할 예정) -> high, low 업데이트
@@ -530,9 +564,6 @@ def process_combo(user):
 #---선우 작업---#
 
 def search(request):
-    current_user = request.user
-    followings_len = current_user.followings.count()
-    
     search_content = request.GET.get('search_content','')
     users = User.objects.all()
     filtered_users = users
@@ -541,7 +572,6 @@ def search(request):
 
     ctx = {
         'users': users,
-        'followings': followings_len,
         'filtered_users': filtered_users,
     }
 
@@ -553,3 +583,10 @@ def landing_page(request):
 # def settings(request):
 #     return render(request, 'main/settings.html')
 
+
+
+
+
+# alarm
+def alarm(request):
+    return render(request, 'main/alarm.html')

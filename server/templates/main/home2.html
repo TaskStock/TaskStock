@@ -1,22 +1,84 @@
 {% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
 <main>
-    {{ user.combo }}
+ 
     <div class="main-left">
-        <div id="username_save">{{user.username}}</div>
+    
         <div id="chart"></div>
         <div class="chart-btn--container">
-            <div id="one_week" class="chart-btn active chart-week">1 week</div>
+            <!-- <div id="one_week" class="chart-btn active chart-week">1 week</div>
             <div id="one_month" class="chart-btn chart-month">1 month</div>
             <div id="three_month" class="chart-btn chart-3month">3 months</div>
             <div id="six_month" class="chart-btn chart-6month">6 months</div>
-            <div id="one_year" class="chart-btn chart-year">1 year</div>
+            <div id="one_year" class="chart-btn chart-year">1 year</div> -->
+            <form>
+                <label>
+                    <input type="radio" name="chart_period" value="7" id="one_week">
+                    1 week
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="30" id="one_month">
+                    1 month
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="90" id="three_month">
+                    3 months
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="180" id="six_month">
+                    6 months
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="365" id="one_year">
+                    1 year
+                </label>
+                
+            </form>
+        </div>
+        <div class="dashboard">
+            <div id="username_save" style="display:none;">{{user.username}}</div>
+            <div class="dashboard--achivements">
+                <h3>Achievements</h3>
+                <div class="dashboard--combo">
+                    <span>Combo: </span>
+                    <span>{{ user.combo }}</span>
+                </div>
+                <div class="dashboard--badge">
+                    
+                </div>
+                <div class="dashboard--totalValue">
+                    <span>가치종합지수: </span>
+                </div>
+            </div>
+            
+            
         </div>
     </div>
     <div class="main-right">
         <div class="main-right--container">
-            <div class="heatmap-container">
-                <div id="heatmap"></div>
+            <div class="calendar-container">
+                <div class="cal--header">
+                    <button id="backButton"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div id="monthDisplay"></div>
+                    <button id="nextButton"><i class="fa-solid fa-chevron-right"></i></button>     
+                </div>
+                <div class="cal--weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                    
+                </div>
+                <div class="cal--calendar">
+
+                </div>
             </div>
+            <!-- <div class="heatmap-container">
+                <div id="heatmap"></div>
+            </div> -->
+            
             <div class="todo-container">
                 <!-- 할 일 등록 -->
                 <div class="todo-plus">
@@ -27,6 +89,7 @@
                             <span>할 일을 입력하세요</span>
                             <input type="text"
                             placeholder="헬스장 가기"
+                            onkeypress="if(event.keyCode==13) {add_todo({{ date_id }})}"
                             autofocus
                             >
                         </div>
@@ -46,7 +109,9 @@
                 </div>
 
                 <!-- paint todo -->
-                <div class="todo-paint">
+
+                <div class="todo-paint" id="todo-paint">
+                    
                     {% for todo in todos %}
                     
                     <div class="todo-item todo-item-{{todo.pk}} ">
@@ -109,14 +174,17 @@
                 </div>
                 
             </div>
+            
         </div>
     </div>
-    <script src="{% static 'js/todo2.js' %}"></script>
+    
     
 </main>
 
 {% endblock %}
 
 {% block extra %}
+<script src="{% static 'js/calendar.js' %}"></script>
+<script src="{% static 'js/todo2.js' %}"></script>
 <script src="{% static 'js/candlestick.js' %}"></script>
 {% endblock %}
