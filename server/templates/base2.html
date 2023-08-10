@@ -25,9 +25,11 @@
 <body>
     <section>
         <header>
-            <h1>TASKSTOCK
-                <img src="{% static 'img/logo-3.png' %}" alt="">
-            </h1>
+            <a href="/main/">
+                <h1>TASKSTOCK
+                    <img src="{% static 'img/logo-3.png' %}" alt="">
+                </h1>
+            </a>
             <div class="hamburger">
                 <div></div>
                 <div></div>
@@ -66,7 +68,7 @@
             <div class="my-info--pic"></div>
             <div class="my-info--about">
                 <div class="my-info--name">{{user}}</div>
-                <div class="my-info--comment">Hello World!</div>
+                <div class="my-info--comment">{{user.textContent}}</div>
                 <div class="my-info--sff__container">
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
@@ -74,7 +76,7 @@
                     </div>
                     <div class="my-info--sff sff-fg">
                         <span>Following</span>
-                        <span id="following_list">34</span>
+                        <span id="following_list">{{user.followings.all.count}}</span>
                     </div>
                     <div class="my-info--sff sff-fr">
                         <span>Follower</span>
@@ -102,14 +104,14 @@
     {% endblock %}
      
     <script>
-        let follow_type
+        let follow_type;
 
         document.addEventListener("DOMContentLoaded", function(){
             // 팔로우 목록 click 이벤트
             const followingSpan = document.querySelector("#following_list");
             const followerSpan = document.querySelector("#follower_list");
             const followsearchInput = document.querySelector("#follow_search_content");
-
+            
             followingSpan.addEventListener("click", function(){
                 follow_type="following";
                 followsearchInput.classList.remove('displayNone');
@@ -128,6 +130,9 @@
             follow_search.addEventListener("input", function(){
                 follow(follow_type+"_search", follow_search.value);
             });
+
+            // followingSpan.click();
+
         });
         const follow = async (type, searchtext) =>{
 

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from .models import *
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import auth
@@ -37,6 +38,39 @@ def login(request):
             'form': form,
         }
         return render(request, 'account/login.html', context=context)
+    
+@csrf_exempt
+def find_password(request):
+    if request.method == 'POST':
+        password=request.POST.get('password')
+        password_check=request.POST.get('password-check')
+        username=request.POST.get('username')
+
+        if password==password_check:
+            user=User.objects.get(username=username)
+            user.set_password(password)
+            return JsonResponse({"success": True, "redirect": '/login/'})
+        else:
+            return JsonResponse({"success": False, "redirect": ''})
+
+
+    context = {
+    }
+    return render(request, 'account/find_password.html', context=context)
+
+@csrf_exempt
+def check_id(request):
+    username = request.POST.get("id")
+
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return JsonResponse({"result": False, "email": "", "username": ""})
+    
+    if user.is_superuser:
+        return JsonResponse({"result": False, "email": "", "username": ""})
+    
+    return JsonResponse({"result": True, "email": user.email, "username": username})
 
 def logout(request):
     auth.logout(request)
@@ -101,43 +135,39 @@ import random
 import string
 
 from django.core.mail import EmailMessage
-import ssl
-# from django.core.mail.backends.smtp import EmailBackend
 
 @csrf_exempt
 def email_validation(request):
     email = request.POST.get("email")
+    type = request.POST.get("type")
 
-    # 이메일 형식 검증
-    email_validator = EmailValidator()
-    try:
-        email_validator(email)  # 이메일 형식이 올바르지 않으면 ValidationError 발생
-    except ValidationError:
-        response_data = {'error': True}
-        return JsonResponse(response_data, status=400)
+    if type=="email_validation":
+        # 이메일 형식 검증
+        email_validator = EmailValidator()
+        try:
+            email_validator(email)  # 이메일 형식이 올바르지 않으면 ValidationError 발생
+        except ValidationError:
+            response_data = {'error': True}
+            return JsonResponse(response_data, status=400)
 
     # 이메일 중복 검사 필요
     # 이메일 중복 허용할 것인지?
 
     code = ''.join(random.choices(string.digits, k=6))
-    # smtp_connection = EmailBackend(
-    #         host=EMAIL_HOST,
-    #         port=EMAIL_PORT,
-    #         username=EMAIL_HOST_USER,
-    #         password=EMAIL_HOST_PASSWORD,
-    #         use_tls=EMAIL_USE_TLS,
-    #         use_ssl=EMAIL_USE_SSL,
-    #     )
-    # context=ssl._create_unverified_context()
+
     # 이메일 보내기
-    ssl._create_default_https_context = ssl._create_unverified_context
-    email_send = EmailMessage(
-        'TaskStock 이메일 인증 코드',
-        '안녕하세요! TaskStock에 오신 것을 환영합니다! 다음 인증 코드를 입력해주세요.\n'+code,
-        to=[email],
-        # connection=None,
-        # context=context,
-    )
+    if type=="email_validation":
+        email_send = EmailMessage(
+            'TaskStock 이메일 인증 코드',
+            '안녕하세요! TaskStock에 오신 것을 환영합니다! 다음 인증 코드를 입력해주세요.\n'+code,
+            to=[email],
+        )
+    elif type=="find_password":
+        email_send = EmailMessage(
+            'TaskStock 비밀번호 변경 인증 코드',
+            '안녕하세요! 비밀번호 변경을 위해 다음 인증 코드를 입력해주세요.\n'+code,
+            to=[email],
+        )
     email_send.send()
 
     response_data = {'error': False, 'code': code, 'email': email,}

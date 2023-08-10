@@ -7,8 +7,6 @@ from django.utils import timezone
 import pytz
 from datetime import timedelta, datetime
 from django.db import transaction
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 
 # 비밀번호 변경 위한 라이브러리
@@ -189,15 +187,12 @@ def createValue(user):
     # 마지막 생성된 value 기준으로 새로운 value 값들을 계산하는 로직 필요
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
     percentage=0
-    start_datetime=50000
-    end=0
-    low=0
-    high=0
+    start = end = low = high = last_value.end
     value = Value.objects.create(
         user=user,
         date=timezone.now(),
         percentage=percentage,
-        start_datetime=start_datetime,
+        start=start,
         end=end,
         low=low,
         high=high,
@@ -219,10 +214,12 @@ def chart_ajax(request):
 
 def home(request):
     current_user = request.user
+    process_combo(current_user)
     value = get_value_for_date(current_user)
+    
     if value is None:
         # 로그인 했을 때 value가 없는 경우
-        value = createValue(request.user)
+        value = createValue(current_user)
         
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
@@ -237,7 +234,6 @@ def home(request):
     # 데이터
     # dataset = values_for_chart(current_user, 7)
     
-
     context = {
         'user': current_user,
         'todos_levels_dict': todos_levels_dict,
@@ -261,8 +257,11 @@ user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으�
 def get_value_for_date(user, target_date=None):
     if not target_date:
         target_date = timezone.localtime(timezone.now()).date()
-        
-    value_object = Value.objects.get(user=user, date=target_date)
+    
+    try:    
+        value_object = Value.objects.get(user=user, date=target_date)
+    except:
+        value_object = None
 
     return value_object
 
@@ -283,9 +282,13 @@ def add_todo(request):
         #date 일치하는 value 객체 가져오기
         value = get_value_for_date(current_user)
         
+        #달력 연결 대비
+        # if value is None:
+        #     createValue(current_user)
+            
         #현재 user의 todolist 객체 가져오기
         category = Category.objects.get(user=current_user)
-        
+
         
         #투두 객체 생성
         Todo.objects.create(
@@ -299,10 +302,10 @@ def add_todo(request):
         todo_id = todo.pk
         
         #todo의 high값 업데이트
-        value.low += my_level*1000
+        value.high += my_level*1000
         
         #todo의 low값 업데이트
-        value.high -= my_level*1000
+        value.low -= my_level*1000
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
@@ -337,7 +340,7 @@ def delete_todo(request, pk):
     return JsonResponse({'id':todo_id, 'd_id': value.id})
 """
 Todo 업데이트 하는 함수
-content, level 업데이트 -> high, low 업데이트
+content, level 업데이트 -> value high, low 업데이트
 """
 @csrf_exempt
 def update_todo(request, pk):
@@ -393,8 +396,12 @@ def check_todo(request, pk):
                 todo.goal_check = False
                 value.end -= 1000*todo.level
             
-            #value의 percentage값 업데이트
-            value.percentage = int((value.end-value.start)/value.start *100)
+            #value의 percentage값 업데이트 -> 소수점 둘째자리까지
+            if value.start == 0:
+                value.percentage = int((value.end - 50000)/50000 * 100)
+            else:
+                value.percentage = int((value.end-value.start)/value.start *100)
+                
             if value.percentage > 0:
                 color = 'red'
             else:
@@ -414,10 +421,10 @@ def check_todo(request, pk):
 차트로 보낼 data준비하는 함수
 """
 #유저의 최초회원가입 날짜로부터 경과한 날짜 반환하는 함수
-def days_since_joined(user):
-    delta = timezone.now() - user.date_joined
+# def days_since_joined(user):
+#     delta = timezone.now() - user.date_joined
     
-    return delta.days   #int자료형으로 반환
+#     return delta.days   #int자료형으로 반환
 
 def date_to_timestamp(date_obj):
     
@@ -425,63 +432,34 @@ def date_to_timestamp(date_obj):
 
 def values_for_chart(user, term):
     kst = pytz.timezone('Asia/Seoul')
-    max_date = days_since_joined(user)  
-
-    # 현재 날짜를 KST로 설정
     kst_date = timezone.now().astimezone(kst).date()
-
-    # term 값을 조절
-    # term = min(max_date, term)
     start_date = kst_date - timedelta(days=term-1)
-
-    # 사용자가 요청한 범위의 date
-    all_dates = {start_date + timedelta(days=i) for i in range(term)}
-    print('사용자가 요청한 datetime:', all_dates)
-
-    # DB에서 존재하는 date들을 가져옴
-    range_values = Value.objects.filter(user=user, date__range=(start_date, kst_date))
+    
+    #db에 존재하는 date들 가져오기
+    range_values =  Value.objects.filter(user=user, date__range=(start_date, kst_date))
     value_dates = set(range_values.values_list('date', flat=True))
-    print('db에 있는 datetime:', value_dates)
     
-    # 없는 날짜 처리
-    missing_dates = sorted(list(all_dates - value_dates))
-    print('없는 datetime:', missing_dates)
-    
-    # 없는 날짜에 대한 처리
-    for missing_date in missing_dates:
-        previous_value = Value.objects.filter(user=user, date=missing_date - timedelta(days=1)).first()
-        if previous_value:
-            #previous_value가 있으면 그 값을 기준으로 더미 데이터 생성
+    #첫 시작 날짜에 대한 더미데이터 처리
+    date_list = [start_date, start_date + timedelta(days=1)]
+    for date in date_list:
+        if date not in value_dates:
             Value.objects.create(
                 user=user,
-                date=missing_date,
-                percentage=0,
-                start=previous_value.end,
-                end=previous_value.end,
-                low=previous_value.end - 1000,
-                high=previous_value.end,
-            )      
-        else:
-            #previous_value가 없으면 기본 값으로 더미 데이터 생성
-            Value.objects.create(
-                user=user,
-                date=missing_date,
+                date=date,
                 percentage=0,
                 start=0,
                 end=0,
-                low=0,
                 high=0,
+                low=0,
             )
-    
-        print('만든 value 객체 date:', missing_date)
 
-    # 최종 데이터 가져오기
-    values = Value.objects.filter(user=user, date__range=(start_date, kst_date)).order_by('date')
-    print(values)
+    #최종 데이터 다시 쿼리하기
+    values = Value.objects.filter(user=user, date__range=(start_date, kst_date))
     
     dataset = [[date_to_timestamp(value.date), value.start, value.high, value.low, value.end] for value in values]
-        
+    
     return dataset
+    
 
 """
 combo처리하는 함수

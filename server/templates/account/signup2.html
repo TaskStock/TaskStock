@@ -30,6 +30,7 @@
         event.preventDefault();
 
         const formData = new FormData(event.target);
+        formData.append('type', 'email_validation');
 
         // csrf 보안 토큰
         // const csrftoken = $("[name=csrfmiddlewaretoken]").val();

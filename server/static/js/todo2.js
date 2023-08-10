@@ -63,6 +63,7 @@ const add_todo = async(date_id) => {
     }else if (level == '0'){
         document.querySelector(`.day${date_id}--todo .todo-add--level span`).style.color = '#ff0033';
     } 
+   
 }
 
 const handleTodoResponse = async(todo_id, level, content) => {
@@ -116,6 +117,7 @@ const handleTodoResponse = async(todo_id, level, content) => {
         </div>
     </div>
     `;
+    
 }
 
 
@@ -129,10 +131,12 @@ const edit_todo = (todo_id) => {
     document.querySelectorAll('.todo-item--edit').forEach(c => {
         c.classList.remove('active');
     })
+   
 
     // 열고 닫기
     const edit_container = document.querySelector(`.todo-item--edit-${todo_id}`);
     edit_container.classList.toggle('active');
+    edit_container.style.width = `${Edit_width}px`;
    
     let curr_level = edit_container.querySelector(`.edit-todo-level`).getAttribute('curr-level');
     epaintStar(todo_id, curr_level);
@@ -151,6 +155,7 @@ const edit_todo = (todo_id) => {
             }
         )})
     }
+   
 }
 
 // 문서 전체에 클릭 이벤트 리스너 추가
@@ -223,7 +228,7 @@ const handleUpdateTodoRes = async(todo_id, level, content) => {
     const container = document.querySelector(`.todo-level-${todo_id}`);
     const edit_container = document.querySelector(`.todo-item--edit-${todo_id} .edit-todo-level`);
     edit_container.setAttribute('curr-level', level);
-    console.log(level);
+    
     container.innerHTML = `
             ${paintedLevel}
             ${emptyLevel}
