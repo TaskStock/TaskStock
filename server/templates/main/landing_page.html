@@ -235,16 +235,32 @@
           </div>
         </div>
       </section>
-      <section>
-        <div class="swiper mySwiper">
+      <section id="swiper">
+        <div class="swiper-container">
           <div class="swiper-wrapper">
+            <!-- 각 이미지 슬라이드를 추가합니다. -->
             <div class="swiper-slide">
-              <section class="introduction-rule" style="background-color: black;">
+              <section class="introduction-developer">
                 <div class="container">
                   <div class="introduction-rule__container">
                     <div class="introduction-rule__description" data-aos="zoom-in-right">
-                      <h2>Level 1: You can do it easy</h2>
-                      <h3>example: wash dishes, cleaning, eat vitamin</h3>
+                      <h2>민세원</h2>
+                      <h3>팀장</h3>
+                    </div>
+                    <div class="introduction-rule__image" data-aos="flip-right">
+                    <img src="https://placekitten.com/300/300" alt="">
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+            <div class="swiper-slide">
+              <section class="introduction-developer">
+                <div class="container">
+                  <div class="introduction-rule__container">
+                    <div class="introduction-rule__description" data-aos="zoom-in-right">
+                      <h2>안정근</h2>
+                      <h3>Backend</h3>
                     </div>
                     <div class="introduction-rule__image" data-aos="flip-right">
                     <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
@@ -254,38 +270,22 @@
               </section>
             </div>
             <div class="swiper-slide">
-              <section class="introduction-rule" style="background-color: black;">
+              <section class="introduction-developer">
                 <div class="container">
                   <div class="introduction-rule__container">
                     <div class="introduction-rule__description" data-aos="zoom-in-right">
-                      <h2>Level 1: You can do it easy</h2>
-                      <h3>example: wash dishes, cleaning, eat vitamin</h3>
+                      <h2>정환희</h2>
+                      <h3>프론트엔드</h3>
                     </div>
                     <div class="introduction-rule__image" data-aos="flip-right">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+                    <img src="https://placekitten.com/200/200" alt="">
                     </div>
                   </div>
                 </div>
               </section>
             </div>
-            <div class="swiper-slide">
-              <section class="introduction-rule">
-                <div class="container">
-                  <div class="introduction-rule__container">
-                    <div class="introduction-rule__description" data-aos="zoom-in-right">
-                      <h2>Level 1: You can do it easy</h2>
-                      <h3>example: wash dishes, cleaning, eat vitamin</h3>
-                    </div>
-                    <div class="introduction-rule__image" data-aos="flip-right">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </div>
+            <!-- 나머지 이미지 슬라이드도 동일한 방식으로 추가합니다. -->
           </div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
           <div class="swiper-pagination"></div>
         </div>
       </section>
@@ -304,22 +304,30 @@
     </footer>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
-      var swiper = new Swiper(".mySwiper", {
-        spaceBetween: 30,
-        centeredSlides: true,
-        autoplay: {
-          delay: 2500,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: ".swiper-pagination",
-          clickable: true,
-        },
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
+      document.addEventListener("DOMContentLoaded", function () {
+        var mySwiper = new Swiper('.swiper-container', {
+          grabCursor: true,
+          centeredSlides: true,
+          slidesPerView: "auto",
+          effect: "coverflow",
+          loop: true,
+          coverflowEffect: {
+            rotate: 50,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows: true,
+          },
+          pagination: {
+            el: '.swiper-pagination',
+          },
+          autoplay: {
+            delay: 2500, // 슬라이드 간격을 밀리초(ms) 단위로 지정합니다.
+            disableOnInteraction: false, // 사용자 인터랙션 후에도 자동 전환을 유지합니다.
+          },
+        });
       });
     </script>
     <script>
