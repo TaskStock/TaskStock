@@ -352,7 +352,7 @@ def add_todo(request):
         value = get_value_for_date(current_user, target_date)
         
         #value 없는 날-달력 연결 후 '완료'버튼 누르면 객체 생성
-        if value is None:
+        if value == None:
             createValue(current_user)
         
         #value 있긴 한데 더미데이터 인 날
