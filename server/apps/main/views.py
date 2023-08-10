@@ -191,6 +191,7 @@ def createValue(user):
     start = end = low = high = last_value.end
     value = Value.objects.create(
         user=user,
+        # REVIEW : DB의 now 활용
         date=timezone.now(),
         percentage=percentage,
         start=start,
@@ -261,6 +262,7 @@ def get_value_for_date(user, target_date=None):
     
     try:    
         value_object = Value.objects.get(user=user, date=target_date)
+    # REVIEW : except DoesNotExist. user나 target_date가 잘못되는 경우 사일런트 에러를 뱉을 수 있다.
     except:
         value_object = None
 
@@ -288,6 +290,7 @@ def add_todo(request):
         #     createValue(current_user)
             
         #현재 user의 todolist 객체 가져오기
+        # REVIEW : 존재하지 않는다면?
         category = Category.objects.get(user=current_user)
 
         
@@ -390,6 +393,7 @@ def check_todo(request, pk):
         
         with transaction.atomic():
         #status에 따라 goal_check와 value의 end값 업데이트
+            # REVIEW : todo_status가 'True'인 이유는? 타입이 문자열이라 헷갈릴 여지 농후
             if todo_status == 'True':
                 todo.goal_check = True
                 value.end += 1000*todo.level
