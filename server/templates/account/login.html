@@ -21,7 +21,7 @@
                 <label class="f30" for="username">사용자ID</label>
             </td>
             <td>
-                <input type="text" class="form-control" name="username" id="username">
+                <input type="text" class="form-control" name="username" id="username" required>
             </td>
             </tr>
         
@@ -30,7 +30,7 @@
                 <label class="f30" for="password">비밀번호</label>
             </td>
             <td>
-                <input type="password" class="form-control" name="password" id="password">
+                <input type="password" class="form-control" name="password" id="password" required>
                 {% if error_message %}
                 <div style="color: red;">{{ error_message }}</div>
                 {% endif %}
@@ -44,7 +44,7 @@
         </table>
     </form>
 </div>
-<div class="login__forgot-pw"><a href="/logout/">Forgot password?</a></div>        
+<div class="login__forgot-pw"><a href="/find_password/">Forgot password?</a></div>        
 <div class="login__signup">Not a member? <a href="/signup/step1/">Create an account</a></div>
       
 

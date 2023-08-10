@@ -60,7 +60,7 @@ class Value(models.Model):
     high = models.IntegerField(null=True, default=0)
     
     def __str__(self):
-        return self.date.strftime('%Y-%m-%d')
+        return f'{self.date} - {self.user.username}'
 
 
 class Category(models.Model):

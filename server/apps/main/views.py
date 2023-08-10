@@ -302,10 +302,10 @@ def add_todo(request):
         todo_id = todo.pk
         
         #todo의 high값 업데이트
-        value.low += my_level*1000
+        value.high += my_level*1000
         
         #todo의 low값 업데이트
-        value.high -= my_level*1000
+        value.low -= my_level*1000
         value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
@@ -396,7 +396,7 @@ def check_todo(request, pk):
                 todo.goal_check = False
                 value.end -= 1000*todo.level
             
-            #value의 percentage값 업데이트
+            #value의 percentage값 업데이트 -> 소수점 둘째자리까지
             if value.start == 0:
                 value.percentage = int((value.end - 50000)/50000 * 100)
             else:
@@ -421,10 +421,10 @@ def check_todo(request, pk):
 차트로 보낼 data준비하는 함수
 """
 #유저의 최초회원가입 날짜로부터 경과한 날짜 반환하는 함수
-def days_since_joined(user):
-    delta = timezone.now() - user.date_joined
+# def days_since_joined(user):
+#     delta = timezone.now() - user.date_joined
     
-    return delta.days   #int자료형으로 반환
+#     return delta.days   #int자료형으로 반환
 
 def date_to_timestamp(date_obj):
     
@@ -432,63 +432,34 @@ def date_to_timestamp(date_obj):
 
 def values_for_chart(user, term):
     kst = pytz.timezone('Asia/Seoul')
-    max_date = days_since_joined(user)  
-
-    # 현재 날짜를 KST로 설정
     kst_date = timezone.now().astimezone(kst).date()
-
-    # term 값을 조절
-    # term = min(max_date, term)
     start_date = kst_date - timedelta(days=term-1)
-
-    # 사용자가 요청한 범위의 date
-    all_dates = {start_date + timedelta(days=i) for i in range(term)}
-    print('사용자가 요청한 datetime:', all_dates)
-
-    # DB에서 존재하는 date들을 가져옴
-    range_values = Value.objects.filter(user=user, date__range=(start_date, kst_date))
+    
+    #db에 존재하는 date들 가져오기
+    range_values =  Value.objects.filter(user=user, date__range=(start_date, kst_date))
     value_dates = set(range_values.values_list('date', flat=True))
-    print('db에 있는 datetime:', value_dates)
     
-    # 없는 날짜 처리
-    missing_dates = sorted(list(all_dates - value_dates))
-    print('없는 datetime:', missing_dates)
-    
-    # 없는 날짜에 대한 처리
-    for missing_date in missing_dates:
-        previous_value = Value.objects.filter(user=user, date=missing_date - timedelta(days=1)).first()
-        if previous_value:
-            #previous_value가 있으면 그 값을 기준으로 더미 데이터 생성
+    #첫 시작 날짜에 대한 더미데이터 처리
+    date_list = [start_date, start_date + timedelta(days=1)]
+    for date in date_list:
+        if date not in value_dates:
             Value.objects.create(
                 user=user,
-                date=missing_date,
-                percentage=0,
-                start=previous_value.end,
-                end=previous_value.end,
-                low=previous_value.end,
-                high=previous_value.end,
-            )      
-        else:
-            #previous_value가 없으면 기본 값으로 더미 데이터 생성
-            Value.objects.create(
-                user=user,
-                date=missing_date,
+                date=date,
                 percentage=0,
                 start=0,
                 end=0,
-                low=0,
                 high=0,
+                low=0,
             )
-    
-        print('만든 value 객체 date:', missing_date)
 
-    # 최종 데이터 가져오기
-    values = Value.objects.filter(user=user, date__range=(start_date, kst_date)).order_by('date')
-    print(values)
+    #최종 데이터 다시 쿼리하기
+    values = Value.objects.filter(user=user, date__range=(start_date, kst_date))
     
     dataset = [[date_to_timestamp(value.date), value.start, value.high, value.low, value.end] for value in values]
-        
+    
     return dataset
+    
 
 """
 combo처리하는 함수
