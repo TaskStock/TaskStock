@@ -278,9 +278,7 @@ main{
 }
 /* dashboard */
 .dashboard{
-    height: 40%;
     padding: var(--gutter);
-    flex-grow: 1;
     margin-bottom: var(--gutter);
 }
 
@@ -315,13 +313,13 @@ main{
 .dashboard{
     display: flex;
     gap: var(--gutter);
-    /* margin: 0 var(--gutter); */
+
 }
 .dashboard--combo{
     width: 150px;
-    height: 100px;
+    /* height: 70px; */
 }
 .dashboard--badge{
     flex-grow: 1;
-    height: 100px;
+    /* height: 70px; */
 }
