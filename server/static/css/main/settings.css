@@ -3,6 +3,7 @@
     --max_width: 1440px; /*컨테이너폭*/
     --columns: 12; /*컬럼갯수*/
     --gutter: 16px; /*거터폭*/
+    --pading-top: 48px;
     /* color */
     --black: #37352F;
 
@@ -24,6 +25,9 @@
     /* grey */
     --grey_bg: #FBFBFA;
     --grey_border: rgba(233, 233, 231);
+    --grey_400: #BDBDBD;
+    --grey_600: #757575;
+    --grey_700: #616161;
 
     /* font */
     --hero: 50px;
@@ -43,18 +47,19 @@
 
 .main--settings{
     padding: var(--gutter) var(--gutter);
+    display: flex;
+    justify-content: center;
 
 }
 
 .settings-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 70%;
     height: 100vh;
     overflow: hidden;
     gap: var(--gutter);
-    padding-bottom: var(--gutter);
-    
+    padding-bottom: var(--gutter);    
 }
 .settigs-header{
     padding-left: var(--offset);
@@ -81,6 +86,7 @@
     box-shadow: var(--box-shadow);
     padding: var(--gutter);
     border: 1px solid var(--grey_border);
+    padding-top: var(--pading-top);
 }
 .settings-detail {
     flex-grow: 1;
@@ -107,13 +113,17 @@
 }
  
 .settings-menu__h3:hover {
-    color: var(--green_500); 
+    color: var(--grey_400); 
 } 
 
 .settings-detail__edit-profile {
     display: flex;
     flex-direction: column;
     margin: 16px;
+}
+
+.settings-detail-element{
+    margin:50px;
 }
 
 .settings-detail-element > h1 {
@@ -161,6 +171,7 @@
     display: flex;
     gap: var(--gutter);
     flex-direction: column;
+    padding-top: var(--gutter);
 }
 .profile-description__textarea{
     gap: 5px;
@@ -168,13 +179,13 @@
 .profile-description__textarea p{
     margin-left: auto;
     font-size: var(--body2);
-    color: var(--grey_400);
+    color: var(--grey_700);
 
 }
 .profile-description__form label,
 .reset-password__comtainer label{
     font-size: var(--body2);
-    color: var(--grey_400);
+    color: var(--grey_700);
 }
 .profile-description__form textarea,
 .reset-password__comtainer input{
@@ -198,21 +209,21 @@
     height: 36px;
     white-space: nowrap;
     border-radius: var(--border-r);
-    border: 1px solid var(--green_200);
-    color: var(--green_700);
+    border: 1px solid var(--grey_600);
+    color: var(--grey_700);
     background-color: var(--grey_bg);
     margin-top: 10px;
     font-size: var(--body2);
-    box-shadow: rgba(17, 171, 73, 0.1) 0px 1px 2px, 
-    rgba(17, 171, 73, 0.1) 0px 0px 0px 1px;
+    box-shadow: rgba(var(--grey_border)) 0px 1px 2px, 
+    rgba(var(--grey_border)) 0px 0px 0px 1px;
     transition: 0.3s;
 }
 .profile-description__form button:hover,
 .reset-password__form button:hover{
-    background-color: var(--green_100);
-    border: 1px solid var(--green_200);
-    box-shadow: rgba(17, 171, 73, 0.1) 0px 1px 2px, 
-    rgba(17, 171, 73, 0.1) 0px 0px 0px 1px;
+    background-color: var(--grey_border);
+    border: 1px solid var(--grey_bg);
+    box-shadow: rgba(var(--grey_border)) 0px 1px 2px, 
+    rgba(var(--grey_border)) 0px 0px 0px 1px;
 }
 
 
@@ -223,7 +234,7 @@
     flex-direction: column;
 }
 .settings-detail__container{
-    padding: var(--gutter) 0 var(--offset) var(--gutter);
+    padding-top: var(--pading-top);
 }
 .settings-detail__container > h3 {
     font-size: var(--body1);
@@ -236,7 +247,6 @@ input[type="radio"] {
 }
 
 .radio__set  {
-    margin-left: 50px;
     margin-top: var(--gutter);
 }
 .reset-password__comtainer{
