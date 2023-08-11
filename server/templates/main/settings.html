@@ -41,6 +41,7 @@
                                 </div>
                             </a>
                         </div>
+                    {% if not user.socialaccount_set.exists %}
                         <div class="settings-menu__password">
                             <a href="#reset-password" onclick="smoothScrollToElement('reset-password',event);onNavigationClick('settings-menu__password');">
                                 <div class="bar-icon__container">
@@ -49,6 +50,7 @@
                                 </div>
                             </a>
                         </div>
+                    {% endif %}
                     </div>
                 </div>
         <!-- edit profile부분만 예시적으로 detail페이지를 만들어 놓겠음 -->
