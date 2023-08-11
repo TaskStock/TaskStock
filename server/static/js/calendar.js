@@ -57,6 +57,9 @@ function load() {
             // ajax로 dayString 보내기 
             const formData = new FormData();
             formData.append('str', dayString);
+
+            formData.append("username", global_chart_target_username);
+
             const url = `/main/click_date/`;
             const res = await fetch(url, {
                 method: 'POST', 

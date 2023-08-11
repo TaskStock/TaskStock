@@ -1,4 +1,13 @@
+let global_chart_target_username="";
+
 document.addEventListener("DOMContentLoaded", function(){
+
+  const username = document.querySelector("#username_save");
+  if(username==null){
+    global_chart_target_username="";
+  }else{
+    global_chart_target_username=username.textContent;
+  }
   
   const one_week = document.querySelector("#one_week");
   const one_month = document.querySelector("#one_month");
@@ -42,8 +51,7 @@ const request_chart = async (day) =>{
   const formData = new FormData();
   formData.append("day", day);
 
-  const username = document.querySelector("#username_save");
-  formData.append("username", username.textContent);
+  formData.append("username", global_chart_target_username);
 
   const url = "/main/chart_ajax/";
   const res = await fetch(url, {

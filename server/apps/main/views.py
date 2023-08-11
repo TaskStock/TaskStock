@@ -45,18 +45,46 @@ def settings(request):
 def profile(request):
     username=request.GET.get('username')
     try:
-        user = User.objects.get(username=username)
+        target_user = User.objects.get(username=username)
     except User.DoesNotExist:
         return redirect('/main/')
-    if user.is_superuser:
+    if target_user.is_superuser:
         return redirect('/main/')
 
     current_user=request.user
-    if user == current_user:
+    if target_user == current_user:
         return redirect('/main/settings/')
     
+    if target_user in current_user.followings.all():
+        follow_text='CANCEL'
+    else:
+        follow_text='FOLLOW'
+
+    # home 로직 가져옴
+    process_combo(target_user)
+    value = get_value_for_date(target_user)
+    
+    if value is None:
+        # 로그인 했을 때 value가 없는 경우
+        value = createValue(target_user)
+        
+    todos = Todo.objects.filter(value=value)
+    date_id = value.pk
+    todos_levels_dict = {}
+    for todo in todos:
+        todos_levels_dict[todo.id] = todo.level
+
+    todos_sub_dict = {}
+    for todo in todos:
+        todos_sub_dict[todo.pk] = 5 - todo.level
+    
     ctx ={ 
-        'user':user,
+        'user':target_user,
+        'follow_text':follow_text,
+        'todos_levels_dict': todos_levels_dict,
+        'date_id':date_id, 
+        'todos':todos,
+        'todos_sub_dict': todos_sub_dict,
     }
     return render(request, 'main/profile.html', context=ctx)
 
@@ -206,11 +234,31 @@ def chart_ajax(request):
     day = int(request.POST.get("day"))
     username = request.POST.get("username")
 
-    target_user = User.objects.get(username=username)
+    if username == "":
+        target_user = request.user
+    else:
+        target_user = User.objects.get(username=username)
 
     dataset = values_for_chart(target_user, day)
 
     return JsonResponse({"dataset": dataset})
+
+@csrf_exempt
+def follow(request):
+    buttonText = request.POST.get("buttonText")
+    username = request.POST.get("username")
+
+    target_user = User.objects.get(username=username)
+    current_user = request.user
+
+    if buttonText == "FOLLOW":
+        current_user.followings.add(target_user)
+        text="CANCEL"
+    elif buttonText == "CANCEL":
+        current_user.followings.remove(target_user)
+        text="FOLLOW"
+
+    return JsonResponse({"text": text})
 
 # ---환희 작업---#
 
@@ -308,14 +356,20 @@ def click_date(request):
     #존재하지 않으면 -> todos == ''
     date_str = request.POST.get('str') #'8/21/2023'
     month_date_year = date_str.split('/')
+
+    username = request.POST.get("username")
     
-    current_user = request.user
+    if username == "":
+        target_user = request.user
+    else:
+        target_user = User.objects.get(username=username)
+    
     #date_str을 date 자료형으로 변환
     date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
     
     todos = []
     try:
-        value = Value.objects.get(date=date_object, user=current_user)
+        value = Value.objects.get(date=date_object, user=target_user)
         todo_objects = Todo.objects.filter(value=value)
         
         for todo in todo_objects:
