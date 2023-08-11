@@ -1,0 +1,16 @@
+.alarm-main{
+    padding: var(--gutter) var(--gutter);
+    display: flex;
+    justify-content: center;
+
+}
+
+.alarm-container {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 100vh;
+    overflow: hidden;
+    gap: var(--gutter);
+    padding-bottom: var(--gutter);    
+}
