@@ -251,7 +251,6 @@ def follow(request):
     return JsonResponse({"text": text})
 
 # ---환희 작업---#
-
 def home(request):
     current_user = request.user
     process_combo(current_user)
@@ -260,7 +259,7 @@ def home(request):
     if value is None:
         # 로그인 했을 때 value가 없는 경우
         value = createValue(current_user)
-        
+    
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
     todos_levels_dict = {}
