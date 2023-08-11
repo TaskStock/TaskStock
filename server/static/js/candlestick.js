@@ -58,7 +58,7 @@ const request_chart = async (day) =>{
 const showChart = (dataset) => {
   const chartdiv = document.querySelector("#chart");
   chartdiv.innerHTML="";
-
+  
   var options = {
     series: [{
     name: 'candle',
@@ -93,8 +93,7 @@ const showChart = (dataset) => {
   annotations: {
     xaxis: [
       {
-        // x: 'Oct 06 14:00',
-        // borderColor: '#00E396',
+       
         borderColor: '#000',
         label: {
           borderColor: '#00E396',
@@ -104,8 +103,7 @@ const showChart = (dataset) => {
             background: '#00E396'
           },
           orientation: 'horizontal',
-          // offsetY: 7,
-          // text: 'Annotation Test'
+        
         }
       }
     ]
@@ -116,7 +114,7 @@ const showChart = (dataset) => {
       show: false,
     },
     tooltip:{
-      offsetX: true,
+      // offsetX: true,
     },
     type: "datetime",
   },

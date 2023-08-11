@@ -511,7 +511,7 @@ def check_todo(request, pk):
 #     return delta.days   #int자료형으로 반환
 
 def date_to_timestamp(date_obj):
-    
+    # return int(datetime.combine(date_obj, datetime.min.time()).timestamp() * 1000) + timedelta(days=1)
     return int(datetime.combine(date_obj, datetime.min.time()).timestamp() * 1000)
 
 def values_for_chart(user, term):
