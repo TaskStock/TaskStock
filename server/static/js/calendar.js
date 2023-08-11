@@ -184,9 +184,17 @@ function paintDate(){
     document.querySelector('.todo-add--date').innerHTML = `
         ${clicked_month}월 ${clicked_date}일
     `;
-    document.querySelector('.todo-item--date').innerHTML = `
-        ${clicked_month}월 ${clicked_date}일
-    `;
+    const items = document.querySelectorAll('.todo-item--date');
+    console.log(items.length);
+    if (items.length !== 0){
+        items.forEach(i => {
+            i.innerHTML = `
+            ${clicked_month}월 ${clicked_date}일
+        `;
+        })
+    }
+   
+    
     
 }
 initButtons();
