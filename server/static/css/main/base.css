@@ -97,7 +97,18 @@ section header img{
     width: 90px;
     height: 90px;
     background-color: grey;
+    overflow: hidden;
 }
+
+.friend-info--pic img,
+.my-info--pic img {
+    height: 100%;
+}
+
+.friend-info--pic {
+    overflow: hidden;
+}
+
 .my-info--about{
     flex-grow: 1;
     padding: var(--gutter);

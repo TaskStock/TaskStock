@@ -5,6 +5,11 @@ from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+def user_directory_path(instance, filename):
+    #파일을 user_<id>/<filename>에 저장
+    
+    return f'profile/user_{instance.id}/{filename}'
+
 class User(AbstractUser):
     combo = models.IntegerField(null=True, default=0)
     first_name=None
@@ -12,6 +17,7 @@ class User(AbstractUser):
     name = models.CharField(max_length=30, default="닉네임을 설정하세요")
     introduce = models.CharField(max_length=50, null=True, blank=True)
     email_alarm = models.BooleanField(null=True, default=False)
+    img = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
 
     # false = public, true = private
     hide = models.BooleanField(null=True, default=False)
@@ -31,6 +37,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+
 
 # User 모델 객체가 생성될 때 실행할 함수
 @receiver(post_save, sender=User)

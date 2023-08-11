@@ -74,14 +74,20 @@
         </header>
         
         <div class="my-info--container">
-            <div class="my-info--pic"></div>
+            <div class="my-info--pic">
+                {% if user.img %}
+                    <img src="{{ user.img.url }}" alt="Profile Image">
+                {% else %}
+                    <img src="{% static 'img/blank-profile-picture.png' %}" alt="Default Profile Image">
+                {% endif %}
+            </div>
             <div class="my-info--about">
                 <div class="my-info--name">{{user}}</div>
                 <div class="my-info--comment">{{user.textContent}}</div>
                 <div class="my-info--sff__container">
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
-                        <span>4.7%</span>
+                        <span>{{ percent }}</span>
                     </div>
                     <div class="my-info--sff sff-fg">
                         <span>Following</span>
@@ -111,7 +117,7 @@
 
     {% block extra %}
     {% endblock %}
-     
+    
     <script>
 
         document.addEventListener("DOMContentLoaded", function(){
@@ -180,7 +186,9 @@
                     atagInput.innerHTML = `
                         <div class="friend-item">
                             <div class="search-result__right--container">
-                                <div class="friend-info--pic"></div>
+                                <div class="friend-info--pic">
+                                    <img src="${user.img}" alt="">
+                                </div>
                                 
                                 <div class="search-result__name-container">
                                     <h2>${user.name}</h2>
@@ -190,9 +198,9 @@
                             <div class="search-result__right-container">
                                 <div class="search-result__info">
                                     <div class="search-result__right-upper-container">
-                                        <img src="https://placekitten.com/30/30" alt="">
+                                        
                                     </div>
-                                    <p>13%</p>
+                                    <p>${user.percent}%</p>
                                 </div>
                             </div>
                         </div>

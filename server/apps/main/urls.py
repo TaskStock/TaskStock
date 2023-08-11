@@ -10,12 +10,13 @@ urlpatterns = [
     path('', home), # /main/
     path('search/', search), # /main/search/
     path('settings/', settings), # /main/settings/
+    path('settings/update_profile/', update_profile), # /main/settings/update_profile/
+    
     # 다른 유저의 상세 페이지
     path('profile/', profile), # /main/profile/
     path('alarm/', alarm), # /main/alarm/
 
     # ajax 처리 url
-    path('settings/update_introduce/', update_introduce), # /main/settings/update_introduce/
 
     path('settings/update_profile/', update_profile), # /main/settings/update_profile/
 
