@@ -42,20 +42,40 @@
                     <h1 id="edit-profile">Edit Profile</h1>
                     <div class="settings-detail__container">
                         <div class="settings-detail__profile-container">
-                            <img src="https://placekitten.com/100/100" alt="">
+                            {% if user.img %}
+                                <img src="{{ user.img.url }}" alt="Profile Image">
+                            {% else %}
+                                <img src="{% static 'img/blank-profile-picture.png' %}" alt="Default Profile Image">
+                            {% endif %}
                             <div class="settings-detail__description-container">
-                                <h3>{{ user.name }}</h3>
-                                <a href="">Change profile picture</a>
+                                <h3>{{ user.name}}</h3>
                             </div>
                         </div>
-                        <form onsubmit="introduceUpdate(event)" class="profile-description__form">
+
+                        <form method="POST" action="/main/settings/update_profile/" class="profile-update__form" enctype="multipart/form-data">
                             {% csrf_token %}
+
+                            <!-- 닉네임 업데이트 부분 -->
+                            <div class="profile-name__input">
+                                <label for="name">Chang profile name</label>
+                                <input type="text" id="name" name="name" placeholder="{{ user.name }}" placeholder="Enter your name">
+                            </div>
+
+                            <!-- 이미지 업데이트 부분 -->
+                            <div class="profile-image__input">
+                                <label for="profile-image">Change profile picture</label>
+                                <input type="file" id="profile-image" name="img">
+                            </div>
+
+                            <!-- 소개 업데이트 부분 -->
                             <div class="profile-description__textarea">
-                                <label for="proflie-description">소개</label>
-                                <textarea name="proflie-description" id="proflie-description" cols="40" rows="5" placeholder="50자 이내로 입력">{% if user.introduce %}{{ user.introduce }}{% endif %}</textarea>
+                                <label for="profile-description">Change profile introduce</label>
+                                <textarea name="profile-description" id="profile-description" cols="40" rows="5">{% if user.introduce %}{{ user.introduce }}{% endif %}</textarea>
                                 <p>0/50</p>
                             </div>
-                            <button type="submit">Done</button>
+                            
+                            <button type="submit" >Done</button>
+
                         </form>
                     </div>
                 </div>

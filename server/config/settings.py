@@ -135,6 +135,7 @@ USE_TZ = True
 STATIC_URL = 'static/' 
 STATICFILES_DIRS = [ BASE_DIR / 'static', ] 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+print(STATIC_URL)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -205,7 +206,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 EMAIL_USE_SSL = False
 
-
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 

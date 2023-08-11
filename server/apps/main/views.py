@@ -7,6 +7,10 @@ from django.utils import timezone
 import pytz
 from datetime import timedelta, datetime
 from django.db import transaction
+from django.contrib.auth.decorators import login_required
+import os
+from django.conf import settings
+
 
 
 # 비밀번호 변경 위한 라이브러리
@@ -60,15 +64,15 @@ def profile(request):
     }
     return render(request, 'main/profile.html', context=ctx)
 
-@csrf_exempt
-def update_introduce(request):
-    introduce = request.POST.get("proflie-description")
+# @csrf_exempt
+# def update_introduce(request):
+#     introduce = request.POST.get("proflie-description")
 
-    user=request.user
-    user.introduce=introduce
-    user.save()
+#     user=request.user
+#     user.introduce=introduce
+#     user.save()
 
-    return JsonResponse({"result": True})
+#     return JsonResponse({"result": True})
 
 @csrf_exempt
 def update_emailalarm(request):
@@ -159,7 +163,7 @@ def search_ajax(request):
 @csrf_exempt
 def follow_list(request):
     current_user=request.user
-
+    
     if request.POST.get("type")=="following":
         follow_list = current_user.followings.all()
     elif request.POST.get("type")=="follower":
@@ -172,10 +176,18 @@ def follow_list(request):
     users=[]
 
     for user in follow_list:
+        try:
+            value = Value.objects.get(user=user, date=datetime.now())
+            percent = value.percentage
+        except:
+            percent = 0
+        
         user_data={
             "username":user.username,
             "name":user.name,
             "introduce":user.introduce,
+            "percent": percent,
+            "img": user.img.url if user.img else '/static/img/blank-profile-picture.png',
             # 추후 필요한 필드 추가
         }
         users.append(user_data)
@@ -242,11 +254,39 @@ def home(request):
         'date_id':date_id, 
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
+        'percent': value.percentage,
     }
     return render(request, 'main/home2.html', context)
 
 
 #---세원 작업---#
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        image = request.FILES.get('img')
+        name = request.POST.get('name')
+        introduce = request.POST.get('profile-description')
+
+        #새 이미지가 제출되었을 경우, 이전 이미지를 삭제
+        if image and user.img:
+            old_image_path = user.img.path
+            if os.path.isfile(old_image_path):
+                os.remove(old_image_path)
+
+        if image:
+            user.img = image
+        if name:
+            user.name = name
+        if introduce:
+            user.introduce = introduce
+            
+        user.save()
+    
+        return redirect('/main/settings/')
+    
+    return JsonResponse({"result": False, "error": "GET요청이 들어옴"})
+
 @csrf_exempt
 def click_date(request, pk):
     #자바스크립트에서 날짜를 전달한다
@@ -420,7 +460,7 @@ def delete_todo(request, pk):
         
         #combo 변화 처리    
         process_combo(current_user)
-        a = ''
+    
     return JsonResponse({'id':todo_id, 'd_id': value.id})
 """
 Todo 업데이트 하는 함수
@@ -482,9 +522,9 @@ def check_todo(request, pk):
             
             #value의 percentage값 업데이트 -> 소수점 둘째자리까지
             if value.start == 0:
-                value.percentage = int((value.end - 50000)/50000 * 100)
+                value.percentage = round((value.end - 50000)/50000 * 100, 2)
             else:
-                value.percentage = int((value.end-value.start)/value.start *100)
+                value.percentage = round((value.end - value.start)/value.start *100, 2) 
                 
             if value.percentage > 0:
                 color = 'red'
@@ -497,7 +537,7 @@ def check_todo(request, pk):
         #combo변화 처리
         process_combo(current_user)
         todo_status = str(todo_status)
-        return JsonResponse({'color':color, 'todo_status': todo_status, 't_id':todo.pk})
+        return JsonResponse({'color':color, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
         
 
 
@@ -584,6 +624,7 @@ def process_combo(user):
     user.save()
         
     return
+
 #---선우 작업---#
 
 def search(request):

@@ -72,7 +72,13 @@ section header img{
     width: 90px;
     height: 90px;
     background-color: grey;
+    overflow: hidden;
 }
+
+.my-info--pic img {
+    height: 100%;
+}
+
 .my-info--about{
     flex-grow: 1;
     padding: var(--gutter);
