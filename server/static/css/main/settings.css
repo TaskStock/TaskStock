@@ -29,6 +29,8 @@
     --grey_600: #757575;
     --grey_700: #616161;
 
+    --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
     /* font */
     --hero: 50px;
     --heading1: 38px;
@@ -76,14 +78,14 @@
     overflow: hidden;
     border-radius: var(--border-r);
     background-color: var(--grey_bg);
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--shadow);
     padding: var(--gutter);
 }
 .settings-menu {
     width: 200px;
     border-radius: var(--border-r);
     background-color: var(--grey_bg);
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--shadow);
     padding: var(--gutter);
     border: 1px solid var(--grey_border);
     padding-top: var(--pading-top);
@@ -94,9 +96,12 @@
     background-color: var(--grey_bg);
     box-shadow: var(--box-shadow);
     padding: var(--gutter);
-    border: 1px solid var(--grey_border);
     overflow-y: scroll;
     scroll-padding-top: var(--gutter);
+}
+
+.settings-detail > div:last-child {
+    margin-bottom: 530px;
 }
 
 .settings-menu__container {
@@ -124,7 +129,7 @@
 
 .settings-detail-element{
     margin:50px;
-    margin-bottom: 250px;
+    margin-bottom: 40px;
 }
 
 .settings-detail-element > h1 {

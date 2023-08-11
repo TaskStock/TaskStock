@@ -43,6 +43,7 @@
     --border-r: 8px;
     /* shadow */
     --box-shadow: rgba(233, 233, 231) 1.95px 1.95px 2.6px;
+    --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .alarm-main {
@@ -68,7 +69,6 @@
     padding-top: var(--gutter);
 }
 .alarm-header > h1 {
-    color: #fff;
     font-size: var(--heading1);
     font-weight: 600;
 }
@@ -78,8 +78,10 @@
     overflow: hidden;
     border-radius: var(--border-r);
     background-color: var(--grey_bg);
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--shadow);
     padding: var(--gutter);
+    height: 100vh;
+    overflow-y: scroll;
 }
 
 
@@ -92,7 +94,6 @@
     overflow: hidden;
     border-radius: var(--border-r);
     background-color: var(--grey_bg);
-    box-shadow: var(--box-shadow);
     padding: var(--gutter);
     flex-direction: column;
     gap: var(--gutter);
@@ -103,14 +104,10 @@
     overflow: hidden;
     border-radius: var(--border-r);
     background-color: var(--grey_bg);
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--shadow);
     padding: var(--gutter);
 }
 
-.alarm-list:hover {
-    background-color: var(--grey_400);
-    cursor: pointer;
-}
 
 .alarm-content__container {
     display: flex;
@@ -123,7 +120,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 10%;
+    width: 11%;
 }
 
 .alarm-image__container>img {
@@ -137,7 +134,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--gutter);
-    width: 80%;
+    width: 70%;
 }
 
 .alarm-description__container > h3 {
@@ -176,16 +173,22 @@
     content: 'X';
 }
 
+.alarm-content__more-btn:hover {
+    background-color: var(--grey_400);
+    cursor: pointer;
+}
+
 .alarm-description__content:has(+ .alarm-content__more-btn:checked) {
     -webkit-line-clamp:unset
   }
   
 
 .alarm-time__container {
+    margin-left: 80px;
     display: flex;
     flex-direction: column;
     gap: var(--gutter);
-    width: 6%;
+    width: 9%;
 }
 .alarm-time__container > span {
     font-size: var(--caption);
