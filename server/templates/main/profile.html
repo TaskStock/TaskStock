@@ -35,12 +35,12 @@
             </form>
         </div>
         <div class="dashboard">
-            <div id="username_save" style="border: 1px solid black">{{user.username}}</div>
+            <div id="username_save" style="border: 1px solid black">{{target_user.username}}</div>
             <div class="dashboard--achivements">
                 <h3>Achievements</h3>
                 <div class="dashboard--combo">
                     <span>Combo: </span>
-                    <span>{{ user.combo }}</span>
+                    <span>{{ target_user.combo }}</span>
                 </div>
                 <div class="dashboard--badge">
                     
@@ -60,18 +60,26 @@
         <div class="main-right--container">
             <div class="calendar-container">
                 <div class="cal--header">
-                    <button id="backButton"><i class="fa-solid fa-chevron-left"></i></button>
-                    <div id="monthDisplay"></div>
-                    <button id="nextButton"><i class="fa-solid fa-chevron-right"></i></button>     
+                    <div id="monthDisplay">
+                        <div class="monthDisplay--month"></div>
+                        <!-- <div class="monthDisplay--year"></div> -->
+                    </div>
+                    <div class="monthControl">
+                        <button id="nextButton"><i class="fa-solid fa-chevron-up"></i></button>
+                        <button id="backButton"><i class="fa-solid fa-chevron-down"></i></button>
+                    </div>
+                    <!-- 할 일 등록 -->
+                    
+                    
                 </div>
                 <div class="cal--weekdays">
-                    <div>Sun</div>
-                    <div>Mon</div>
-                    <div>Tue</div>
-                    <div>Wed</div>
-                    <div>Thu</div>
-                    <div>Fri</div>
-                    <div>Sat</div>
+                    <div>S</div>
+                    <div>M</div>
+                    <div>T</div>
+                    <div>W</div>
+                    <div>T</div>
+                    <div>F</div>
+                    <div>S</div>
                     
                 </div>
                 <div class="cal--calendar">
@@ -83,9 +91,6 @@
             </div> -->
             
             <div class="todo-container">
-                <!-- 할 일 등록 -->
-                
-
                 <!-- paint todo -->
 
                 <div class="todo-paint" id="todo-paint">
@@ -155,7 +160,6 @@
             
         </div>
     </div>
-    
     
 </main>
 

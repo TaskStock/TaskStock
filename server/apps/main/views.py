@@ -79,7 +79,8 @@ def profile(request):
         todos_sub_dict[todo.pk] = 5 - todo.level
     
     ctx ={ 
-        'user':target_user,
+        'user':current_user,
+        'target_user':target_user,
         'follow_text':follow_text,
         'todos_levels_dict': todos_levels_dict,
         'date_id':date_id, 
