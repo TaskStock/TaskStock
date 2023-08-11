@@ -5,13 +5,11 @@ main{
 .main-left{
     width: 60%;
     height: 100%;
-    border-right: 1px solid black;
+    border-right: 1px solid var(--border-color);
     padding: var(--gutter);
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    
-    
 }
 .main-right{
     width: 40%;
@@ -32,7 +30,8 @@ main{
 .chart-btn{
     padding: 7px 10px;
     border-radius: var(--border-r);
-    border: 1px solid white;
+    border: 1px solid var(--body-color);
+    /* light: white / dark:  */
     cursor: pointer;
     font-size: var(--caption);
     transition: var(--transition);
@@ -41,12 +40,14 @@ main{
     border: 1px solid rgb(177, 176, 176);
 }
 .chart-btn--container input:checked + .chart-btn{
-    border: 1px solid var(--bg-1);
+    border: 1px solid var(--checked-border);
+    /* light: #000, dark: #fff */
 
 }
 .todo-plus--btn{
     cursor: pointer;
-    background-color: white;
+    background-color: var(--body-color);
+
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -55,19 +56,23 @@ main{
     height: 40px;
     transition: var(--transition);
 }
+.todo-plus--btn i{
+    color: var(--checked-border);
+
+}
 .cal--header{
     position: relative;
 
 }
 .todo-plus--btn:hover{
-    background-color: var(--bg-3);
+    background-color: var(--box-color);
 }
 .todo-plus--btn i{
     font-size: 24px;
 
 }
 .todo-add--container{
-    background-color: var(--bg-1);
+    background-color: var(--section-color);
     position: absolute;
     border-radius: var(--border-r);
     padding: var(--gutter);
@@ -90,8 +95,6 @@ main{
     flex-direction: column;
     gap: var(--gutter);
 }
-
-
 .todo-plus.active .todo-add--container{
     visibility: visible;
     opacity: 1;
@@ -113,6 +116,14 @@ main{
 	margin-left: -20px;
 
 
+}
+.todo-item{
+    background-color: var(--item-color);
+    /* #fff, #323232 */
+}
+.todo-item > input{
+    color: var(--checked-border);
+    /* #000,  #fff*/
 }
 .todo-add--input input,
 .todo-item--edit .todo-item--input input{
@@ -220,8 +231,7 @@ main{
 }
 .todo-item--edit{
     width: 400px;
-    /* height: 300px; */
-    background-color: var(--bg-1);
+    background-color: var(--section-color);
     border-radius: var(--border-r);
     position: absolute;  
     left: 30px;
@@ -256,7 +266,8 @@ main{
 .todo-level div{
     width: 7px;
     height: 20px;
-    background-color: var(--bg-3);
+    background-color: var(--level-blank);
+    /* rgb(222,222,222),  #A4A4A4*/
     border-radius: var(--border-r);
 }
 .todo-level div.active{
