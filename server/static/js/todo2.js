@@ -100,7 +100,7 @@ const handleTodoResponse = async(todo_id, level, content) => {
         </div>
         
         <div class="todo-item--edit todo-item--edit-${todo_id}">
-            <div class="todo-item--date">8월 7일 월요일</div>
+            <div class="todo-item--date"></div>
             <div class="todo-item--input">
                 <span>할 일을 수정하세요</span>
                 <input type="text"
@@ -126,7 +126,7 @@ const handleTodoResponse = async(todo_id, level, content) => {
     </div>
     `;
     update_chart();
-    
+  
 }
 
 
@@ -164,6 +164,7 @@ const edit_todo = (todo_id) => {
             }
         )})
     }
+    paintDate();
    
 }
 
@@ -247,6 +248,7 @@ const handleUpdateTodoRes = async(todo_id, level, content) => {
             ${emptyLevel}
     `;
     update_chart();
+    paintDate();
 }
 
 function epaintStar(todo_id, level){

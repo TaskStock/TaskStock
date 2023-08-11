@@ -99,9 +99,9 @@ function handleDateResponse(todos){
             for(e = todo.level + 1; e < 6; e++){
                 emptyLevel += `<div level="${e}"></div>`;
             }
-            document.querySelector('.todo-add--date').innerHTML = `
-                ${todo.month}월 ${todo.date}일
-            `;
+            // document.querySelector('.todo-add--date').innerHTML = `
+            //     ${todo.month}월 ${todo.date}일
+            // `;
             currentInput.innerHTML += `
             <div class="todo-item todo-item-${todo.id} ">
                         
@@ -164,8 +164,9 @@ function initButtons() {
 function blackBorder(){
     document.querySelectorAll('.cal--calendar .day').forEach(day => {
         day.addEventListener('click', () => {
+            paintDate();
             const clicked_day = document.querySelectorAll('.clickedDay');
-            // console.log(clicked_day.length);
+          
             if(clicked_day.length !== 0){
                 clicked_day.forEach(c => {
                     c.classList.remove('clickedDay');
@@ -176,10 +177,22 @@ function blackBorder(){
         })
     })
 }
-
+function paintDate(){
+    let clicked_month = dayString.split('/')[0];
+    let clicked_date = dayString.split('/')[1];
+    
+    document.querySelector('.todo-add--date').innerHTML = `
+        ${clicked_month}월 ${clicked_date}일
+    `;
+    document.querySelector('.todo-item--date').innerHTML = `
+        ${clicked_month}월 ${clicked_date}일
+    `;
+    
+}
 initButtons();
 load();
 blackBorder();
+paintDate();
 
 
 
