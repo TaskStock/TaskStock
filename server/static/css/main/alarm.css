@@ -123,7 +123,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 14%;
+    width: 10%;
 }
 
 .alarm-image__container>img {
@@ -145,10 +145,41 @@
     font-weight: 600;
 }
 
-.alarm-description__container > span {
+.alarm-description__content {
     font-size: var(--caption);
     color: var(--grey_600);
+    /* 보여질 내용을 한 줄로만 제한 */
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical; 
+    overflow: hidden;
 }
+
+.alarm-content__more-btn {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    border: 1px solid var(--grey_600);
+    border-radius: 0.25em;
+    cursor: pointer;
+    padding: 0.25em 0.5em;
+    transform: rotate(0deg); /* 텍스트를 가로 방향으로 회전시킵니다. */
+    transform-origin: center; /* 회전 중심을 가운데로 설정합니다. */
+}
+
+.alarm-content__more-btn::before {
+    content: 'more';
+    display: inline;
+}
+
+.alarm-content__more-btn:checked::before {
+    content: 'X';
+}
+
+.alarm-description__content:has(+ .alarm-content__more-btn:checked) {
+    -webkit-line-clamp:unset
+  }
+  
 
 .alarm-time__container {
     display: flex;
@@ -159,4 +190,11 @@
 .alarm-time__container > span {
     font-size: var(--caption);
     color: var(--grey_600);
+}
+
+.more-btn__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
