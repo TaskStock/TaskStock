@@ -251,6 +251,10 @@ def follow(request):
     return JsonResponse({"text": text})
 
 # ---환희 작업---#
+def extract_month_day(date):
+    month = date.strftime('%-m')  # 월
+    day = date.strftime('%-d')    # 일
+    return month, day
 
 def home(request):
     current_user = request.user
@@ -260,7 +264,11 @@ def home(request):
     if value is None:
         # 로그인 했을 때 value가 없는 경우
         value = createValue(current_user)
-        
+    
+    kst = pytz.timezone('Asia/Seoul')
+    kst_date = timezone.now().astimezone(kst).date()
+
+    month, date = extract_month_day(kst_date)
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
     todos_levels_dict = {}
@@ -281,6 +289,8 @@ def home(request):
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
         'percent': value.percentage,
+        'month': month,
+        'date': date,
     }
     return render(request, 'main/home2.html', context)
 

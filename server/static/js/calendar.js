@@ -46,12 +46,6 @@ function load() {
         daySquare.innerText = i - paddingDays;
         daySquare.addEventListener('click', async() => {
             // 각 day 클릭할 때 발생한는 함수 
-
-
-            
-
-
-
             dayString = `${month+1}/${i-paddingDays}/${year}`; // '8/10/2023'
             
             // ajax로 dayString 보내기 
@@ -105,7 +99,9 @@ function handleDateResponse(todos){
             for(e = todo.level + 1; e < 6; e++){
                 emptyLevel += `<div level="${e}"></div>`;
             }
-            
+            document.querySelector('.todo-add--date').innerHTML = `
+                ${todo.month}월 ${todo.date}일
+            `;
             currentInput.innerHTML += `
             <div class="todo-item todo-item-${todo.id} ">
                         
@@ -150,7 +146,6 @@ function handleDateResponse(todos){
 function clickedDayString(dayString){
     return dayString;
 }
-
 
 function initButtons() {
   document.getElementById('nextButton').addEventListener('click', () => {
