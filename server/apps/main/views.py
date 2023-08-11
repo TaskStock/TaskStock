@@ -420,7 +420,7 @@ def delete_todo(request, pk):
         
         #combo 변화 처리    
         process_combo(current_user)
-            
+        a = ''
     return JsonResponse({'id':todo_id, 'd_id': value.id})
 """
 Todo 업데이트 하는 함수
