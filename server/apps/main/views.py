@@ -296,7 +296,7 @@ def home(request):
 
 #---세원 작업---#
 @login_required
-def update_profile(request):
+def update_userinfo(request):
     if request.method == 'POST':
         user = request.user
         image = request.FILES.get('img')
