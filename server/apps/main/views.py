@@ -99,41 +99,27 @@ def update_introduce(request):
     return JsonResponse({"result": True})
 
 @csrf_exempt
-def update_emailalarm(request):
-    emailalarm = request.POST.get("radio")
-
-    if emailalarm=="alarm-set":
-        alarm=True
-    elif emailalarm=="alarm-reset":
-        alarm=False
+def update_profile(request):
+    type = request.POST.get("type")
+    radio = request.POST.get("radio")
 
     user=request.user
-    user.email_alarm=alarm
-    user.save()
 
-    return JsonResponse({"result": True})
+    if type=="email_alarm":
+        if radio=="alarm-set":
+            radio_value=True
+        elif radio=="alarm-reset":
+            radio_value=False
+        user.email_alarm=radio_value
+    elif type=="security":
+        if radio=="public":
+            radio_value=False
+        elif radio=="private":
+            radio_value=True
+        user.hide=radio_value
+    elif type=="language":
+        user.language=radio
 
-@csrf_exempt
-def update_hide(request):
-    hiderange = request.POST.get("radio")
-
-    if hiderange=="public":
-        hide=False
-    elif hiderange=="private":
-        hide=True
-
-    user=request.user
-    user.hide=hide
-    user.save()
-
-    return JsonResponse({"result": True})
-
-@csrf_exempt
-def update_language(request):
-    language = request.POST.get("radio")
-
-    user=request.user
-    user.language=language
     user.save()
 
     return JsonResponse({"result": True})

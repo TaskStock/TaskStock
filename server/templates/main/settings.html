@@ -81,12 +81,16 @@
                             <form action="" class="email-alarm__form">
                                 {% csrf_token %}
                                 <div class="radio__set">
-                                    <input type="radio" name="radio_answer" value="alarm-set" onchange="updateEmailAlarm(this)" {% if user.email_alarm %} checked {% endif %} />
-                                    <label>설정</label>
+                                    <label>
+                                        <input type="radio" name="email_alarm" value="alarm-set" onchange="updateProfile(this)" {% if user.email_alarm %} checked {% endif %} />
+                                        설정
+                                    </label>
                                 </div>
                                 <div class="radio__set">
-                                    <input type="radio" name="radio_answer" value="alarm-reset" onchange="updateEmailAlarm(this)" {% if not user.email_alarm %} checked {% endif %} />
-                                    <label>해제</label>
+                                    <label>
+                                        <input type="radio" name="email_alarm" value="alarm-reset" onchange="updateProfile(this)" {% if not user.email_alarm %} checked {% endif %} />
+                                        해제
+                                    </label>
                                 </div>
                             </form>
                         </div>
@@ -97,12 +101,16 @@
                             <form action="" class="public-private__form">
                                 {% csrf_token %}
                                 <div class="radio__set">
-                                    <input type="radio" name="radio_answer" value="public" onchange="updateHide(this)" {% if not user.hide %} checked {% endif %} />
-                                    <label>public</label>
+                                    <label>
+                                        <input type="radio" name="security" value="public" onchange="updateProfile(this)" {% if not user.hide %} checked {% endif %} />
+                                        public
+                                    </label>
                                 </div>
                                 <div class="radio__set">
-                                    <input type="radio" name="radio_answer" value="private" onchange="updateHide(this)" {% if user.hide %} checked {% endif %} />
-                                    <label>private</label>
+                                    <label>
+                                        <input type="radio" name="security" value="private" onchange="updateProfile(this)" {% if user.hide %} checked {% endif %} />
+                                        private
+                                    </label>
                                 </div>                            
                             </form>
                         </div>      
@@ -114,21 +122,29 @@
                                 {% csrf_token %}
                                 {% if user.language == 'KR' %}
                                 <div class="radio__set">
-                                    <input type="radio" name="radio_answer" value="KR" onchange="updateLanguage(this)" checked />
-                                    <label>한국어</label>
+                                    <label>
+                                        <input type="radio" name="language" value="KR" onchange="updateProfile(this)" checked />
+                                        한국어
+                                    </label>
                                 </div>
                                 <div class="radio__set">
-                                    <input type="radio" name="radio_answer" value="EN" onchange="updateLanguage(this)" />
-                                    <label>English</label>
+                                    <label>
+                                        <input type="radio" name="language" value="EN" onchange="updateProfile(this)" />
+                                        English
+                                    </label>
                                 </div>
                                 {% elif user.language == 'EN' %}
                                 <div class="radio__set">
-                                    <input type="radio" name="radio_answer" value="KR" onchange="updateLanguage(this)" />
-                                    <label>한국어</label>
+                                    <label>
+                                        <input type="radio" name="radio_answer" value="KR" onchange="updateProfile(this)" />
+                                        한국어
+                                    </label>
                                 </div>
                                 <div class="radio__set">
-                                    <input type="radio" name="radio_answer" value="EN" onchange="updateLanguage(this)" checked />
-                                    <label>English</label>
+                                    <label>
+                                        <input type="radio" name="radio_answer" value="EN" onchange="updateProfile(this)" checked />
+                                        English
+                                    </label>
                                 </div>
                                 {% endif %}
                                 
