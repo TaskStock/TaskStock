@@ -15,43 +15,15 @@ const introduceUpdate = async (event) => {
   const { result: result } = await res.json();
 };
 
-// 이메일 알람 ajax 처리
-const updateEmailAlarm = async (inputElement) => {
+// 이메일 알람, 계정 공개 여부, 언어 선택 ajax 처리
+const updateProfile = async (inputElement) => {
   const value = inputElement.value;
+  const name = inputElement.name;
   const formData = new FormData();
+  formData.append("type", name);
   formData.append("radio", value);
 
-  const url = "/main/settings/update_emailalarm/";
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {},
-    body: formData,
-  });
-  const { result: result } = await res.json();
-};
-
-// 계정 공개 여부 ajax 처리
-const updateHide = async (inputElement) => {
-  const value = inputElement.value;
-  const formData = new FormData();
-  formData.append("radio", value);
-
-  const url = "/main/settings/update_hide/";
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {},
-    body: formData,
-  });
-  const { result: result } = await res.json();
-};
-
-// 계정 공개 여부 ajax 처리
-const updateLanguage = async (inputElement) => {
-  const value = inputElement.value;
-  const formData = new FormData();
-  formData.append("radio", value);
-
-  const url = "/main/settings/update_language/";
+  const url = "/main/settings/update_profile/";
   const res = await fetch(url, {
     method: "POST",
     headers: {},
