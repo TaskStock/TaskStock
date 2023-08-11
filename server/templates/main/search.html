@@ -14,7 +14,7 @@
             </div>
             <div class="search-result">
                 {% for user in users %}
-                <a href="/">
+                <a href="/main/profile/?username={{user.username}}">
                     <div class="search-result__container">
                         <div class="search-result__right--container">
                             <div class="friend-info--pic"></div>
@@ -43,7 +43,7 @@
             </div>
             <div class="search-result Scroll" id="search-users__result-container">
                 {% for filtered_user in filtered_users %}
-                <a href="/">
+                <a href="/main/profile/?username={{filtered_user.username}}">
                     <div class="search-result__container">
                         <div class="search-result__right--container">
                             <div class="friend-info--pic"></div>
@@ -113,10 +113,9 @@
                 }
                 
                 atagInput = document.createElement('a');
-                atagInput.href="/";
+                atagInput.href="/main/profile/?username="+user.username;
 
                 atagInput.innerHTML = `
-                <a href="/">
                     <div class="search-result__container">
                         <div class="search-result__right--container">
                             <img src="https://placekitten.com/50/50" alt="user image">
@@ -146,7 +145,6 @@
                             </div>
                         </div>
                     </div>
-                </a>
                 `;
                 currentInput.appendChild(atagInput);
             }
