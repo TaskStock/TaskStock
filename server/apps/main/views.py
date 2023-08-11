@@ -164,6 +164,7 @@ def search_ajax(request):
     for user in find_users:
         user_data={
             "name":user.name,
+            "username":user.username,
             "introduce":user.introduce,
             # 추후 필요한 필드 추가
         }
