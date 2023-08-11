@@ -153,29 +153,35 @@ function initButtons() {
   document.getElementById('nextButton').addEventListener('click', () => {
     nav++;
     load();
+    blackBorder();
   });
 
   document.getElementById('backButton').addEventListener('click', () => {
     nav--;
     load();
+    blackBorder();
   });
+}
+
+function blackBorder(){
+    document.querySelectorAll('.cal--calendar .day').forEach(day => {
+        day.addEventListener('click', () => {
+            const clicked_day = document.querySelectorAll('.clickedDay');
+            // console.log(clicked_day.length);
+            if(clicked_day.length !== 0){
+                clicked_day.forEach(c => {
+                    c.classList.remove('clickedDay');
+                })
+                
+            }
+            day.classList.add('clickedDay');
+        })
+    })
 }
 
 initButtons();
 load();
+blackBorder();
 
 
 
-document.querySelectorAll('.cal--calendar .day').forEach(day => {
-    day.addEventListener('click', () => {
-        const clicked_day = document.querySelectorAll('.clickedDay');
-        // console.log(clicked_day.length);
-        if(clicked_day.length !== 0){
-            clicked_day.forEach(c => {
-                c.classList.remove('clickedDay');
-            })
-            
-        }
-        day.classList.add('clickedDay');
-    })
-})

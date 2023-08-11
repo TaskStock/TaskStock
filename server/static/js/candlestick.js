@@ -64,13 +64,15 @@ const showChart = (dataset) => {
     name: 'candle',
     data: dataset  
   }],
-    chart: {
+  chart: {
     height: '50%',
     type: 'candlestick',
     zoom: {
       enabled: false,
-    }
-  
+    },
+    toolbar: {
+      show: false
+    },
   },
   plotOptions: {
     candlestick: {
@@ -81,7 +83,13 @@ const showChart = (dataset) => {
       wick: { useFillColor: true },
     }
   },
-  
+  grid: {
+    yaxis: {
+      lines: {
+        // show: false
+      }
+    }
+  },
   annotations: {
     xaxis: [
       {
@@ -96,28 +104,30 @@ const showChart = (dataset) => {
             background: '#00E396'
           },
           orientation: 'horizontal',
-          offsetY: 7,
+          // offsetY: 7,
           // text: 'Annotation Test'
         }
       }
     ]
   },
-  tooltip: {
-    enabled: true,
-  },
+
   xaxis: {
-    type: 'category',
     labels: {
-      // formatter: function(val) {
-      //   return dayjs(val).format('MMM DD HH:mm')
-      // }
       show: false,
-    }
+    },
+    tooltip:{
+      offsetX: true,
+    },
+    type: "datetime",
   },
   yaxis: {
-    tooltip: {
-      enabled: true
-    }
+    labels: {
+      show: false,
+    },
+    // tooltip:{
+    //   enabled: true,
+    // },
+    
   }
   };
 

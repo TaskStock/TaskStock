@@ -28,3 +28,4 @@ function smoothScrollToElement(elementId, event) {
     targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
+
