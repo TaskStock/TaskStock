@@ -124,6 +124,7 @@
 
 .settings-detail-element{
     margin:50px;
+    margin-bottom: 150px;
 }
 
 .settings-detail-element > h1 {
@@ -234,7 +235,7 @@
     flex-direction: column;
 }
 .settings-detail__container{
-    padding-top: var(--pading-top);
+    margin-top: var(--gutter);
 }
 .settings-detail__container > h3 {
     font-size: var(--body1);
@@ -266,4 +267,21 @@ input[type="radio"] {
 
 .success{
     border: 1px solid var(--green_500) !important;
+}
+
+.bar-icon {
+    width: 3px;
+    height: 20px;
+    margin-right: 10px;
+    background-color: #1B5E20;
+}
+
+.hidden {
+    display: none;
+}
+
+.bar-icon__container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
 }
