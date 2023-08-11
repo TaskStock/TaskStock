@@ -532,7 +532,7 @@ def check_todo(request, pk):
         #combo변화 처리
         process_combo(current_user)
         todo_status = str(todo_status)
-        return JsonResponse({'color':color, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
+        return JsonResponse({'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
         
 
 

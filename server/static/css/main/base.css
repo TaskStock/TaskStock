@@ -75,8 +75,13 @@ section header img{
     overflow: hidden;
 }
 
+.friend-info--pic img,
 .my-info--pic img {
     height: 100%;
+}
+
+.friend-info--pic {
+    overflow: hidden;
 }
 
 .my-info--about{
