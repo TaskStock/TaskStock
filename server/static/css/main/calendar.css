@@ -88,5 +88,5 @@
     /* #000,#fff */
 }
 .cal--calendar .padding:hover::before{
-    border: 2px solid white;
+    border: 2px solid var(--body-color);
 }

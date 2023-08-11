@@ -2,7 +2,23 @@
 <main>
  
     <div class="main-left">
-    
+        <div class="price">
+            <div class="price--taspi">
+                <span>TASPI</span>
+                <!-- (오늘의 주가총액 / 배포 하루 후 주가총액) * 100 -->
+                <span>2,591.26</span>
+            </div>
+            <div class="price--marketcap">
+                <span>Market Cap</span>
+                <!-- value개수 * value.end -->
+                <span>3,634.7조</span>
+            </div>
+            <div class="total-todos">
+                <span>Completed Todos</span>
+                <!-- 완료한 투두 -->
+                <span>326</span>
+            </div>
+        </div>
         <div id="chart"></div>
         <div class="chart-btn--container">
             <!-- <div id="one_week" class="chart-btn active chart-week">1 week</div>
@@ -36,18 +52,13 @@
         </div>
         <div class="dashboard">
             <div id="username_save" style="display:none;">{{user.username}}</div>
-            <div class="dashboard--achivements">
-                <h3>Achievements</h3>
-                <div class="dashboard--combo">
-                    <span>Combo: </span>
-                    <span>{{ user.combo }}</span>
-                </div>
-                <div class="dashboard--badge">
-                    
-                </div>
-                <div class="dashboard--totalValue">
-                    <span>가치종합지수: </span>
-                </div>
+            <div class="dashboard--combo">
+                <span>Combo</span>
+                <span>{{ user.combo }}</span>
+            </div>
+            <div class="dashboard--badge">
+                <span>Badge</span>
+                <span></span>
             </div>
             
             

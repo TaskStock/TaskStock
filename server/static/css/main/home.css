@@ -44,6 +44,9 @@ main{
     /* light: #000, dark: #fff */
 
 }
+.chart-btn--container label input{
+    display: none;
+}
 .todo-plus--btn{
     cursor: pointer;
     background-color: var(--body-color);
@@ -275,9 +278,48 @@ main{
 }
 /* dashboard */
 .dashboard{
-    height: 40%;
     padding: var(--gutter);
-    flex-grow: 1;
     margin-bottom: var(--gutter);
 }
 
+
+.price{
+    display: grid;
+    grid-template-columns: repeat(3, calc((100% - 2 * var(--gutter)) / 3));
+    gap: var(--gutter);
+    margin: 0 var(--gutter);
+    
+}
+.price > div,
+.dashboard > div{
+    border-radius: var(--border-r);
+    display: flex;
+    flex-direction: column;
+    padding: var(--gutter);
+    gap: 7px;
+    background-color: var(--bg-5);
+}
+.price > div > span:first-child,
+.dashboard > div > span:first-child{
+    font-size: var(--body1);
+    font-weight: var(--weight1);
+}
+.price > div > span:last-child,
+.dashboard > div > span:last-child{
+    color: var(--checked-border);
+    font-weight: var(--weight2);
+    font-size: var(--heading3);
+}
+.dashboard{
+    display: flex;
+    gap: var(--gutter);
+
+}
+.dashboard--combo{
+    width: 150px;
+    /* height: 70px; */
+}
+.dashboard--badge{
+    flex-grow: 1;
+    /* height: 70px; */
+}

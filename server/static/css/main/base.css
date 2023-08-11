@@ -11,6 +11,7 @@
     --bg-1: #000;
     --bg-2: #363636;
     --bg-3: rgb(222, 222, 222);
+    --bg-5: rgba(236, 236, 236, 0.466);
     --bg-4: #fff;
 
     --red-1: #DD1717;
@@ -55,8 +56,8 @@
     --checked-border: #fff;
     --level-blank: #A4A4A4;
     --item-color: #323232;
+    --bg-5: #323232;
 }
-
 body{
     width: 100%;
     height: 100vh;
