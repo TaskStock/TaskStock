@@ -1,37 +1,193 @@
-{% extends '../base2.html' %} {% load static %}
-{%block page%}
-<!-- class, id 전부 싹 갈아엎어야 합니다!!!! -->
-<main class="main--settings">
-    <div class="settings-container">
-        <div class="settigs-header">
-            <h1>Show Other User Detail</h1>
-        </div>
-        <div class="settings-content">
-            <div class="settings-detail Scroll">
-                <div class="settings-detail__edit-profile settings-detail-element">
-                    <div class="settings-detail__container">
-                        <div class="settings-detail__profile-container">
-                            <img src="https://placekitten.com/100/100" alt="">
-                            <div class="settings-detail__description-container">
-                                <h3>{{ user.name }}</h3>
-                            </div>
-                        </div>
-                        <div class="profile-description__textarea">
-                            <label for="proflie-description">소개</label>
-                            <div>{% if user.introduce %}{{ user.introduce }}{% endif %}</div>
-                        </div>
-                    </div>
-                </div>
+{% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
+<main>
+ 
+    <div class="main-left">
+    
+        <div id="chart"></div>
+        <div class="chart-btn--container">
+            <!-- <div id="one_week" class="chart-btn active chart-week">1 week</div>
+            <div id="one_month" class="chart-btn chart-month">1 month</div>
+            <div id="three_month" class="chart-btn chart-3month">3 months</div>
+            <div id="six_month" class="chart-btn chart-6month">6 months</div>
+            <div id="one_year" class="chart-btn chart-year">1 year</div> -->
+            <form>
+                <label>
+                    <input type="radio" name="chart_period" value="7" id="one_week">
+                    1 week
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="30" id="one_month">
+                    1 month
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="90" id="three_month">
+                    3 months
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="180" id="six_month">
+                    6 months
+                </label>
+                <label>
+                    <input type="radio" name="chart_period" value="365" id="one_year">
+                    1 year
+                </label>
                 
-
+            </form>
+        </div>
+        <div class="dashboard">
+            <div id="username_save" style="border: 1px solid black">{{user.username}}</div>
+            <div class="dashboard--achivements">
+                <h3>Achievements</h3>
+                <div class="dashboard--combo">
+                    <span>Combo: </span>
+                    <span>{{ user.combo }}</span>
+                </div>
+                <div class="dashboard--badge">
+                    
+                </div>
+                <div class="dashboard--totalValue">
+                    <span>가치종합지수: </span>
+                </div>
+                <div id="follow-btn">
+                    <button id="followBtn" onclick="followClick();">{{follow_text}}</button>
+                </div>
             </div>
+            
+            
         </div>
     </div>
+    <div class="main-right">
+        <div class="main-right--container">
+            <div class="calendar-container">
+                <div class="cal--header">
+                    <button id="backButton"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div id="monthDisplay"></div>
+                    <button id="nextButton"><i class="fa-solid fa-chevron-right"></i></button>     
+                </div>
+                <div class="cal--weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                    
+                </div>
+                <div class="cal--calendar">
+
+                </div>
+            </div>
+            <!-- <div class="heatmap-container">
+                <div id="heatmap"></div>
+            </div> -->
+            
+            <div class="todo-container">
+                <!-- 할 일 등록 -->
+                
+
+                <!-- paint todo -->
+
+                <div class="todo-paint" id="todo-paint">
+                    
+                    {% for todo in todos %}
+                    
+                    <div class="todo-item todo-item-{{todo.pk}} ">
+                        
+                        <div class="todo-checkbox todo-checkbox-{{todo.pk}} {{todo.goal_check}}" onclick="check_todo({{todo.pk}})"></div>
+                        
+                        <input type="text" 
+                               class="todo-contents" 
+                               onclick="edit_todo({{todo.pk}})"
+                               value="{{todo.content}}"
+                               readonly>
+                        <div class="todo-level todo-level-{{todo.pk}}">
+                      
+                         
+          
+                        {% with level=todos_levels_dict|get_item:todo.id %}
+                            {% for i in level|to_range %}
+                                <div level="{{level}}" class="active"></div>
+                            {% endfor %}
+                         
+                        {% endwith %} 
+
+                        {% with sub=todos_sub_dict|get_item:todo.id %}
+                            {% for i in sub|to_range %}
+                                <div level="{{sub}}"></div>
+                            {% endfor %}
+                         
+                        {% endwith %} 
+                            
+                        </div>
+                        <!-- edit page -->
+                        <div class="todo-item--edit todo-item--edit-{{todo.pk}}">
+                            <div class="todo-item--date">8월 7일 월요일</div>
+                            <div class="todo-item--input">
+                                <span>할 일을 수정하세요</span>
+                                <input type="text"
+                                placeholder="{{todo.content}}"
+                                value="{{todo.content}}"
+                                
+                                >
+                            </div>
+                            <div class="todo-item--level">
+                                <span>난이도를 수정하세요</span>
+                                <div class="edit-todo-level" curr-level="{{todo.level}}">
+                                    <div level="1"></div>
+                                    <div level="2"></div>
+                                    <div level="3"></div>
+                                    <div level="4"></div>
+                                    <div level="5"></div>
+                                </div>
+                            </div>
+                            <div class="edit-btn--container">
+                                <div class="todo-edit--delete-btn" onclick="delete_todo({{todo.pk}})">삭제</div>
+                                <div class="todo-edit--submit-btn" onclick="update_todo({{todo.pk}})">완료</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+    
 </main>
 
 {% endblock %}
 
-
-
 {% block extra %}
+<script src="{% static 'js/calendar.js' %}"></script>
+<script src="{% static 'js/candlestick.js' %}"></script>
+<script>
+    const followClick = async () =>{
+        const followButton = document.querySelector("#followBtn");
+        const buttonText = followButton.textContent;
+
+        const formData = new FormData();
+        formData.append("buttonText",buttonText);
+
+        const username = document.querySelector("#username_save");
+        formData.append("username", username.textContent);
+
+        const url = "/main/follow/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {text} = await res.json();
+        updateBtn(text);
+    }
+    const updateBtn = (text) => {
+        const follow_btn = document.querySelector('#followBtn');
+        follow_btn.textContent=text;
+    }
+</script>
+
 {% endblock %}

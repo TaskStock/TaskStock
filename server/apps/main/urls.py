@@ -25,5 +25,8 @@ urlpatterns = [
 
     # chart ajax
     path('chart_ajax/', chart_ajax), # /main/chart_ajax/
+
+    # follow ajax
+    path('follow/', follow), # /main/follow/
 ] 
 
