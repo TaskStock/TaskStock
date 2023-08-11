@@ -526,11 +526,6 @@ def check_todo(request, pk):
             else:
                 value.percentage = round((value.end - value.start)/value.start *100, 2) 
                 
-            if value.percentage > 0:
-                color = 'red'
-            else:
-                color = 'blue'
-            
             todo.save()
             value.save()
             
