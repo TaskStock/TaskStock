@@ -1,4 +1,13 @@
+let global_chart_target_username="";
+
 document.addEventListener("DOMContentLoaded", function(){
+
+  const username = document.querySelector("#username_save");
+  if(username==null){
+    global_chart_target_username="";
+  }else{
+    global_chart_target_username=username.textContent;
+  }
   
   const one_week = document.querySelector("#one_week");
   const one_month = document.querySelector("#one_month");
@@ -42,8 +51,7 @@ const request_chart = async (day) =>{
   const formData = new FormData();
   formData.append("day", day);
 
-  const username = document.querySelector("#username_save");
-  formData.append("username", username.textContent);
+  formData.append("username", global_chart_target_username);
 
   const url = "/main/chart_ajax/";
   const res = await fetch(url, {
@@ -64,13 +72,15 @@ const showChart = (dataset) => {
     name: 'candle',
     data: dataset  
   }],
-    chart: {
+  chart: {
     height: '50%',
     type: 'candlestick',
     zoom: {
       enabled: false,
-    }
-  
+    },
+    toolbar: {
+      show: false
+    },
   },
   plotOptions: {
     candlestick: {
@@ -81,7 +91,13 @@ const showChart = (dataset) => {
       wick: { useFillColor: true },
     }
   },
-  
+  grid: {
+    yaxis: {
+      lines: {
+        // show: false
+      }
+    }
+  },
   annotations: {
     xaxis: [
       {
@@ -96,28 +112,30 @@ const showChart = (dataset) => {
             background: '#00E396'
           },
           orientation: 'horizontal',
-          offsetY: 7,
+          // offsetY: 7,
           // text: 'Annotation Test'
         }
       }
     ]
   },
-  tooltip: {
-    enabled: true,
-  },
+
   xaxis: {
-    type: 'category',
     labels: {
-      // formatter: function(val) {
-      //   return dayjs(val).format('MMM DD HH:mm')
-      // }
       show: false,
-    }
+    },
+    tooltip:{
+      offsetX: true,
+    },
+    type: "datetime",
   },
   yaxis: {
-    tooltip: {
-      enabled: true
-    }
+    labels: {
+      show: false,
+    },
+    // tooltip:{
+    //   enabled: true,
+    // },
+    
   }
   };
 

@@ -49,18 +49,47 @@ def settings(request):
 def profile(request):
     username=request.GET.get('username')
     try:
-        user = User.objects.get(username=username)
+        target_user = User.objects.get(username=username)
     except User.DoesNotExist:
         return redirect('/main/')
-    if user.is_superuser:
+    if target_user.is_superuser:
         return redirect('/main/')
 
     current_user=request.user
-    if user == current_user:
+    if target_user == current_user:
         return redirect('/main/settings/')
     
+    if target_user in current_user.followings.all():
+        follow_text='CANCEL'
+    else:
+        follow_text='FOLLOW'
+
+    # home 로직 가져옴
+    process_combo(target_user)
+    value = get_value_for_date(target_user)
+    
+    if value is None:
+        # 로그인 했을 때 value가 없는 경우
+        value = createValue(target_user)
+        
+    todos = Todo.objects.filter(value=value)
+    date_id = value.pk
+    todos_levels_dict = {}
+    for todo in todos:
+        todos_levels_dict[todo.id] = todo.level
+
+    todos_sub_dict = {}
+    for todo in todos:
+        todos_sub_dict[todo.pk] = 5 - todo.level
+    
     ctx ={ 
-        'user':user,
+        'user':current_user,
+        'target_user':target_user,
+        'follow_text':follow_text,
+        'todos_levels_dict': todos_levels_dict,
+        'date_id':date_id, 
+        'todos':todos,
+        'todos_sub_dict': todos_sub_dict,
     }
     return render(request, 'main/profile.html', context=ctx)
 
@@ -75,41 +104,27 @@ def profile(request):
 #     return JsonResponse({"result": True})
 
 @csrf_exempt
-def update_emailalarm(request):
-    emailalarm = request.POST.get("radio")
-
-    if emailalarm=="alarm-set":
-        alarm=True
-    elif emailalarm=="alarm-reset":
-        alarm=False
+def update_profile(request):
+    type = request.POST.get("type")
+    radio = request.POST.get("radio")
 
     user=request.user
-    user.email_alarm=alarm
-    user.save()
 
-    return JsonResponse({"result": True})
+    if type=="email_alarm":
+        if radio=="alarm-set":
+            radio_value=True
+        elif radio=="alarm-reset":
+            radio_value=False
+        user.email_alarm=radio_value
+    elif type=="security":
+        if radio=="public":
+            radio_value=False
+        elif radio=="private":
+            radio_value=True
+        user.hide=radio_value
+    elif type=="language":
+        user.language=radio
 
-@csrf_exempt
-def update_hide(request):
-    hiderange = request.POST.get("radio")
-
-    if hiderange=="public":
-        hide=False
-    elif hiderange=="private":
-        hide=True
-
-    user=request.user
-    user.hide=hide
-    user.save()
-
-    return JsonResponse({"result": True})
-
-@csrf_exempt
-def update_language(request):
-    language = request.POST.get("radio")
-
-    user=request.user
-    user.language=language
     user.save()
 
     return JsonResponse({"result": True})
@@ -218,11 +233,31 @@ def chart_ajax(request):
     day = int(request.POST.get("day"))
     username = request.POST.get("username")
 
-    target_user = User.objects.get(username=username)
+    if username == "":
+        target_user = request.user
+    else:
+        target_user = User.objects.get(username=username)
 
     dataset = values_for_chart(target_user, day)
 
     return JsonResponse({"dataset": dataset})
+
+@csrf_exempt
+def follow(request):
+    buttonText = request.POST.get("buttonText")
+    username = request.POST.get("username")
+
+    target_user = User.objects.get(username=username)
+    current_user = request.user
+
+    if buttonText == "FOLLOW":
+        current_user.followings.add(target_user)
+        text="CANCEL"
+    elif buttonText == "CANCEL":
+        current_user.followings.remove(target_user)
+        text="FOLLOW"
+
+    return JsonResponse({"text": text})
 
 # ---환희 작업---#
 
@@ -348,14 +383,20 @@ def click_date(request):
     #존재하지 않으면 -> todos == ''
     date_str = request.POST.get('str') #'8/21/2023'
     month_date_year = date_str.split('/')
+
+    username = request.POST.get("username")
     
-    current_user = request.user
+    if username == "":
+        target_user = request.user
+    else:
+        target_user = User.objects.get(username=username)
+    
     #date_str을 date 자료형으로 변환
     date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
     
     todos = []
     try:
-        value = Value.objects.get(date=date_object, user=current_user)
+        value = Value.objects.get(date=date_object, user=target_user)
         todo_objects = Todo.objects.filter(value=value)
         
         for todo in todo_objects:
@@ -400,7 +441,7 @@ def add_todo(request):
         #value 있긴 한데 더미데이터 인 날
         if value.is_dummy:
             value.is_dummy = False
-            last_value = Value.objects.filter(user=current_user, is_dummay=False, date__lt=target_date).order_by('-date').first()
+            last_value = Value.objects.filter(user=current_user, is_dummy=False, date__lt=target_date).order_by('-date').first()
             if last_value:
                 value.start = value.end = value.low = value.high = last_value.end
             else:

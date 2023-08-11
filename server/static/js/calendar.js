@@ -57,6 +57,9 @@ function load() {
             // ajax로 dayString 보내기 
             const formData = new FormData();
             formData.append('str', dayString);
+
+            formData.append("username", global_chart_target_username);
+
             const url = `/main/click_date/`;
             const res = await fetch(url, {
                 method: 'POST', 
@@ -153,29 +156,35 @@ function initButtons() {
   document.getElementById('nextButton').addEventListener('click', () => {
     nav++;
     load();
+    blackBorder();
   });
 
   document.getElementById('backButton').addEventListener('click', () => {
     nav--;
     load();
+    blackBorder();
   });
+}
+
+function blackBorder(){
+    document.querySelectorAll('.cal--calendar .day').forEach(day => {
+        day.addEventListener('click', () => {
+            const clicked_day = document.querySelectorAll('.clickedDay');
+            // console.log(clicked_day.length);
+            if(clicked_day.length !== 0){
+                clicked_day.forEach(c => {
+                    c.classList.remove('clickedDay');
+                })
+                
+            }
+            day.classList.add('clickedDay');
+        })
+    })
 }
 
 initButtons();
 load();
+blackBorder();
 
 
 
-document.querySelectorAll('.cal--calendar .day').forEach(day => {
-    day.addEventListener('click', () => {
-        const clicked_day = document.querySelectorAll('.clickedDay');
-        // console.log(clicked_day.length);
-        if(clicked_day.length !== 0){
-            clicked_day.forEach(c => {
-                c.classList.remove('clickedDay');
-            })
-            
-        }
-        day.classList.add('clickedDay');
-    })
-})
