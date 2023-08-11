@@ -10,7 +10,7 @@ urlpatterns = [
     path('', home), # /main/
     path('search/', search), # /main/search/
     path('settings/', settings), # /main/settings/
-    path('settings/update_profile/', update_profile), # /main/settings/update_profile/
+    path('settings/update_userinfo/', update_userinfo), # /main/settings/update_userinfo/
     
     # 다른 유저의 상세 페이지
     path('profile/', profile), # /main/profile/
