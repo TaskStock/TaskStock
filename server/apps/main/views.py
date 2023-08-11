@@ -360,7 +360,7 @@ def add_todo(request):
         #value 있긴 한데 더미데이터 인 날
         if value.is_dummy:
             value.is_dummy = False
-            last_value = Value.objects.filter(user=current_user, is_dummay=False, date__lt=target_date).order_by('-date').first()
+            last_value = Value.objects.filter(user=current_user, is_dummy=False, date__lt=target_date).order_by('-date').first()
             if last_value:
                 value.start = value.end = value.low = value.high = last_value.end
             else:

@@ -6,6 +6,11 @@
     display: grid;
     grid-template-columns: repeat(7, calc(100% / 7));
 }
+/* white text color in dark theme */
+.monthDisplay--month,
+.cal--weekdays > div{
+    color: var(--checked-border);
+}
 .cal--weekdays > div,
 .cal--calendar > div{
     text-align: center;
@@ -44,6 +49,13 @@
     flex-direction: column;
     font-weight: var(--weight1);
 }
+.monthControl button{
+    color: var(--text-color);
+}
+.monthControl button:hover{
+    color: var(--checked-border);
+    /* 000, white */
+}
 .todo-plus{
     margin-left: auto;
 }
@@ -59,19 +71,22 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border: 2px solid white;
+    border: 2px solid var(--body-color);
     border-radius: 30px;
-
     z-index: 0;
-    
 }
 #currentDay::before{
     border: 2px solid var(--red-1);
 }
 .cal--calendar .day:hover::before{
-    border: 2px solid var(--bg-3);
+    border: 2px solid var(--box-color);
+    /*  rgb(222, 222, 222), */
 }
 .cal--calendar .clickedDay::before,
 .cal--calendar .clickedDay:hover::before{
-    border: 2px solid var(--bg-1);
+    border: 2px solid var(--checked-border);
+    /* #000,#fff */
+}
+.cal--calendar .padding:hover::before{
+    border: 2px solid white;
 }

@@ -22,17 +22,32 @@ document.addEventListener('click', (event) => {
 
 
 // dark mode toggle
+const bodyEl = document.querySelector('body');
 const darkBtn = document.querySelector('.menu-right__darkmode');
+const activeTheme = localStorage.getItem('theme');
+
+if(activeTheme){
+    bodyEl.classList.add('dark');
+    darkBtn.querySelector('i').classList.remove('gg-moon');
+    darkBtn.querySelector('i').classList.add('gg-sun');
+    darkBtn.querySelector('span').innerHTML = 'Light Mode';
+}
 
 darkBtn.addEventListener('click', () => {
-    darkBtn.classList.toggle('dark');
-    if(darkBtn.classList.contains('dark')){
+    bodyEl.classList.toggle('dark');
+   
+    if(bodyEl.classList.contains('dark')){
+        localStorage.setItem('theme', 'dark');
         darkBtn.querySelector('i').classList.remove('gg-moon');
         darkBtn.querySelector('i').classList.add('gg-sun');
         darkBtn.querySelector('span').innerHTML = 'Light Mode';
     }else{
+        localStorage.removeItem('theme');
         darkBtn.querySelector('i').classList.remove('gg-sun');
         darkBtn.querySelector('i').classList.add('gg-moon');
         darkBtn.querySelector('span').innerHTML = 'Dark Mode';
     }
 })
+
+
+
