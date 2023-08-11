@@ -17,7 +17,6 @@ urlpatterns = [
     path('alarm/', alarm), # /main/alarm/
 
     # ajax 처리 url
-    path('settings/update_introduce/', update_introduce), # /main/settings/update_introduce/
     path('settings/update_profile/', update_profile), # /main/settings/update_profile/
     path('settings/change_password/', change_password), # /main/settings/change_password/
     path('search/ajax/', search_ajax), # /main/search/ajax/

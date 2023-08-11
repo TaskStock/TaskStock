@@ -159,59 +159,38 @@ def email_validation(request):
     code = ''.join(random.choices(string.digits, k=6))
 
     # 이메일 보내기
-    if type=="email_validation":
-        # email_send = EmailMessage(
-        #     'TaskStock 이메일 인증 코드',
-        #     '안녕하세요! TaskStock에 오신 것을 환영합니다! 다음 인증 코드를 입력해주세요.\n'+code,
-        #     to=[email],
-        # )
-        user=request.user
-        user.email=email
-        user.save()
-        try:
-            smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
-            smtp_server.starttls()
+    try:
+        smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
+        smtp_server.starttls()
 
-            EMAIL_HOST_USER = request.META.get('EMAIL_HOST_USER')
-            EMAIL_HOST_PASSWORD = request.META.get('EMAIL_HOST_PASSWORD')
-            smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+        EMAIL_HOST_USER = request.META.get('EMAIL_HOST_USER')
+        EMAIL_HOST_PASSWORD = request.META.get('EMAIL_HOST_PASSWORD')
+        smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+
+        if type=="email_validation":
+            user=request.user
+            user.email=email
+            user.save()
 
             subject = 'Activate Your Account'
             message = f'Click the link to activate your account: http://127.0.0.1:8000/activate/{user.username}/'
-            sender_email = EMAIL_HOST_USER
-            recipient_email = email
-            msg = f'Subject: {subject}\n\n{message}'
-            smtp_server.sendmail(sender_email, recipient_email, msg)
-
-        except smtplib.SMTPException as e:
-            print("An error occurred:", str(e))
-        finally:
-            smtp_server.quit()
-
-    elif type=="find_password":
-
-        username = request.POST.get("username")
-        user=User.objects.get(username=username)
-
-        try:
-            smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
-            smtp_server.starttls()
-
-            EMAIL_HOST_USER = request.META.get('EMAIL_HOST_USER')
-            EMAIL_HOST_PASSWORD = request.META.get('EMAIL_HOST_PASSWORD')
-            smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+        elif type=="find_password":
+            username = request.POST.get("username")
+            user=User.objects.get(username=username)
 
             subject = 'Change Your Password'
             message = f'Please enter the following authentication code to change the password.\n {code}'
-            sender_email = EMAIL_HOST_USER
-            recipient_email = email
-            msg = f'Subject: {subject}\n\n{message}'
-            smtp_server.sendmail(sender_email, recipient_email, msg)
 
-        except smtplib.SMTPException as e:
-            print("An error occurred:", str(e))
-        finally:
-            smtp_server.quit()
+        sender_email = EMAIL_HOST_USER
+        recipient_email = email
+            
+        msg = f'Subject: {subject}\n\n{message}'
+        smtp_server.sendmail(sender_email, recipient_email, msg.encode('utf-8'))
+
+    except smtplib.SMTPException as e:
+        print("An error occurred:", str(e))
+    finally:
+        smtp_server.quit()
 
     response_data = {'error': False, 'code': code, 'email': email,}
 

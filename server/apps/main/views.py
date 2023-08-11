@@ -93,16 +93,6 @@ def profile(request):
     }
     return render(request, 'main/profile.html', context=ctx)
 
-# @csrf_exempt
-# def update_introduce(request):
-#     introduce = request.POST.get("proflie-description")
-
-#     user=request.user
-#     user.introduce=introduce
-#     user.save()
-
-#     return JsonResponse({"result": True})
-
 @csrf_exempt
 def update_profile(request):
     type = request.POST.get("type")
