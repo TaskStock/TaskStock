@@ -4,6 +4,7 @@
     --section-text-color: #fff;
     --border-color: #000;
     --text-color: #000;
+    --none-border: #fff;
     --item-color: #fff;
     --checked-border: #000;
     --box-color: rgb(222, 222, 222);
@@ -13,6 +14,7 @@
     --bg-3: rgb(222, 222, 222);
     --bg-5: rgba(236, 236, 236, 0.466);
     --bg-4: #fff;
+    --grey_border: #fbfbfa;
 
     --red-1: #DD1717;
     --red_error: #ff0033;
@@ -37,6 +39,7 @@
     --weight2: 500;
     --weight3: 700;
 
+    --offset: 40px;
     --gutter: 16px;
     --border-r: 8px;
     --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -51,6 +54,7 @@
     --body-color: #1F1F1F;
     --box-color: #323232;
     --text-color: #A4A4A4;
+    --none-border: #A4A4A4;
     --section-text-color: #fff;
     --border-color: #A4A4A4;
     --checked-border: #fff;
