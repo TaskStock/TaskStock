@@ -689,4 +689,23 @@ def category(request):
 
 # group
 def group(request):
-    return render(request, 'main/group.html')
+    current_user = request.user
+    group = Group.objects.get(name=current_user.my_group)
+    users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
+    context = {
+        'group': group,
+        'users': users,
+    }
+    return render(request, 'main/group.html', context)
+
+def follow_group(request):
+    pass
+
+def create_group(request):
+    pass
+
+def update_group(request):
+    pass
+
+def delete_group(request):
+    pass
