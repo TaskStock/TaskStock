@@ -49,7 +49,7 @@ def user_created(sender, instance, created, **kwargs):
             user=instance,
             date=instance.date_joined,
             percentage=0,
-            start=0,
+            start=50000,
             end=50000,
             low=50000,
             high=50000,
