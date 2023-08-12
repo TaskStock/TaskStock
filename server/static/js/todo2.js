@@ -274,15 +274,16 @@ const delete_todo = async(todo_id) => {
         },
         body: JSON.stringify({todo_id}),
     })
-    const {id: id, d_id: d_id} = await res.json();
-    handleDelTodoRes(id, d_id);
+    const {my_combo: my_combo, id: id, d_id: d_id} = await res.json();
+    handleDelTodoRes(my_combo, id, d_id);
 }
-const handleDelTodoRes = async(todo_id, date_id) => {
+const handleDelTodoRes = async(my_combo, todo_id, date_id) => {
     // delete container
     const container = document.querySelector(`.todo-item-${todo_id}`);
     container.remove();
     update_chart();
     has_unchecked_todos();
+    handleCombo(my_combo);
 }
 
 
@@ -309,11 +310,11 @@ const check_todo = async(todo_id) => {
         body: JSON.stringify({todo_id, status}),
     })
     
-    const {'color': color, 'todo_status': todo_status, 't_id': t_id} = await res.json();
-    handleCheckTodoRes(color, todo_status, t_id);
+    const {'my_combo': my_combo, 'color': color, 'todo_status': todo_status, 't_id': t_id} = await res.json();
+    handleCheckTodoRes(my_combo, color, todo_status, t_id);
 }
 
-function handleCheckTodoRes(color, status, todo_id){
+function handleCheckTodoRes(my_combo, color, status, todo_id){
     const checkBox = document.querySelector(`.todo-checkbox-${todo_id}`);
     if (status == 'True'){
         checkBox.classList.add('True');
@@ -321,6 +322,7 @@ function handleCheckTodoRes(color, status, todo_id){
         checkBox.classList.remove('True');
     }
     
+    handleCombo(my_combo);
     update_chart();
     has_unchecked_todos();
 }
@@ -361,21 +363,18 @@ function has_unchecked_todos(){
                     }else{
                         d.classList.remove('unchecked');
                     }
+                } else if(todos.length == 0){
+                    d.classList.remove('unchecked');
                 }
-                
             })
-           
-           
-
         }
     })
     
 }
-has_unchecked_todos();
 // 차트 다시 불러오기
 function update_chart(){
     let chart_radio=localStorage.getItem('chart_radio');
-
+    
     let chart_period;
     if(chart_radio=="7"){
         chart_period="#one_week";
@@ -388,7 +387,7 @@ function update_chart(){
     }else if(chart_radio=="365"){
         chart_period="#one_year";
     }
-
+    
     let chart_update;
     if(chart_radio==null){
         chart_update = document.querySelector("#one_week");
@@ -397,3 +396,16 @@ function update_chart(){
     }
     chart_update.click();
 }
+// combo
+function handleCombo(combo){
+    const comboHTML = document.querySelector('.dashboard--combo span:last-child');
+    comboHTML.innerHTML = `🔥 ${combo}`;
+    comboHTML.style.animation = `combo 2s ease-in-out`;
+    comboHTML.addEventListener('animationend', () => {
+        comboHTML.style.animation = ''; // 애니메이션 제거
+    }, { once: true });
+}
+
+
+
+has_unchecked_todos();
