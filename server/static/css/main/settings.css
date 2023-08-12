@@ -138,12 +138,6 @@
     margin: 5px;
 }
 
-.settings-detail__edit-profile > img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin: 10px;
-}
 
 /* bar-icon */
 .bar-icon {
@@ -175,6 +169,7 @@
     height: 100px;
     border-radius: 50%;
     margin: 10px;
+    border: var(--grey_border) 1px solid;
 }
 
 .settings-detail__description-container > h3 {
@@ -183,11 +178,11 @@
     margin: 5px;
 }
 
-.settings-detail__description-container > a {
-    font-size: var(--caption);
-    color: blue;
-    font-weight: 400;
-    margin: 5px;
+.profile-update__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+    margin-top: var(--pading-top);
 }
 
 .profile-description__form,
@@ -197,24 +192,53 @@
     flex-direction: column;
     padding-top: var(--gutter);
 }
-.profile-description__textarea{
-    gap: 5px;
+
+.profile-description__textarea > textarea {
+    width: 100%;
+    height: 100px;
+    border-radius: var(--border-r);
+    border: 1px solid var(--grey_border);
+    background-color: var(--grey_bg);
+    padding: var(--gutter);
+    resize: none;
 }
+
 .profile-description__textarea p{
     margin-left: auto;
     font-size: var(--body2);
     color: var(--grey_700);
 
 }
-.profile-description__form label,
+
+.profile-update__form label,
 .reset-password__comtainer label{
-    font-size: var(--body2);
+    font-size: var(--body1);
     color: var(--grey_700);
 }
-.profile-description__form textarea,
+
+
+.profile-name__input, .profile-image__input, .profile-description__textarea {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+    padding-top: var(--gutter);
+}
+.profile-image__input>input[type=file]::file-selector-button {
+    width: 100px;
+    height: 30px;
+    background: #fff;
+    border: 1px solid rgb(77,77,77);
+    border-radius: 10px;
+    cursor: pointer;
+    &:hover {
+      background: rgb(77,77,77);
+      color: #fff;
+    }
+  }
+.profile-name__input input,
 .reset-password__comtainer input{
-    width: 100%;
-    /* height: 34px; */
+    width: 40%;
+    height: 34px;
     border-radius: var(--border-r);
     border: 1px solid var(--grey_border);
     background-color: var(--grey_bg);
@@ -226,7 +250,7 @@
     height: 34px;
     max-width: 400px;
 }
-.profile-description__form button,
+.profile-update__form button,
 .reset-password__form button{
     margin-left: auto;
     width: 120px;
@@ -242,7 +266,7 @@
     rgba(var(--grey_border)) 0px 0px 0px 1px;
     transition: 0.3s;
 }
-.profile-description__form button:hover,
+.profile-update__form button:hover,
 .reset-password__form button:hover{
     background-color: var(--grey_border);
     border: 1px solid var(--grey_bg);
