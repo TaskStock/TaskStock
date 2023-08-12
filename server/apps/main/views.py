@@ -49,6 +49,7 @@ def set_timezone(request):
     return JsonResponse({'status':'fail'})
 
 #사용자 timezone의 현재 날짜 얻기 *user_timezone = user.tzinfo
+#사용자의 시간대를 기반으로 현재 날짜를 가져옴
 def get_current_date(user_timezone):
     local_timezone = pytz.timezone(user_timezone)
     now = datetime.now(local_timezone)
@@ -356,45 +357,7 @@ def update_userinfo(request):
     
     return JsonResponse({"result": False, "error": "GET요청이 들어옴"})
 
-# @csrf_exempt
-# def click_date(request, pk):
-#     #자바스크립트에서 날짜를 전달한다
-#     #views.py에서 그 날짜를 받고 날짜에 해당하는 value가 존재하는지 확인한다.
-#     #존재하면 -> value에 해당하는 todos를 보낸다
-#     #존재하지 않으면 -> todos == ''
-#     date_str = request.POST.get('date') #'8/21/2023'
-#     month_date_year = date_str.split('/')
-    
-#     current_user = request.user
-#     #date_str을 date 자료형으로 변환
-#     date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
-    
-#     todos = []
-#     try:
-#         value = Value.objects.get(user=current_user,date=date_object)
-#         todo_objects = Todo.objects.filter(value=value)
-        
-#         for todo in todo_objects:
-#             todo_data={
-#                 'date_id':todo.value.pk,
-#                 'content':todo.content,
-#                 'goal_check':todo.goal_check,
-#                 'id':todo.pk,
-#                 'level':todo.level,
-#                 'month':month_date_year[0],
-#                 'date':month_date_year[1],
-#                 'year':month_date_year[2],
-#             }
-#             todos.append(todo_data)
-            
-#     except Value.DoesNotExist:
-#         todos = []
 
-#     return JsonResponse({'todos':todos})
-
-#8월 1일 접속, 8월 3일 접속 -> 8월 3일의 value가 8월 1일 value를 기반으로 만들어져
-#8월 1일 체크하면 -> 8월 3일 값의 변동은 다 반영이 됨
-#8월 2일을 add_todo하고 check_todo -> 8월 2일도 8월 1일의 값을 기반으로 만들어졌기 때문에 8월 3일과 초깃값이 같고, 충돌
 """
 user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으면 그날의 date 가져오는 함수
 """
@@ -521,6 +484,7 @@ def add_todo(request):
 Todo 삭제 하는 함수 
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
 """
+@login_required
 @csrf_exempt
 def delete_todo(request, pk):
     if request.method == 'POST':
@@ -528,7 +492,8 @@ def delete_todo(request, pk):
         todo_id = req['todo_id']
         current_user = request.user
         
-        todo = Todo.objects.get(pk=todo_id)
+        todo = Todo.objects.get(pk=todo_id)     
+        
         value = todo.value
         
         #todo 삭제하기 전 연결된 value의 high값 업데이트
@@ -549,6 +514,8 @@ def delete_todo(request, pk):
 Todo 업데이트 하는 함수
 content, level 업데이트 -> value high, low 업데이트
 """
+
+@login_required
 @csrf_exempt
 def update_todo(request, pk):
     if request.method == "POST":
@@ -580,6 +547,7 @@ def update_todo(request, pk):
 """
 할일 완료에 체크 표시/해제 -> 가치 등락 계산 -> end, percentage 업데이트
 """
+@login_required
 @csrf_exempt
 def check_todo(request, pk):
     if request.method == "POST":
@@ -622,27 +590,26 @@ def check_todo(request, pk):
 """
 차트로 보낼 data준비하는 함수
 """
-#유저의 최초회원가입 날짜로부터 경과한 날짜 반환하는 함수
-# def days_since_joined(user):
-#     delta = timezone.now() - user.date_joined
-    
-#     return delta.days   #int자료형으로 반환
-
 def date_to_timestamp(date_obj):
-    # return int(datetime.combine(date_obj, datetime.min.time()).timestamp() * 1000) + timedelta(days=1)
+
     return int(datetime.combine(date_obj, datetime.min.time()).timestamp() * 1000)
 
 def values_for_chart(user, term):
-    kst = pytz.timezone('Asia/Seoul')
-    kst_date = timezone.now().astimezone(kst).date()
-    start_date = kst_date - timedelta(days=term-1)
+    user_timezone = user.tzinfo
+    
+    current_local_date = get_current_date(user_timezone)
+    start_local_date = current_local_date - timedelta(days=term-1)
+    
+    #사용자의 시간대를 기반으로 UTC날짜로 변환
+    current_utc_date = local_to_utc(current_local_date, user_timezone)
+    start_utc_date = local_to_utc(start_local_date, user_timezone)
     
     #db에 존재하는 date들 가져오기
-    range_values =  Value.objects.filter(user=user, date__range=(start_date, kst_date))
+    range_values =  Value.objects.filter(user=user, date__range=(start_utc_date, current_utc_date))
     value_dates = set(range_values.values_list('date', flat=True))
     
     #첫 시작 날짜에 대한 더미데이터 처리
-    date_list = [start_date, start_date + timedelta(days=1)]
+    date_list = [start_utc_date, start_utc_date + timedelta(days=1)]
     for date in date_list:
         if date not in value_dates:
             Value.objects.create(
@@ -657,9 +624,9 @@ def values_for_chart(user, term):
             )
 
     #최종 데이터 다시 쿼리하기
-    values = Value.objects.filter(user=user, date__range=(start_date, kst_date))
+    values = Value.objects.filter(user=user, date__range=(start_utc_date, current_utc_date))
     
-    dataset = [[date_to_timestamp(value.date), value.start, value.high, value.low, value.end] for value in values]
+    dataset = [[date_to_timestamp(utc_to_local(value.date, user_timezone)), value.start, value.high, value.low, value.end] for value in values]
     
     return dataset
     
@@ -668,17 +635,14 @@ def values_for_chart(user, term):
 combo처리하는 함수
 """
 def process_combo(user):
+    #사용자의 시간대를 기반으로 현재 날짜를 가져옴
+    current_local_date = get_current_date(user.tzinfo)
+    #utc로 변환
+    current_utc_date = local_to_utc(current_local_date, user.tzinfo)
     
-    #전체 기간의 value들을 내림차순으로 가져와서 goal_check=True인 todo가 있는지 확인
-    #date가 연속적이지 않을때까지 combo += 1
-    #goal_check=False인 todo가 나올때까지 combo += 1
-    #두 조건 and로 연결
-    kst = pytz.timezone('Asia/Seoul')
-    today = datetime.now(kst).date()
+    #오늘 utc 날짜 기준으로 조회
+    values = Value.objects.filter(user=user, date__lte=current_utc_date).order_by('-date')
 
-    values = Value.objects.filter(user=user, date__lte=today).order_by('-date')
-
-    
     #역순으로 체크
     combo = 0
     previous_date = None
