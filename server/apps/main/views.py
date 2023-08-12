@@ -33,6 +33,25 @@ from django.core import serializers
 전체 사람 중에 검색하는 함수
 """
 
+#시간대 설정
+@csrf_exempt
+def set_timezone(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_timezone = data.get('timezone')
+        
+        #현재 로그인한 사람의 timezone정보를 업데이트
+        user = request.user
+        user.tzinfo = user_timezone
+        user.save()
+        print(user.tzinfo)
+        return JsonResponse({'status':'success'})
+    return JsonResponse({'status':'fail'})
+
+
+
+
+
 # Create your views here.
 # ---정근 작업---#
 

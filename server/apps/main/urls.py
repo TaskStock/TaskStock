@@ -29,5 +29,8 @@ urlpatterns = [
 
     # follow ajax
     path('follow/', follow), # /main/follow/
+    
+    #시간대 저장 ajax
+    path('set_timezone/', set_timezone), # /main/set_timezone/
 ] 
 

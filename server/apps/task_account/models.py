@@ -18,6 +18,7 @@ class User(AbstractUser):
     introduce = models.CharField(max_length=50, null=True, blank=True)
     email_alarm = models.BooleanField(null=True, default=False)
     img = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
+    tzinfo = models.CharField(max_length=50, default='UTC')
 
     # false = public, true = private
     hide = models.BooleanField(null=True, default=False)
@@ -83,4 +84,4 @@ class Todo(models.Model):
     level = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
-    finish_time = models.DateTimeField(null=True)
+    finish_at = models.DateTimeField(null=True)
