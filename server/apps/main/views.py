@@ -490,9 +490,9 @@ def delete_todo(request, pk):
         todo.delete()
         
         #combo 변화 처리    
-        process_combo(current_user)
+        my_combo = process_combo(current_user)
     
-    return JsonResponse({'id':todo_id, 'd_id': value.id})
+    return JsonResponse({'my_combo': my_combo, 'id':todo_id, 'd_id': value.id})
 """
 Todo 업데이트 하는 함수
 content, level 업데이트 -> value high, low 업데이트
@@ -561,9 +561,9 @@ def check_todo(request, pk):
             value.save()
             
         #combo변화 처리
-        process_combo(current_user)
+        my_combo = process_combo(current_user)
         todo_status = str(todo_status)
-        return JsonResponse({'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
+        return JsonResponse({'my_combo': my_combo, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
         
 
 
@@ -649,7 +649,7 @@ def process_combo(user):
     user.combo = combo
     user.save()
         
-    return
+    return combo
 
 #---선우 작업---#
 
