@@ -23,11 +23,6 @@
         </div>
         <div id="chart"></div>
         <div class="chart-btn--container">
-            <!-- <div id="one_week" class="chart-btn active chart-week">1 week</div>
-            <div id="one_month" class="chart-btn chart-month">1 month</div>
-            <div id="three_month" class="chart-btn chart-3month">3 months</div>
-            <div id="six_month" class="chart-btn chart-6month">6 months</div>
-            <div id="one_year" class="chart-btn chart-year">1 year</div> -->
             <form>
                 <label>
                     <input type="radio" name="chart_period" value="7" id="one_week" checked>
@@ -77,7 +72,7 @@
                 <div class="cal--header">
                     <div id="monthDisplay">
                         <div class="monthDisplay--month"></div>
-                        <!-- <div class="monthDisplay--year"></div> -->
+                        <div class="monthDisplay--year" style="opacity: 0;"></div>
                     </div>
                     <div class="monthControl">
                         <button id="nextButton"><i class="fa-solid fa-chevron-up"></i></button>
@@ -207,7 +202,7 @@
 {% endblock %}
 
 {% block extra %}
+<script src="{% static 'js/candlestick.js' %}"></script>
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
-<script src="{% static 'js/candlestick.js' %}"></script>
 {% endblock %}
