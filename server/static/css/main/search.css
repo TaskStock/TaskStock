@@ -10,7 +10,7 @@
 .search-container {
     flex-grow: 1;
     overflow-y: scroll;
-    width: 500px;
+    width: 50%;
 }
 
 .search-form {
@@ -22,7 +22,8 @@
     color: var(--bg-1);
     height: 34px;
     border-radius: var(--border-r);
-    border: 1px solid var(--bg-1);
+    border: 1px solid var(--grey_border);
+    box-shadow: var(--shadow);
     background-color: transparent;
     padding: var(--gutter);
     margin-bottom: var(--gutter);
@@ -36,16 +37,18 @@
 
 .search-result__container {
     display: flex;
+    align-items: center;
     border-radius: var(--border-r);
-    border: 1px solid var(--bg-1);
+    border: 1px solid var(--grey_border);
+    box-shadow: var(--shadow);
     padding: var(--gutter);
     justify-content: space-between;
     margin-bottom: var(--gutter);
+    width: 500px;
 }
 
 .search-result__left-container {
     display: flex;
-    flex-direction: column;
     justify-content: center;
 }
 
@@ -57,13 +60,13 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-left: 8px;
 }
 
 .friend-info-pic {
     width: 50px;
     height: 50px;
     background-color: grey;
-    margin: 0 var(--gutter) 8px 0;
 }
 
 .search-result__name-container h2 {
@@ -76,11 +79,20 @@
 }
 
 .search-label {
+    font-size: var(--heading3);
+    font-weight: 500;
     margin-bottom: var(--gutter);
 }
 
 /* 검색결과  속 유저 프로필 */
 /* 검색 결과 속 유저 프로필 - 퍼센트, 팔로잉, 팔로워 */
+#search-users__result-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .searched-result__searched-user__right-container {
     display: flex;
     align-items: baseline;
@@ -90,7 +102,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* padding: var(--gutter); */
+    justify-content: center;
 }
 
 .search-result__right-upper-container > h2 {
@@ -101,4 +113,17 @@
 .search-result__right-upper-container__current-percent , .search-result__right-upper-container > p {
     font-size: var(--body1);
     font-weight: 500;
+}
+
+/* 유저 실시간 순위 */
+.user-rank-container {
+    margin-bottom: 10px;
+}
+
+.user-rank-container__list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
