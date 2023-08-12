@@ -48,6 +48,31 @@ def set_timezone(request):
         return JsonResponse({'status':'success'})
     return JsonResponse({'status':'fail'})
 
+#사용자 timezone의 현재 날짜 얻기 *user_timezone = user.tzinfo
+def get_current_date(user_timezone):
+    local_timezone = pytz.timezone(user_timezone)
+    now = datetime.now(local_timezone)
+    
+    return now.date()
+
+#utc 날짜를 local날짜로 변경
+def utc_to_local(utc_date, user_timezone):
+    local_timezone = pytz.timezone(user_timezone)
+    utc_datetime = datetime.combine(utc_date, datetime.min.time())
+    local_datetime = utc_datetime.astimezone(local_timezone)
+    
+    return local_datetime.date()
+
+#local 날짜를 utc 날짜로 변경
+def local_to_utc(local_date, user_timezone):
+    local_timezone = pytz.timezone(user_timezone)
+    
+    # local date를 local datetime으로 변환 (시간은 00:00:00)
+    local_datetime = local_timezone.localize(datetime.combine(local_date, datetime.min.time()))
+    #local_datetime을 UTC로 변환
+    utc_datetime = local_datetime.astimezone(local_timezone)
+    
+    return utc_datetime.date()
 
 
 
@@ -223,7 +248,7 @@ def createValue(user, target_date=None):
     last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
     if target_date == None:
-        target_date = timezone.now().date()
+        target_date = get_current_date(user.tzinfo)
     
     percentage=0
     start = end = low = high = last_value.end
@@ -331,41 +356,41 @@ def update_userinfo(request):
     
     return JsonResponse({"result": False, "error": "GET요청이 들어옴"})
 
-@csrf_exempt
-def click_date(request, pk):
-    #자바스크립트에서 날짜를 전달한다
-    #views.py에서 그 날짜를 받고 날짜에 해당하는 value가 존재하는지 확인한다.
-    #존재하면 -> value에 해당하는 todos를 보낸다
-    #존재하지 않으면 -> todos == ''
-    date_str = request.POST.get('date') #'8/21/2023'
-    month_date_year = date_str.split('/')
+# @csrf_exempt
+# def click_date(request, pk):
+#     #자바스크립트에서 날짜를 전달한다
+#     #views.py에서 그 날짜를 받고 날짜에 해당하는 value가 존재하는지 확인한다.
+#     #존재하면 -> value에 해당하는 todos를 보낸다
+#     #존재하지 않으면 -> todos == ''
+#     date_str = request.POST.get('date') #'8/21/2023'
+#     month_date_year = date_str.split('/')
     
-    current_user = request.user
-    #date_str을 date 자료형으로 변환
-    date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
+#     current_user = request.user
+#     #date_str을 date 자료형으로 변환
+#     date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
     
-    todos = []
-    try:
-        value = Value.objects.get(user=current_user,date=date_object)
-        todo_objects = Todo.objects.filter(value=value)
+#     todos = []
+#     try:
+#         value = Value.objects.get(user=current_user,date=date_object)
+#         todo_objects = Todo.objects.filter(value=value)
         
-        for todo in todo_objects:
-            todo_data={
-                'date_id':todo.value.pk,
-                'content':todo.content,
-                'goal_check':todo.goal_check,
-                'id':todo.pk,
-                'level':todo.level,
-                'month':month_date_year[0],
-                'date':month_date_year[1],
-                'year':month_date_year[2],
-            }
-            todos.append(todo_data)
+#         for todo in todo_objects:
+#             todo_data={
+#                 'date_id':todo.value.pk,
+#                 'content':todo.content,
+#                 'goal_check':todo.goal_check,
+#                 'id':todo.pk,
+#                 'level':todo.level,
+#                 'month':month_date_year[0],
+#                 'date':month_date_year[1],
+#                 'year':month_date_year[2],
+#             }
+#             todos.append(todo_data)
             
-    except Value.DoesNotExist:
-        todos = []
+#     except Value.DoesNotExist:
+#         todos = []
 
-    return JsonResponse({'todos':todos})
+#     return JsonResponse({'todos':todos})
 
 #8월 1일 접속, 8월 3일 접속 -> 8월 3일의 value가 8월 1일 value를 기반으로 만들어져
 #8월 1일 체크하면 -> 8월 3일 값의 변동은 다 반영이 됨
@@ -375,7 +400,8 @@ user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으�
 """
 def get_value_for_date(user, target_date=None):
     if not target_date:
-        target_date = timezone.localtime(timezone.now()).date()
+        current_local_date = get_current_date(user.tzinfo)
+        target_date = local_to_utc(current_local_date, user.tzinfo)
     
     try:    
         value_object = Value.objects.get(user=user, date=target_date)
@@ -391,8 +417,6 @@ def click_date(request):
     #존재하면 -> value에 해당하는 todos를 보낸다
     #존재하지 않으면 -> todos == ''
     date_str = request.POST.get('str') #'8/21/2023'
-    month_date_year = date_str.split('/')
-
     username = request.POST.get("username")
     
     if username == "":
@@ -401,23 +425,27 @@ def click_date(request):
         target_user = User.objects.get(username=username)
     
     #date_str을 date 자료형으로 변환
-    date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
+    local_date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
     
+    # target_user의 타임존을 기반으로 local_date_object를 UTC로 변환
+    utc_date_object = local_to_utc(local_date_object, target_user.tzinfo)
+
     todos = []
     try:
-        value = Value.objects.get(date=date_object, user=target_user)
+        value = Value.objects.get(user=target_user, date=utc_date_object)
         todo_objects = Todo.objects.filter(value=value)
         
         for todo in todo_objects:
+            #target_user의 timezone을 기반으로 utc날짜를 로컬 날짜로 변환
             todo_data={
                 'date_id':todo.value.pk,
                 'content':todo.content,
                 'goal_check':todo.goal_check,
                 'id':todo.pk,
                 'level':todo.level,
-                'month':month_date_year[0],
-                'date':month_date_year[1],
-                'year':month_date_year[2],
+                'month': local_date_object.month,
+                'date':local_date_object.day,
+                'year':local_date_object.year,
             }
             todos.append(todo_data)
             
@@ -436,10 +464,14 @@ def add_todo(request):
         content = req['content']
         my_level = req['level']
         date_str = req['date_id']
-        target_date = datetime.strptime(date_str, '%m/%d/%Y').date()
         
         #현재 user 객체 가져오기
         current_user = request.user
+        
+        #date_str을 사용자의 timezone을 고려해서 utc로 변환
+        local_date = datetime.strptime(date_str, '%m/%d/%Y').date()
+        target_date = local_to_utc(local_date, current_user.tzinfo)
+        
         #date 일치하는 value 객체 가져오기
         value = get_value_for_date(current_user, target_date)
         
@@ -447,6 +479,7 @@ def add_todo(request):
         if value == None:
             createValue(current_user, target_date)
             value = get_value_for_date(current_user, target_date)
+
         #value 있긴 한데 더미데이터 인 날
         if value.is_dummy:
             value.is_dummy = False
@@ -454,7 +487,7 @@ def add_todo(request):
             if last_value:
                 value.start = value.end = value.low = value.high = last_value.end
             else:
-                #만약 회원가입 일주일 전 ~ 회원가입날을 클릭한다면
+                #만약 회원가입 일주일 전 ~ 회원가입날을 클릭한다면(last_value가 없다면)
                 value.start = 0
                 value.low = value.high = value.end = 50000
 
