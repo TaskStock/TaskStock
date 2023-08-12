@@ -33,7 +33,7 @@ function load() {
   const displayMonth = String(month + 1);
   const ddisplayMonth = displayMonth.padStart(2, '0');
   document.querySelector('.monthDisplay--month').innerText = `${ddisplayMonth}`;
-//   document.querySelector('.monthDisplay--year').innerText = `${year}`;
+  document.querySelector('.monthDisplay--year').innerText = `${year}`;
 
   calendar.innerHTML = '';
 
@@ -44,6 +44,8 @@ function load() {
     
     if (i > paddingDays) {
         daySquare.innerText = i - paddingDays;
+
+
         daySquare.addEventListener('click', async() => {
             // 각 day 클릭할 때 발생한는 함수 
             dayString = `${month+1}/${i-paddingDays}/${year}`; // '8/10/2023'
@@ -99,9 +101,6 @@ function handleDateResponse(todos){
             for(e = todo.level + 1; e < 6; e++){
                 emptyLevel += `<div level="${e}"></div>`;
             }
-            // document.querySelector('.todo-add--date').innerHTML = `
-            //     ${todo.month}월 ${todo.date}일
-            // `;
             currentInput.innerHTML += `
             <div class="todo-item todo-item-${todo.id} ">
                         
@@ -185,7 +184,7 @@ function paintDate(){
         ${clicked_month}월 ${clicked_date}일
     `;
     const items = document.querySelectorAll('.todo-item--date');
-    console.log(items.length);
+
     if (items.length !== 0){
         items.forEach(i => {
             i.innerHTML = `
@@ -193,10 +192,8 @@ function paintDate(){
         `;
         })
     }
-   
-    
-    
 }
+
 initButtons();
 load();
 blackBorder();

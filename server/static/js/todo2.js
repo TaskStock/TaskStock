@@ -126,6 +126,7 @@ const handleTodoResponse = async(todo_id, level, content) => {
     </div>
     `;
     update_chart();
+    has_unchecked_todos();
   
 }
 
@@ -262,26 +263,27 @@ function epaintStar(todo_id, level){
     })
 }
 
-    // delete todo
+// delete todo
 
-    const delete_todo = async(todo_id) => {
-        const url = `/main/delete_todo/${todo_id}/`;
-        const res = await fetch(url, {
-            method: 'POST', 
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({todo_id}),
-        })
-        const {id: id, d_id: d_id} = await res.json();
-        handleDelTodoRes(id, d_id);
-    }
-    const handleDelTodoRes = async(todo_id, date_id) => {
-        // delete container
-        const container = document.querySelector(`.todo-item-${todo_id}`);
-        container.remove();
-        update_chart();
-    }
+const delete_todo = async(todo_id) => {
+    const url = `/main/delete_todo/${todo_id}/`;
+    const res = await fetch(url, {
+        method: 'POST', 
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({todo_id}),
+    })
+    const {id: id, d_id: d_id} = await res.json();
+    handleDelTodoRes(id, d_id);
+}
+const handleDelTodoRes = async(todo_id, date_id) => {
+    // delete container
+    const container = document.querySelector(`.todo-item-${todo_id}`);
+    container.remove();
+    update_chart();
+    has_unchecked_todos();
+}
 
 
 
@@ -320,8 +322,56 @@ function handleCheckTodoRes(color, status, todo_id){
     }
     
     update_chart();
+    has_unchecked_todos();
 }
 
+function has_unchecked_todos(){
+    // 완료하지 않은 투두가 있는 날 색칠 opacity: 0.2
+    const month = document.querySelector('.monthDisplay--month').innerText;
+    const year = document.querySelector('.monthDisplay--year').innerText;
+    const days = document.querySelectorAll('.cal--calendar .day');
+
+    days.forEach(d => {
+        if(!d.classList.contains('padding')){
+            // 8/11/2023
+            let checkDayString = `${parseInt(month)}/${parseInt(d.innerText)}/${parseInt(year)}`;
+            // console.log(checkDayString);
+            // 해당 날짜의 todos
+            const formData = new FormData();
+            formData.append('str', checkDayString);
+            formData.append("username", global_chart_target_username);
+
+            const url = `/main/click_date/`;
+            fetch(url, {
+                method: 'POST', 
+                headers: {},
+                body: formData,
+            }).then(res => res.json()).then(data => {
+                const {todos: todos} = data;
+                if(todos.length > 0){
+                    let has_unchecked = false;
+                    for(const todo of todos){
+                        // uncheck가 하나라도 있으면, true로 바꾸기 
+                        if(todo.goal_check == false){
+                            has_unchecked = true;
+                        }
+                    }
+                    if(has_unchecked == true){
+                        d.classList.add('unchecked');
+                    }else{
+                        d.classList.remove('unchecked');
+                    }
+                }
+                
+            })
+           
+           
+
+        }
+    })
+    
+}
+has_unchecked_todos();
 // 차트 다시 불러오기
 function update_chart(){
     let chart_radio=localStorage.getItem('chart_radio');
