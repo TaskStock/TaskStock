@@ -11,7 +11,9 @@ urlpatterns = [
     path('search/', search), # /main/search/
     path('settings/', settings), # /main/settings/
     path('settings/update_userinfo/', update_userinfo), # /main/settings/update_userinfo/
-    
+    path('category/', category), #/main/category/
+    path('group/', group), #/main/group/
+
     # 다른 유저의 상세 페이지
     path('profile/', profile), # /main/profile/
     path('alarm/', alarm), # /main/alarm/

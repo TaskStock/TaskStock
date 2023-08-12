@@ -680,3 +680,13 @@ def landing_page(request):
 # alarm
 def alarm(request):
     return render(request, 'main/alarm.html')
+
+
+# category
+def category(request):
+    return render(request, 'main/category.html')
+
+
+# group
+def group(request):
+    return render(request, 'main/group.html')
