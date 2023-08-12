@@ -67,10 +67,7 @@ def utc_to_local(utc_date, user_timezone):
 #local 날짜를 utc 날짜로 변경
 def local_to_utc(local_date, user_timezone):
     local_timezone = pytz.timezone(user_timezone)
-    
-    # local date를 local datetime으로 변환 (시간은 00:00:00)
     local_datetime = local_timezone.localize(datetime.combine(local_date, datetime.min.time()))
-    #local_datetime을 UTC로 변환
     utc_datetime = local_datetime.astimezone(local_timezone)
     
     return utc_datetime.date()
@@ -245,14 +242,18 @@ def follow_list(request):
 
     return JsonResponse({"users": users})
 
+# **주의점: target_date 줄거면 무조건 utc의 date로 줘야함
 def createValue(user, target_date=None):
-    last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
+    if not target_date:
+        current_local_date = get_current_date(user.tzinfo)
+        target_date = local_to_utc(current_local_date, user.tzinfo)
+    
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
-    if target_date == None:
-        target_date = get_current_date(user.tzinfo)
+    last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
     
     percentage=0
     start = end = low = high = last_value.end
+    
     value = Value.objects.create(
         user=user,
         date=target_date,
@@ -301,7 +302,7 @@ def home(request):
     process_combo(current_user)
     value = get_value_for_date(current_user)
     
-    if value is None:
+    if value == None:
         # 로그인 했을 때 value가 없는 경우
         value = createValue(current_user)
     
@@ -359,8 +360,9 @@ def update_userinfo(request):
 
 
 """
-user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으면 그날의 date 가져오는 함수
+user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으면 그날의 date에 해당하는 value 가져오는 함수
 """
+# **주의점: target_date 넣을거면무조건 utc기준 데이터로 변환해서 집어넣어야함
 def get_value_for_date(user, target_date=None):
     if not target_date:
         current_local_date = get_current_date(user.tzinfo)
