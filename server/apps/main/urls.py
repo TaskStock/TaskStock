@@ -29,5 +29,11 @@ urlpatterns = [
 
     # follow ajax
     path('follow/', follow), # /main/follow/
+
+    # category ajax
+    path('create_category/', create_category), # /main/create_category/
+    path('update_category/', update_category), # /main/update_category/
+    path('delete_category/', delete_category), # /main/delete_category/
+    path('complete_category/', complete_category), # /main/complete_category/
 ] 
 

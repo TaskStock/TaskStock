@@ -684,8 +684,93 @@ def alarm(request):
 
 # category
 def category(request):
-    return render(request, 'main/category.html')
+    current_user=request.user
+    finish_categorys = Category.objects.filter(user=current_user, finish=True)
+    not_finish_categorys = Category.objects.filter(user=current_user, finish=False)
 
+    ctx = {
+        'user': current_user,
+        'finish_categorys': finish_categorys,
+        'not_finish_categorys': not_finish_categorys,
+    }
+
+    return render(request, 'main/category.html', context=ctx)
+
+# category ajax
+@csrf_exempt
+def create_category(request):
+    input_name = request.POST.get('name')
+
+    error_text=""
+    if input_name=="":
+        success=False
+        error_text="이름을 입력해주세요."
+    else:
+        try:
+            category=Category.objects.get(name=input_name)
+            success=False
+            error_text="이미 존재하는 이름입니다."
+        except ObjectDoesNotExist:
+            success=True
+        
+    category_data={}
+    if success:
+        category = Category.objects.create(
+            user=request.user,
+            name=input_name,
+            finish=False,
+        )
+        category_data={
+            'name':category.name,
+            'pk':category.pk,
+        }
+
+    return JsonResponse({'success':success, 'category_data':category_data, 'error_text':error_text})
+
+@csrf_exempt
+def update_category(request):
+    name = request.POST.get('name')
+    pk = request.POST.get('pk')
+
+    update_category = Category.objects.get(pk=pk)
+    origin_name=update_category.name
+        
+    # category 이름이 겹치는지 확인
+    try:
+        category = Category.objects.get(name=name)
+        # 겹친 이름이 자기 자신이라면
+        if category.pk==int(pk):
+            raise ObjectDoesNotExist
+        error_text="이미 존재하는 이름입니다."
+    # 겹치지 않은 경우
+    except ObjectDoesNotExist:
+        
+        update_category.name=name
+        update_category.save()
+        error_text=""
+
+    return JsonResponse({'error_text':error_text, 'origin_name':origin_name,})
+
+@csrf_exempt
+def delete_category(request):
+    pk = request.POST.get('pk')
+        
+    category = Category.objects.get(pk=pk)
+
+    category.delete()
+
+    return JsonResponse({'success':True})
+
+@csrf_exempt
+def complete_category(request):
+    pk = request.POST.get('pk')
+        
+    category = Category.objects.get(pk=pk)
+
+    category.finish=True
+    category.save()
+
+    return JsonResponse({'success':True})
 
 # group
 def group(request):

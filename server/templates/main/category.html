@@ -1,7 +1,188 @@
 {% extends '../base2.html' %} {% load static %}
 {%block page%}
 <main class="group-category">
-    <div>Category Page</div>
+    <div>
+        <button onclick="create_category();">카테고리 추가</button>
+    </div>
+    <div class="category-container">
+        <div id="category-finish-list">
+            <h2>완료된 카테고리 목록</h2>
+            <div id="category-finish-for">
+                {% for category in finish_categorys %}
+                <div class="category-item">
+                    <h2>{{category.name}}</h2>
+                    <h2>{{category.memory}}</h2>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="category-not-finish-list">
+            <h2>완료되지 않은 카테고리 목록</h2>
+            <div id="create_category" class="displayNone">
+                <form onsubmit="add_category(event)">
+                    {% csrf_token %}
+                    <input type="text" placeholder="카테고리 이름을 입력하세요." id="name" name="name">
+                    <div id="error-message-category" style="color: red;"></div>
+                    <button type="submit">생성</button>
+                </form>
+            </div>
+            <div id="category-not-finish-for">
+                {% for category in not_finish_categorys %}
+                <div class="category-item" id="nf-category-{{category.pk}}">
+                    <h2 id="tag-{{category.pk}}">{{category.name}}</h2>
+                    <button onclick="update_btn({{category.pk}});">수정</button>
+                    <button onclick="delete_category({{category.pk}});">삭제</button>
+                    <button onclick="complete_category({{category.pk}});">완료</button>
+                </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+    </div>
+    
 </main>
 
+<!-- <div class="todo-checkbox todo-checkbox-${todo.id} ${todo.goal_check}" onclick="check_todo(${todo.id})"></div> -->
+{% endblock %}
+
+{% block extra %}
+<script>
+    const create_category = () => {
+        const createInput = document.querySelector('#create_category');
+        createInput.classList.remove('displayNone');
+    };
+
+    const add_category = async (event) =>{
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+        const nameInput = document.querySelector('#name');
+        nameInput.value = '';
+
+        const url = "/main/create_category/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {success, category_data, error_text}=await res.json();
+        category_add(success, category_data, error_text);
+    }
+    const category_add = (success, category_data, error_text) => {
+        const createInput = document.querySelector('#create_category');
+        const errorMessageElement = document.querySelector('#error-message-category');
+
+        errorMessageElement.textContent = ''; // 오류 메시지 초기화
+        
+        if(success){
+            createInput.classList.remove('displayNone');
+            const categoryInput = document.querySelector('#category-not-finish-for');
+            const divInput=document.createElement('div');
+            divInput.classList.add('category-item');
+            divInput.innerHTML=`
+            <h2 id="tag-${category_data.pk}">${category_data.name}</h2>
+            <button onclick="update_category(${category_data.pk});">수정</button>
+            <button onclick="delete_category(${category_data.pk});">삭제</button>
+            `;
+            createInput.insertBefore(divInput, createInput.firstChild);
+        }else{
+            errorMessageElement.textContent=error_text;
+        }
+    }
+
+    const update_btn = (pk) => {
+        const h2Input = document.querySelector('#tag-'+pk);
+        const tmpname = h2Input.textContent;
+        const categoryBox = document.querySelector('#nf-category-'+pk);
+
+        const inputElement = document.createElement('input');
+        inputElement.setAttribute('type', 'text');
+        inputElement.setAttribute('value', tmpname);
+        inputElement.setAttribute('id', 'update_name-'+pk);
+        inputElement.setAttribute('name', 'name');
+
+        h2Input.remove();
+
+        categoryBox.insertBefore(inputElement, categoryBox.firstChild);
+        inputElement.focus();
+
+        inputElement.addEventListener('blur', ()=>{
+            const updatedName = inputElement.value;
+            const update_pk = inputElement.id.slice("update_name-".length);   // update_name-{pk} 에서 마지막에 위치한 pk를 가져옴
+
+            update_category(updatedName, update_pk);
+        });
+    };
+    
+    const update_category = async (name, pk) =>{
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('pk', pk);
+
+        const url = "/main/update_category/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {error_text, origin_name}=await res.json();
+        category_update(error_text, origin_name, name, pk);
+    }
+    const category_update = (error_text, origin_name, name, pk) => {
+        const categoryBox = document.querySelector('#nf-category-'+pk);
+        const inputElement = document.querySelector('#update_name-'+pk);
+        inputElement.remove();
+
+        const h2Element = document.createElement('h2');
+        h2Element.setAttribute('id', 'tag-'+pk);
+
+        if(error_text=="")
+            h2Element.textContent=name;
+            
+        else
+            h2Element.textContent=origin_name;
+
+        categoryBox.insertBefore(h2Element, categoryBox.firstChild);
+
+    }
+
+    const delete_category = async (pk) =>{
+
+        const formData = new FormData();
+        formData.append('pk', pk);
+
+        const url = "/main/delete_category/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {success}=await res.json();
+        category_delete(pk);
+    }
+    const category_delete = (pk) => {
+        const categoryBox = document.querySelector('#nf-category-'+pk);
+
+        categoryBox.remove();
+
+    }
+
+    const complete_category = async (pk) =>{
+
+        const formData = new FormData();
+        formData.append('pk', pk);
+
+        const url = "/main/complete_category/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {success}=await res.json();
+        category_delete(pk);
+    }
+
+</script>
 {% endblock %}
