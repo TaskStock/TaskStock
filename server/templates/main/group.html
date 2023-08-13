@@ -33,6 +33,16 @@
                 <input type="text" name="group-create-inpput"  id="create-input">
                 <button type="submit" name="group-create-button" id="create-button">Create</button>
             </form>
+            {% if am_I_creator %}
+                <form onsubmit="handleUpdateButtonClick(event)">
+                    {% csrf_token %}
+                    <input type="text" name="group-create-inpput"  id="update-input">
+                    <button type="submit" name="group-update-button" id="update-button">Update</button>
+                </form>
+                <form action="">
+                    <button type="submit" name="group-delete-button" id="delete-button">Delete</button>
+                </form>
+            {% endif %}
         </div>
     </div>
 </main>
@@ -93,6 +103,38 @@
         }
         else {
             alert("그룹이 생성되었습니다.");
+        }
+    }
+
+    // update 부분
+    const handleUpdateButtonClick= async(event) => {
+        event.preventDefault();
+
+        const input_content = document.querySelector("#update-input").value;
+        console.log(input_content);
+        const url = "/main/group/update_group/";
+        const group_name = document.querySelector(".group-content__name").textContent;
+
+        const formData = new FormData(event.target);
+        formData.append("update_name", input_content);
+        formData.append("group_name", group_name);
+        const res = await fetch(url, {
+            method: 'POST', 
+            headers: {},
+            body: formData,
+        })
+        const {result:result} = await res.json();
+        handleUpdateResult(result, input_content);
+    }
+
+    const handleUpdateResult = async(result, updatedGroupName) => {
+        if(result == 'Exist'){
+            alert("그룹명이 이미 존재합니다.");
+        }
+        else {
+            alert("그룹명이 변경되었습니다.")
+            document.querySelector(".group-content__name").textContent = updatedGroupName;
+            document.querySelector("#update-input").value = "";
         }
     }
 </script>

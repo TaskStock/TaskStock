@@ -695,6 +695,11 @@ def group(request,pk):
     value_dic={}
     my_group = request.user.my_group
 
+    if group.create_user == request.user.name:
+        am_I_creator = True
+    else:
+        am_I_creator = False
+
     if my_group == group.name:
         button_text = "CANCEL"
     else:
@@ -712,6 +717,7 @@ def group(request,pk):
         'users': users,
         'value': value_dic,
         'button_text': button_text,
+        'am_I_creator': am_I_creator,
     }
     return render(request, 'main/group.html', context)
 
@@ -748,17 +754,24 @@ def create_group(request):
             )
             user.my_group = Group.objects.get(name=content)
             user.save()
-            
+
             redirect(f'/main/group/{user.my_group.id}')
         else:
             #그룹이 있는 경우
             return JsonResponse({'result': 'Exist'})
 
-
-
-
 def update_group(request):
-    pass
+    if request.method == 'POST':
+        update_content = request.POST.get("update_name")
+        group_name = request.POST.get("group_name")
+        group = Group.objects.get(name=group_name)
+        # 중복 검사
+        if Group.objects.filter(name=update_content).exists():
+            return JsonResponse({'result': 'Exist'})
+        else:
+            group.name = update_content
+            group.save()
+            return JsonResponse({'result': 'Success'})
 
 def delete_group(request):
     pass

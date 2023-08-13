@@ -33,5 +33,7 @@ urlpatterns = [
     # group ajax
     path('group/follow_group/', follow_group), # /main/follow_group/
     path('group/create_group/', create_group), # /main/create_group/
+    path('group/delete_group/', delete_group), # /main/delete_group/
+    path('group/update_group/', update_group), # /main/update_group/
 ] 
 
