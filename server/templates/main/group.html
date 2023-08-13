@@ -7,8 +7,8 @@
     <div class="group-content">
         <div class="group-content__info">
             <div class="group-content__name">{{group.name}}</div>
-            <div>그룹장: {{group.create_user}}</div>
-            <div>가격: {{group.price}}</div>
+            <span class="group-content__text">그룹장: {{group.create_user}}</span>
+            <span class="group-content__text">가격: {{group.price}}</span>
             <div class="add-button__container">
                 <form onsubmit="handleButtonClick(event)">
                     {% csrf_token %}
@@ -17,17 +17,7 @@
                 </form>
             </div>
         </div>
-        <div class="group-content__list">
-            <ul>
-                {% for key, value in value.items %}
-                <li>
-                    <div>키: {{ key }}</div>
-                    <div>값: {{ value }}</div>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div>
+        <div class="group-content__form">
             <form onsubmit="handleCreateButtonClick(event)" class="create-form">
                 {% csrf_token %}
                 <input type="text" name="group-create-inpput"  id="create-input">
@@ -45,6 +35,14 @@
                 </form>
             {% endif %}
         </div>
+        <ul class="group-content__ul">
+            {% for key, value in value.items %}
+            <li class="group-content__li">
+                <div>그룹원 명: {{ key }}</div>
+                <div>그룹원 가격: {{ value }}</div>
+            </li>
+                {% endfor %}
+        </ul>
     </div>
 </main>
 

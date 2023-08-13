@@ -699,13 +699,14 @@ def group(request,pk):
     value_dic={}
     my_group = request.user.my_group
 
+    # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
     if group.create_user == request.user.name:
         am_I_creator = True
     else:
         am_I_creator = False
 
     # 팔로잉 버튼을 내 그룹 유무에 따라 다르게 표시.
-    if my_group == group.name:
+    if my_group == group:
         button_text = "CANCEL"
     else:
         button_text = "FOLLOW"    
