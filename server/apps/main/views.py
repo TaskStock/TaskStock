@@ -218,6 +218,7 @@ def createValue(user, target_date=None):
         low=low,
         high=high,
     )
+    add_price(user)
     return value
 
 # 이 곳에 그룹 주가 상승 함수를 추가할 생각
@@ -793,6 +794,8 @@ def add_price(user):
         my_group.price += last_value.start - last_value.end
         my_group.save()
 
+    return my_group.price
+
 # search에 그룹 검색 기능 추가
 # 그룹에 멤버가 0명이라면 삭제하기
 
@@ -800,6 +803,7 @@ def add_price(user):
 def search_group(request):
     search_content = request.GET.get('search_content','')
     groups = Group.objects.all()
+    currentu_user = request.user
     filtered_groups = groups
     if search_content:
         filtered_users = Group.objects.all().filter(name__contains=search_content)
@@ -807,6 +811,7 @@ def search_group(request):
     ctx = {
         'groups': groups,
         'filtered_groups': filtered_groups,
+        'my_group': currentu_user.my_group,
     }
 
     return render(request, 'main/search_group.html',context=ctx)
