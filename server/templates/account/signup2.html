@@ -6,18 +6,9 @@
     <label for="email">Email</label>
     <input type="text" placeholder="user@user.com" id="email" name="email">
     <div id="error-message" style="color: red;"></div>
-    <button type="submit" class="signup1-btn">인증코드 전송하기</button>
+    <button type="submit" class="signup1-btn">이메일로 로그인 링크 받기</button>
 </form>
-<form class="signup-code" onsubmit="codeCheck(event)">
-    {% csrf_token %}
-    <span>
-        We just sent you a temporary sign up code. Please check your inbox and paste the sign up code below.
-    </span>
-    <label for="signup-code">Sign up Code</label>
-    <input type="text" placeholder="Paste sign up code" id="signup-code" name="signup-code">
-    <div id="error-message-code" style="color: red;"></div>
-    <button type="submit" class="signup1-btn">인증코드 입력 완료</button>
-</form>   
+
 
 {% endblock %}
 

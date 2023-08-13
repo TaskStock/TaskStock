@@ -11,9 +11,9 @@
     flex-direction: column;
     width: 90%;
     gap: var(--gutter);
-
-
 } 
+
+
 .alarm-header > h1 {
     padding: var(--offset) 0 0;
     font-size: var(--heading3);

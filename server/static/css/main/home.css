@@ -117,8 +117,6 @@ main{
 	border-top: 0;
 	margin-top: -20px;
 	margin-left: -20px;
-
-
 }
 .todo-item{
     background-color: var(--item-color);
@@ -294,7 +292,6 @@ main{
         font-size: 24px;
     }
 }
-
 .price{
     display: grid;
     grid-template-columns: repeat(3, calc((100% - 2 * var(--gutter)) / 3));
