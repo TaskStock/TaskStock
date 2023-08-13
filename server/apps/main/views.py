@@ -436,10 +436,9 @@ def add_todo(request):
         current_user = request.user
         
         # date_str을 사용자의 timezone을 고려해서 arrow로 변환
-        local_arrow = arrow.get(date_str, 'M/D/YYYY', tzinfo=current_user.tzinfo).ceil('day')
+        target_arrow = arrow.get(date_str, 'M/D/YYYY', tzinfo=current_user.tzinfo).ceil('day')
         
-        target_arrow = local_to_utc(local_arrow)
-        
+        print('add_todo target_arrow:', target_arrow)
         # date 일치하는 value 객체 가져오기
         value = get_value_for_date(current_user, target_arrow)
         
