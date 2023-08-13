@@ -15,8 +15,7 @@
     color: var(--checked-border);
 }
 .category-header i{
-    position: relative;
-    top: 2px;
+
     cursor: pointer;
 }
 #category-content {
@@ -150,14 +149,37 @@
 #category-finish-list > h2{
     color: var(--checked-border);
     padding-bottom: var(--gutter);
-
 }
 #category-finish-list > h2{
     padding-top: var(--gutter);
 }
-
-
-
+#cdc-name-box{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+#cdc-name-box h2{
+    font-size: var(--heading3);
+    color: var(--checked-border);
+    font-weight: var(--weight3);
+}
+#category-detail-container{
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+}
+#cdc-memory-box{
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+    padding-top: var(--gutter);
+}
+#cdc-memory-box textarea{
+    resize: none;
+}
+#cdc-memory-box button{
+    margin-left: auto;
+}
 .displayNone{
     display: none !important;
 }
@@ -169,3 +191,4 @@
 #category-detail-container input[type="checkbox"]{
     appearance: auto;
 }
+
