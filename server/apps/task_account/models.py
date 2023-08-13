@@ -57,11 +57,12 @@ def user_created(sender, instance, created, **kwargs):
         Category.objects.create(
             user=instance,
         )
+        print('회원가입 시간:', instance.date_joined)
 
 
 class Value(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='value_user')
-    date = models.DateField()
+    date = models.DateTimeField()
     percentage = models.FloatField()
     start = models.IntegerField()
     end = models.IntegerField(null=True, default=0)

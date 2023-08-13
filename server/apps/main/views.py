@@ -3,13 +3,12 @@ from .models import *
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.utils import timezone
-import pytz
-from datetime import timedelta, datetime
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
 import os
 from django.conf import settings
+import arrow 
+from datetime import timedelta
 
 
 
@@ -50,28 +49,17 @@ def set_timezone(request):
 
 #사용자 timezone의 현재 날짜 얻기 *user_timezone = user.tzinfo
 #사용자의 시간대를 기반으로 현재 날짜를 가져옴
-def get_current_date(user_timezone):
-    local_timezone = pytz.timezone(user_timezone)
-    now = datetime.now(local_timezone)
-    
-    return now.date()
+def get_current_arrow(user_timezone):
+    now = arrow.now(user_timezone)
+    return now  # 현재 날짜와 시간을 반환
 
-#utc 날짜를 local날짜로 변경
-def utc_to_local(utc_date, user_timezone):
-    local_timezone = pytz.timezone(user_timezone)
-    utc_datetime = datetime.combine(utc_date, datetime.min.time())
-    local_datetime = utc_datetime.astimezone(local_timezone)
-    
-    return local_datetime.date()
+def utc_to_local(utc_arrow, user_timezone):
+    local_time = utc_arrow.to(user_timezone)
+    return local_time 
 
-#local 날짜를 utc 날짜로 변경
-def local_to_utc(local_date, user_timezone):
-    local_timezone = pytz.timezone(user_timezone)
-    local_datetime = local_timezone.localize(datetime.combine(local_date, datetime.min.time()))
-    utc_datetime = local_datetime.astimezone(local_timezone)
-    
-    return utc_datetime.date()
-
+def local_to_utc(local_arrow):
+    utc_arrow = local_arrow.to('UTC')
+    return utc_arrow 
 
 
 
@@ -225,7 +213,7 @@ def follow_list(request):
 
     for user in follow_list:
         try:
-            value = Value.objects.get(user=user, date=datetime.now())
+            value = Value.objects.get(user=user, date=arrow.now())
             percent = value.percentage
         except:
             percent = 0
@@ -242,21 +230,21 @@ def follow_list(request):
 
     return JsonResponse({"users": users})
 
-# **주의점: target_date 줄거면 무조건 utc의 date로 줘야함
-def createValue(user, target_date=None):
-    if not target_date:
-        current_local_date = get_current_date(user.tzinfo)
-        target_date = local_to_utc(current_local_date, user.tzinfo)
+# **주의점: target_datetime 줄거면 무조건 utc의 datetime으로 줘야함
+def createValue(user, target_arrow=None):
+    if not target_arrow:
+        current_local_aroow = get_current_arrow(user.tzinfo).ceil('day')
+        target_arrow = local_to_utc(current_local_aroow)
     
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
-    last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
-    
-    percentage=0
+    last_value = Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
+
+    percentage = 0
     start = end = low = high = last_value.end
     
     value = Value.objects.create(
         user=user,
-        date=target_date,
+        date=target_arrow.datetime,  
         percentage=percentage,
         start=start,
         end=end,
@@ -299,12 +287,12 @@ def follow(request):
 # ---환희 작업---#
 def home(request):
     current_user = request.user
-    process_combo(current_user)
     value = get_value_for_date(current_user)
     
     if value == None:
         # 로그인 했을 때 value가 없는 경우
         value = createValue(current_user)
+        print('home로딩하면서 createValue')
     
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
@@ -362,62 +350,76 @@ def update_userinfo(request):
 """
 user만 넣으면 오늘 날짜의 value 반환하고, user, target_date 넣으면 그날의 date에 해당하는 value 가져오는 함수
 """
-# **주의점: target_date 넣을거면무조건 utc기준 데이터로 변환해서 집어넣어야함
-def get_value_for_date(user, target_date=None):
-    if not target_date:
-        current_local_date = get_current_date(user.tzinfo)
-        target_date = local_to_utc(current_local_date, user.tzinfo)
+#local_arrow 받자
+def get_value_for_date(user, target_arrow=None):
+    if not target_arrow:
+        target_arrow = get_current_arrow(user.tzinfo)
+    
+    start_local_arrow = target_arrow.floor('day')
+    end_local_arrow = target_arrow.ceil('day')
+    
+    start_utc_arrow = local_to_utc(start_local_arrow)
+    end_utc_arrow = local_to_utc(end_local_arrow)
     
     try:    
-        value_object = Value.objects.get(user=user, date=target_date)
-    except:
+        value_object = Value.objects.get(user=user, date__gte=start_utc_arrow.datetime, date__lte=end_utc_arrow.datetime)
+        print('get_value_for_date try 실행:, 검색범위', start_utc_arrow,'부터',end_utc_arrow )
+    except Value.DoesNotExist:
         value_object = None
+        print('get_value_for_date Value가 검색 범위 내 없음, Value=None 반환')
 
     return value_object
 
+
 @csrf_exempt
 def click_date(request):
-    #자바스크립트에서 날짜를 전달한다
-    #views.py에서 그 날짜를 받고 날짜에 해당하는 value가 존재하는지 확인한다.
-    #존재하면 -> value에 해당하는 todos를 보낸다
-    #존재하지 않으면 -> todos == ''
-    date_str = request.POST.get('str') #'8/21/2023'
+    # 자바스크립트에서 날짜를 전달한다
+    date_str = request.POST.get('str')  # '8/21/2023' 브라우저의로컬 시간대 들어온다
+    print('click_date date_str:',date_str)
     username = request.POST.get("username")
     
     if username == "":
         target_user = request.user
     else:
         target_user = User.objects.get(username=username)
-    
-    #date_str을 date 자료형으로 변환
-    local_date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
-    
-    # target_user의 타임존을 기반으로 local_date_object를 UTC로 변환
-    utc_date_object = local_to_utc(local_date_object, target_user.tzinfo)
+
+    #date_str을 arrow 자료형으로 변환
+    local_arrow_object = arrow.get(date_str, 'M/D/YYYY', tzinfo=target_user.tzinfo)
+    # target_user의 타임존을 기반으로 local_datetime_object를 UTC로 변환
+    local_arrow_start = local_arrow_object.floor('day') #자정
+    local_arrow_end = local_arrow_object.ceil('day')    #23:59:59
+    print('click_date local:', local_arrow_start, '부터',local_arrow_end)
+
+    utc_arrow_start = local_to_utc(local_arrow_start)
+    utc_arrow_end = local_to_utc(local_arrow_end)
+
 
     todos = []
     try:
-        value = Value.objects.get(user=target_user, date=utc_date_object)
+        value = Value.objects.get(user=target_user, date__gte=utc_arrow_start.datetime, date__lte=utc_arrow_end.datetime)
+        print('click_date try 실행:, 검색범위', utc_arrow_start,'부터',utc_arrow_end )
         todo_objects = Todo.objects.filter(value=value)
         
         for todo in todo_objects:
-            #target_user의 timezone을 기반으로 utc날짜를 로컬 날짜로 변환
-            todo_data={
-                'date_id':todo.value.pk,
-                'content':todo.content,
-                'goal_check':todo.goal_check,
-                'id':todo.pk,
-                'level':todo.level,
-                'month': local_date_object.month,
-                'date':local_date_object.day,
-                'year':local_date_object.year,
+            # target_user의 timezone을 기반으로 utc datetime을 로컬 datetime으로 변환
+            local_datetime = utc_to_local(local_arrow_object, target_user.tzinfo)
+            todo_data = {
+                'date_id': todo.value.pk,
+                'content': todo.content,
+                'goal_check': todo.goal_check,
+                'id': todo.pk,
+                'level': todo.level,
+                'month': local_datetime.month,
+                'date': local_datetime.day,
+                'year': local_datetime.year,
             }
             todos.append(todo_data)
             
     except Value.DoesNotExist:
         todos = []
 
-    return JsonResponse({'todos':todos})
+    return JsonResponse({'todos': todos})
+
 """
 Todo 추가 하는 함수
 할 일 추가 버튼 누름 -> 새로운 Todo객체 생성(ajax로 구현할 예정) -> high, low 업데이트
@@ -430,40 +432,44 @@ def add_todo(request):
         my_level = req['level']
         date_str = req['date_id']
         
-        #현재 user 객체 가져오기
+        # 현재 user 객체 가져오기
         current_user = request.user
         
-        #date_str을 사용자의 timezone을 고려해서 utc로 변환
-        local_date = datetime.strptime(date_str, '%m/%d/%Y').date()
-        target_date = local_to_utc(local_date, current_user.tzinfo)
+        # date_str을 사용자의 timezone을 고려해서 arrow로 변환
+        local_arrow = arrow.get(date_str, 'M/D/YYYY', tzinfo=current_user.tzinfo).ceil('day')
         
-        #date 일치하는 value 객체 가져오기
-        value = get_value_for_date(current_user, target_date)
+        target_arrow = local_to_utc(local_arrow)
         
-        #value 없는 날-달력 연결 후 '완료'버튼 누르면 객체 생성
+        # date 일치하는 value 객체 가져오기
+        value = get_value_for_date(current_user, target_arrow)
+        
+        # value 없는 날 - 달력 연결 후 '완료' 버튼 누르면 객체 생성
         if value == None:
-            createValue(current_user, target_date)
-            value = get_value_for_date(current_user, target_date)
+            createValue(current_user, target_arrow)
+            print('add_todo에서 완료 눌렀을 때 value 없는 날이라 creatValue 실행, create된 datetime =', target_arrow )
+            value = get_value_for_date(current_user, target_arrow)
 
-        #value 있긴 한데 더미데이터 인 날
+        # value 있긴 한데 더미데이터인 날
         if value.is_dummy:
-            value.is_dummy = False
-            last_value = Value.objects.filter(user=current_user, is_dummy=False, date__lt=target_date).order_by('-date').first()
-            if last_value:
-                value.start = value.end = value.low = value.high = last_value.end
-            else:
-                #만약 회원가입 일주일 전 ~ 회원가입날을 클릭한다면(last_value가 없다면)
-                value.start = 0
-                value.low = value.high = value.end = 50000
+            print('add_todo에서 완료 눌렀을 때 더미데이터임.', target_arrow, )
+            # last_value = Value.objects.filter(user=current_user, is_dummy=False, date__lte=target_arrow).order_by('-date').first()
+            
+            # if last_value:
+            #     print('근데 더미데이터 이전 날짜에 더미데이터가 아닌(값을 참고할 만한) 객체가 있음')
+            #     value.start = value.end = value.low = value.high = last_value.end
+            # else:
+            #     # 만약 회원가입 일주일 전 ~ 회원가입날을 클릭한다면(last_value가 없다면)
+            #     value.start = value.low = value.high = value.end = 0
 
+            value.is_dummy = False
             value.save()
         
-        #현재 user의 caregory 객체 가져오기
+        # 현재 user의 caregory 객체 가져오기
         category = Category.objects.get(user=current_user)
 
-        #투두 객체 생성
+        # 투두 객체 생성
         Todo.objects.create(
-            value = value,
+            value=value,
             category=category,
             content=content,
             level=my_level,
@@ -472,16 +478,15 @@ def add_todo(request):
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
-        #todo의 high값 업데이트
-        value.high += my_level*1000
+        # todo의 high값 업데이트
+        value.high += my_level * 1000
         
-        #todo의 low값 업데이트
-        value.low -= my_level*1000
+        # todo의 low값 업데이트
+        value.low -= my_level * 1000
         value.save()
         
-        #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
-        
-        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content})
+        # 방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
+        return JsonResponse({'date_id': value.id, 'todo_id': todo_id, 'my_level': my_level, 'content': content})
 """
 Todo 삭제 하는 함수 
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
@@ -532,6 +537,7 @@ def update_todo(request, pk):
             todo.value.high -= todo.level * 1000
             todo.value.low += todo.level *1000
             
+            
             #todo 내용 update
             todo.level = updated_level
             todo.content = updated_content
@@ -564,23 +570,22 @@ def check_todo(request, pk):
         #해당되는 todo 가져오기
         todo = Todo.objects.get(pk=todo_id)
         
-        with transaction.atomic():
         #status에 따라 goal_check와 value의 end값 업데이트
-            if todo_status == 'True':
-                todo.goal_check = True
-                value.end += 1000*todo.level
-            else:
-                todo.goal_check = False
-                value.end -= 1000*todo.level
+        if todo_status == 'True':
+            todo.goal_check = True
+            value.end += 1000*todo.level
+        else:
+            todo.goal_check = False
+            value.end -= 1000*todo.level
+        
+        #value의 percentage값 업데이트 -> 소수점 둘째자리까지
+        if value.start == 0:
+            value.percentage = round((value.end - 50000)/50000 * 100, 2)
+        else:
+            value.percentage = round((value.end - value.start)/value.start *100, 2) 
             
-            #value의 percentage값 업데이트 -> 소수점 둘째자리까지
-            if value.start == 0:
-                value.percentage = round((value.end - 50000)/50000 * 100, 2)
-            else:
-                value.percentage = round((value.end - value.start)/value.start *100, 2) 
-                
-            todo.save()
-            value.save()
+        todo.save()
+        value.save()
             
         #combo변화 처리
         process_combo(current_user)
@@ -592,31 +597,38 @@ def check_todo(request, pk):
 """
 차트로 보낼 data준비하는 함수
 """
-def date_to_timestamp(date_obj):
+def arrow_to_date(arrow_obj):
+    timestamp_milliseconds = int(arrow_obj.timestamp()) * 1000  # 초 단위 타임스탬프를 밀리초로 변환
+    return timestamp_milliseconds
 
-    return int(datetime.combine(date_obj, datetime.min.time()).timestamp() * 1000)
 
 def values_for_chart(user, term):
     user_timezone = user.tzinfo
     
-    current_local_date = get_current_date(user_timezone)
-    start_local_date = current_local_date - timedelta(days=term-1)
+    current_local_arrow = get_current_arrow(user_timezone)
+    #local_date의 자정으로 만들기
+    start_local_arrow = current_local_arrow.ceil('day')
+    #이 작업 안해줘서 db에서 두번 만듦
+
+    # 사용자의 시간대를 기반으로 UTC arrow로 변환
+    current_utc_arrow = local_to_utc(start_local_arrow)
+    print('value_for_chart local utc arrow:', current_utc_arrow)
+    start_utc_arrow = current_utc_arrow.shift(days=-term+1)
+    next_utc_arrow = start_utc_arrow.shift(days=1)
     
-    #사용자의 시간대를 기반으로 UTC날짜로 변환
-    current_utc_date = local_to_utc(current_local_date, user_timezone)
-    start_utc_date = local_to_utc(start_local_date, user_timezone)
+    dummy_candidate = [start_utc_arrow, next_utc_arrow]
+    print('value_for_chart dummy_candidate:', dummy_candidate)
     
-    #db에 존재하는 date들 가져오기
-    range_values =  Value.objects.filter(user=user, date__range=(start_utc_date, current_utc_date))
-    value_dates = set(range_values.values_list('date', flat=True))
+    # DB에 존재하는 로컬 시간대 날짜들 가져오기
+    range_values = Value.objects.filter(user=user, date__range=(start_utc_arrow.datetime, current_utc_arrow.datetime))
+    value_datetimes =[value.date.date() for value in range_values]
     
-    #첫 시작 날짜에 대한 더미데이터 처리
-    date_list = [start_utc_date, start_utc_date + timedelta(days=1)]
-    for date in date_list:
-        if date not in value_dates:
+    #더미데이터 처리(start_utc_datetime.date()하고 그 다음날이 db에 없으면 create)
+    for candidate in dummy_candidate:
+        if candidate.datetime.date() not in value_datetimes:
             Value.objects.create(
                 user=user,
-                date=date,
+                date=candidate.datetime,
                 percentage=0,
                 start=0,
                 end=0,
@@ -625,10 +637,14 @@ def values_for_chart(user, term):
                 is_dummy=True,
             )
 
-    #최종 데이터 다시 쿼리하기
-    values = Value.objects.filter(user=user, date__range=(start_utc_date, current_utc_date))
+    # 최종 데이터 다시 쿼리하기
+    values = Value.objects.filter(user=user, date__range=(start_utc_arrow.datetime, current_utc_arrow.datetime))
+    print('start:', start_utc_arrow.datetime)
+    print('current:', current_utc_arrow.datetime)
     
-    dataset = [[date_to_timestamp(utc_to_local(value.date, user_timezone)), value.start, value.high, value.low, value.end] for value in values]
+    
+    dataset = [[arrow_to_date(utc_to_local(arrow.get(value.date), user_timezone)), value.start, value.high, value.low, value.end] for value in values]
+    print(dataset)
     
     return dataset
     
@@ -637,32 +653,28 @@ def values_for_chart(user, term):
 combo처리하는 함수
 """
 def process_combo(user):
-    #사용자의 시간대를 기반으로 현재 날짜를 가져옴
-    current_local_date = get_current_date(user.tzinfo)
-    #utc로 변환
-    current_utc_date = local_to_utc(current_local_date, user.tzinfo)
+    # 사용자의 시간대를 기반으로 현재 arrow을 가져옴
+    current_local_arrow = get_current_arrow(user.tzinfo)
+    # UTC로 변환
+    current_utc_arrow = local_to_utc(current_local_arrow)
     
-    #오늘 utc 날짜 기준으로 조회
-    values = Value.objects.filter(user=user, date__lte=current_utc_date).order_by('-date')
+    # 오늘 UTC datetime 기준으로 조회
+    values = Value.objects.filter(user=user, date__lte=current_utc_arrow.datetime).order_by('-date')
 
-    #역순으로 체크
+    # 역순으로 체크
     combo = 0
-    previous_date = None
+    previous_datetime = None
 
     for value in values:
         todos = Todo.objects.filter(value=value)
         success_day = any(todo.goal_check for todo in todos)
     
-        #previous_date가 설정되어 있고 그 간격이 1 이상이거나 체크한 날이 아니면 반복문 탈출
-        if (previous_date and previous_date - value.date > timedelta(days=1)) or not success_day:
-            print('탈출')
+        # previous_datetime이 설정되어 있고 그 간격이 1 일 이상이거나 체크한 날이 아니면 반복문 탈출
+        if previous_datetime and (previous_datetime - value.date > timedelta(days=1)) or not success_day:
             break
-        print('previous_date:', previous_date)
-        print('valid_date:', value.date)
         
         combo += 1
-        print('combo 증가:', combo)
-        previous_date = value.date
+        previous_datetime = value.date
         
     user.combo = combo
     user.save()
