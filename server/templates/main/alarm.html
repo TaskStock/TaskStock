@@ -6,62 +6,85 @@
             <h1>Alarms</h1>
         </div>
         <div class="alarm-content">
+            <span>읽지 않은 알림</span>
             <ul class="alarm-lists">
                 <li class="alarm-list">
                     <div class="alarm-content__container">
                         <div class="alarm-image__container">
-                            <img src="https://placekitten.com/50/50" alt="알림 이미지">
+                            <img src="{% static 'img/favicon.svg' %}" alt="로고 이미지">
                         </div>
-                        <div class="alarm-description__container">
-                            <h3>안녕하세요. 운영진 입니다.</h3>
-                            <div class="more-btn__container">
-                                <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="alarm-time__container">
-                            <span>5 시간전</span>
-                        </div>
-                    </div>
-                </li>
-                <!-- <li class="alarm-list">
-                    <div class="alarm-content__container">
-                        <div class="alarm-image__container">
-                            <img src="https://placekitten.com/50/50" alt="알림 이미지">
-                        </div>
-                        <div class="alarm-description__container">
-                            <h3>안녕하세요. 운영진 입니다.</h3>
-                            <div class="more-btn__container">
-                                <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.가나다라ㅏ마ㅣ나리ㅏ니라니라ㅣㄴ라니라니라니라니ㅏㄴ랄니라닐
-                                    니ㅏㄹㄴ란ㄹ니라니ㅏㄹ니ㅏㄹ니라디라ㅣ날니ㅏㄹ니ㅏ리나ㅣ날날나ㅣㄹ나ㅣ닐ㄹ리리리리ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ
-                                </p>
-                                <input type="checkbox" class="alarm-content__more-btn">
-                            </div>
-                        </div>
-                        <div class="alarm-time__container">
-                            <span>5 시간전</span>
-                        </div>
+                        <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.</p>
+                        <span class="alarm-time">5시간 전</span>
                     </div>
                 </li>
                 <li class="alarm-list">
                     <div class="alarm-content__container">
                         <div class="alarm-image__container">
-                            <img src="https://placekitten.com/50/50" alt="알림 이미지">
+                            <img src="{% static 'img/favicon.svg' %}" alt="로고 이미지">
                         </div>
-                        <div class="alarm-description__container">
-                            <h3>안녕하세요. 운영진 입니다.</h3>
-                            <div class="more-btn__container">
-                                <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.가나다라ㅏ마ㅣ나리ㅏ니라니라ㅣㄴ라니라니라니라니ㅏㄴ랄니라닐
-                                    니ㅏㄹㄴ란ㄹ니라니ㅏㄹ니ㅏㄹ니라디라ㅣ날니ㅏㄹ니ㅏ리나ㅣ날날나ㅣㄹ나ㅣ닐ㄹ리리리리ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ
-                                </p>
-                                <input type="checkbox" class="alarm-content__more-btn">
-                            </div>
-                        </div>
-                        <div class="alarm-time__container">
-                            <span>5 시간전</span>
-                        </div>
+                        <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.</p>
+                        <span class="alarm-time">5시간 전</span>
                     </div>
-                </li>  -->
+                </li>
+               
+            </ul>
+            <span>읽은 알림</span>
+            <ul class="alarm-lists">
+                <li class="alarm-list">
+                    <div class="alarm-content__container">
+                        <div class="alarm-image__container">
+                            <img src="{% static 'img/favicon.svg' %}" alt="로고 이미지">
+                        </div>
+                        <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.</p>
+                        <span class="alarm-time">5시간 전</span>
+                    </div>
+                </li>
+                <li class="alarm-list">
+                    <div class="alarm-content__container">
+                        <div class="alarm-image__container">
+                            <img src="{% static 'img/favicon.svg' %}" alt="로고 이미지">
+                        </div>
+                        <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.</p>
+                        <span class="alarm-time">5시간 전</span>
+                    </div>
+                </li>
+                <li class="alarm-list">
+                    <div class="alarm-content__container">
+                        <div class="alarm-image__container">
+                            <img src="{% static 'img/favicon.svg' %}" alt="로고 이미지">
+                        </div>
+                        <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.</p>
+                        <span class="alarm-time">5시간 전</span>
+                    </div>
+                </li>
+                <li class="alarm-list">
+                    <div class="alarm-content__container">
+                        <div class="alarm-image__container">
+                            <img src="{% static 'img/favicon.svg' %}" alt="로고 이미지">
+                        </div>
+                        <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.</p>
+                        <span class="alarm-time">5시간 전</span>
+                    </div>
+                </li>
+                <li class="alarm-list">
+                    <div class="alarm-content__container">
+                        <div class="alarm-image__container">
+                            <img src="{% static 'img/favicon.svg' %}" alt="로고 이미지">
+                        </div>
+                        <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.</p>
+                        <span class="alarm-time">5시간 전</span>
+                    </div>
+                </li>
+                <li class="alarm-list">
+                    <div class="alarm-content__container">
+                        <div class="alarm-image__container">
+                            <img src="{% static 'img/favicon.svg' %}" alt="로고 이미지">
+                        </div>
+                        <p class="alarm-description__content">user1님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.</p>
+                        <span class="alarm-time">5시간 전</span>
+                    </div>
+                </li>
+               
             </ul>
         </div>
 

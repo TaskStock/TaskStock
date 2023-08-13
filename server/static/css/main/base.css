@@ -61,6 +61,7 @@
     --level-blank: #A4A4A4;
     --item-color: #323232;
     --bg-5: #323232;
+    --shadow: 0;
 }
 body{
     width: 100%;
