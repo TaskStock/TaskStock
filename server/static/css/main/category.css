@@ -1,0 +1,32 @@
+.group-category{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#category-container{
+    flex-grow: 1;
+    overflow-y: scroll;
+    width: 500px;
+}
+.category-item{
+    display: flex;
+    border-radius: var(--border-r);
+    border: 1px solid var(--bg-1);
+    padding: var(--gutter);
+    justify-content: space-between;
+    margin-bottom: var(--gutter);
+}
+
+.displayNone{
+    display: none !important;
+}
+
+#category-content{
+    display: flex;
+
+}
+
+#category-detail-container input[type="checkbox"]{
+    appearance: auto;
+}
