@@ -4,7 +4,7 @@
     flex-direction: column;
     align-items: center;
 }
-.category-container{
+#category-container{
     flex-grow: 1;
     overflow-y: scroll;
     width: 500px;
@@ -20,4 +20,13 @@
 
 .displayNone{
     display: none !important;
+}
+
+#category-content{
+    display: flex;
+
+}
+
+#category-detail-container input[type="checkbox"]{
+    appearance: auto;
 }

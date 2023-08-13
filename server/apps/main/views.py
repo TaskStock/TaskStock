@@ -439,10 +439,13 @@ def add_todo(request):
                 value.start = 0
                 value.low = value.high = value.end = 50000
 
+                return redirect()
+
             value.save()
         
         #현재 user의 caregory 객체 가져오기
-        category = Category.objects.get(user=current_user)
+        # category = Category.objects.get(user=current_user)
+        category = None
 
         #투두 객체 생성
         Todo.objects.create(
@@ -762,15 +765,35 @@ def delete_category(request):
     return JsonResponse({'success':True})
 
 @csrf_exempt
-def complete_category(request):
+def finish_category(request):
+    isChecked = request.POST.get('isChecked')
     pk = request.POST.get('pk')
-        
+
     category = Category.objects.get(pk=pk)
 
-    category.finish=True
+    name = category.name
+
+    if isChecked=='true':
+        category.finish=True
+    else:
+        category.finish=False
+
     category.save()
 
-    return JsonResponse({'success':True})
+    return JsonResponse({'success':True, 'name':name})
+
+@csrf_exempt
+def click_category(request):
+    pk = request.POST.get('pk')
+    
+    category = Category.objects.get(pk=pk)
+
+    category_data={
+        'name':category.name,
+        'memory':category.memory,
+    }
+
+    return JsonResponse({'category_data':category_data})
 
 # group
 def group(request):
