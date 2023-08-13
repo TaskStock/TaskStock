@@ -12,7 +12,7 @@ urlpatterns = [
     path('settings/', settings), # /main/settings/name/
     path('settings/update_userinfo/', update_userinfo), # /main/settings/update_userinfo/
     path('category/', category), #/main/category/
-    path('group/<int:pk>', group), #/main/group/
+    path('group/<int:pk>/', group), #/main/group/
 
     # 다른 유저의 상세 페이지
     path('profile/', profile), # /main/profile/
@@ -31,6 +31,7 @@ urlpatterns = [
     path('follow/', follow), # /main/follow/
 
     # group ajax
-    path('group/follow_group/', follow_group), # /main/group_ajax/
+    path('group/follow_group/', follow_group), # /main/follow_group/
+    path('group/create_group/', create_group), # /main/create_group/
 ] 
 
