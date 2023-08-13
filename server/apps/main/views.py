@@ -773,5 +773,10 @@ def update_group(request):
             group.save()
             return JsonResponse({'result': 'Success'})
 
-def delete_group(request):
-    pass
+def delete_group(request,pk):
+    if request.method == 'POST':
+        group = Group.objects.get(pk=pk)
+        group.delete()
+        
+        return redirect('/main/settings/')
+    
