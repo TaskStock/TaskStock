@@ -400,7 +400,7 @@ function update_chart(){
 function handleCombo(combo){
     const comboHTML = document.querySelector('.dashboard--combo span:last-child');
     comboHTML.innerHTML = `🔥 ${combo}`;
-    comboHTML.style.animation = `combo 2s ease-in-out`;
+    comboHTML.style.animation = `combo 1.5s ease-in-out`;
     comboHTML.addEventListener('animationend', () => {
         comboHTML.style.animation = ''; // 애니메이션 제거
     }, { once: true });
