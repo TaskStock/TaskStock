@@ -42,6 +42,17 @@ document.addEventListener("DOMContentLoaded", function(){
       one_week.click();
     }else{
       request_chart(chart_radio);
+      if(chart_radio == "7"){
+        one_week.checked = true;
+      }else if(chart_radio == "30"){
+        one_month.checked = true;
+      }else if(chart_radio == "90"){
+        three_month.checked = true;
+      } else if(chart_radio == "180"){
+        six_month.checked = true;
+      } else if(chart_radio == "365"){
+        one_year.checked = true;
+      }
     }
   }
 

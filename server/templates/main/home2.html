@@ -23,11 +23,6 @@
         </div>
         <div id="chart"></div>
         <div class="chart-btn--container">
-            <!-- <div id="one_week" class="chart-btn active chart-week">1 week</div>
-            <div id="one_month" class="chart-btn chart-month">1 month</div>
-            <div id="three_month" class="chart-btn chart-3month">3 months</div>
-            <div id="six_month" class="chart-btn chart-6month">6 months</div>
-            <div id="one_year" class="chart-btn chart-year">1 year</div> -->
             <form>
                 <label>
                     <input type="radio" name="chart_period" value="7" id="one_week" checked>
@@ -48,27 +43,23 @@
                 <label>
                     <input type="radio" name="chart_period" value="365" id="one_year">
                     <div class="chart-btn">1 year</div>
-                </label>
-                
+                </label>   
             </form>
         </div>
         <div class="dashboard">
             <div id="username_save" style="display:none;">{{user.username}}</div>
             <div class="dashboard--combo">
                 <span>Combo</span>
-                <span>{{ user.combo }}</span>
+                <span>🔥 {{ user.combo }}</span>
             </div>
             <div class="dashboard--completed">
                 <span>Completed Todos</span>
-                <span>56</span>
+                <span>✔︎ 56</span>
             </div>
             <div class="dashboard--badge">
                 <span>Badge</span>
                 <span></span>
             </div>
-            
-            
-            
         </div>
     </div>
     <div class="main-right">
@@ -77,7 +68,7 @@
                 <div class="cal--header">
                     <div id="monthDisplay">
                         <div class="monthDisplay--month"></div>
-                        <!-- <div class="monthDisplay--year"></div> -->
+                        <div class="monthDisplay--year" style="display: none;"></div>
                     </div>
                     <div class="monthControl">
                         <button id="nextButton"><i class="fa-solid fa-chevron-up"></i></button>
@@ -207,7 +198,7 @@
 {% endblock %}
 
 {% block extra %}
+<script src="{% static 'js/candlestick.js' %}"></script>
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
-<script src="{% static 'js/candlestick.js' %}"></script>
 {% endblock %}

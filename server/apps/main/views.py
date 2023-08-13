@@ -60,7 +60,7 @@ def profile(request):
         return redirect('/main/settings/')
     
     if target_user in current_user.followings.all():
-        follow_text='CANCEL'
+        follow_text='UNFOLLOW'
     else:
         follow_text='FOLLOW'
 
@@ -243,8 +243,8 @@ def follow(request):
 
     if buttonText == "FOLLOW":
         current_user.followings.add(target_user)
-        text="CANCEL"
-    elif buttonText == "CANCEL":
+        text="UNFOLLOW"
+    elif buttonText == "UNFOLLOW":
         current_user.followings.remove(target_user)
         text="FOLLOW"
 
@@ -444,6 +444,7 @@ def add_todo(request):
             value.save()
         
         #현재 user의 caregory 객체 가져오기
+        
         # category = Category.objects.get(user=current_user)
         category = None
 
@@ -493,9 +494,9 @@ def delete_todo(request, pk):
         todo.delete()
         
         #combo 변화 처리    
-        process_combo(current_user)
+        my_combo = process_combo(current_user)
     
-    return JsonResponse({'id':todo_id, 'd_id': value.id})
+    return JsonResponse({'my_combo': my_combo, 'id':todo_id, 'd_id': value.id})
 """
 Todo 업데이트 하는 함수
 content, level 업데이트 -> value high, low 업데이트
@@ -564,9 +565,9 @@ def check_todo(request, pk):
             value.save()
             
         #combo변화 처리
-        process_combo(current_user)
+        my_combo = process_combo(current_user)
         todo_status = str(todo_status)
-        return JsonResponse({'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
+        return JsonResponse({'my_combo': my_combo, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
         
 
 
@@ -652,7 +653,7 @@ def process_combo(user):
     user.combo = combo
     user.save()
         
-    return
+    return combo
 
 #---선우 작업---#
 
