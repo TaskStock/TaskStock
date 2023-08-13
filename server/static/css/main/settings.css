@@ -11,6 +11,7 @@
 .settigs-header > h1 {
     font-size: var(--heading3);
     font-weight: var(--weight3);
+    color: var(--checked-border);
 }
 .settings-content {
     display: flex;

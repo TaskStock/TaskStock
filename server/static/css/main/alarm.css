@@ -18,6 +18,7 @@
     padding: var(--offset) 0 0;
     font-size: var(--heading3);
     font-weight: var(--weight3);
+    color: var(--checked-border);
 }
 .alarm-content {
     border-radius: var(--border-r);
@@ -41,96 +42,34 @@
     border-radius: var(--border-r);
     box-shadow: var(--shadow);
     padding: var(--gutter);
+    background-color: var(--box-color);
 }
-
-
 .alarm-content__container {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     width: 100%;
 }
-
 .alarm-image__container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 11%;
+    width: 45px;
+    height: 45px;
+    margin-right: var(--gutter);
 }
-
 .alarm-image__container>img {
-    width: 50px;
-    height: 50px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
 }
-/*
-.alarm-description__container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gutter);
-    width: 70%;
+.alarm-time{
+    margin-left: auto;
 }
-
-.alarm-description__container > h3 {
+.alarm-content > span{
     font-size: var(--body1);
-    font-weight: 600;
-} */
-/* 
-.alarm-description__content {
-    font-size: var(--caption);
-    color: var(--grey_600);
-    
-    overflow: hidden;
+    font-weight: var(--weight3);
+    padding-bottom: 7px;
+    display: block;
 }
-
-.alarm-content__more-btn {
-    display: inline-block;
-    width: auto;
-    height: auto;
-    border: 1px solid var(--grey_600);
-    border-radius: 0.25em;
-    cursor: pointer;
-    padding: 0.25em 0.5em; 
-    transform: rotate(0deg); 
-    transform-origin: center;
-}
-*/
-
-/* .alarm-content__more-btn::before {
-    content: 'more';
-    display: inline;
-}
-
-.alarm-content__more-btn:checked::before {
-    content: 'X';
-}
-
-.alarm-content__more-btn:hover {
-    background-color: var(--grey_400);
-    cursor: pointer;
-}
-
-.alarm-description__content:has(+ .alarm-content__more-btn:checked) {
-    -webkit-line-clamp:unset
-  }
-  
-
-.alarm-time__container {
-    margin-left: 80px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--gutter);
-    width: 9%;
-}
-.alarm-time__container > span {
-    font-size: var(--caption);
-    color: var(--grey_600);
-}
-
-.more-btn__container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-} */

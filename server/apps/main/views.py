@@ -60,7 +60,7 @@ def profile(request):
         return redirect('/main/settings/')
     
     if target_user in current_user.followings.all():
-        follow_text='CANCEL'
+        follow_text='UNFOLLOW'
     else:
         follow_text='FOLLOW'
 
@@ -243,8 +243,8 @@ def follow(request):
 
     if buttonText == "FOLLOW":
         current_user.followings.add(target_user)
-        text="CANCEL"
-    elif buttonText == "CANCEL":
+        text="UNFOLLOW"
+    elif buttonText == "UNFOLLOW":
         current_user.followings.remove(target_user)
         text="FOLLOW"
 
@@ -442,7 +442,7 @@ def add_todo(request):
             value.save()
         
         #현재 user의 caregory 객체 가져오기
-        category = Category.objects.get(user=current_user)
+        category = Category.objects.filter(user=current_user)
 
         #투두 객체 생성
         Todo.objects.create(
