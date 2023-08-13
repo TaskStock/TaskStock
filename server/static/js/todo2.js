@@ -47,12 +47,14 @@ const add_todo = async(date_id) => {
     console.log(click_date);
 
     const selectElement = document.querySelector('#todo-add--select');
+    category_name=selectElement.value;
+    selectElement.value="";
     
     const data = { 
         content: inputVal, 
         level: parseInt(level), 
         date_id: click_date,
-        category: selectElement.value,
+        category: category_name,
         };
     if (inputVal !== '' && level !== '0'){
         const res = await fetch(url, {
@@ -67,7 +69,7 @@ const add_todo = async(date_id) => {
         level = '0';
         paintStar('0');
         document.querySelector('.todo-plus').classList.remove('active');
-        handleTodoResponse(todo_id, my_level, content, category_datas);
+        handleTodoResponse(todo_id, my_level, content, category_datas, category_name);
 
     }else if (inputVal === ''){
         document.querySelector(`.day${date_id}--todo .todo-add--input span`).style.color = '#ff0033';
@@ -76,7 +78,7 @@ const add_todo = async(date_id) => {
     } 
 }
 
-const handleTodoResponse = async(todo_id, level, content, category_datas) => {
+const handleTodoResponse = async(todo_id, level, content, category_datas, category_name) => {
     let paintedLevel = '';
     let emptyLevel = '';
     level = Number(level);
@@ -89,7 +91,10 @@ const handleTodoResponse = async(todo_id, level, content, category_datas) => {
 
     let category_html="";
     for (const c_name of category_datas) {
-        category_html+=`<option value='${c_name}'>${c_name}</option>`;
+        if(todo.category==c_name)
+            category_html+=`<option value='${c_name}' selected>${c_name}</option>`;
+        else
+            category_html+=`<option value='${c_name}'>${c_name}</option>`;
     }
 
     
@@ -129,7 +134,7 @@ const handleTodoResponse = async(todo_id, level, content, category_datas) => {
             <div class="todo-add--category">
                 <span>카테고리를 수정하세요</span>
                 <select class="todo-edit--select">
-                    <option value="" selected>None</option>
+                    <option value="">None</option>
                     ${category_html}
                 </select>
             </div>

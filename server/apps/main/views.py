@@ -315,42 +315,6 @@ def update_userinfo(request):
     
     return JsonResponse({"result": False, "error": "GET요청이 들어옴"})
 
-@csrf_exempt
-def click_date(request, pk):
-    #자바스크립트에서 날짜를 전달한다
-    #views.py에서 그 날짜를 받고 날짜에 해당하는 value가 존재하는지 확인한다.
-    #존재하면 -> value에 해당하는 todos를 보낸다
-    #존재하지 않으면 -> todos == ''
-    date_str = request.POST.get('date') #'8/21/2023'
-    month_date_year = date_str.split('/')
-    
-    current_user = request.user
-    #date_str을 date 자료형으로 변환
-    date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
-    
-    todos = []
-    try:
-        value = Value.objects.get(user=current_user,date=date_object)
-        todo_objects = Todo.objects.filter(value=value)
-        
-        for todo in todo_objects:
-            todo_data={
-                'date_id':todo.value.pk,
-                'content':todo.content,
-                'goal_check':todo.goal_check,
-                'id':todo.pk,
-                'level':todo.level,
-                'month':month_date_year[0],
-                'date':month_date_year[1],
-                'year':month_date_year[2],
-            }
-            todos.append(todo_data)
-            
-    except Value.DoesNotExist:
-        todos = []
-
-    return JsonResponse({'todos':todos})
-
 #8월 1일 접속, 8월 3일 접속 -> 8월 3일의 value가 8월 1일 value를 기반으로 만들어져
 #8월 1일 체크하면 -> 8월 3일 값의 변동은 다 반영이 됨
 #8월 2일을 add_todo하고 check_todo -> 8월 2일도 8월 1일의 값을 기반으로 만들어졌기 때문에 8월 3일과 초깃값이 같고, 충돌
@@ -402,13 +366,21 @@ def click_date(request):
                 'month':month_date_year[0],
                 'date':month_date_year[1],
                 'year':month_date_year[2],
+                'category':todo.category.name,
             }
             todos.append(todo_data)
             
     except Value.DoesNotExist:
         todos = []
 
-    return JsonResponse({'todos':todos})
+    categorys = Category.objects.all()
+
+    category_datas=[]
+
+    for tmp in categorys:
+        category_datas.append(tmp.name)
+
+    return JsonResponse({'todos':todos, 'category_datas':category_datas})
 """
 Todo 추가 하는 함수
 할 일 추가 버튼 누름 -> 새로운 Todo객체 생성(ajax로 구현할 예정) -> high, low 업데이트
