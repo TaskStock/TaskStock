@@ -29,5 +29,8 @@ urlpatterns = [
 
     # follow ajax
     path('follow/', follow), # /main/follow/
+
+    # group ajax
+    path('group/follow_group/', follow_group), # /main/group_ajax/
 ] 
 

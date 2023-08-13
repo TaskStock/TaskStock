@@ -119,6 +119,7 @@ def update_profile(request):
 
     return JsonResponse({"result": True})
 
+
 @csrf_exempt
 def change_password(request):
     current_password = request.POST.get("current-password")
@@ -690,16 +691,45 @@ def category(request):
 # group
 def group(request):
     current_user = request.user
-    group = Group.objects.get(name=current_user.my_group)
-    users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
-    context = {
-        'group': group,
-        'users': users,
-    }
-    return render(request, 'main/group.html', context)
+    if current_user.my_group is None:
+        return redirect('/main/')
+    else:
+        group = Group.objects.get(name=current_user.my_group)
+        users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
+        value_dic={}
+        for user in users:
+            value = get_value_for_date(user)
+            if value is None:
+                value_dic[user.name] = 0
+            else:
+                value_dic[user.name] = value.end
 
+        context = {
+            'group': group,
+            'users': users,
+            'value': value_dic,
+        }
+        return render(request, 'main/group.html', context)
+
+
+
+@csrf_exempt
 def follow_group(request):
-    pass
+    buttonText = request.POST.get("buttonText")
+    group = request.POST.get("group")
+    target_group = Group.objects.get(name=group)
+    current_user = request.user
+
+    if buttonText == "FOLLOW":
+        current_user.my_group = target_group
+        text="CANCEL"
+    elif buttonText == "CANCEL":
+        current_user.my_group = None
+        text="FOLLOW"
+
+    current_user.save()
+
+    return JsonResponse({"text": text})
 
 def create_group(request):
     pass

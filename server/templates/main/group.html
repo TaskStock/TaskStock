@@ -1,11 +1,101 @@
 {% extends '../base2.html' %} {% load static %}
 {%block page%}
 <main class="group-main">
-    <div>Group Page</div>
-    <div>{{group.name}}</div>
-    <div>{{group.create_user}}</div>
-    <div>{{group.price}}</div>
-    <div>{{users}}</div>
+    <div class="group-header">
+        <span>Group Page</span>
+    </div>
+    <div class="group-content">
+        <div class="group-content__info">
+            <div class="group-content__name">{{group.name}}</div>
+            <div>그룹장: {{group.create_user}}</div>
+            <div>가격: {{group.price}}</div>
+            <div class="add-button__container">
+                <form onsubmit="handleButtonClick(event)">
+                    {% csrf_token %}
+                    <input type="hidden" name="group" value="{{ group.name }}">
+                    <button type="submit" name="group-button" id="add-button">CANCEL</button>
+                </form>
+            </div>
+        </div>
+        <div class="group-content__list">
+            <ul>
+                {% for key, value in value.items %}
+                <li>
+                    <div>키: {{ key }}</div>
+                    <div>값: {{ value }}</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </main>
+
+<script>
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     var addButton = document.querySelector(".add-button");
+        
+    //     addButton.addEventListener("click", async function(event) {
+    //         event.preventDefault();
+            
+    //         var buttonText = addButton.value;
+    //         var groupName = "{{ group }}"
+    //         const url = "/main/group/follow_group/";
+    //         try {
+    //             var response = await fetch(url, {
+    //                 method: "POST",
+    //                 headers: {
+    //                     "Content-Type": "application/x-www-form-urlencoded",
+    //                 },
+    //                 body: JSON.stringify({
+    //                     "buttonText": buttonText,  // "FOLLOW" or "CANCEL
+    //                     "group": groupName,}),
+    //             });
+                
+    //             if (response.ok) {
+    //                 const {text:text} = await res.json();
+    //                 if (text === "CANCEL") {
+    //                     addButton.value = "FOLLOW";
+    //                 } else if (text === "FOLLOW") {
+    //                     addButton.value = "CANCEL";
+    //                 }
+    //             } else {
+    //                 throw new Error("Request failed with status: " + response.status);
+    //             }
+    //         } catch (error) {
+    //             alert("Error occurred while processing the request.");
+    //         }
+    //     });
+    // });
+
+
+
+    const handleButtonClick = async(event) => {
+        const addButton = document.querySelector("#add-button");
+        const group = document.querySelector(".group-content__name").textContent;
+        event.preventDefault();
+
+        const url = "/main/group/follow_group/";
+
+        const formData = new FormData(event.target);
+        formData.append("buttonText", addButton.textContent);
+        formData.append("group", group);
+        const res = await fetch(url, {
+            method: 'POST', 
+            headers: {},
+            body: formData,
+        })
+        const {text:text} = await res.json();
+        alert(text);
+        handleButtonText(text);
+    }
+    const handleButtonText = async(Text) => {
+        if (Text === "CANCEL") {
+            document.querySelector("#add-button").textContent = "FOLLOW";
+        } else if (Text === "FOLLOW") {
+            document.querySelector("#add-button").textContent = "CANCEL";
+        }
+    }
+
+</script>
 
 {% endblock %}
