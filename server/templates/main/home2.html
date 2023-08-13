@@ -97,6 +97,15 @@
                                     <div level="5"></div>
                                 </div>
                             </div>
+                            <div id="todo-add--category">
+                                <span>카테고리를 설정하세요</span>
+                                <select id="todo-add--select">
+                                    <option value="" selected>None</option>
+                                    {% for category in categorys %}
+                                    <option value="{{category.name}}">{{category.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                             <div class="todo-add--submit-btn" onclick="add_todo({{ date_id }})">완료</div>
 
                         </div>
@@ -176,6 +185,17 @@
                                     <div level="4"></div>
                                     <div level="5"></div>
                                 </div>
+                            </div>
+                            <div class="todo-edit--category">
+                                <span>카테고리를 수정하세요</span>
+                                <select class="todo-edit--select">
+                                    <option value="">None</option>
+                                    {% for category in categorys %}
+                                    <option value="{{category.name}}" {% if todo.category.name == category.name %} selected {% endif %}>
+                                        {{category.name}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="edit-btn--container">
                                 <div class="todo-edit--delete-btn" onclick="delete_todo({{todo.pk}})">삭제</div>

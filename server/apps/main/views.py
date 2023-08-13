@@ -271,6 +271,8 @@ def home(request):
         todos_sub_dict[todo.pk] = 5 - todo.level
     
     followings_len = current_user.followings.count()
+
+    categorys = Category.objects.all()
     
     context = {
         'user': current_user,
@@ -280,6 +282,7 @@ def home(request):
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
         'percent': value.percentage,
+        'categorys': categorys,
     }
     return render(request, 'main/home2.html', context)
 
@@ -311,42 +314,6 @@ def update_userinfo(request):
         return redirect('/main/settings/')
     
     return JsonResponse({"result": False, "error": "GET요청이 들어옴"})
-
-@csrf_exempt
-def click_date(request, pk):
-    #자바스크립트에서 날짜를 전달한다
-    #views.py에서 그 날짜를 받고 날짜에 해당하는 value가 존재하는지 확인한다.
-    #존재하면 -> value에 해당하는 todos를 보낸다
-    #존재하지 않으면 -> todos == ''
-    date_str = request.POST.get('date') #'8/21/2023'
-    month_date_year = date_str.split('/')
-    
-    current_user = request.user
-    #date_str을 date 자료형으로 변환
-    date_object = datetime.strptime(date_str, '%m/%d/%Y').date()
-    
-    todos = []
-    try:
-        value = Value.objects.get(user=current_user,date=date_object)
-        todo_objects = Todo.objects.filter(value=value)
-        
-        for todo in todo_objects:
-            todo_data={
-                'date_id':todo.value.pk,
-                'content':todo.content,
-                'goal_check':todo.goal_check,
-                'id':todo.pk,
-                'level':todo.level,
-                'month':month_date_year[0],
-                'date':month_date_year[1],
-                'year':month_date_year[2],
-            }
-            todos.append(todo_data)
-            
-    except Value.DoesNotExist:
-        todos = []
-
-    return JsonResponse({'todos':todos})
 
 #8월 1일 접속, 8월 3일 접속 -> 8월 3일의 value가 8월 1일 value를 기반으로 만들어져
 #8월 1일 체크하면 -> 8월 3일 값의 변동은 다 반영이 됨
@@ -399,13 +366,21 @@ def click_date(request):
                 'month':month_date_year[0],
                 'date':month_date_year[1],
                 'year':month_date_year[2],
+                'category':todo.category.name,
             }
             todos.append(todo_data)
             
     except Value.DoesNotExist:
         todos = []
 
-    return JsonResponse({'todos':todos})
+    categorys = Category.objects.all()
+
+    category_datas=[]
+
+    for tmp in categorys:
+        category_datas.append(tmp.name)
+
+    return JsonResponse({'todos':todos, 'category_datas':category_datas})
 """
 Todo 추가 하는 함수
 할 일 추가 버튼 누름 -> 새로운 Todo객체 생성(ajax로 구현할 예정) -> high, low 업데이트
@@ -417,6 +392,7 @@ def add_todo(request):
         content = req['content']
         my_level = req['level']
         date_str = req['date_id']
+        category_name = req['category']
         target_date = datetime.strptime(date_str, '%m/%d/%Y').date()
         
         #현재 user 객체 가져오기
@@ -444,9 +420,18 @@ def add_todo(request):
             value.save()
         
         #현재 user의 caregory 객체 가져오기
+        try:
+            category = Category.objects.get(name=category_name)
+        except ObjectDoesNotExist:
+            category = None
+
+        #edit todo 에서 카테고리 수정할 수 있도록 모든 카테고리 객체 전달
+        categorys = Category.objects.all()
+        category_datas=[]
+
+        for tmp in categorys:
+            category_datas.append(tmp.name)
         
-        # category = Category.objects.get(user=current_user)
-        category = None
 
         #투두 객체 생성
         Todo.objects.create(
@@ -468,7 +453,7 @@ def add_todo(request):
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
         
-        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content})
+        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content, 'category_datas':category_datas})
 """
 Todo 삭제 하는 함수 
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
@@ -508,6 +493,7 @@ def update_todo(request, pk):
         todo_id = req['todo_id']
         updated_level = int(req['curr_level'])
         updated_content = req['curr_content']
+        c_name = req['c_value']
         
         with transaction.atomic():
             todo = Todo.objects.get(pk=todo_id)
@@ -522,6 +508,13 @@ def update_todo(request, pk):
             #value의 high, low updated_level 반영해서 다시 넣기
             todo.value.high += updated_level * 1000
             todo.value.low -= updated_level * 1000
+
+            #category 설정
+            try:
+                category = Category.objects.get(name=c_name)
+                todo.category=category
+            except ObjectDoesNotExist:
+                todo.category=None
             
             todo.save()
             todo.value.save()

@@ -62,8 +62,8 @@ function load() {
                 headers: {},
                 body: formData,
             })
-            const {todos: todos} = await res.json();
-            handleDateResponse(todos);
+            const {todos: todos, category_datas: category_datas} = await res.json();
+            handleDateResponse(todos, category_datas);
 
         
         })
@@ -81,12 +81,19 @@ function load() {
   }
 }
 
-function handleDateResponse(todos){
+function handleDateResponse(todos, category_datas){
     const currentInput = document.querySelector('#todo-paint');
     currentInput.innerHTML = "";
     
-    if(todos.length > 0){
+    if(todos.length > 0){        
         for (const todo of todos){
+            let category_html="";
+            for (const c_name of category_datas) {
+                if(todo.category==c_name)
+                    category_html+=`<option value='${c_name}' selected>${c_name}</option>`;
+                else
+                    category_html+=`<option value='${c_name}'>${c_name}</option>`;
+            }
             let paintedLevel = '';
             let emptyLevel = '';
             todo.level = Number(todo.level);
@@ -127,6 +134,13 @@ function handleDateResponse(todos){
                             <div level="4"></div>
                             <div level="5"></div>
                         </div>
+                    </div>
+                    <div class="todo-add--category">
+                        <span>카테고리를 수정하세요</span>
+                        <select class="todo-edit--select">
+                            <option value="">None</option>
+                            ${category_html}
+                        </select>
                     </div>
                     <div class="edit-btn--container">
                         <div class="todo-edit--delete-btn" onclick="delete_todo(${todo.id})">삭제</div>
