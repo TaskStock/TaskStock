@@ -91,7 +91,7 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
 
     let category_html="";
     for (const c_name of category_datas) {
-        if(todo.category==c_name)
+        if(category_name==c_name)
             category_html+=`<option value='${c_name}' selected>${c_name}</option>`;
         else
             category_html+=`<option value='${c_name}'>${c_name}</option>`;
@@ -147,7 +147,6 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
     `;
     update_chart();
     has_unchecked_todos();
-  
 }
 
 
@@ -161,7 +160,7 @@ const edit_todo = (todo_id) => {
     document.querySelectorAll('.todo-item--edit').forEach(c => {
         c.classList.remove('active');
     })
-   
+
 
     // 열고 닫기
     const edit_container = document.querySelector(`.todo-item--edit-${todo_id}`);

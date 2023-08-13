@@ -478,7 +478,7 @@ def add_todo(request):
         
         # 현재 user의 caregory 객체 가져오기
         try:
-            category = Category.objects.get(name=category_name)
+            category = Category.objects.get(user=current_user, name=category_name)
         except ObjectDoesNotExist:
             category = None
 
@@ -571,7 +571,7 @@ def update_todo(request, pk):
 
             #category 설정
             try:
-                category = Category.objects.get(name=c_name)
+                category = Category.objects.get(user=request.user, name=c_name)
                 todo.category=category
             except ObjectDoesNotExist:
                 todo.category=None
