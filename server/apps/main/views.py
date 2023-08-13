@@ -220,6 +220,9 @@ def createValue(user, target_date=None):
     )
     return value
 
+# 이 곳에 그룹 주가 상승 함수를 추가할 생각
+
+
 @csrf_exempt
 def chart_ajax(request):
     day = int(request.POST.get("day"))
@@ -689,6 +692,7 @@ def category(request):
 
 
 # group
+# URL 뒤의 pk값을 가져와 해당 그룹의 페이지를 보여줌.
 def group(request,pk):
     group = Group.objects.get(id=pk)
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
@@ -700,11 +704,12 @@ def group(request,pk):
     else:
         am_I_creator = False
 
+    # 팔로잉 버튼을 내 그룹 유무에 따라 다르게 표시.
     if my_group == group.name:
         button_text = "CANCEL"
     else:
         button_text = "FOLLOW"    
-    # value_dic에 사용자 이름과 해당 사용자의 value를 넣어줍니다.
+    # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
     for user in users:
         value = get_value_for_date(user)
         if value is None:
@@ -778,5 +783,13 @@ def delete_group(request,pk):
         group = Group.objects.get(pk=pk)
         group.delete()
         
-        return redirect('/main/settings/')
+        return redirect('/main/')
     
+def add_price(user):
+    last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
+    my_group = user.my_group
+    if my_group is not None:
+        my_group.price += last_value.start - last_value.end
+        my_group.save()
+
+# search에 그룹 검색 기능 추가
