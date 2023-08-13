@@ -29,6 +29,13 @@ urlpatterns = [
 
     # follow ajax
     path('follow/', follow), # /main/follow/
+
+    # category ajax
+    path('create_category/', create_category), # /main/create_category/
+    path('update_category/', update_category), # /main/update_category/
+    path('delete_category/', delete_category), # /main/delete_category/
+    path('finish_category/', finish_category), # /main/finish_category/
+    path('click_category/', click_category), # /main/click_category/
     
     #시간대 저장 ajax
     path('set_timezone/', set_timezone), # /main/set_timezone/

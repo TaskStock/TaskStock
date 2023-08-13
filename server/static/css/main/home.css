@@ -281,7 +281,19 @@ main{
     padding: var(--gutter);
     margin-bottom: var(--gutter);
 }
-
+.dashboard--combo span:last-child{
+    /* animation: combo 1.5s ease-in-out; */
+    animation: none;
+    font-size: var(--heading3);
+}
+@keyframes combo {
+    0%, 100%{
+        font-size: var(--heading3);
+    }
+    50%{
+        font-size: 24px;
+    }
+}
 
 .price{
     display: grid;

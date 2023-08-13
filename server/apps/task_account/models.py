@@ -54,10 +54,11 @@ def user_created(sender, instance, created, **kwargs):
             low=50000,
             high=50000,
         )
+
         Category.objects.create(
             user=instance,
         )
-        print('회원가입 시간:', instance.date_joined)
+
 
 
 class Value(models.Model):
@@ -76,10 +77,13 @@ class Value(models.Model):
 
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='category_user')
+    name = models.CharField(max_length=30)
+    finish = models.BooleanField(default=False)
+    memory = models.TextField(null=True)
 
 class Todo(models.Model):
     value = models.ForeignKey(Value, on_delete=models.CASCADE, related_name='todo_value')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='todo_category', null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='todo_category', null=True)
     content = models.TextField()
     goal_check = models.BooleanField()
     level = models.IntegerField()

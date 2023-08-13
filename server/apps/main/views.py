@@ -90,7 +90,7 @@ def profile(request):
         return redirect('/main/settings/')
     
     if target_user in current_user.followings.all():
-        follow_text='CANCEL'
+        follow_text='UNFOLLOW'
     else:
         follow_text='FOLLOW'
 
@@ -277,8 +277,8 @@ def follow(request):
 
     if buttonText == "FOLLOW":
         current_user.followings.add(target_user)
-        text="CANCEL"
-    elif buttonText == "CANCEL":
+        text="UNFOLLOW"
+    elif buttonText == "UNFOLLOW":
         current_user.followings.remove(target_user)
         text="FOLLOW"
 
@@ -305,6 +305,8 @@ def home(request):
         todos_sub_dict[todo.pk] = 5 - todo.level
     
     followings_len = current_user.followings.count()
+
+    categorys = Category.objects.all()
     
     context = {
         'user': current_user,
@@ -314,6 +316,7 @@ def home(request):
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
         'percent': value.percentage,
+        'categorys': categorys,
     }
     return render(request, 'main/home2.html', context)
 
@@ -412,13 +415,22 @@ def click_date(request):
                 'month': local_datetime.month,
                 'date': local_datetime.day,
                 'year': local_datetime.year,
+                'category':todo.category.name,
+
             }
             todos.append(todo_data)
             
     except Value.DoesNotExist:
         todos = []
+        
+    categorys = Category.objects.all()
 
-    return JsonResponse({'todos': todos})
+    category_datas=[]
+
+    for tmp in categorys:
+        category_datas.append(tmp.name)
+
+    return JsonResponse({'todos':todos, 'category_datas':category_datas})
 
 """
 Todo 추가 하는 함수
@@ -431,10 +443,11 @@ def add_todo(request):
         content = req['content']
         my_level = req['level']
         date_str = req['date_id']
+        category_name = req['category']
         
         # 현재 user 객체 가져오기
         current_user = request.user
-        
+    
         # date_str을 사용자의 timezone을 고려해서 arrow로 변환
         target_arrow = arrow.get(date_str, 'M/D/YYYY', tzinfo=current_user.tzinfo).ceil('day')
         
@@ -464,8 +477,18 @@ def add_todo(request):
             value.save()
         
         # 현재 user의 caregory 객체 가져오기
-        category = Category.objects.get(user=current_user)
+        try:
+            category = Category.objects.get(name=category_name)
+        except ObjectDoesNotExist:
+            category = None
 
+        #edit todo 에서 카테고리 수정할 수 있도록 모든 카테고리 객체 전달
+        categorys = Category.objects.all()
+        category_datas=[]
+
+        for tmp in categorys:
+            category_datas.append(tmp.name)
+        
         # 투두 객체 생성
         Todo.objects.create(
             value=value,
@@ -484,8 +507,8 @@ def add_todo(request):
         value.low -= my_level * 1000
         value.save()
         
-        # 방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
-        return JsonResponse({'date_id': value.id, 'todo_id': todo_id, 'my_level': my_level, 'content': content})
+        #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
+        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content, 'category_datas':category_datas})
 """
 Todo 삭제 하는 함수 
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
@@ -513,9 +536,9 @@ def delete_todo(request, pk):
         todo.delete()
         
         #combo 변화 처리    
-        process_combo(current_user)
+        my_combo = process_combo(current_user)
     
-    return JsonResponse({'id':todo_id, 'd_id': value.id})
+    return JsonResponse({'my_combo': my_combo, 'id':todo_id, 'd_id': value.id})
 """
 Todo 업데이트 하는 함수
 content, level 업데이트 -> value high, low 업데이트
@@ -529,6 +552,7 @@ def update_todo(request, pk):
         todo_id = req['todo_id']
         updated_level = int(req['curr_level'])
         updated_content = req['curr_content']
+        c_name = req['c_value']
         
         with transaction.atomic():
             todo = Todo.objects.get(pk=todo_id)
@@ -544,6 +568,13 @@ def update_todo(request, pk):
             #value의 high, low updated_level 반영해서 다시 넣기
             todo.value.high += updated_level * 1000
             todo.value.low -= updated_level * 1000
+
+            #category 설정
+            try:
+                category = Category.objects.get(name=c_name)
+                todo.category=category
+            except ObjectDoesNotExist:
+                todo.category=None
             
             todo.save()
             todo.value.save()
@@ -587,9 +618,9 @@ def check_todo(request, pk):
         value.save()
             
         #combo변화 처리
-        process_combo(current_user)
+        my_combo = process_combo(current_user)
         todo_status = str(todo_status)
-        return JsonResponse({'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
+        return JsonResponse({'my_combo': my_combo, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
         
 
 
@@ -603,7 +634,7 @@ def arrow_to_date(arrow_obj):
 
 def values_for_chart(user, term):
     user_timezone = user.tzinfo
-    
+
     current_local_arrow = get_current_arrow(user_timezone)
     #local_date의 자정으로 만들기
     start_local_arrow = current_local_arrow.ceil('day')
@@ -617,11 +648,10 @@ def values_for_chart(user, term):
     
     dummy_candidate = [start_utc_arrow, next_utc_arrow]
     print('value_for_chart dummy_candidate:', dummy_candidate)
-    
     # DB에 존재하는 로컬 시간대 날짜들 가져오기
     range_values = Value.objects.filter(user=user, date__range=(start_utc_arrow.datetime, current_utc_arrow.datetime))
     value_datetimes =[value.date.date() for value in range_values]
-    
+
     #더미데이터 처리(start_utc_datetime.date()하고 그 다음날이 db에 없으면 create)
     for candidate in dummy_candidate:
         if candidate.datetime.date() not in value_datetimes:
@@ -640,8 +670,7 @@ def values_for_chart(user, term):
     values = Value.objects.filter(user=user, date__range=(start_utc_arrow.datetime, current_utc_arrow.datetime))
     print('start:', start_utc_arrow.datetime)
     print('current:', current_utc_arrow.datetime)
-    
-    
+
     dataset = [[arrow_to_date(utc_to_local(arrow.get(value.date), user_timezone)), value.start, value.high, value.low, value.end] for value in values]
     print(dataset)
     
@@ -678,7 +707,7 @@ def process_combo(user):
     user.combo = combo
     user.save()
         
-    return
+    return combo
 
 #---선우 작업---#
 
@@ -713,8 +742,113 @@ def alarm(request):
 
 # category
 def category(request):
-    return render(request, 'main/category.html')
+    current_user=request.user
+    finish_categorys = Category.objects.filter(user=current_user, finish=True)
+    not_finish_categorys = Category.objects.filter(user=current_user, finish=False)
 
+    ctx = {
+        'user': current_user,
+        'finish_categorys': finish_categorys,
+        'not_finish_categorys': not_finish_categorys,
+    }
+
+    return render(request, 'main/category.html', context=ctx)
+
+# category ajax
+@csrf_exempt
+def create_category(request):
+    input_name = request.POST.get('name')
+
+    error_text=""
+    if input_name=="":
+        success=False
+        error_text="이름을 입력해주세요."
+    else:
+        try:
+            category=Category.objects.get(name=input_name)
+            success=False
+            error_text="이미 존재하는 이름입니다."
+        except ObjectDoesNotExist:
+            success=True
+        
+    category_data={}
+    if success:
+        category = Category.objects.create(
+            user=request.user,
+            name=input_name,
+            finish=False,
+        )
+        category_data={
+            'name':category.name,
+            'pk':category.pk,
+        }
+
+    return JsonResponse({'success':success, 'category_data':category_data, 'error_text':error_text})
+
+@csrf_exempt
+def update_category(request):
+    name = request.POST.get('name')
+    pk = request.POST.get('pk')
+
+    update_category = Category.objects.get(pk=pk)
+    origin_name=update_category.name
+        
+    # category 이름이 겹치는지 확인
+    try:
+        category = Category.objects.get(name=name)
+        # 겹친 이름이 자기 자신이라면
+        if category.pk==int(pk):
+            raise ObjectDoesNotExist
+        error_text="이미 존재하는 이름입니다."
+    # 겹치지 않은 경우
+    except ObjectDoesNotExist:
+        
+        update_category.name=name
+        update_category.save()
+        error_text=""
+
+    return JsonResponse({'error_text':error_text, 'origin_name':origin_name,})
+
+@csrf_exempt
+def delete_category(request):
+    pk = request.POST.get('pk')
+        
+    category = Category.objects.get(pk=pk)
+
+    category.delete()
+
+    return JsonResponse({'success':True})
+
+@csrf_exempt
+def finish_category(request):
+    isChecked = request.POST.get('isChecked')
+    pk = request.POST.get('pk')
+
+    category = Category.objects.get(pk=pk)
+
+    name = category.name
+
+    if isChecked=='true':
+        category.finish=True
+    else:
+        category.finish=False
+
+    category.save()
+
+    return JsonResponse({'success':True, 'name':name})
+
+@csrf_exempt
+def click_category(request):
+    pk = request.POST.get('pk')
+    
+    category = Category.objects.get(pk=pk)
+
+    category_data={
+        'name':category.name,
+        'memory':category.memory,
+    }
+
+    return JsonResponse({'category_data':category_data})
 
 # group
 def group(request):
