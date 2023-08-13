@@ -1,6 +1,6 @@
 {% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
 <main>
- 
+
     <div class="main-left">
         <div class="price">
             <div class="price--taspi">
@@ -97,6 +97,15 @@
                                     <div level="5"></div>
                                 </div>
                             </div>
+                            <div id="todo-add--category">
+                                <span>카테고리를 설정하세요</span>
+                                <select id="todo-add--select">
+                                    <option value="" selected>None</option>
+                                    {% for category in categorys %}
+                                    <option value="{{category.name}}">{{category.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                             <div class="todo-add--submit-btn" onclick="add_todo({{ date_id }})">완료</div>
 
                         </div>
@@ -177,6 +186,17 @@
                                     <div level="5"></div>
                                 </div>
                             </div>
+                            <div class="todo-edit--category">
+                                <span>카테고리를 수정하세요</span>
+                                <select class="todo-edit--select">
+                                    <option value="">None</option>
+                                    {% for category in categorys %}
+                                    <option value="{{category.name}}" {% if todo.category.name == category.name %} selected {% endif %}>
+                                        {{category.name}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                             <div class="edit-btn--container">
                                 <div class="todo-edit--delete-btn" onclick="delete_todo({{todo.pk}})">삭제</div>
                                 <div class="todo-edit--submit-btn" onclick="update_todo({{todo.pk}})">완료</div>
@@ -198,7 +218,8 @@
 {% endblock %}
 
 {% block extra %}
-<script src="{% static 'js/candlestick.js' %}"></script>
+<script src="{% static 'js/time.js' %}"></script>
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
+<script src="{% static 'js/candlestick.js' %}"></script>
 {% endblock %}

@@ -18,6 +18,7 @@ class User(AbstractUser):
     introduce = models.CharField(max_length=50, null=True, blank=True)
     email_alarm = models.BooleanField(null=True, default=False)
     img = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
+    tzinfo = models.CharField(max_length=50, default='Asia/Seoul')
 
     # false = public, true = private
     hide = models.BooleanField(null=True, default=False)
@@ -48,16 +49,21 @@ def user_created(sender, instance, created, **kwargs):
             user=instance,
             date=instance.date_joined,
             percentage=0,
-            start=0,
+            start=50000,
             end=50000,
             low=50000,
             high=50000,
         )
 
+        Category.objects.create(
+            user=instance,
+        )
+
+
 
 class Value(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='value_user')
-    date = models.DateField()
+    date = models.DateTimeField()
     percentage = models.FloatField()
     start = models.IntegerField()
     end = models.IntegerField(null=True, default=0)
@@ -83,4 +89,4 @@ class Todo(models.Model):
     level = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
-    finish_time = models.DateTimeField(null=True)
+    finish_at = models.DateTimeField(null=True)

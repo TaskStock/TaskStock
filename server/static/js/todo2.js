@@ -45,12 +45,16 @@ const add_todo = async(date_id) => {
     // 달력에서 클릭한 날짜. 클릭 안했으면 오늘날짜 
     let click_date = clickedDayString(dayString);
     console.log(click_date);
-    
+
+    const selectElement = document.querySelector('#todo-add--select');
+    category_name=selectElement.value;
+    selectElement.value="";
     
     const data = { 
         content: inputVal, 
         level: parseInt(level), 
         date_id: click_date,
+        category: category_name,
         };
     if (inputVal !== '' && level !== '0'){
         const res = await fetch(url, {
@@ -60,12 +64,12 @@ const add_todo = async(date_id) => {
             },
             body: JSON.stringify(data),
         })
-        const {todo_id: todo_id, my_level: my_level, content: content} = await res.json();
+        const {todo_id: todo_id, my_level: my_level, content: content, category_datas: category_datas} = await res.json();
         document.querySelector(`.day${date_id}--todo input`).value = '';
         level = '0';
         paintStar('0');
         document.querySelector('.todo-plus').classList.remove('active');
-        handleTodoResponse(todo_id, my_level, content);
+        handleTodoResponse(todo_id, my_level, content, category_datas, category_name);
 
     }else if (inputVal === ''){
         document.querySelector(`.day${date_id}--todo .todo-add--input span`).style.color = '#ff0033';
@@ -74,7 +78,7 @@ const add_todo = async(date_id) => {
     } 
 }
 
-const handleTodoResponse = async(todo_id, level, content) => {
+const handleTodoResponse = async(todo_id, level, content, category_datas, category_name) => {
     let paintedLevel = '';
     let emptyLevel = '';
     level = Number(level);
@@ -84,6 +88,15 @@ const handleTodoResponse = async(todo_id, level, content) => {
     for(e = level + 1; e < 6; e++){
         emptyLevel += `<div level="${e}"></div>`;
     }
+
+    let category_html="";
+    for (const c_name of category_datas) {
+        if(todo.category==c_name)
+            category_html+=`<option value='${c_name}' selected>${c_name}</option>`;
+        else
+            category_html+=`<option value='${c_name}'>${c_name}</option>`;
+    }
+
     
     document.querySelector('.todo-paint').innerHTML += `
     <div class="todo-item todo-item-${todo_id}">
@@ -117,6 +130,13 @@ const handleTodoResponse = async(todo_id, level, content) => {
                     <div level="4"></div>
                     <div level="5"></div>
                 </div>
+            </div>
+            <div class="todo-add--category">
+                <span>카테고리를 수정하세요</span>
+                <select class="todo-edit--select">
+                    <option value="">None</option>
+                    ${category_html}
+                </select>
             </div>
             <div class="edit-btn--container">
                 <div class="todo-edit--delete-btn" onclick="delete_todo(${todo_id})">삭제</div>
@@ -208,6 +228,11 @@ const update_todo = async(todo_id) => {
     }
     const curr_content = content.value;
 
+    const category = edit_container.querySelector('.todo-edit--select');
+    c_value=category.value;
+    if(c_value==null)
+        c_value="";
+
     // ajax
     const url = `/main/update_todo/${todo_id}/`;
     const res = await fetch(url, {
@@ -215,7 +240,7 @@ const update_todo = async(todo_id) => {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({todo_id, curr_level, curr_content}),
+        body: JSON.stringify({todo_id, curr_level, curr_content, c_value}),
     })
     
     const {t_id: t_id, c_level: c_level, c_content: c_content} = await res.json();
