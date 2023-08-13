@@ -689,27 +689,31 @@ def category(request):
 
 
 # group
-def group(request):
-    current_user = request.user
-    if current_user.my_group is None:
-        return redirect('/main/')
-    else:
-        group = Group.objects.get(name=current_user.my_group)
-        users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
-        value_dic={}
-        for user in users:
-            value = get_value_for_date(user)
-            if value is None:
-                value_dic[user.name] = 0
-            else:
-                value_dic[user.name] = value.end
+def group(request,pk):
+    group = Group.objects.get(id=pk)
+    users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
+    value_dic={}
+    my_group = request.user.my_group
 
-        context = {
-            'group': group,
-            'users': users,
-            'value': value_dic,
-        }
-        return render(request, 'main/group.html', context)
+    if my_group == group.name:
+        button_text = "CANCEL"
+    else:
+        button_text = "FOLLOW"    
+    # value_dic에 사용자 이름과 해당 사용자의 value를 넣어줍니다.
+    for user in users:
+        value = get_value_for_date(user)
+        if value is None:
+            value_dic[user.name] = 0
+        else:
+            value_dic[user.name] = value.end
+
+    context = {
+        'group': group,
+        'users': users,
+        'value': value_dic,
+        'button_text': button_text,
+    }
+    return render(request, 'main/group.html', context)
 
 
 
