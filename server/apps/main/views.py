@@ -794,3 +794,42 @@ def add_price(user):
         my_group.save()
 
 # search에 그룹 검색 기능 추가
+# 그룹에 멤버가 0명이라면 삭제하기
+
+# group search에 관한 함수
+def search_group(request):
+    search_content = request.GET.get('search_content','')
+    groups = Group.objects.all()
+    filtered_groups = groups
+    if search_content:
+        filtered_users = Group.objects.all().filter(name__contains=search_content)
+
+    ctx = {
+        'groups': groups,
+        'filtered_groups': filtered_groups,
+    }
+
+    return render(request, 'main/search_group.html',context=ctx)
+
+
+@csrf_exempt
+def search_group_ajax(request):
+    search_content = request.POST.get("text")
+
+    if search_content is not None:
+        find_groups = Group.objects.filter(name__contains=search_content)
+    else:
+        find_groups = Group.objects.all()
+
+    groups=[]
+
+    for group in find_groups:
+        group_data={
+            "name":group.name,
+            "price":group.price,
+            "create_user":group.create_user,
+            # 추후 필요한 필드 추가
+        }
+        groups.append(group_data)
+
+    return JsonResponse({"groups": groups})
