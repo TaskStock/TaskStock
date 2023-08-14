@@ -984,16 +984,10 @@ def delete_group(request,pk):
 
 # group search에 관한 함수
 def search_group(request):
-    search_content = request.GET.get('search_content','')
     groups = Group.objects.all().order_by('-price')
     currentu_user = request.user
     filtered_groups = groups
     my_group = currentu_user.my_group
-
-    # 검색 필터 부분
-    if search_content:
-        filtered_users = Group.objects.all().filter(name__contains=search_content)
-
 
 
     ctx = {
@@ -1007,10 +1001,10 @@ def search_group(request):
 
 @csrf_exempt
 def search_group_ajax(request):
-    search_content = request.POST.get("text")
+    search_contents = request.POST.get("textContent")
 
-    if search_content is not None:
-        find_groups = Group.objects.filter(name__contains=search_content)
+    if search_contents is not None:
+        find_groups = Group.objects.filter(name__contains=search_contents)
     else:
         find_groups = Group.objects.all()
 

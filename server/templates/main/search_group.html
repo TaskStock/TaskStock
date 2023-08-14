@@ -6,15 +6,15 @@
 <main class="search-main">
     <div class="search-form-container">
         <form action="" class="search-form">
-            <input type="text" placeholder="Search" name="search_content" id="search_content" autofocus>
+            <input type="text" placeholder="Search" name="search-group_content" id="search-group_content" autofocus>
             <button type="submit"><i class="gg-search"></i></button>
         </form>
     </div>
     <div class="search-container">
-        <div id="live-chart" class="live-chart">
+        <div id="live-group-chart" class="live-group-chart">
             <form onsubmit="handleCreateButtonClick(event)" class="create-form">
                 {% csrf_token %}
-                <input type="text" name="group-create-inpput"  id="create-input">
+                <input type="text" name="group-create-input"  id="create-input">
                 <button type="submit" name="group-create-button" id="create-button">Create</button>
             </form>
             <div class="search-result">
@@ -93,7 +93,7 @@
             <div class="search-label">
                 <h3>검색 결과</h3>
             </div>
-            <div class="search-result Scroll" id="search-users__result-container">
+            <div class="search-result Scroll" id="search-groups__result-container">
                 {% for filtered_group in filtered_groups %}
                 <a href="/main/group/{{filtered_group.pk}}/">
                     <div class="search-result__container">
@@ -132,5 +132,7 @@
 {% endblock %}
 
 {% block extra %}
+
+
 
 {% endblock %}

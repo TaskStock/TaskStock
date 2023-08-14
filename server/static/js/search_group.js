@@ -1,18 +1,19 @@
 // 검색 창에 입력할 때마다 ajax로 유저 목록
 document.addEventListener("DOMContentLoaded", function () {
-  const textarea = document.querySelector("#search_content");
+  const textInput = document.querySelector("#search-group_content");
 
-  textarea.addEventListener("input", function () {
-    const liveChartInput = document.querySelector("#live-chart");
-    if (textarea.value == "") liveChartInput.classList.remove("displayNone");
-    else liveChartInput.classList.add("displayNone");
-    searchAjax(textarea.value);
+  textInput.addEventListener("input", function () {
+    const liveGroupChartInput = document.querySelector("#live-group-chart");
+    if (textInput.value == "")
+      liveGroupChartInput.classList.remove("displayNone");
+    else liveGroupChartInput.classList.add("displayNone");
+    searchGroupAjax(textInput.value);
   });
 });
 
-const searchAjax = async (text) => {
+const searchGroupAjax = async (text) => {
   const formData = new FormData();
-  formData.append("text", text);
+  formData.append("textContent", text);
 
   const url = "/main/group/search_group/ajax/";
   const res = await fetch(url, {
@@ -21,11 +22,11 @@ const searchAjax = async (text) => {
     body: formData,
   });
   const { groups } = await res.json();
-  showUserList(groups);
+  showGroupsList(groups);
 };
-const showUserList = (groups) => {
+const showGroupsList = (groups) => {
   const currentInput = document.querySelector(
-    "#search-users__result-container"
+    "#search-groups__result-container"
   );
   currentInput.innerHTML = "";
 
