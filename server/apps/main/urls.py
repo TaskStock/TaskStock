@@ -39,5 +39,8 @@ urlpatterns = [
     
     #시간대 저장 ajax
     path('set_timezone/', set_timezone), # /main/set_timezone/
+    
+    #celery 비동기 처리 관련 url
+    path('celery_test/', celery_test)   #/main/celery_test/
 ] 
 

@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -40,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'server.apps.task_account',
     'server.apps.main',
+    "django_celery_beat",
+    "django_celery_results",
 
     # 소셜로그인(allauth)
     'django.contrib.sites',
@@ -207,5 +211,18 @@ EMAIL_USE_SSL = False
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+#Celery 설정
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONFIG_DIR = os.path.join(ROOT_DIR, 'config')
+sys.path.append(CONFIG_DIR)
+
+from server.apps.main import tasks
+
+CELERY_IMPORTS = (tasks,)
+
 
 

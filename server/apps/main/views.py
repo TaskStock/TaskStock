@@ -709,6 +709,13 @@ def process_combo(user):
         
     return combo
 
+from .tasks import test_task
+
+def celery_test():
+    test_task(2, 5)
+    print('celery is running')
+
+
 #---선우 작업---#
 
 def search(request):
