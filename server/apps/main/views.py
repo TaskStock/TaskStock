@@ -725,6 +725,7 @@ def group(request,pk):
         'value': value_dic,
         'button_text': button_text,
         'am_I_creator': am_I_creator,
+        'users_length': len(users),
     }
     return render(request, 'main/group.html', context)
 
@@ -736,6 +737,7 @@ def follow_group(request):
     group = request.POST.get("group")
     target_group = Group.objects.get(name=group)
     current_user = request.user
+    text="오류"
 
     if buttonText == "FOLLOW":
         current_user.my_group = target_group
@@ -805,8 +807,13 @@ def search_group(request):
     groups = Group.objects.all()
     currentu_user = request.user
     filtered_groups = groups
+    my_group = currentu_user.my_group
+
+    # 검색 필터 부분
     if search_content:
         filtered_users = Group.objects.all().filter(name__contains=search_content)
+
+
 
     ctx = {
         'groups': groups,

@@ -1,3 +1,5 @@
+// follow부분
+
 const handleButtonClick = async (event) => {
   const addButton = document.querySelector("#add-button");
   const group = document.querySelector(".group-content__name").textContent;
@@ -14,7 +16,7 @@ const handleButtonClick = async (event) => {
     body: formData,
   });
   const { text: text } = await res.json();
-  handleButtonText(text);
+  handleFollowButtonText(text);
 };
 const handleButtonText = async (Text) => {
   alert(Text);
@@ -22,34 +24,6 @@ const handleButtonText = async (Text) => {
     document.querySelector("#add-button").textContent = "CANCEL";
   } else if (Text === "FOLLOW") {
     document.querySelector("#add-button").textContent = "FOLLOW";
-  }
-};
-
-// create 부분
-
-const handleCreateButtonClick = async (event) => {
-  event.preventDefault();
-
-  const input_content = document.querySelector("#create-input").value;
-  console.log(input_content);
-  const url = "/main/group/create_group/";
-
-  const formData = new FormData(event.target);
-  formData.append("name", input_content);
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {},
-    body: formData,
-  });
-  const { result: result } = await res.json();
-  handleCreateResult(result);
-};
-
-const handleCreateResult = async (result) => {
-  if (result == "Exist") {
-    alert("그룹은 1개만 가능합니다.");
-  } else {
-    alert("그룹이 생성되었습니다.");
   }
 };
 

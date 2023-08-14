@@ -9,6 +9,7 @@
             <div class="group-content__name">{{group.name}}</div>
             <span class="group-content__text">그룹장: {{group.create_user}}</span>
             <span class="group-content__text">가격: {{group.price}}</span>
+            <span class="group-content__text">그룹원: {{users_length}}</span>
             <div class="add-button__container">
                 <form onsubmit="handleButtonClick(event)">
                     {% csrf_token %}
@@ -18,11 +19,6 @@
             </div>
         </div>
         <div class="group-content__form">
-            <form onsubmit="handleCreateButtonClick(event)" class="create-form">
-                {% csrf_token %}
-                <input type="text" name="group-create-inpput"  id="create-input">
-                <button type="submit" name="group-create-button" id="create-button">Create</button>
-            </form>
             {% if am_I_creator %}
                 <form onsubmit="handleUpdateButtonClick(event)">
                     {% csrf_token %}
