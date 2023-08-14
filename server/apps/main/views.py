@@ -805,7 +805,7 @@ def add_price(user):
 # group search에 관한 함수
 def search_group(request):
     search_content = request.GET.get('search_content','')
-    groups = Group.objects.all()
+    groups = Group.objects.all().order_by('-price')
     currentu_user = request.user
     filtered_groups = groups
     my_group = currentu_user.my_group
