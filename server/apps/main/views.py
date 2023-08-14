@@ -875,6 +875,7 @@ def group(request,pk):
     value_dic={}
     my_group = request.user.my_group
     current_user = request.user
+    my_value = get_value_for_date(current_user)
 
     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
     if group.create_user == request.user.name:
@@ -895,6 +896,7 @@ def group(request,pk):
         else:
             value_dic[user.name] = value.end
 
+
     context = {
         'group': group,
         'users': users,
@@ -903,6 +905,7 @@ def group(request,pk):
         'am_I_creator': am_I_creator,
         'users_length': len(users),
         'current_user': current_user,
+        'my_value': my_value,
     }
     return render(request, 'main/group.html', context)
 
