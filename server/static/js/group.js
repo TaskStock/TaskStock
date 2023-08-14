@@ -23,8 +23,8 @@ const handleButtonClick = async (event, name, price) => {
 };
 
 const handleButtonText = async (Text, id_name, price, name) => {
-  if (Text === "CANCEL") {
-    document.querySelector("#add-button").textContent = "CANCEL";
+  if (Text === "DELETE GROUP") {
+    document.querySelector("#add-button").textContent = "DELETE GROUP";
 
     // 리스트에 사용자 추가
     const ul = document.querySelector(".group-content__ul");
@@ -37,8 +37,8 @@ const handleButtonText = async (Text, id_name, price, name) => {
 
     group_member = document.getElementById("group-member");
     group_member = parseInt(group_member.textContent) - 1;
-  } else if (Text === "FOLLOW") {
-    document.querySelector("#add-button").textContent = "FOLLOW";
+  } else if (Text === "ADD GROUP") {
+    document.querySelector("#add-button").textContent = "ADD GROUP";
 
     // 리스트에서 사용자 삭제
     document.getElementById(id_name).remove();

@@ -39,29 +39,30 @@ const showUserList = (groups) => {
       atagInput = document.createElement("a");
       atagInput.href = `/main/group/${group.pk}/`;
 
-      const addButtonContent = group.name == my_group ? "CANCEL" : "FOLLOW";
+      const addButtonContent =
+        group.name == my_group ? "DELETE GROUP" : "ADD GROUP";
 
       atagInput.innerHTML = `
-                <div class="search-result__container">
-                        <div class="search-result__right--container">
-                            <div class="friend-info--pic"></div>
-                            <div class="search-result__name-container">
-                                <h2>${group.name}</h2>
-                                <p>${group.price}</p>
-                            </div>
-                        </div>
-                        <div class="search-result__right-container">
-                            <div class="search-result__info">
-                                <div class="search-result__right-upper-container">
-                                    <form onsubmit="handleFollowButtonClick(event)">
-                                        <input type="hidden" name="group" value="${group.name}">
-                                        <button type="submit" name="group-button" class="add-button">${addButtonContent}</button>
-                                    </form>
-                                </div>
-                                <p>${group.create_user}</p>
-                            </div>                           
-                        </div>    
-                    </div>
+<div class="search-result__container">
+        <div class="search-result__right--container">
+            <div class="friend-info--pic"></div>
+            <div class="search-result__name-container">
+                <h2>${group.name}</h2>
+                <p>${group.price}</p>
+            </div>
+        </div>
+        <div class="search-result__right-container">
+            <div class="search-result__info">
+                <div class="search-result__right-upper-container">
+                    <form onsubmit="handleFollowButtonClick(event)">
+                        <input type="hidden" name="group" value="${group.name}">
+                        <button type="submit" name="group-button" class="add-button">${addButtonContent}</button>
+                    </form>
+                </div>
+                <p>${group.create_user}</p>
+            </div>                           
+        </div>    
+    </div>
                 `;
       currentInput.appendChild(atagInput);
     }
@@ -130,8 +131,8 @@ const handleFollowButtonText = async (
   event
 ) => {
   const addButton = event.target.querySelector("[name=group-button]");
-  if (text === "CANCEL") {
-    addButton.textContent = "CANCEL";
+  if (text === "DELETE GROUP") {
+    addButton.textContent = "DELETE GROUP";
     document.querySelector(
       ".my-group__container"
     ).innerHTML = `<a href="/main/group/${pk}/">
@@ -148,7 +149,7 @@ const handleFollowButtonText = async (
                 <div class="search-result__right-upper-container">
                     <form onsubmit="handleFollowButtonClick(event)">
                         <input type="hidden" name="group" value="${name}">
-                        <button type="submit" name="group-button" class="add-button">CANCEL</button>
+                        <button type="submit" name="group-button" class="add-button">DELETE GROUP</button>
                     </form>
                 </div>
                 <p>${create_user}</p>
@@ -157,8 +158,8 @@ const handleFollowButtonText = async (
         </div>    
     </div>
 </a>`;
-  } else if (text === "FOLLOW") {
-    addButton.textContent = "FOLLOW";
+  } else if (text === "ADD GROUP") {
+    addButton.textContent = "ADD GROUP";
     document.querySelector(".my-group__container").innerHTML = `
     <span>가입 그룹이 없습니다.</span>
     `;

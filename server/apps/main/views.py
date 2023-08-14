@@ -252,7 +252,7 @@ def createValue(user, target_arrow=None):
         low=low,
         high=high,
     )
-    add_price(user)
+    # add_price(user)
     return value
 
 # 이 곳에 그룹 주가 상승 함수를 추가할 생각
@@ -884,9 +884,9 @@ def group(request,pk):
 
     # 팔로잉 버튼을 내 그룹 유무에 따라 다르게 표시.
     if my_group == group:
-        button_text = "CANCEL"
+        button_text ="DELETE GROUP"
     else:
-        button_text = "FOLLOW"    
+        button_text = "ADD GROUP"    
     # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
     for user in users:
         value = get_value_for_date(user)
@@ -916,12 +916,12 @@ def follow_group(request):
     current_user = request.user
     text="오류"
 
-    if buttonText == "FOLLOW":
+    if buttonText == "ADD GROUP":
         current_user.my_group = target_group
-        text="CANCEL"
-    elif buttonText == "CANCEL":
+        text="DELETE GROUP"
+    elif buttonText =="DELETE GROUP":
         current_user.my_group = None
-        text="FOLLOW"
+        text="ADD GROUP"
 
     current_user.save()
 
@@ -967,14 +967,14 @@ def delete_group(request,pk):
         
         return redirect('/main/')
     
-def add_price(user):
-    last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
-    my_group = user.my_group
-    if my_group is not None:
-        my_group.price += last_value.start - last_value.end
-        my_group.save()
+# def add_price(user):
+#     last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
+#     my_group = user.my_group
+#     if my_group is not None:
+#         my_group.price += last_value.start - last_value.end
+#         my_group.save()
 
-    return my_group.price
+#     return my_group.price
 
 # search에 그룹 검색 기능 추가
 # 그룹에 멤버가 0명이라면 삭제하기
