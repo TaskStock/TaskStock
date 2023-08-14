@@ -128,9 +128,6 @@
     {% block page %}
     {% endblock %}
 
-    {% block extra %}
-    {% endblock %}
-    
     <script>
 
         document.addEventListener("DOMContentLoaded", function(){
@@ -230,6 +227,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{% static 'js/heatmap.js' %}"></script>    
     
-    
+    {% block extra %}
+    {% endblock %}
 </body>
 </html>
