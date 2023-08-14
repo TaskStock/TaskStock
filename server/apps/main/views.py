@@ -411,6 +411,12 @@ def click_date(request):
         for todo in todo_objects:
             # target_user의 timezone을 기반으로 utc datetime을 로컬 datetime으로 변환
             local_datetime = utc_to_local(local_arrow_object, target_user.tzinfo)
+            category_object = todo.category
+            if category_object == None:
+                category_name = ''
+            else:
+                category_name = category_object.name
+
             todo_data = {
                 'date_id': todo.value.pk,
                 'content': todo.content,
@@ -420,7 +426,7 @@ def click_date(request):
                 'month': local_datetime.month,
                 'date': local_datetime.day,
                 'year': local_datetime.year,
-                'category':todo.category.name,
+                'category':category_name,
 
             }
             todos.append(todo_data)

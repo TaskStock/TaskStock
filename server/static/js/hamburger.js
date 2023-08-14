@@ -10,7 +10,7 @@ document.addEventListener('click', (event) => {
     // 클릭된 요소가 hamburger contents 내부에 속하는지 확인
     let clickedInsideEditContainer = false;
     
-    if (contents.contains(event.target) || event.target.classList.contains('hamburger')) {
+    if (contents.contains(event.target) || event.target.parentNode.classList.contains('hamburger') || event.target.classList.contains('hamburger')) {
         clickedInsideEditContainer = true;
     }
 
@@ -20,6 +20,18 @@ document.addEventListener('click', (event) => {
     }
 });
 
+//  mobile hamburger
+const left_section = document.querySelector('section');
+const tb_section = document.querySelector('#tb-section');
+
+document.querySelector('#hamburger-tb').addEventListener('click', () => {
+    left_section.style.left = '-350px';
+    
+})
+document.querySelector('#tb-hamburger').addEventListener('click', () => {
+    left_section.style.left = '0';    
+    tb_section.style.left = '-70px';
+})
 
 // dark mode toggle
 const bodyEl = document.querySelector('body');

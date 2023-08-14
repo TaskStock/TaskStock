@@ -149,7 +149,20 @@
 #category-finish-list > h2{
     color: var(--checked-border);
     padding-bottom: var(--gutter);
+    font-size: var(--body1);
+    font-weight: var(--weight3);
 }
+#category-not-finish-list #cnff-h2,
+#category-finish-list #cff-h2,
+#category-detail-container h2{
+    font-size: var(--body2);
+    font-weight: var(--weight1);
+    text-align: center;
+}
+#category-detail-container h2{
+    margin: auto 0;
+}
+#category-not-finish-list #cnff-h2,
 #category-finish-list > h2{
     padding-top: var(--gutter);
 }

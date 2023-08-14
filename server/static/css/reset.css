@@ -7,8 +7,8 @@
 
 /* JSDelivr */
 @import url("https://cdn.jsdelivr.net/npm/css.gg/icons/icons.css");
-html { font-size: 62.5%; }
-html,
+html { font-size: 62.5% !important; }
+
 body,
 div,
 span,
