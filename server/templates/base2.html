@@ -29,6 +29,10 @@
     <title>TASKSTOCK</title>
 </head>
 <body>
+    <!-- 가정 먼저 실행되는 스크립트, 전역 변수 설정 -->
+    <script>
+        let global_chart_target_username="";
+    </script>
     <section>
         <header>
             <a href="/main/">
@@ -128,9 +132,6 @@
     {% block page %}
     {% endblock %}
 
-    {% block extra %}
-    {% endblock %}
-    
     <script>
 
         document.addEventListener("DOMContentLoaded", function(){
@@ -230,6 +231,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{% static 'js/heatmap.js' %}"></script>    
     
-    
+    {% block extra %}
+    {% endblock %}
 </body>
 </html>
