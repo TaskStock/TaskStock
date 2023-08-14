@@ -46,7 +46,7 @@
         </div>
         
         <!-- 검색 결과 -->
-        <div class="search-users">
+        <div id="search-users" class="displayNone">
             <div class="search-label">
                 <h3>검색 결과</h3>
             </div>
@@ -87,10 +87,15 @@
 
         textarea.addEventListener("input", function(){
             const liveChartInput = document.querySelector('#live-chart');
-            if(textarea.value=="")
+            const searchResultInput = document.querySelector('#search-users');
+            if(textarea.value==""){
                 liveChartInput.classList.remove('displayNone');
-            else
+                searchResultInput.classList.add('displayNone');
+            }
+            else{
                 liveChartInput.classList.add('displayNone');
+                searchResultInput.classList.remove('displayNone');
+            }
             searchAjax(textarea.value);
         });
     });
