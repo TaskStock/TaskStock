@@ -46,12 +46,14 @@ def find_password(request):
         password_check=request.POST.get('password-check')
         username=request.POST.get('username')
 
-        if password==password_check:
+        if password=="":
+            return JsonResponse({"error_text": "변경할 비밀번호를 입력해주세요.", "redirect": ''})
+        elif password==password_check:
             user=User.objects.get(username=username)
             user.set_password(password)
-            return JsonResponse({"success": True, "redirect": '/login/'})
+            return JsonResponse({"error_text": "", "redirect": '/login/'})
         else:
-            return JsonResponse({"success": False, "redirect": ''})
+            return JsonResponse({"error_text": "비밀번호가 일치하지 않습니다. 다시 입력해 주세요.", "redirect": ''})
 
 
     context = {

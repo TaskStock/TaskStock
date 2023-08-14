@@ -1,6 +1,9 @@
 {% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
 <main>
- 
+    <!-- 가정 먼저 실행되는 스크립트, 전역 변수 설정 -->
+    <script>
+        let global_chart_target_username="";
+    </script>
     <div class="main-left">
         <div class="price">
             <div class="price--taspi">
@@ -23,11 +26,6 @@
         </div>
         <div id="chart"></div>
         <div class="chart-btn--container">
-            <!-- <div id="one_week" class="chart-btn active chart-week">1 week</div>
-            <div id="one_month" class="chart-btn chart-month">1 month</div>
-            <div id="three_month" class="chart-btn chart-3month">3 months</div>
-            <div id="six_month" class="chart-btn chart-6month">6 months</div>
-            <div id="one_year" class="chart-btn chart-year">1 year</div> -->
             <form>
                 <label>
                     <input type="radio" name="chart_period" value="7" id="one_week" checked>
@@ -48,27 +46,31 @@
                 <label>
                     <input type="radio" name="chart_period" value="365" id="one_year">
                     <div class="chart-btn">1 year</div>
-                </label>
-                
+                </label>   
             </form>
         </div>
         <div class="dashboard">
             <div id="username_save" style="display:none;">{{user.username}}</div>
+            <script>
+                const username = document.querySelector("#username_save");
+                if(username==null){
+                    global_chart_target_username="";
+                }else{
+                    global_chart_target_username=username.textContent;
+                }
+            </script>
             <div class="dashboard--combo">
                 <span>Combo</span>
-                <span>{{ user.combo }}</span>
+                <span>🔥 {{ user.combo }}</span>
             </div>
             <div class="dashboard--completed">
                 <span>Completed Todos</span>
-                <span>56</span>
+                <span>✔︎ 56</span>
             </div>
             <div class="dashboard--badge">
                 <span>Badge</span>
                 <span></span>
             </div>
-            
-            
-            
         </div>
     </div>
     <div class="main-right">
@@ -77,7 +79,7 @@
                 <div class="cal--header">
                     <div id="monthDisplay">
                         <div class="monthDisplay--month"></div>
-                        <!-- <div class="monthDisplay--year"></div> -->
+                        <div class="monthDisplay--year" style="display: none;"></div>
                     </div>
                     <div class="monthControl">
                         <button id="nextButton"><i class="fa-solid fa-chevron-up"></i></button>
@@ -105,6 +107,15 @@
                                     <div level="4"></div>
                                     <div level="5"></div>
                                 </div>
+                            </div>
+                            <div id="todo-add--category">
+                                <span>카테고리를 설정하세요</span>
+                                <select id="todo-add--select">
+                                    <option value="" selected>None</option>
+                                    {% for category in categorys %}
+                                    <option value="{{category.name}}">{{category.name}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="todo-add--submit-btn" onclick="add_todo({{ date_id }})">완료</div>
 
@@ -186,6 +197,17 @@
                                     <div level="5"></div>
                                 </div>
                             </div>
+                            <div class="todo-edit--category">
+                                <span>카테고리를 수정하세요</span>
+                                <select class="todo-edit--select">
+                                    <option value="">None</option>
+                                    {% for category in categorys %}
+                                    <option value="{{category.name}}" {% if todo.category.name == category.name %} selected {% endif %}>
+                                        {{category.name}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                             <div class="edit-btn--container">
                                 <div class="todo-edit--delete-btn" onclick="delete_todo({{todo.pk}})">삭제</div>
                                 <div class="todo-edit--submit-btn" onclick="update_todo({{todo.pk}})">완료</div>
@@ -207,7 +229,14 @@
 {% endblock %}
 
 {% block extra %}
+<script>
+    // home2를 랜더링했을 때 가장 먼제 실행하는 스크립트
+    document.addEventListener("DOMContentLoaded", function(){
+        
+    });
+</script>
+<script src="{% static 'js/candlestick.js' %}"></script>
+<script src="{% static 'js/time.js' %}"></script>
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
-<script src="{% static 'js/candlestick.js' %}"></script>
 {% endblock %}

@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static 'img/favicon.svg' %}">
     <!-- font : pretendard -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <!-- icon : css.gg -->
@@ -20,10 +22,12 @@
     <link rel="stylesheet" href="{% static 'css/main/calendar.css' %}">
     <link rel="stylesheet" href="{% static 'css/main/alarm.css' %}">
     <link rel="stylesheet" href="{% static 'css/main/group.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main/category.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main/follow.css' %}">
     <!-- <link rel="stylesheet" href="{% static 'css/chart.css' %}"> -->
     
     
-    <title>TaskStock</title>
+    <title>TASKSTOCK</title>
 </head>
 <body>
     <section>
@@ -125,9 +129,6 @@
     {% block page %}
     {% endblock %}
 
-    {% block extra %}
-    {% endblock %}
-    
     <script>
 
         document.addEventListener("DOMContentLoaded", function(){
@@ -230,6 +231,7 @@
     <script src="{% static 'js/search_group.js' %}"></script>
 
     
-    
+    {% block extra %}
+    {% endblock %}
 </body>
 </html>

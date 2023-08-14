@@ -37,5 +37,17 @@ urlpatterns = [
     path('group/delete_group/<int:pk>/', delete_group), # /main/delete_group/
     path('group/update_group/', update_group), # /main/update_group/
     path('group/search_group/ajax/', search_group_ajax), # /main/invite_group/
+
+    # category ajax
+    path('create_category/', create_category), # /main/create_category/
+    path('update_category/', update_category), # /main/update_category/
+    path('delete_category/', delete_category), # /main/delete_category/
+    path('finish_category/', finish_category), # /main/finish_category/
+    path('click_category/', click_category), # /main/click_category/
+    path('update_memory/', update_memory), # /main/update_memory/
+    
+    #시간대 저장 ajax
+    path('set_timezone/', set_timezone), # /main/set_timezone/
+
 ] 
 

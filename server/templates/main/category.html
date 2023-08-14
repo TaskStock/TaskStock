@@ -1,7 +1,368 @@
 {% extends '../base2.html' %} {% load static %}
 {%block page%}
 <main class="group-category">
-    <div>Category Page</div>
+    <div class="category-header">
+        <h1>Project</h1>
+        <i class="gg-info"></i>
+    </div>
+    <div id="category-content">
+        <div id="category-container">
+            <button onclick="create_category();"><i class="fa-solid fa-plus"></i></button>
+            
+            <div id="create_category" class="inactive">
+                <form onsubmit="add_category(event)">
+                    {% csrf_token %}    
+                    <label for="name">프로젝트 이름을 입력하세요</label>                    
+                    <input type="text" placeholder="졸업 프로젝트" id="name" name="name">
+                    <div id="error-message-category" style="color: var(--red_error);"></div>
+                    <button type="submit">만들기</button>
+                </form>
+            </div>
+            <div id="category-not-finish-list">
+                <h2>진행중인 프로젝트</h2>
+                <h2 id="cnff-h2" {% if not_finish_categorys %} class="displayNone" {% endif %} >진행중인 카테고리가 없습니다.</h2>
+                <div id="category-not-finish-for">
+                    {% for category in not_finish_categorys %}
+                    <div class="category-item" id="nf-category-{{category.pk}}" onclick="click_category({{category.pk}}, 'unfinish')">
+                        <h2 id="tag-{{category.pk}}">{{category.name}}</h2>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+            </div>
+            <div id="category-finish-list">
+                <h2>완료한 프로젝트</h2>
+                <h2 id="cff-h2" {% if finish_categorys %} class="displayNone" {% endif %} >완료된 카테고리가 없습니다.</h2>
+                <div id="category-finish-for">
+                    {% for category in finish_categorys %}
+                    <div class="category-item" id="f-category-{{category.pk}}" onclick="click_category({{category.pk}}, 'finish')">
+                        <h2 id="tag-{{category.pk}}">{{category.name}}</h2>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+        </div>
+        <div id="category-detail-container">
+            <h2>카테고리를 선택 또는 추가해주세요.</h2>
+        </div>
+    </div>
+    
+    
 </main>
 
+<!-- <div class="todo-checkbox todo-checkbox-${todo.id} ${todo.goal_check}" onclick="check_todo(${todo.id})"></div> -->
+{% endblock %}
+
+{% block extra %}
+<script>
+    // 리스트에 카테고리가 없다면 없다고 알리는 알림 문구 표시
+    const update_noneAlarm = () =>{
+        const cnffAlarmInput = document.querySelector('#cnff-h2');
+        const cffAlarmInput = document.querySelector('#cff-h2');
+        
+        const cnffBox = document.querySelector('#category-not-finish-for');
+        const cffBox = document.querySelector('#category-finish-for');
+        
+        const cnffCount = cnffBox.children.length;
+        const cffCount = cffBox.children.length;
+
+        if(cnffCount<1){
+            cnffAlarmInput.classList.remove('displayNone');
+        }else{
+            cnffAlarmInput.classList.add('displayNone');
+        }
+
+        if(cffCount<1){
+            cffAlarmInput.classList.remove('displayNone');
+        }else{
+            cffAlarmInput.classList.add('displayNone');
+        }
+    }
+
+    // 카테고리 추가 버튼(+) 를 눌렀을 때
+    const create_category = () => {
+        const createInput = document.querySelector('#create_category');
+        createInput.classList.toggle('inactive');
+        document.querySelector('#category-container button').classList.toggle('active');
+    };
+
+    // 새로운 카테고리를 추가했을 때
+    const add_category = async (event) =>{
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+        const nameInput = document.querySelector('#name');
+        nameInput.value = '';
+
+        const url = "/main/create_category/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {success, category_data, error_text}=await res.json();
+        category_add(success, category_data, error_text);
+    }
+    const category_add = (success, category_data, error_text) => {
+        const createInput = document.querySelector('#create_category');
+        const errorMessageElement = document.querySelector('#error-message-category');
+
+        errorMessageElement.textContent = ''; // 오류 메시지 초기화
+        
+        if(success){
+            createInput.classList.add('inactive');
+            const categoryInput = document.querySelector('#category-not-finish-for');
+            const divInput=document.createElement('div');
+            divInput.classList.add('category-item');
+            divInput.setAttribute('id', 'nf-category-'+category_data.pk);
+            divInput.setAttribute('onclick', `click_category(${category_data.pk}, 'unfinish')`);
+            divInput.innerHTML=`
+            <h2 id="tag-${category_data.pk}">${category_data.name}</h2>
+            <i class="fa-solid fa-chevron-right"></i>
+            `;
+            categoryInput.insertBefore(divInput, categoryInput.firstChild);
+            update_noneAlarm();
+        }else{
+            errorMessageElement.textContent=error_text;
+        }
+    }
+
+    // 카테고리 이름 수정 버튼을 눌렀을 때
+    const update_btn = (pk) => {
+        const h2Input = document.querySelector('#cdc-name-'+pk);
+        const tmpname = h2Input.textContent;
+        const categoryBox = document.querySelector('#cdc-name-box');
+
+        const inputElement = document.createElement('input');
+        inputElement.setAttribute('type', 'text');
+        inputElement.setAttribute('value', tmpname);
+        inputElement.setAttribute('id', 'update_name-'+pk);
+        inputElement.setAttribute('name', 'name');
+
+        h2Input.remove();
+
+        categoryBox.insertBefore(inputElement, categoryBox.firstChild);
+        inputElement.focus();
+
+        inputElement.addEventListener('blur', ()=>{
+            const updatedName = inputElement.value;
+            const update_pk = inputElement.id.slice("update_name-".length);   // update_name-{pk} 에서 마지막에 위치한 pk를 가져옴
+
+            update_category(updatedName, update_pk);
+        });
+    };
+    const update_category = async (name, pk) =>{
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('pk', pk);
+
+        const url = "/main/update_category/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {error_text, origin_name}=await res.json();
+        category_update(error_text, origin_name, name, pk);
+    }
+    const category_update = (error_text, origin_name, name, pk) => {
+        const categoryBox = document.querySelector('#cdc-name-box');
+        const inputElement = document.querySelector('#update_name-'+pk);
+        inputElement.remove();
+
+        const h2Element = document.createElement('h2');
+        h2Element.setAttribute('id', 'cdc-name-'+pk);
+
+        if(error_text==""){
+            h2Element.textContent=name;
+            const listItem = document.querySelector('#tag-'+pk);
+            listItem.textContent=name;
+        }            
+        else
+            h2Element.textContent=origin_name;
+
+        categoryBox.insertBefore(h2Element, categoryBox.firstChild);
+
+    }
+
+    // 카테고리 삭제 버튼을 눌렀을 때
+    const delete_category = async (pk, type) =>{
+
+        const formData = new FormData();
+        formData.append('pk', pk);
+
+        const url = "/main/delete_category/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {success}=await res.json();
+        category_delete(pk, type);
+    }
+    const category_delete = (pk, type) => {
+        const categoryBox = document.querySelector('#category-detail-container');
+        categoryBox.innerHTML=`
+            <h2>성공적으로 삭제되었습니다.</h2>
+        `;
+        let select_str="";
+        if(type=="finish"){
+            select_str="#f-category-";
+        }else if(type=="unfinish"){
+            select_str="#nf-category-";
+        }
+        const listItem = document.querySelector(select_str+pk);
+        listItem.remove();
+
+        update_noneAlarm();
+    }
+
+    // 카테고리 완료 체크박스를 눌렀을 때
+    const update_finish = async (checkBox, pk) =>{
+
+        const formData = new FormData();
+        formData.append('isChecked', checkBox.checked);
+        formData.append('pk', pk);
+
+        const url = "/main/finish_category/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {success, name}=await res.json();
+        finish_update(checkBox.checked, name, pk);
+    }
+    const finish_update = (isChecked, name, pk) => {
+        let categoryInput;
+        
+        const divInput=document.createElement('div');
+        divInput.classList.add('category-item');
+        if(isChecked==true){
+            const listItem = document.querySelector('#nf-category-'+pk);
+            listItem.remove();
+            categoryInput = document.querySelector('#category-finish-for');
+            divInput.setAttribute('id', 'f-category-'+pk);
+            divInput.setAttribute('onclick', `click_category(${pk}, 'finish')`);
+        }else{
+            const listItem = document.querySelector('#f-category-'+pk);
+            listItem.remove();
+            categoryInput = document.querySelector('#category-not-finish-for');
+            divInput.setAttribute('id', 'nf-category-'+pk);
+            divInput.setAttribute('onclick', `click_category(${pk}, 'unfinish')`);
+        }
+        divInput.innerHTML=`
+        <h2 id="tag-${pk}">${name}</h2>
+        <i class="fa-solid fa-chevron-right"></i>
+        `;
+        categoryInput.insertBefore(divInput, categoryInput.firstChild);
+
+        update_noneAlarm();
+    }
+
+    // 성장 기록 수정완료 버튼을 눌렀을 때
+    const update_memory = async (pk) =>{
+
+        const formData = new FormData();
+        formData.append('pk', pk);
+
+        const memoryBox = document.querySelector('#category-memory');
+        let memory = memoryBox.value;
+        formData.append('memory', memory);
+
+        const url = "/main/update_memory/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {success}=await res.json();
+        memory_update(success, memory);
+    }
+    const memory_update = (success, memory) => {
+        const memoryBox = document.querySelector('#category-memory');
+
+        if(success){
+            memoryBox.textContent=memory;
+        }
+    }
+
+    // 카테고리 리스트에서 카테고리를 클릭했을 때
+    const click_category = async (pk, type) =>{
+
+        const formData = new FormData();
+        formData.append('pk', pk);
+        formData.append('type', type);
+
+        const url = "/main/click_category/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {category_data}=await res.json();
+        show_category(category_data, pk, type);
+    }
+    const show_category = (category_data, pk, type) => {
+        const categoryBox = document.querySelector('#category-detail-container');
+
+        let memoryText;
+        if(category_data.memory == null)
+            memoryText = "";
+        else
+            memoryText = category_data.memory;
+
+        // innerHTML 안의 내용 수정 시 바로 밑에 다른 조건문의 innerHTML도 수정해야함에 주의
+        if(type=="finish"){
+            categoryBox.innerHTML=`
+            <div id="cdc-name-box">
+                <h2 id="cdc-name-${pk}">${category_data.name}</h2>
+                <button onclick="update_btn(${pk});"><i class="fa-solid fa-pen"></i></button>
+            </div>
+            <div id="cdc-memory-box">
+                <h2>나의 성장 기록하기</h2>
+                
+                <textarea name="memory" id="category-memory" placeholder="나의 성장을 기록해보세요!" rows="30">${memoryText}</textarea>
+                <button onclick="update_memory(${pk});">수정완료</button>
+            </div>
+            <div id="cdc-finish-box">
+                <label>
+                    <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})" checked/>
+                    프로젝트 끝내기
+                </label>
+            </div>
+            <div id="cdc-delete-box">
+                <button onclick="delete_category(${pk}, 'finish');">프로젝트 삭제</button>
+            </div>
+            `;
+        }else if(type=="unfinish"){
+            categoryBox.innerHTML=`
+            <div id="cdc-name-box">
+                <h2 id="cdc-name-${pk}">${category_data.name}</h2>
+                <button onclick="update_btn(${pk});"><i class="fa-solid fa-pen"></i></button>
+            </div>
+            <div id="cdc-memory-box">        
+                <h2>나의 성장 기록하기</h2>
+                <textarea name="memory" id="category-memory" placeholder="나의 성장을 기록해보세요!" rows="30">${memoryText}</textarea>
+                <button onclick="update_memory(${pk});">수정완료</button>
+            </div>
+            <div id="cdc-finish-box">
+                <label>
+                    <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})"/>
+                    프로젝트 끝내기
+                </label>
+            </div>
+            <div id="cdc-delete-box">
+                <button onclick="delete_category(${pk}, 'unfinish');">프로젝트 삭제</button>
+            </div>
+            `;
+        }
+    }
+
+</script>
 {% endblock %}

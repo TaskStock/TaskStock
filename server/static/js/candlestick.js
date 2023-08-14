@@ -1,14 +1,4 @@
-let global_chart_target_username="";
-
-document.addEventListener("DOMContentLoaded", function(){
-
-  const username = document.querySelector("#username_save");
-  if(username==null){
-    global_chart_target_username="";
-  }else{
-    global_chart_target_username=username.textContent;
-  }
-  
+document.addEventListener("DOMContentLoaded", function(){  
   const one_week = document.querySelector("#one_week");
   const one_month = document.querySelector("#one_month");
   const three_month = document.querySelector("#three_month");
@@ -42,6 +32,17 @@ document.addEventListener("DOMContentLoaded", function(){
       one_week.click();
     }else{
       request_chart(chart_radio);
+      if(chart_radio == "7"){
+        one_week.checked = true;
+      }else if(chart_radio == "30"){
+        one_month.checked = true;
+      }else if(chart_radio == "90"){
+        three_month.checked = true;
+      } else if(chart_radio == "180"){
+        six_month.checked = true;
+      } else if(chart_radio == "365"){
+        one_year.checked = true;
+      }
     }
   }
 

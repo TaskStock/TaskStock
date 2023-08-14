@@ -45,12 +45,16 @@ const add_todo = async(date_id) => {
     // 달력에서 클릭한 날짜. 클릭 안했으면 오늘날짜 
     let click_date = clickedDayString(dayString);
     console.log(click_date);
-    
+
+    const selectElement = document.querySelector('#todo-add--select');
+    category_name=selectElement.value;
+    selectElement.value="";
     
     const data = { 
         content: inputVal, 
         level: parseInt(level), 
         date_id: click_date,
+        category: category_name,
         };
     if (inputVal !== '' && level !== '0'){
         const res = await fetch(url, {
@@ -60,12 +64,12 @@ const add_todo = async(date_id) => {
             },
             body: JSON.stringify(data),
         })
-        const {todo_id: todo_id, my_level: my_level, content: content} = await res.json();
+        const {todo_id: todo_id, my_level: my_level, content: content, category_datas: category_datas} = await res.json();
         document.querySelector(`.day${date_id}--todo input`).value = '';
         level = '0';
         paintStar('0');
         document.querySelector('.todo-plus').classList.remove('active');
-        handleTodoResponse(todo_id, my_level, content);
+        handleTodoResponse(todo_id, my_level, content, category_datas, category_name);
 
     }else if (inputVal === ''){
         document.querySelector(`.day${date_id}--todo .todo-add--input span`).style.color = '#ff0033';
@@ -74,7 +78,7 @@ const add_todo = async(date_id) => {
     } 
 }
 
-const handleTodoResponse = async(todo_id, level, content) => {
+const handleTodoResponse = async(todo_id, level, content, category_datas, category_name) => {
     let paintedLevel = '';
     let emptyLevel = '';
     level = Number(level);
@@ -84,6 +88,15 @@ const handleTodoResponse = async(todo_id, level, content) => {
     for(e = level + 1; e < 6; e++){
         emptyLevel += `<div level="${e}"></div>`;
     }
+
+    let category_html="";
+    for (const c_name of category_datas) {
+        if(category_name==c_name)
+            category_html+=`<option value='${c_name}' selected>${c_name}</option>`;
+        else
+            category_html+=`<option value='${c_name}'>${c_name}</option>`;
+    }
+
     
     document.querySelector('.todo-paint').innerHTML += `
     <div class="todo-item todo-item-${todo_id}">
@@ -118,6 +131,13 @@ const handleTodoResponse = async(todo_id, level, content) => {
                     <div level="5"></div>
                 </div>
             </div>
+            <div class="todo-add--category">
+                <span>카테고리를 수정하세요</span>
+                <select class="todo-edit--select">
+                    <option value="">None</option>
+                    ${category_html}
+                </select>
+            </div>
             <div class="edit-btn--container">
                 <div class="todo-edit--delete-btn" onclick="delete_todo(${todo_id})">삭제</div>
                 <div class="todo-edit--submit-btn" onclick="update_todo(${todo_id})">완료</div>
@@ -126,7 +146,7 @@ const handleTodoResponse = async(todo_id, level, content) => {
     </div>
     `;
     update_chart();
-  
+    has_unchecked_todos();
 }
 
 
@@ -140,7 +160,7 @@ const edit_todo = (todo_id) => {
     document.querySelectorAll('.todo-item--edit').forEach(c => {
         c.classList.remove('active');
     })
-   
+
 
     // 열고 닫기
     const edit_container = document.querySelector(`.todo-item--edit-${todo_id}`);
@@ -207,6 +227,11 @@ const update_todo = async(todo_id) => {
     }
     const curr_content = content.value;
 
+    const category = edit_container.querySelector('.todo-edit--select');
+    c_value=category.value;
+    if(c_value==null)
+        c_value="";
+
     // ajax
     const url = `/main/update_todo/${todo_id}/`;
     const res = await fetch(url, {
@@ -214,7 +239,7 @@ const update_todo = async(todo_id) => {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({todo_id, curr_level, curr_content}),
+        body: JSON.stringify({todo_id, curr_level, curr_content, c_value}),
     })
     
     const {t_id: t_id, c_level: c_level, c_content: c_content} = await res.json();
@@ -262,26 +287,28 @@ function epaintStar(todo_id, level){
     })
 }
 
-    // delete todo
+// delete todo
 
-    const delete_todo = async(todo_id) => {
-        const url = `/main/delete_todo/${todo_id}/`;
-        const res = await fetch(url, {
-            method: 'POST', 
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({todo_id}),
-        })
-        const {id: id, d_id: d_id} = await res.json();
-        handleDelTodoRes(id, d_id);
-    }
-    const handleDelTodoRes = async(todo_id, date_id) => {
-        // delete container
-        const container = document.querySelector(`.todo-item-${todo_id}`);
-        container.remove();
-        update_chart();
-    }
+const delete_todo = async(todo_id) => {
+    const url = `/main/delete_todo/${todo_id}/`;
+    const res = await fetch(url, {
+        method: 'POST', 
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({todo_id}),
+    })
+    const {my_combo: my_combo, id: id, d_id: d_id} = await res.json();
+    handleDelTodoRes(my_combo, id, d_id);
+}
+const handleDelTodoRes = async(my_combo, todo_id, date_id) => {
+    // delete container
+    const container = document.querySelector(`.todo-item-${todo_id}`);
+    container.remove();
+    update_chart();
+    has_unchecked_todos();
+    handleCombo(my_combo);
+}
 
 
 
@@ -307,11 +334,11 @@ const check_todo = async(todo_id) => {
         body: JSON.stringify({todo_id, status}),
     })
     
-    const {'color': color, 'todo_status': todo_status, 't_id': t_id} = await res.json();
-    handleCheckTodoRes(color, todo_status, t_id);
+    const {'my_combo': my_combo, 'color': color, 'todo_status': todo_status, 't_id': t_id} = await res.json();
+    handleCheckTodoRes(my_combo, color, todo_status, t_id);
 }
 
-function handleCheckTodoRes(color, status, todo_id){
+function handleCheckTodoRes(my_combo, color, status, todo_id){
     const checkBox = document.querySelector(`.todo-checkbox-${todo_id}`);
     if (status == 'True'){
         checkBox.classList.add('True');
@@ -319,13 +346,59 @@ function handleCheckTodoRes(color, status, todo_id){
         checkBox.classList.remove('True');
     }
     
+    handleCombo(my_combo);
     update_chart();
+    has_unchecked_todos();
 }
 
+function has_unchecked_todos(){
+    // 완료하지 않은 투두가 있는 날 색칠 opacity: 0.2
+    const month = document.querySelector('.monthDisplay--month').innerText;
+    const year = document.querySelector('.monthDisplay--year').innerText;
+    const days = document.querySelectorAll('.cal--calendar .day');
+
+    days.forEach(d => {
+        if(!d.classList.contains('padding')){
+            // 8/11/2023
+            let checkDayString = `${parseInt(month)}/${parseInt(d.innerText)}/${parseInt(year)}`;
+            // console.log(checkDayString);
+            // 해당 날짜의 todos
+            const formData = new FormData();
+            formData.append('str', checkDayString);
+            formData.append("username", global_chart_target_username);
+
+            const url = `/main/click_date/`;
+            fetch(url, {
+                method: 'POST', 
+                headers: {},
+                body: formData,
+            }).then(res => res.json()).then(data => {
+                const {todos: todos} = data;
+                if(todos.length > 0){
+                    let has_unchecked = false;
+                    for(const todo of todos){
+                        // uncheck가 하나라도 있으면, true로 바꾸기 
+                        if(todo.goal_check == false){
+                            has_unchecked = true;
+                        }
+                    }
+                    if(has_unchecked == true){
+                        d.classList.add('unchecked');
+                    }else{
+                        d.classList.remove('unchecked');
+                    }
+                } else if(todos.length == 0){
+                    d.classList.remove('unchecked');
+                }
+            })
+        }
+    })
+    
+}
 // 차트 다시 불러오기
 function update_chart(){
     let chart_radio=localStorage.getItem('chart_radio');
-
+    
     let chart_period;
     if(chart_radio=="7"){
         chart_period="#one_week";
@@ -338,7 +411,7 @@ function update_chart(){
     }else if(chart_radio=="365"){
         chart_period="#one_year";
     }
-
+    
     let chart_update;
     if(chart_radio==null){
         chart_update = document.querySelector("#one_week");
@@ -347,3 +420,16 @@ function update_chart(){
     }
     chart_update.click();
 }
+// combo
+function handleCombo(combo){
+    const comboHTML = document.querySelector('.dashboard--combo span:last-child');
+    comboHTML.innerHTML = `🔥 ${combo}`;
+    comboHTML.style.animation = `combo 1.5s ease-in-out`;
+    comboHTML.addEventListener('animationend', () => {
+        comboHTML.style.animation = ''; // 애니메이션 제거
+    }, { once: true });
+}
+
+
+
+has_unchecked_todos();

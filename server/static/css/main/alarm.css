@@ -1,88 +1,30 @@
-:root {
-    --offset: 40px; /*양쪽마진*/
-    --max_width: 1440px; /*컨테이너폭*/
-    --columns: 12; /*컬럼갯수*/
-    --gutter: 16px; /*거터폭*/
-    --pading-top: 48px;
-    /* color */
-    --black: #37352F;
-
-    /* main : green */
-    --green_50: #E8F5E9;
-    --green_100: #C8E6C9;
-    --green_200: #A5D6A7;
-    --green_300: #81C784;
-    --green_400: #66BB6A;
-    --green_500: #4CAf50;
-    --green_600: #43A047;
-    --green_700: #388E3C;
-    --green_800: #2E7D32;
-    --green_900: #1B5E20;
-
-    /* error : red */
-    --red: #d30808;
-    
-    /* grey */
-    --grey_bg: #FBFBFA;
-    --grey_border: rgba(233, 233, 231);
-    --grey_400: #BDBDBD;
-    --grey_600: #757575;
-    --grey_700: #616161;
-
-    /* font */
-    --hero: 50px;
-    --heading1: 38px;
-    --heading2: 28px;
-    --heading3: 22px;
-    --subheading: 18px;
-    --body1: 16px;
-    --body2: 14px;
-    --caption: 12px;
-
-    /* border-radius */
-    --border-r: 8px;
-    /* shadow */
-    --box-shadow: rgba(233, 233, 231) 1.95px 1.95px 2.6px;
-    --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
 .alarm-main {
-    width: 100%;
-    height: 100vh;
-    padding: var(--gutter) var(--gutter);
+   
+    overflow: hidden;
+    color: var(--text-color);
     display: flex;
     justify-content: center;
-
 }
 
 .alarm-container {
     display: flex;
     flex-direction: column;
-    width: 70%;
-    height: 100vh;
-    overflow: hidden;
+    width: 90%;
     gap: var(--gutter);
-    padding-bottom: var(--gutter);    
-}
-.alarm-header{
-    padding-left: var(--offset);
-    padding-top: var(--gutter);
-}
+} 
+
+
 .alarm-header > h1 {
-    font-size: var(--heading1);
-    font-weight: 600;
+    padding: var(--offset) 0 0;
+    font-size: var(--heading3);
+    font-weight: var(--weight3);
+    color: var(--checked-border);
 }
 .alarm-content {
-    display: flex;
-    width: 100%;
-    overflow: hidden;
     border-radius: var(--border-r);
-    background-color: var(--grey_bg);
-    box-shadow: var(--shadow);
     padding: var(--gutter);
-    height: 100vh;
     overflow-y: scroll;
-}
+} 
 
 
 /* 알림리스트 영역 작업 */
@@ -91,113 +33,43 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    overflow: hidden;
     border-radius: var(--border-r);
-    background-color: var(--grey_bg);
     padding: var(--gutter);
-    flex-direction: column;
     gap: var(--gutter);
 }
 .alarm-list {
-    display: flex;
     width: 100%;
-    overflow: hidden;
     border-radius: var(--border-r);
-    background-color: var(--grey_bg);
     box-shadow: var(--shadow);
     padding: var(--gutter);
+    background-color: var(--box-color);
 }
-
-
 .alarm-content__container {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     width: 100%;
 }
-
 .alarm-image__container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 11%;
+    width: 45px;
+    height: 45px;
+    margin-right: var(--gutter);
 }
-
 .alarm-image__container>img {
-    width: 50px;
-    height: 50px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
 }
-
-.alarm-description__container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gutter);
-    width: 70%;
+.alarm-time{
+    margin-left: auto;
 }
-
-.alarm-description__container > h3 {
+.alarm-content > span{
     font-size: var(--body1);
-    font-weight: 600;
-}
-
-.alarm-description__content {
-    font-size: var(--caption);
-    color: var(--grey_600);
-    /* 보여질 내용을 한 줄로만 제한 */
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical; 
-    overflow: hidden;
-}
-
-.alarm-content__more-btn {
-    display: inline-block;
-    width: auto;
-    height: auto;
-    border: 1px solid var(--grey_600);
-    border-radius: 0.25em;
-    cursor: pointer;
-    padding: 0.25em 0.5em;
-    transform: rotate(0deg); /* 텍스트를 가로 방향으로 회전시킵니다. */
-    transform-origin: center; /* 회전 중심을 가운데로 설정합니다. */
-}
-
-.alarm-content__more-btn::before {
-    content: 'more';
-    display: inline;
-}
-
-.alarm-content__more-btn:checked::before {
-    content: 'X';
-}
-
-.alarm-content__more-btn:hover {
-    background-color: var(--grey_400);
-    cursor: pointer;
-}
-
-.alarm-description__content:has(+ .alarm-content__more-btn:checked) {
-    -webkit-line-clamp:unset
-  }
-  
-
-.alarm-time__container {
-    margin-left: 80px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--gutter);
-    width: 9%;
-}
-.alarm-time__container > span {
-    font-size: var(--caption);
-    color: var(--grey_600);
-}
-
-.more-btn__container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+    font-weight: var(--weight3);
+    padding-bottom: 7px;
+    display: block;
 }

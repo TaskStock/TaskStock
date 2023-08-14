@@ -1,60 +1,111 @@
 {% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
 <main>
- 
+    <!-- 가정 먼저 실행되는 스크립트, 전역 변수 설정 -->
+    <script>
+        let global_chart_target_username="";
+    </script>
     <div class="main-left">
-    
+        <div class="user-info--container">
+            <div class="user-info--pic">
+                {% if target_user.img %}
+                    <img src="{{ target_user.img.url }}" alt="Profile Image">
+                {% else %}
+                    <img src="{% static 'img/blank-profile-picture.png' %}" alt="Default Profile Image">
+                {% endif %}
+            </div>
+            <div class="user-info--about">
+                <div class="user-info--name">{{target_user.username}}</div>
+                <div class="user-info--comment">Hello world!</div>
+            </div>
+            <div class="user-info--sff__container">
+                <div class="user-info--sff sff-s">
+                    <span>Today</span>
+                    <span>0%</span>
+                </div>
+                <div class="user-info--sff sff-fg">
+                    <span>Following</span>
+                    <span id="following_list">{{target_user.followings.all.count}}</span>
+                </div>
+                <div class="user-info--sff sff-fr">
+                    <span>Follower</span>
+                    <span id="follower_list">30</span>
+                </div>
+            </div>
+            <div class="follow-btn">
+                <button id="followBtn" onclick="followClick();">{{follow_text}}</button>
+            </div>
+        </div>
+        <div class="price">
+            <div class="price--taspi">
+                <span>TASPI</span>
+                <!-- (오늘의 주가총액 / 배포 하루 후 주가총액) * 100 -->
+                <span>2,591.26</span>
+            </div>
+            <div class="price--marketcap">
+                <span>{{target_user.username}}'s Value</span>
+                <!-- value개수 * value.end -->
+                <span>3,634.7조</span>
+            </div>
+            <div class="total-todos">
+                <span>{{target_user.username}}'s Group Value</span>
+                <!-- 그룹에 참여한 시점부터 
+                    개인별 (value.end - value.start)를 모두 합한 값
+                -->
+                <span>3,634.7조</span>
+            </div>
+        </div>
         <div id="chart"></div>
         <div class="chart-btn--container">
-            <!-- <div id="one_week" class="chart-btn active chart-week">1 week</div>
-            <div id="one_month" class="chart-btn chart-month">1 month</div>
-            <div id="three_month" class="chart-btn chart-3month">3 months</div>
-            <div id="six_month" class="chart-btn chart-6month">6 months</div>
-            <div id="one_year" class="chart-btn chart-year">1 year</div> -->
             <form>
                 <label>
-                    <input type="radio" name="chart_period" value="7" id="one_week">
-                    1 week
+                    <input type="radio" name="chart_period" value="7" id="one_week" checked>
+                    <div class="chart-btn">1 week</div>
                 </label>
                 <label>
                     <input type="radio" name="chart_period" value="30" id="one_month">
-                    1 month
+                    <div class="chart-btn">1 month</div>
                 </label>
                 <label>
                     <input type="radio" name="chart_period" value="90" id="three_month">
-                    3 months
+                    <div class="chart-btn">3 months</div>
                 </label>
                 <label>
                     <input type="radio" name="chart_period" value="180" id="six_month">
-                    6 months
+                    <div class="chart-btn">6 months</div>
                 </label>
                 <label>
                     <input type="radio" name="chart_period" value="365" id="one_year">
-                    1 year
-                </label>
-                
+                    <div class="chart-btn">1 year</div>
+                </label>   
             </form>
-        </div>
+        </div> 
         <div class="dashboard">
-            <div id="username_save" style="border: 1px solid black">{{target_user.username}}</div>
-            <div class="dashboard--achivements">
-                <h3>Achievements</h3>
-                <div class="dashboard--combo">
-                    <span>Combo: </span>
-                    <span>{{ target_user.combo }}</span>
-                </div>
-                <div class="dashboard--badge">
-                    
-                </div>
-                <div class="dashboard--totalValue">
-                    <span>가치종합지수: </span>
-                </div>
-                <div id="follow-btn">
-                    <button id="followBtn" onclick="followClick();">{{follow_text}}</button>
-                </div>
+            <div id="username_save" style="display:none;">{{user.username}}</div>
+            <script>
+                const username = document.querySelector("#username_save");
+                if(username==null){
+                    global_chart_target_username="";
+                }else{
+                    global_chart_target_username=username.textContent;
+                }
+            </script>
+            <div class="dashboard--combo">
+                <span>Combo</span>
+                <span>🔥 {{ target_user.combo }}</span>
             </div>
-            
-            
+            <div class="dashboard--completed">
+                <span>Completed Todos</span>
+                <span>✔︎ 56</span>
+            </div>
+            <div class="dashboard--badge">
+                <span>Badge</span>
+                <span></span>
+            </div>
         </div>
+        
+            
+            
+     
     </div>
     <div class="main-right">
         <div class="main-right--container">
@@ -62,7 +113,7 @@
                 <div class="cal--header">
                     <div id="monthDisplay">
                         <div class="monthDisplay--month"></div>
-                        <!-- <div class="monthDisplay--year"></div> -->
+                        <div class="monthDisplay--year" style="display:none;"></div>
                     </div>
                     <div class="monthControl">
                         <button id="nextButton"><i class="fa-solid fa-chevron-up"></i></button>

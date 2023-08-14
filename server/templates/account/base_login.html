@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static 'img/favicon.svg' %}">
     <!-- font : pretendard -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <!-- icon : css.gg -->
@@ -14,11 +16,15 @@
     <!-- css -->
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
-    <title>Document</title>
+    <title>TASKSTOCK</title>
 </head>
 <body>
     <header>
-        <h1>TASKSTOCK</h1>
+        <a href="/">
+            <h1>TASKSTOCK
+                <img src="{% static 'img/logo-2.png' %}" alt="logo">
+            </h1>
+        </a>
     </header>
     <main class="Flex_cc">
         
