@@ -245,3 +245,9 @@ input[type="radio"]:checked {
     border: 1px solid green !important;
 }
 
+@media screen and (max-width: 950px){
+    .settings-menu{
+        display: none;
+    }
+}
+

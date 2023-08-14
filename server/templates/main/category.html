@@ -106,6 +106,7 @@
         });
         const {success, category_data, error_text}=await res.json();
         category_add(success, category_data, error_text);
+        document.querySelector('#category-container button').classList.remove('active');
     }
     const category_add = (success, category_data, error_text) => {
         const createInput = document.querySelector('#create_category');
