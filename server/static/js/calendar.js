@@ -64,7 +64,7 @@ function load() {
             })
             const {todos: todos, category_datas: category_datas} = await res.json();
             handleDateResponse(todos, category_datas);
-
+            has_unchecked_todos();
         
         })
         if (i - paddingDays === day && nav === 0) {
@@ -212,6 +212,4 @@ initButtons();
 load();
 blackBorder();
 paintDate();
-
-
 
