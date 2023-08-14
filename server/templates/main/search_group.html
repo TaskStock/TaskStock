@@ -1,0 +1,135 @@
+{% extends '../base2.html' %} {% load static %}
+{%block page%}
+
+<!-- search.html, search.js의 기능을 대부분 그대로 가져옴. search view함수역시 거의 동일하게 가져옴 -->
+<main class="search-main">
+    <div class="search-form-container">
+        <form action="" class="search-form">
+            <input type="text" placeholder="Search" name="search_content" id="search_content" autofocus>
+            <button type="submit"><i class="gg-search"></i></button>
+        </form>
+    </div>
+    <div class="search-container">
+        <div id="live-chart" class="live-chart">
+            <form onsubmit="handleCreateButtonClick(event)" class="create-form">
+                {% csrf_token %}
+                <input type="text" name="group-create-inpput"  id="create-input">
+                <button type="submit" name="group-create-button" id="create-button">Create</button>
+            </form>
+            <div class="search-result">
+                {% if my_group == None %}
+                <h3>내 그룹</h3>
+                <div class="my-group__container">
+                    <span>가입 그룹이 없습니다.</span>
+                </div>
+                {% else %}
+                <h3>내 그룹</h3>
+                <div class="my-group__container">
+                <a href="/main/group/{{my_group.pk}}/">
+                    <div class="search-result__container">
+                        <div class="search-result__right--container">
+                            <div class="friend-info--pic"></div>
+                            <div class="search-result__name-container">
+                                <h2 id="my_group_name">{{my_group.name}}</h2>
+                                <p>{{my_group.price}}</p>
+                            </div>
+                        </div>
+                        <div class="search-result__right-container">
+                            <div class="search-result__info">
+                                <div class="search-result__right-upper-container">
+                                    <form onsubmit="handleFollowButtonClick(event)">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="group" value="{{ my_group.name }}">
+                                        <button type="submit" name="group-button" class="add-button">CANCEL</button>
+                                    </form>
+                                </div>
+                                <p>{{my_group.create_user}}</p>
+                            </div>
+                            
+                        </div>    
+                    </div>
+                </a>
+                </div>
+                {% endif %}
+                <div class="search-label">
+                    <h3>실시간 차트</h3>
+                </div>
+                {% for group in groups %}
+                <a href="/main/group/{{group.pk}}/">
+                    <div class="search-result__container">
+                        <div class="search-result__right--container">
+                            <div class="friend-info--pic"></div>
+                            <div class="search-result__name-container">
+                                <h2>{{group.name}}</h2>
+                                <p>{{group.price}}</p>
+                            </div>
+                        </div>
+                        <div class="search-result__right-container">
+                            <div class="search-result__info">
+                                <div class="search-result__right-upper-container">
+                                    <form onsubmit="handleFollowButtonClick(event)">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="group" value="{{ group.name }}">
+                                        <button type="submit" name="group-button" class="add-button">
+                                            {% if group == my_group %}
+                                                CANCEL
+                                            {% else %}
+                                                FOLLOW
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                </div>
+                                <p>{{group.create_user}}</p>
+                            </div>
+                            
+                        </div>    
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="search-users">
+            <div class="search-label">
+                <h3>검색 결과</h3>
+            </div>
+            <div class="search-result Scroll" id="search-users__result-container">
+                {% for filtered_group in filtered_groups %}
+                <a href="/main/group/{{filtered_group.pk}}/">
+                    <div class="search-result__container">
+                        <div class="search-result__right--container">
+                            <div class="friend-info--pic"></div>
+                            <div class="search-result__name-container">
+                                <h2>{{filtered_group.name}}</h2>
+                                <p>{{filtered_group.price}}</p>
+                            </div>
+                        </div>
+                        <div class="search-result__right-container">
+                            <div class="search-result__info">
+                                <div class="search-result__right-upper-container">
+                                    <form onsubmit="handleFollowButtonClick(event)">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="group" value="{{ filtered_group.name }}">
+                                        <button type="submit" name="group-button" class="add-button">
+                                            {% if filtered_group == my_group %}
+                                                CANCEL
+                                            {% else %}
+                                                FOLLOW
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                </div>
+                                <p>{{filtered_group.create_user}}</p>
+                            </div>                           
+                        </div>    
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra %}
+
+{% endblock %}

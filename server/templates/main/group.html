@@ -1,7 +1,45 @@
 {% extends '../base2.html' %} {% load static %}
 {%block page%}
 <main class="group-main">
-    <div>Group Page</div>
+    <div class="group-header">
+        <span>Group Page</span>
+    </div>
+    <div class="group-content">
+        <div class="group-content__info">
+            <div class="group-content__name">{{group.name}}</div>
+            <span class="group-content__text">그룹장: {{group.create_user}}</span>
+            <span class="group-content__text">가격: {{group.price}}</span>
+            <span class="group-content__text" id="group-member">그룹원: {{users_length}}</span>
+            <div class="add-button__container">
+                <form onsubmit="handleButtonClick(event ,'{{ current_user.name }}','{{ current_user.price }}')">
+                    {% csrf_token %}
+                    <input type="hidden" name="group" value="{{ group.name }}">
+                    <button type="submit" name="group-button" id="add-button">{{button_text}}</button>
+                </form>
+            </div>
+        </div>
+        <div class="group-content__form">
+            {% if am_I_creator %}
+                <form onsubmit="handleUpdateButtonClick(event)">
+                    {% csrf_token %}
+                    <input type="text" name="group-create-inpput"  id="update-input">
+                    <button type="submit" name="group-update-button" id="update-button">Update</button>
+                </form>
+                <form action="/main/group/delete_group/{{ group.pk }}/" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="group-delete-button" id="delete-button">Delete</button>
+                </form>
+            {% endif %}
+        </div>
+        <ul class="group-content__ul">
+            {% for key, value in value.items %}
+            <li id="group-content__li-{{key}}">
+                <div>그룹원 명: {{ key }}</div>
+                <div>그룹원 가격: {{ value }}</div>
+            </li>
+                {% endfor %}
+        </ul>
+    </div>
 </main>
 
 {% endblock %}

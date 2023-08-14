@@ -9,10 +9,11 @@ urlpatterns = [
     path('click_date/', click_date), # /main/click_date/
     path('', home), # /main/
     path('search/', search), # /main/search/
-    path('settings/', settings), # /main/settings/
+    path('settings/', settings), # /main/settings/name/
     path('settings/update_userinfo/', update_userinfo), # /main/settings/update_userinfo/
     path('category/', category), #/main/category/
-    path('group/', group), #/main/group/
+    path('group/<int:pk>/', group), #/main/group/
+    path('search_group/', search_group), #/main/search_group/
 
     # 다른 유저의 상세 페이지
     path('profile/', profile), # /main/profile/
@@ -30,6 +31,13 @@ urlpatterns = [
     # follow ajax
     path('follow/', follow), # /main/follow/
 
+    # group ajax
+    path('group/follow_group/', follow_group), # /main/follow_group/
+    path('group/create_group/', create_group), # /main/create_group/
+    path('group/delete_group/<int:pk>/', delete_group), # /main/delete_group/
+    path('group/update_group/', update_group), # /main/update_group/
+    path('group/search_group/ajax/', search_group_ajax), # /main/invite_group/
+
     # category ajax
     path('create_category/', create_category), # /main/create_category/
     path('update_category/', update_category), # /main/update_category/
@@ -40,5 +48,6 @@ urlpatterns = [
     
     #시간대 저장 ajax
     path('set_timezone/', set_timezone), # /main/set_timezone/
+
 ] 
 
