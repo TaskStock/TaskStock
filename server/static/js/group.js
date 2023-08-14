@@ -1,6 +1,6 @@
 // follow부분
 
-const handleButtonClick = async (event) => {
+const handleButtonClick = async (event, name, price) => {
   const addButton = document.querySelector("#add-button");
   const group = document.querySelector(".group-content__name").textContent;
   event.preventDefault();
@@ -16,13 +16,34 @@ const handleButtonClick = async (event) => {
     body: formData,
   });
   const { text: text } = await res.json();
-  handleButtonText(text);
+  let id_name = `group-content__li-${name}`;
+
+  console.log(text, id_name, price, name);
+  handleButtonText(text, id_name, price, name);
 };
-const handleButtonText = async (Text) => {
+const handleButtonText = async (Text, id_name, price, name) => {
   if (Text === "CANCEL") {
     document.querySelector("#add-button").textContent = "CANCEL";
+
+    // 리스트에 사용자 추가
+    const ul = document.querySelector(".group-content__ul");
+    const li = document.createElement("li");
+    li.setAttribute("id", id_name);
+    li.innerHTML = `   
+    <div>그룹원 명: ${name}</div>
+    <div>그룹원 가격: ${price}</div>`;
+    ul.appendChild(li);
+
+    group_member = document.getElementById("group-member");
+    group_member = parseInt(users__length.textContent) - 1;
   } else if (Text === "FOLLOW") {
     document.querySelector("#add-button").textContent = "FOLLOW";
+
+    // 리스트에서 사용자 삭제
+    document.getElementById(id_name).remove();
+
+    group_member = document.getElementById("group-member");
+    group_member = parseInt(users__length.textContent) + 1;
   }
 };
 

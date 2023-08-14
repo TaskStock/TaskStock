@@ -9,9 +9,9 @@
             <div class="group-content__name">{{group.name}}</div>
             <span class="group-content__text">그룹장: {{group.create_user}}</span>
             <span class="group-content__text">가격: {{group.price}}</span>
-            <span class="group-content__text">그룹원: {{users_length}}</span>
+            <span class="group-content__text" id="group-member">그룹원: {{users_length}}</span>
             <div class="add-button__container">
-                <form onsubmit="handleButtonClick(event)">
+                <form onsubmit="handleButtonClick(event ,'{{ current_user.name }}','{{ current_user.price }}')>
                     {% csrf_token %}
                     <input type="hidden" name="group" value="{{ group.name }}">
                     <button type="submit" name="group-button" id="add-button">{{button_text}}</button>
@@ -33,7 +33,7 @@
         </div>
         <ul class="group-content__ul">
             {% for key, value in value.items %}
-            <li class="group-content__li">
+            <li id="group-content__li-{{key}}">
                 <div>그룹원 명: {{ key }}</div>
                 <div>그룹원 가격: {{ value }}</div>
             </li>

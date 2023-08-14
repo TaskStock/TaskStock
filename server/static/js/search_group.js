@@ -20,7 +20,7 @@ const searchAjax = async (text) => {
     headers: {},
     body: formData,
   });
-  const { groups: groups } = await res.json();
+  const { groups } = await res.json();
   showUserList(groups);
 };
 const showUserList = (groups) => {
@@ -29,11 +29,17 @@ const showUserList = (groups) => {
   );
   currentInput.innerHTML = "";
 
+  const my_group = document.getElementById("my_group_name")
+    ? document.getElementById("my_group_name").textContent
+    : null;
+
   // users가 [] 인 경우 빈 배열이므로 null이 아님
   if (groups.length > 0) {
     for (const group of groups) {
       atagInput = document.createElement("a");
       atagInput.href = "/main/group/" + group.pk + "/";
+
+      const addButtonContent = group.name == my_group ? "CANCEL" : "FOLLOW";
 
       atagInput.innerHTML = `
                 <div class="search-result__container">
@@ -48,15 +54,8 @@ const showUserList = (groups) => {
                             <div class="search-result__info">
                                 <div class="search-result__right-upper-container">
                                     <form onsubmit="handleFollowButtonClick(event)">
-                                        {% csrf_token %}
                                         <input type="hidden" name="group" value="${group.name}">
-                                        <button type="submit" name="group-button" class="add-button">
-                                            {% if filtered_group == my_group %}
-                                                CANCEL
-                                            {% else %}
-                                                FOLLOW
-                                            {% endif %}
-                                        </button>
+                                        <button type="submit" name="group-button" class="add-button">${addButtonContent}</button>
                                     </form>
                                 </div>
                                 <p>${group.create_user}</p>

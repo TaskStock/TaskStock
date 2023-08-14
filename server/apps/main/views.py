@@ -699,6 +699,7 @@ def group(request,pk):
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
     value_dic={}
     my_group = request.user.my_group
+    current_user = request.user
 
     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
     if group.create_user == request.user.name:
@@ -726,6 +727,7 @@ def group(request,pk):
         'button_text': button_text,
         'am_I_creator': am_I_creator,
         'users_length': len(users),
+        'current_user': current_user,
     }
     return render(request, 'main/group.html', context)
 
