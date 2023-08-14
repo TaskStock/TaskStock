@@ -10,13 +10,15 @@ def user_directory_path(instance, filename):
     
     return f'profile/user_{instance.id}/{filename}'
 
-class Group(models.Model):
-    name = models.CharField(max_length=30)
-    create_user = models.CharField(max_length=30, default= "")
-    price = models.IntegerField(null=True, default=0)
+# class Group(models.Model):
+#     name = models.CharField(max_length=30)
+#     create_user = models.CharField(max_length=30, default= "")
+#     price = models.IntegerField(null=True, default=0)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
+    
+
 
 class User(AbstractUser):
     combo = models.IntegerField(null=True, default=0)
@@ -45,7 +47,7 @@ class User(AbstractUser):
     followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
     # 그룹 기능을 위해 추가
-    my_group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='user_set',null=True)
+    # my_group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='user_set',null=True)
 
     def __str__(self):
         return self.username
@@ -91,6 +93,7 @@ class Todo(models.Model):
     content = models.TextField()
     goal_check = models.BooleanField()
     level = models.IntegerField()
+    #assigned = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     finish_at = models.DateTimeField(null=True)
