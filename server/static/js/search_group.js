@@ -37,7 +37,7 @@ const showUserList = (groups) => {
   if (groups.length > 0) {
     for (const group of groups) {
       atagInput = document.createElement("a");
-      atagInput.href = "/main/group/" + group.pk + "/";
+      atagInput.href = `/main/group/${group.pk}/`;
 
       const addButtonContent = group.name == my_group ? "CANCEL" : "FOLLOW";
 

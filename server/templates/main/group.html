@@ -11,7 +11,7 @@
             <span class="group-content__text">가격: {{group.price}}</span>
             <span class="group-content__text" id="group-member">그룹원: {{users_length}}</span>
             <div class="add-button__container">
-                <form onsubmit="handleButtonClick(event ,'{{ current_user.name }}','{{ current_user.price }}')>
+                <form onsubmit="handleButtonClick(event ,'{{ current_user.name }}','{{ current_user.price }}')">
                     {% csrf_token %}
                     <input type="hidden" name="group" value="{{ group.name }}">
                     <button type="submit" name="group-button" id="add-button">{{button_text}}</button>

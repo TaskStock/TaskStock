@@ -843,6 +843,7 @@ def search_group_ajax(request):
             "name":group.name,
             "price":group.price,
             "create_user":group.create_user,
+            "pk":group.pk,
             # 추후 필요한 필드 추가
         }
         groups.append(group_data)

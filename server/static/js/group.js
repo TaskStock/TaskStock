@@ -21,6 +21,7 @@ const handleButtonClick = async (event, name, price) => {
   console.log(text, id_name, price, name);
   handleButtonText(text, id_name, price, name);
 };
+
 const handleButtonText = async (Text, id_name, price, name) => {
   if (Text === "CANCEL") {
     document.querySelector("#add-button").textContent = "CANCEL";
@@ -35,7 +36,7 @@ const handleButtonText = async (Text, id_name, price, name) => {
     ul.appendChild(li);
 
     group_member = document.getElementById("group-member");
-    group_member = parseInt(users__length.textContent) - 1;
+    group_member = parseInt(group_member.textContent) - 1;
   } else if (Text === "FOLLOW") {
     document.querySelector("#add-button").textContent = "FOLLOW";
 
@@ -43,7 +44,7 @@ const handleButtonText = async (Text, id_name, price, name) => {
     document.getElementById(id_name).remove();
 
     group_member = document.getElementById("group-member");
-    group_member = parseInt(users__length.textContent) + 1;
+    group_member = parseInt(group_member.textContent) + 1;
   }
 };
 
