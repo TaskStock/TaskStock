@@ -16,10 +16,9 @@ const handleButtonClick = async (event) => {
     body: formData,
   });
   const { text: text } = await res.json();
-  handleFollowButtonText(text);
+  handleButtonText(text);
 };
 const handleButtonText = async (Text) => {
-  alert(Text);
   if (Text === "CANCEL") {
     document.querySelector("#add-button").textContent = "CANCEL";
   } else if (Text === "FOLLOW") {

@@ -748,7 +748,8 @@ def follow_group(request):
 
     current_user.save()
 
-    return JsonResponse({"text": text})
+    return JsonResponse({'text': text, 'name': target_group.name, 'price': target_group.price, 'create_user': target_group.create_user, 'pk': target_group.pk})
+
 
 def create_group(request):
     user = request.user
