@@ -20,14 +20,12 @@
             </div>
             <div id="category-not-finish-list">
                 <h2>진행중인 프로젝트</h2>
+                <h2 id="cnff-h2" {% if not_finish_categorys %} class="displayNone" {% endif %} >진행중인 카테고리가 없습니다.</h2>
                 <div id="category-not-finish-for">
                     {% for category in not_finish_categorys %}
                     <div class="category-item" id="nf-category-{{category.pk}}" onclick="click_category({{category.pk}}, 'unfinish')">
                         <h2 id="tag-{{category.pk}}">{{category.name}}</h2>
                         <i class="fa-solid fa-chevron-right"></i>
-                        <!-- <button onclick="update_btn({{category.pk}});">수정</button>
-                        <button onclick="delete_category({{category.pk}});">삭제</button>
-                        <button onclick="complete_category({{category.pk}});">완료</button> -->
                     </div>
                     {% endfor %}
                 </div>
@@ -35,12 +33,12 @@
             </div>
             <div id="category-finish-list">
                 <h2>완료한 프로젝트</h2>
+                <h2 id="cff-h2" {% if finish_categorys %} class="displayNone" {% endif %} >완료된 카테고리가 없습니다.</h2>
                 <div id="category-finish-for">
                     {% for category in finish_categorys %}
                     <div class="category-item" id="f-category-{{category.pk}}" onclick="click_category({{category.pk}}, 'finish')">
                         <h2 id="tag-{{category.pk}}">{{category.name}}</h2>
                         <i class="fa-solid fa-chevron-right"></i>
-                        <!-- <h2>{{category.memory}}</h2> -->
                     </div>
                     {% endfor %}
                 </div>
@@ -48,26 +46,7 @@
             
         </div>
         <div id="category-detail-container">
-
-            <!-- <div id="cdc-name-box">
-                <h2 id="cdc-name-{{category.pk}}">{{selected_category.name}}</h2>
-                <button onclick="update_btn({{category.pk}});">닉네임 수정</button>
-            </div>
-            <div id="cdc-memory-box">
-                <div class="cdc-memory-box--header">
-                    <h2>memory</h2>
-                    <button onclick="update_memory({{category.pk}});">memory 수정</button>
-                </div>
-                <textarea name="memory" id="category-memory" cols="40" rows="10">{{selected_category.memory}}</textarea>
-                
-            </div>
-            <div id="cdc-finish-box">
-                <label>
-                    <input type="checkbox" name="finish_check" value="finish_check" onchange="updateProfile(this)" {% if selected_category.finish %}checked{% endif %}/>
-                    완료 여부
-                </label>
-            </div> -->
-            
+            <h2>카테고리를 선택 또는 추가해주세요.</h2>
         </div>
     </div>
     
@@ -79,12 +58,38 @@
 
 {% block extra %}
 <script>
+    // 리스트에 카테고리가 없다면 없다고 알리는 알림 문구 표시
+    const update_noneAlarm = () =>{
+        const cnffAlarmInput = document.querySelector('#cnff-h2');
+        const cffAlarmInput = document.querySelector('#cff-h2');
+        
+        const cnffBox = document.querySelector('#category-not-finish-for');
+        const cffBox = document.querySelector('#category-finish-for');
+        
+        const cnffCount = cnffBox.children.length;
+        const cffCount = cffBox.children.length;
+
+        if(cnffCount<1){
+            cnffAlarmInput.classList.remove('displayNone');
+        }else{
+            cnffAlarmInput.classList.add('displayNone');
+        }
+
+        if(cffCount<1){
+            cffAlarmInput.classList.remove('displayNone');
+        }else{
+            cffAlarmInput.classList.add('displayNone');
+        }
+    }
+
+    // 카테고리 추가 버튼(+) 를 눌렀을 때
     const create_category = () => {
         const createInput = document.querySelector('#create_category');
         createInput.classList.toggle('inactive');
         document.querySelector('#category-container button').classList.toggle('active');
     };
 
+    // 새로운 카테고리를 추가했을 때
     const add_category = async (event) =>{
         event.preventDefault();
 
@@ -120,11 +125,13 @@
             <i class="fa-solid fa-chevron-right"></i>
             `;
             categoryInput.insertBefore(divInput, categoryInput.firstChild);
+            update_noneAlarm();
         }else{
             errorMessageElement.textContent=error_text;
         }
     }
 
+    // 카테고리 이름 수정 버튼을 눌렀을 때
     const update_btn = (pk) => {
         const h2Input = document.querySelector('#cdc-name-'+pk);
         const tmpname = h2Input.textContent;
@@ -148,7 +155,6 @@
             update_category(updatedName, update_pk);
         });
     };
-    
     const update_category = async (name, pk) =>{
 
         const formData = new FormData();
@@ -184,6 +190,7 @@
 
     }
 
+    // 카테고리 삭제 버튼을 눌렀을 때
     const delete_category = async (pk, type) =>{
 
         const formData = new FormData();
@@ -212,8 +219,10 @@
         const listItem = document.querySelector(select_str+pk);
         listItem.remove();
 
+        update_noneAlarm();
     }
 
+    // 카테고리 완료 체크박스를 눌렀을 때
     const update_finish = async (checkBox, pk) =>{
 
         const formData = new FormData();
@@ -252,9 +261,38 @@
         <i class="fa-solid fa-chevron-right"></i>
         `;
         categoryInput.insertBefore(divInput, categoryInput.firstChild);
+
+        update_noneAlarm();
     }
 
+    // 성장 기록 수정완료 버튼을 눌렀을 때
+    const update_memory = async (pk) =>{
 
+        const formData = new FormData();
+        formData.append('pk', pk);
+
+        const memoryBox = document.querySelector('#category-memory');
+        let memory = memoryBox.value;
+        formData.append('memory', memory);
+
+        const url = "/main/update_memory/";
+        const res = await fetch(url, {
+            method:"POST",
+            headers:{},
+            body: formData,
+        });
+        const {success}=await res.json();
+        memory_update(success, memory);
+    }
+    const memory_update = (success, memory) => {
+        const memoryBox = document.querySelector('#category-memory');
+
+        if(success){
+            memoryBox.textContent=memory;
+        }
+    }
+
+    // 카테고리 리스트에서 카테고리를 클릭했을 때
     const click_category = async (pk, type) =>{
 
         const formData = new FormData();
@@ -272,7 +310,14 @@
     }
     const show_category = (category_data, pk, type) => {
         const categoryBox = document.querySelector('#category-detail-container');
-        
+
+        let memoryText;
+        if(category_data.memory == null)
+            memoryText = "";
+        else
+            memoryText = category_data.memory;
+
+        // innerHTML 안의 내용 수정 시 바로 밑에 다른 조건문의 innerHTML도 수정해야함에 주의
         if(type=="finish"){
             categoryBox.innerHTML=`
             <div id="cdc-name-box">
@@ -282,7 +327,7 @@
             <div id="cdc-memory-box">
                 <h2>나의 성장 기록하기</h2>
                 
-                <textarea name="memory" id="category-memory" rows="30">${category_data.memory}</textarea>
+                <textarea name="memory" id="category-memory" placeholder="나의 성장을 기록해보세요!" rows="30">${memoryText}</textarea>
                 <button onclick="update_memory(${pk});">수정완료</button>
             </div>
             <div id="cdc-finish-box">
@@ -303,7 +348,7 @@
             </div>
             <div id="cdc-memory-box">        
                 <h2>나의 성장 기록하기</h2>
-                <textarea name="memory" id="category-memory" rows="30">${category_data.memory}</textarea>
+                <textarea name="memory" id="category-memory" placeholder="나의 성장을 기록해보세요!" rows="30">${memoryText}</textarea>
                 <button onclick="update_memory(${pk});">수정완료</button>
             </div>
             <div id="cdc-finish-box">

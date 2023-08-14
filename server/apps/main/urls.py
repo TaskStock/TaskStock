@@ -36,6 +36,7 @@ urlpatterns = [
     path('delete_category/', delete_category), # /main/delete_category/
     path('finish_category/', finish_category), # /main/finish_category/
     path('click_category/', click_category), # /main/click_category/
+    path('update_memory/', update_memory), # /main/update_memory/
     
     #시간대 저장 ajax
     path('set_timezone/', set_timezone), # /main/set_timezone/

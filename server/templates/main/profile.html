@@ -1,6 +1,9 @@
 {% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
 <main>
- 
+    <!-- 가정 먼저 실행되는 스크립트, 전역 변수 설정 -->
+    <script>
+        let global_chart_target_username="";
+    </script>
     <div class="main-left">
         <div class="user-info--container">
             <div class="user-info--pic">
@@ -78,6 +81,14 @@
         </div> 
         <div class="dashboard">
             <div id="username_save" style="display:none;">{{user.username}}</div>
+            <script>
+                const username = document.querySelector("#username_save");
+                if(username==null){
+                    global_chart_target_username="";
+                }else{
+                    global_chart_target_username=username.textContent;
+                }
+            </script>
             <div class="dashboard--combo">
                 <span>Combo</span>
                 <span>🔥 {{ target_user.combo }}</span>

@@ -365,7 +365,6 @@ function has_unchecked_todos(){
             // 해당 날짜의 todos
             const formData = new FormData();
             formData.append('str', checkDayString);
-            console.log(global_chart_target_username);
             formData.append("username", global_chart_target_username);
 
             const url = `/main/click_date/`;

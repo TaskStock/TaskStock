@@ -55,11 +55,6 @@ def user_created(sender, instance, created, **kwargs):
             high=50000,
         )
 
-        Category.objects.create(
-            user=instance,
-        )
-
-
 
 class Value(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='value_user')

@@ -850,6 +850,18 @@ def click_category(request):
 
     return JsonResponse({'category_data':category_data})
 
+@csrf_exempt
+def update_memory(request):
+    pk = request.POST.get('pk')
+    memory = request.POST.get('memory')
+    
+    category = Category.objects.get(pk=pk)
+
+    category.memory=memory
+    category.save()
+
+    return JsonResponse({'success':True})
+
 # group
 def group(request):
     return render(request, 'main/group.html')
