@@ -1,14 +1,4 @@
-let global_chart_target_username="";
-
-document.addEventListener("DOMContentLoaded", function(){
-
-  const username = document.querySelector("#username_save");
-  if(username==null){
-    global_chart_target_username="";
-  }else{
-    global_chart_target_username=username.textContent;
-  }
-  
+document.addEventListener("DOMContentLoaded", function(){  
   const one_week = document.querySelector("#one_week");
   const one_month = document.querySelector("#one_month");
   const three_month = document.querySelector("#three_month");

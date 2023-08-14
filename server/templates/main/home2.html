@@ -48,6 +48,14 @@
         </div>
         <div class="dashboard">
             <div id="username_save" style="display:none;">{{user.username}}</div>
+            <script>
+                const username = document.querySelector("#username_save");
+                if(username==null){
+                    global_chart_target_username="";
+                }else{
+                    global_chart_target_username=username.textContent;
+                }
+            </script>
             <div class="dashboard--combo">
                 <span>Combo</span>
                 <span>🔥 {{ user.combo }}</span>
@@ -218,8 +226,14 @@
 {% endblock %}
 
 {% block extra %}
+<script>
+    // home2를 랜더링했을 때 가장 먼제 실행하는 스크립트
+    document.addEventListener("DOMContentLoaded", function(){
+        
+    });
+</script>
+<script src="{% static 'js/candlestick.js' %}"></script>
 <script src="{% static 'js/time.js' %}"></script>
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
-<script src="{% static 'js/candlestick.js' %}"></script>
 {% endblock %}
