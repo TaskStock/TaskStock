@@ -897,7 +897,7 @@ def update_memory(request):
 # group
 # URL 뒤의 pk값을 가져와 해당 그룹의 페이지를 보여줌.
 def group(request,pk):
-    # group = Group.objects.get(id=pk)
+    group = Group.objects.get(id=pk)
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
     value_dic={}
     my_group = request.user.my_group
@@ -910,9 +910,9 @@ def group(request,pk):
 
     # 팔로잉 버튼을 내 그룹 유무에 따라 다르게 표시.
     if my_group == group:
-        button_text ="DELETE GROUP"
+        button_text ="LEAVE GROUP"
     else:
-        button_text = "ADD GROUP"    
+        button_text = "JOIN GROUP"    
     # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
     for user in users:
         value = get_value_for_date(user)
@@ -942,12 +942,12 @@ def follow_group(request):
     current_user = request.user
     text="오류"
 
-    if buttonText == "ADD GROUP":
+    if buttonText == "JOIN GROUP":
         current_user.my_group = target_group
-        text="DELETE GROUP"
-    elif buttonText =="DELETE GROUP":
+        text="LEAVE GROUP"
+    elif buttonText =="LEAVE GROUP":
         current_user.my_group = None
-        text="ADD GROUP"
+        text="JOIN GROUP"
 
     current_user.save()
 

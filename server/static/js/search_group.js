@@ -43,7 +43,7 @@ const showGroupsList = (groups) => {
       atagInput.href = `/main/group/${group.pk}/`;
 
       const addButtonContent =
-        group.name == my_group ? "DELETE GROUP" : "ADD GROUP";
+        group.name == my_group ? "LEAVE GROUP" : "JOIN GROUP";
 
       // 검색 결과를 보여주는 부분
       atagInput.innerHTML = `
@@ -129,11 +129,11 @@ const handleFollowButtonClick = async (event) => {
 };
 const handleFollowButtonText = async (text, event) => {
   const addButton = event.target.querySelector("[name=group-button]");
-  if (text === "DELETE GROUP") {
-    addButton.textContent = "DELETE GROUP";
+  if (text === "LEAVE GROUP") {
+    addButton.textContent = "LEAVE GROUP";
     window.location.reload();
-  } else if (text === "ADD GROUP") {
-    addButton.textContent = "ADD GROUP";
+  } else if (text === "JOIN GROUP") {
+    addButton.textContent = "JOIN GROUP";
     window.location.reload();
   }
 };
