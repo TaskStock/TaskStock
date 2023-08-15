@@ -90,11 +90,24 @@ section header{
     justify-content: space-between;
     position: relative;
 }
-section header h1{
+section header h1,
+#mb--header h1{
     font-size: 0;
 }
-section header img{
+section header img,
+#mb--header h1 img{
     height: 30px;
+}
+#mb--header{
+    background-color: var(--section-color);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    display: none;
+    justify-content: space-between;
+    padding: var(--gutter);
+    align-items: center;
+    z-index: 2000;
 }
 .my-info--container{
     width: 100%;
@@ -150,9 +163,7 @@ section header img{
 .my-info--sff span{
     cursor: pointer;
 }
-#hamburger-tb{
-    display: none !important;
-}
+
 .hamburger,
 #hamburger-tb,
 #tb-hamburger{
@@ -331,8 +342,8 @@ section header img{
         z-index: 1000;
         transition: 1s;
     }
-    #hamburger-tb{
-        display: flex !important;
+    header #hamburger-tb{
+        display: flex;
     }
     #tb-section{
         width: 70px;
@@ -382,5 +393,33 @@ section header img{
         left: 50px;
         visibility: visible;
         opacity: 1;
+    }
+}
+@media screen and (max-width: 600px) {
+    html{
+        overflow: hidden;
+    }
+    body{
+        position: relative;
+        overflow-x: hidden !important;
+        width: 100%;
+    }
+    #main--home{
+        margin-top: 62px;
+        overflow-x: hidden;
+        
+    }
+    #mb--header{
+        display: flex;
+        width: 100%;
+    }
+
+    #tb-section{
+        position: relative;
+        right: calc(-100%);
+        margin-right: -70px;
+        top: 0;
+        /* transform: translateX(70px); */
+        /* margin-left: -35px; */
     }
 }
