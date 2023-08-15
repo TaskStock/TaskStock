@@ -9,7 +9,7 @@ const handleButtonClick = async (event) => {
   const url = "/main/group/follow_group/";
 
   const formData = new FormData(event.target);
-  formData.append("buttonText", addButton.textContent);
+  formData.append("group-button", addButton.textContent);
   formData.append("group", group);
   const res = await fetch(url, {
     method: "POST",
@@ -36,9 +36,20 @@ const handleButtonText = async (Text) => {
 
 // update 부분
 // 그룹의 이름을 업데이트 시킨다
-const handleUpdateButtonClick = async (event) => {
-  event.preventDefault();
 
+// yes,no 창을 띄움
+const confirmModal = async (event) => {
+  console.log(event);
+  event.preventDefault();
+  if (window.confirm("정말 이름을 변경하시겠습니까?")) {
+    handleUpdateButtonClick(event);
+  } else {
+    console.log("취소. 변화 없음");
+    window.location.reload();
+  }
+};
+
+const handleUpdateButtonClick = async (event) => {
   const input_content = document.querySelector("#update-input").value;
   console.log(input_content);
   const url = "/main/group/update_group/";

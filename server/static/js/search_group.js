@@ -117,7 +117,7 @@ const handleFollowButtonClick = async (event) => {
   const url = "/main/group/follow_group/";
 
   const formData = new FormData(event.target);
-  formData.append("buttonText", addButton_text.trim());
+  formData.append("group-button", addButton_text.trim());
   formData.append("group", group);
   const res = await fetch(url, {
     method: "POST",
