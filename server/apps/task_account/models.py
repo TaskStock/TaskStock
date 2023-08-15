@@ -66,7 +66,6 @@ def user_created(sender, instance, created, **kwargs):
             high=50000,
         )
 
-
 class Value(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='value_user')
     date = models.DateTimeField()
@@ -97,3 +96,14 @@ class Todo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     finish_at = models.DateTimeField(null=True)
 
+
+#Badge 모델
+class Badge(models.Model):
+    users = models.ManyToManyField(User, related_name="badges")
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+    #배지 부여할 때
+    #user.badges.add(some_badge)

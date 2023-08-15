@@ -561,6 +561,10 @@ def delete_todo(request, pk):
         #todo 삭제하기 전 연결된 value의 low값 업데이트
         value.low += 1000*todo.level
         
+        #체크되어 있다면
+        if todo.goal_check:
+            value.end -= 1000*todo.level
+        
         #저장
         value.save()
         #todo삭제
@@ -737,6 +741,11 @@ def process_combo(user):
         
     user.combo = combo
     user.save()
+    
+    acquired_badges = user.badges.values_list('name', flat=True)
+    if user.combo == 10 and "지금이라도 사야해" not in acquired_badges:
+        badge_to_add = Badge.objects.get(name="지금이라도 사야해")
+        user.badges.add(badge_to_add)
         
     return combo
 
@@ -1045,3 +1054,4 @@ def search_group_ajax(request):
         groups.append(group_data)
 
     return JsonResponse({"groups": groups})
+
