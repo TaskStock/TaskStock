@@ -17,6 +17,8 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
+    
+
 
 class User(AbstractUser):
     combo = models.IntegerField(null=True, default=0)

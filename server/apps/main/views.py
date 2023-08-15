@@ -10,8 +10,6 @@ from django.conf import settings
 import arrow 
 from datetime import timedelta
 
-
-
 # 비밀번호 변경 위한 라이브러리
 from django.contrib.auth.hashers import check_password
 from django.contrib import auth
@@ -20,17 +18,26 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.core import serializers
 
-"""
-사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update //만드는 중
-할일 추가 함수 //만듬
-할일 삭제 함수 //만듬
-체크 상태에 따라 가치 계산하는 함수 //만듬
-난이도 변경에 따라 가치 계산하는 함수
-할일 수정 함수
-팔로잉 검색하는 함수
-팔로우 검색하는 함수
-전체 사람 중에 검색하는 함수
-"""
+
+#스케줄링 관련 함수
+def decrease_value(user, target_arrow):
+    #사용자의 전날 value객체 가져오기
+    value_object = get_value_for_date(user, target_arrow)  #get_value_for_date함수는 local arrow 받아야 함
+    
+    if not value_object:
+        print('전날 접속 안해서 value 없는 사용자')
+        return
+
+    todos = Todo.objects.filter(value=value_object, goal_check=False)
+    for todo in todos:
+        value_object.end -= todo.level * 1000
+        value_object.save()
+        
+    print('process_decrease 가치 감소 check 실행')
+    
+    
+
+
 
 #시간대 설정
 @csrf_exempt
@@ -295,9 +302,21 @@ def home(request):
     value = get_value_for_date(current_user)
     
     if value == None:
-        # 로그인 했을 때 value가 없는 경우
+        # 로그인 했을 때 value가 없는 경우는 create
         value = createValue(current_user)
         print('home로딩하면서 createValue')
+        
+    elif value.is_dummy:
+        #오늘의 데이터가 미리 만들어진 더미데이터면 업데이트로 접근
+        loacl_today_arrow = get_current_arrow(current_user.tzinfo)
+        utc_today_arrow  = local_to_utc(loacl_today_arrow)
+        
+        #더미데이터 빼고 정렬해서 가져와야 하기 때문에 date_lt 사용
+        last_value = Value.objects.filter(user=current_user, date__lt=utc_today_arrow.datetime).order_by('-date').first()
+
+        value.start = value.end = value.low = value.high = last_value.end
+        value.save()
+        
     
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
@@ -459,34 +478,33 @@ def add_todo(request):
         # 현재 user 객체 가져오기
         current_user = request.user
     
-        # date_str을 사용자의 timezone을 고려해서 arrow로 변환
+        # date_str을 사용자의 timezone을 고려해서 arrow로 객체로 변환(local)
         target_arrow = arrow.get(date_str, 'M/D/YYYY', tzinfo=current_user.tzinfo).ceil('day')
         
-        print('add_todo target_arrow:', target_arrow)
+        print('add_todo local target_arrow:', target_arrow)
         # date 일치하는 value 객체 가져오기
         value = get_value_for_date(current_user, target_arrow)
         
         # value 없는 날 - 달력 연결 후 '완료' 버튼 누르면 객체 생성
         if value == None:
-            createValue(current_user, target_arrow)
-            print('add_todo에서 완료 눌렀을 때 value 없는 날이라 creatValue 실행, create된 datetime =', target_arrow )
+            value = Value.objects.create(
+            user=current_user,
+            date=local_to_utc(target_arrow).datetime,   #DB에는 UTC로 저장
+            percentage=0,
+            start=0,
+            end=0,
+            low=0,
+            high=0,
+            is_dummy = True,
+            )
+            print('add_todo에서 완료 눌렀을 때 value 없는 날이라 일단 0으로 다 박음, create된 datetime =', target_arrow )
             value = get_value_for_date(current_user, target_arrow)
+        
 
         # value 있긴 한데 더미데이터인 날
-        if value.is_dummy:
-            print('add_todo에서 완료 눌렀을 때 더미데이터임.', target_arrow, )
-            # last_value = Value.objects.filter(user=current_user, is_dummy=False, date__lte=target_arrow).order_by('-date').first()
-            
-            # if last_value:
-            #     print('근데 더미데이터 이전 날짜에 더미데이터가 아닌(값을 참고할 만한) 객체가 있음')
-            #     value.start = value.end = value.low = value.high = last_value.end
-            # else:
-            #     # 만약 회원가입 일주일 전 ~ 회원가입날을 클릭한다면(last_value가 없다면)
-            #     value.start = value.low = value.high = value.end = 0
+        elif value.is_dummy:
+            print('add_todo에서 완료 눌렀을 때 더미데이터임. local target arrow =', target_arrow)
 
-            value.is_dummy = False
-            value.save()
-        
         # 현재 user의 caregory 객체 가져오기
         try:
             category = Category.objects.get(user=current_user, name=category_name)
@@ -511,12 +529,14 @@ def add_todo(request):
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
+        today_value = get_value_for_date(current_user)
+        
         # todo의 high값 업데이트
-        value.high += my_level * 1000
+        today_value.high += my_level * 1000
         
         # todo의 low값 업데이트
-        value.low -= my_level * 1000
-        value.save()
+        today_value.low -= my_level * 1000
+        today_value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
         return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content, 'category_datas':category_datas})
@@ -720,6 +740,7 @@ def process_combo(user):
         
     return combo
 
+
 #---선우 작업---#
 
 def search(request):
@@ -876,7 +897,7 @@ def update_memory(request):
 # group
 # URL 뒤의 pk값을 가져와 해당 그룹의 페이지를 보여줌.
 def group(request,pk):
-    group = Group.objects.get(id=pk)
+    # group = Group.objects.get(id=pk)
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
     value_dic={}
     my_group = request.user.my_group

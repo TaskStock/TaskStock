@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_apscheduler',
     'server.apps.task_account',
     'server.apps.main',
 
@@ -208,4 +209,8 @@ EMAIL_USE_SSL = False
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+#장고 앱스케줄러 관련 설정
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
+
+SCHEDULER_DEFAULT = True
 
