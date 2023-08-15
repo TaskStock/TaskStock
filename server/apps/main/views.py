@@ -10,8 +10,6 @@ from django.conf import settings
 import arrow 
 from datetime import timedelta
 
-
-
 # 비밀번호 변경 위한 라이브러리
 from django.contrib.auth.hashers import check_password
 from django.contrib import auth
@@ -20,17 +18,26 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.core import serializers
 
-"""
-사용자가 로그인 할 때마다 value객체 검증하고 사용자의 가치 update //만드는 중
-할일 추가 함수 //만듬
-할일 삭제 함수 //만듬
-체크 상태에 따라 가치 계산하는 함수 //만듬
-난이도 변경에 따라 가치 계산하는 함수
-할일 수정 함수
-팔로잉 검색하는 함수
-팔로우 검색하는 함수
-전체 사람 중에 검색하는 함수
-"""
+
+#스케줄링 관련 함수
+def decrease_value(user, target_arrow):
+    #사용자의 전날 value객체 가져오기
+    value_object = get_value_for_date(user, target_arrow)  #get_value_for_date함수는 local arrow 받아야 함
+    
+    if not value_object:
+        print('전날 접속 안해서 value 없는 사용자')
+        return
+
+    todos = Todo.objects.filter(value=value_object, goal_check=False)
+    for todo in todos:
+        value_object.end -= todo.level * 1000
+        value_object.save()
+        
+    print('process_decrease 가치 감소 check 실행')
+    
+    
+
+
 
 #시간대 설정
 @csrf_exempt
@@ -252,7 +259,7 @@ def createValue(user, target_arrow=None):
         low=low,
         high=high,
     )
-    add_price(user)
+    # add_price(user)
     return value
 
 # 이 곳에 그룹 주가 상승 함수를 추가할 생각
@@ -295,9 +302,21 @@ def home(request):
     value = get_value_for_date(current_user)
     
     if value == None:
-        # 로그인 했을 때 value가 없는 경우
+        # 로그인 했을 때 value가 없는 경우는 create
         value = createValue(current_user)
         print('home로딩하면서 createValue')
+        
+    elif value.is_dummy:
+        #오늘의 데이터가 미리 만들어진 더미데이터면 업데이트로 접근
+        loacl_today_arrow = get_current_arrow(current_user.tzinfo)
+        utc_today_arrow  = local_to_utc(loacl_today_arrow)
+        
+        #더미데이터 빼고 정렬해서 가져와야 하기 때문에 date_lt 사용
+        last_value = Value.objects.filter(user=current_user, date__lt=utc_today_arrow.datetime).order_by('-date').first()
+
+        value.start = value.end = value.low = value.high = last_value.end
+        value.save()
+        
     
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
@@ -459,34 +478,33 @@ def add_todo(request):
         # 현재 user 객체 가져오기
         current_user = request.user
     
-        # date_str을 사용자의 timezone을 고려해서 arrow로 변환
+        # date_str을 사용자의 timezone을 고려해서 arrow로 객체로 변환(local)
         target_arrow = arrow.get(date_str, 'M/D/YYYY', tzinfo=current_user.tzinfo).ceil('day')
         
-        print('add_todo target_arrow:', target_arrow)
+        print('add_todo local target_arrow:', target_arrow)
         # date 일치하는 value 객체 가져오기
         value = get_value_for_date(current_user, target_arrow)
         
         # value 없는 날 - 달력 연결 후 '완료' 버튼 누르면 객체 생성
         if value == None:
-            createValue(current_user, target_arrow)
-            print('add_todo에서 완료 눌렀을 때 value 없는 날이라 creatValue 실행, create된 datetime =', target_arrow )
+            value = Value.objects.create(
+            user=current_user,
+            date=local_to_utc(target_arrow).datetime,   #DB에는 UTC로 저장
+            percentage=0,
+            start=0,
+            end=0,
+            low=0,
+            high=0,
+            is_dummy = True,
+            )
+            print('add_todo에서 완료 눌렀을 때 value 없는 날이라 일단 0으로 다 박음, create된 datetime =', target_arrow )
             value = get_value_for_date(current_user, target_arrow)
+        
 
         # value 있긴 한데 더미데이터인 날
-        if value.is_dummy:
-            print('add_todo에서 완료 눌렀을 때 더미데이터임.', target_arrow, )
-            # last_value = Value.objects.filter(user=current_user, is_dummy=False, date__lte=target_arrow).order_by('-date').first()
-            
-            # if last_value:
-            #     print('근데 더미데이터 이전 날짜에 더미데이터가 아닌(값을 참고할 만한) 객체가 있음')
-            #     value.start = value.end = value.low = value.high = last_value.end
-            # else:
-            #     # 만약 회원가입 일주일 전 ~ 회원가입날을 클릭한다면(last_value가 없다면)
-            #     value.start = value.low = value.high = value.end = 0
+        elif value.is_dummy:
+            print('add_todo에서 완료 눌렀을 때 더미데이터임. local target arrow =', target_arrow)
 
-            value.is_dummy = False
-            value.save()
-        
         # 현재 user의 caregory 객체 가져오기
         try:
             category = Category.objects.get(user=current_user, name=category_name)
@@ -511,12 +529,14 @@ def add_todo(request):
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
+        today_value = get_value_for_date(current_user)
+        
         # todo의 high값 업데이트
-        value.high += my_level * 1000
+        today_value.high += my_level * 1000
         
         # todo의 low값 업데이트
-        value.low -= my_level * 1000
-        value.save()
+        today_value.low -= my_level * 1000
+        today_value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
         return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content, 'category_datas':category_datas})
@@ -720,6 +740,7 @@ def process_combo(user):
         
     return combo
 
+
 #---선우 작업---#
 
 def search(request):
@@ -823,7 +844,7 @@ def update_category(request):
 @csrf_exempt
 def delete_category(request):
     pk = request.POST.get('pk')
-        
+    
     category = Category.objects.get(pk=pk)
 
     category.delete()
@@ -880,7 +901,6 @@ def group(request,pk):
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
     value_dic={}
     my_group = request.user.my_group
-    current_user = request.user
 
     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
     if group.create_user == request.user.name:
@@ -890,9 +910,9 @@ def group(request,pk):
 
     # 팔로잉 버튼을 내 그룹 유무에 따라 다르게 표시.
     if my_group == group:
-        button_text = "CANCEL"
+        button_text ="LEAVE GROUP"
     else:
-        button_text = "FOLLOW"    
+        button_text = "JOIN GROUP"    
     # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
     for user in users:
         value = get_value_for_date(user)
@@ -901,6 +921,7 @@ def group(request,pk):
         else:
             value_dic[user.name] = value.end
 
+
     context = {
         'group': group,
         'users': users,
@@ -908,7 +929,6 @@ def group(request,pk):
         'button_text': button_text,
         'am_I_creator': am_I_creator,
         'users_length': len(users),
-        'current_user': current_user,
     }
     return render(request, 'main/group.html', context)
 
@@ -916,22 +936,22 @@ def group(request,pk):
 
 @csrf_exempt
 def follow_group(request):
-    buttonText = request.POST.get("buttonText")
+    buttonText = request.POST.get("group-button")
     group = request.POST.get("group")
     target_group = Group.objects.get(name=group)
     current_user = request.user
     text="오류"
 
-    if buttonText == "FOLLOW":
+    if buttonText == "JOIN GROUP":
         current_user.my_group = target_group
-        text="CANCEL"
-    elif buttonText == "CANCEL":
+        text="LEAVE GROUP"
+    elif buttonText =="LEAVE GROUP":
         current_user.my_group = None
-        text="FOLLOW"
+        text="JOIN GROUP"
 
     current_user.save()
 
-    return JsonResponse({'text': text, 'name': target_group.name, 'price': target_group.price, 'create_user': target_group.create_user, 'pk': target_group.pk})
+    return JsonResponse({'text': text})
 
 
 def create_group(request):
@@ -948,7 +968,8 @@ def create_group(request):
             user.my_group = Group.objects.get(name=content)
             user.save()
 
-            redirect(f'/main/group/{user.my_group.id}')
+            return JsonResponse({'result': 'Success'})
+        
         else:
             #그룹이 있는 경우
             return JsonResponse({'result': 'Exist'})
@@ -971,32 +992,26 @@ def delete_group(request,pk):
         group = Group.objects.get(pk=pk)
         group.delete()
         
-        return redirect('/main/')
+        return redirect('/main/search_group/')
     
-def add_price(user):
-    last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
-    my_group = user.my_group
-    if my_group is not None:
-        my_group.price += last_value.start - last_value.end
-        my_group.save()
+# def add_price(user):
+#     last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
+#     my_group = user.my_group
+#     if my_group is not None:
+#         my_group.price += last_value.start - last_value.end
+#         my_group.save()
 
-    return my_group.price
+#     return my_group.price
 
 # search에 그룹 검색 기능 추가
 # 그룹에 멤버가 0명이라면 삭제하기
 
 # group search에 관한 함수
 def search_group(request):
-    search_content = request.GET.get('search_content','')
     groups = Group.objects.all().order_by('-price')
     currentu_user = request.user
     filtered_groups = groups
     my_group = currentu_user.my_group
-
-    # 검색 필터 부분
-    if search_content:
-        filtered_users = Group.objects.all().filter(name__contains=search_content)
-
 
 
     ctx = {
@@ -1010,10 +1025,10 @@ def search_group(request):
 
 @csrf_exempt
 def search_group_ajax(request):
-    search_content = request.POST.get("text")
+    search_contents = request.POST.get("textContent")
 
-    if search_content is not None:
-        find_groups = Group.objects.filter(name__contains=search_content)
+    if search_contents is not None:
+        find_groups = Group.objects.filter(name__contains=search_contents)
     else:
         find_groups = Group.objects.all()
 
