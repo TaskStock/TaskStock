@@ -1,7 +1,7 @@
 // 검색 창에 입력할 때마다 ajax로 유저 목록
 document.addEventListener("DOMContentLoaded", function () {
   const textInput = document.querySelector("#search-group_content");
-
+  console.log(textInput);
   textInput.addEventListener("input", function () {
     const liveGroupChartInput = document.querySelector("#live-group-chart");
     if (textInput.value == "")
@@ -117,7 +117,7 @@ const handleFollowButtonClick = async (event) => {
   const url = "/main/group/follow_group/";
 
   const formData = new FormData(event.target);
-  formData.append("buttonText", addButton_text.trim());
+  formData.append("group-button", addButton_text.trim());
   formData.append("group", group);
   const res = await fetch(url, {
     method: "POST",

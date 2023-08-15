@@ -20,7 +20,7 @@
         </div>
         <div class="group-content__form">
             {% if am_I_creator %}
-                <form onsubmit="handleUpdateButtonClick(event)">
+                <form onsubmit="confirmModal(event)">
                     {% csrf_token %}
                     <input type="text" name="group-create-inpput"  id="update-input">
                     <button type="submit" name="group-update-button" id="update-button">Update</button>

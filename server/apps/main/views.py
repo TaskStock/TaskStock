@@ -823,7 +823,7 @@ def update_category(request):
 @csrf_exempt
 def delete_category(request):
     pk = request.POST.get('pk')
-        
+    
     category = Category.objects.get(pk=pk)
 
     category.delete()
@@ -915,7 +915,7 @@ def group(request,pk):
 
 @csrf_exempt
 def follow_group(request):
-    buttonText = request.POST.get("buttonText")
+    buttonText = request.POST.get("group-button")
     group = request.POST.get("group")
     target_group = Group.objects.get(name=group)
     current_user = request.user
