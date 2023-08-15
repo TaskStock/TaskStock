@@ -97,7 +97,7 @@ const handleCreateResult = async (result) => {
   if (result == "Exist") {
     alert("그룹은 1개만 가능합니다.");
   } else {
-    alert("그룹이 생성되었습니다.");
+    window.location.reload();
   }
 };
 
@@ -123,49 +123,16 @@ const handleFollowButtonClick = async (event) => {
     headers: {},
     body: formData,
   });
-  const { text, name, price, create_user, pk } = await res.json();
-  handleFollowButtonText(text, name, price, create_user, pk, event);
+  const { text } = await res.json();
+  handleFollowButtonText(text, event);
 };
-const handleFollowButtonText = async (
-  text,
-  name,
-  price,
-  create_user,
-  pk,
-  event
-) => {
+const handleFollowButtonText = async (text, event) => {
   const addButton = event.target.querySelector("[name=group-button]");
   if (text === "DELETE GROUP") {
     addButton.textContent = "DELETE GROUP";
-    document.querySelector(
-      ".my-group__container"
-    ).innerHTML = `<a href="/main/group/${pk}/">
-    <div class="search-result__container">
-        <div class="search-result__right--container">
-            <div class="friend-info--pic"></div>
-            <div class="search-result__name-container">
-                <h2>${name}</h2>
-                <p>${price}</p>
-            </div>
-        </div>
-        <div class="search-result__right-container">
-            <div class="search-result__info">
-                <div class="search-result__right-upper-container">
-                    <form onsubmit="handleFollowButtonClick(event)">
-                        <input type="hidden" name="group" value="${name}">
-                        <button type="submit" name="group-button" class="add-button">DELETE GROUP</button>
-                    </form>
-                </div>
-                <p>${create_user}</p>
-            </div>
-            
-        </div>    
-    </div>
-</a>`;
+    window.location.reload();
   } else if (text === "ADD GROUP") {
     addButton.textContent = "ADD GROUP";
-    document.querySelector(".my-group__container").innerHTML = `
-    <span>가입 그룹이 없습니다.</span>
-    `;
+    window.location.reload();
   }
 };
