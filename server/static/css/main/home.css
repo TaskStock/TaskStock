@@ -368,7 +368,7 @@ main{
         cursor: pointer;
         align-items: center;
         justify-content: center;
-        z-index: 1000;
+        z-index: 500;
     }
     #mb-main--nav i{
         font-size: var(--heading3);
@@ -380,6 +380,7 @@ main{
     }
     .main-left{
         border-bottom: none;
+        padding: var(--gutter) 0;
     }
     #mb-main--nav > input{
         display: none;
@@ -389,7 +390,8 @@ main{
         display: grid;
         grid-template-columns: auto;
         gap: 0;
-        /* margin: 0 var(--gutter); */
+        margin: 0;
+        padding: 0;
     }
     .price > div,
     .dashboard > div{
@@ -397,6 +399,7 @@ main{
         justify-content: space-between;
         border-radius: 0;
         width: 100%;
+        padding: var(--gutter) calc(2 * var(--gutter));
     }
     .price > div > span:last-child,
     .dashboard > div > span:last-child{
@@ -408,8 +411,15 @@ main{
         flex-direction: column;
         gap: 0;
         margin: 0;
+        padding: 0;
+        margin-top: var(--gutter);
     }
-    
+    .dashboard .dashboard--completed,
+    .price .price--taspi,
+    .price .total-todos{
+        background-color: white;
+    }
+   
     
     
 }

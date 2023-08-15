@@ -365,34 +365,10 @@ section header img,
         align-items: center;
         margin: auto 0;
     }
-    .tb-hamburger-contents a,
-    .menu-right__darkmode{
-        position: relative;
-    }
+   
     .tb-hamburger-contents a > span,
-    .tb-hamburger-contents .menu-right__darkmode > span{
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: var(--caption);
-        font-weight: var(--weight2);
-        color: black;
-        visibility: hidden;
-        opacity: 0;
-        white-space: nowrap;
-        padding: 7px 10px;
-        transition: var(--transition);
-        border-radius: var(--border-r);
-        z-index: 5;
-        
-        background-color: var(--bg-3);
-    }
-    .tb-hamburger-contents a:hover span,
-    .tb-hamburger-contents > div:hover span{
-        left: 50px;
-        visibility: visible;
-        opacity: 1;
+    .tb-hamburger-contents .tb-menu-right__darkmode > span{
+       display: none;
     }
 }
 @media screen and (max-width: 600px) {
@@ -403,6 +379,11 @@ section header img,
         position: relative;
         overflow-x: hidden !important;
         width: 100%;
+    }
+    section{
+        width: 90%;
+        left: -90%;
+        margin-right: -90%;
     }
     #main--home{
         margin-top: 62px;
@@ -415,11 +396,41 @@ section header img,
     }
 
     #tb-section{
+        width: 90%;
+        margin-right: -90%;
+        right: -100%;
         position: relative;
-        right: calc(-100%);
-        margin-right: -70px;
         top: 0;
-        /* transform: translateX(70px); */
-        /* margin-left: -35px; */
+        z-index: 1000;
+        align-items: flex-start;
+        z-index: 600;
+        transition: all 1s;
     }
+    .tb-hamburger-contents{
+        align-items: flex-start;
+        padding-left: var(--gutter);
+        justify-content: flex-start;
+        margin: var(--offset);
+        gap: 30px;
+    }
+    .tb-hamburger-contents a > span,
+    .tb-hamburger-contents .tb-menu-right__darkmode > span{
+        display: block;
+        font-size: var(--caption);
+        color: white;
+        visibility: visible;
+        opacity: 1;
+        white-space: nowrap;
+        background-color: transparent;
+        z-index: 5;
+        
+    }
+    .tb-hamburger-contents a,
+    .tb-hamburger-contents .tb-menu-right__darkmode{
+        display: flex;
+        align-items: center;
+        gap: var(--gutter);
+
+    }
+    
 }
