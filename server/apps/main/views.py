@@ -20,9 +20,6 @@ from django.core import serializers
 
 
 #스케줄링 관련 함수
-
-
-
 def decrease_value(user, target_arrow):
     #사용자의 전날 value객체 가져오기
     value_object = get_value_for_date(user, target_arrow)  #get_value_for_date함수는 local arrow 받아야 함
@@ -262,8 +259,7 @@ def createValue(user, target_arrow=None):
         low=low,
         high=high,
     )
-    
-    #add_price(user)
+    # add_price(user)
     return value
 
 # 이 곳에 그룹 주가 상승 함수를 추가할 생각
@@ -848,7 +844,7 @@ def update_category(request):
 @csrf_exempt
 def delete_category(request):
     pk = request.POST.get('pk')
-        
+    
     category = Category.objects.get(pk=pk)
 
     category.delete()
@@ -905,7 +901,6 @@ def group(request,pk):
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
     value_dic={}
     my_group = request.user.my_group
-    current_user = request.user
 
     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
     if group.create_user == request.user.name:
@@ -915,9 +910,9 @@ def group(request,pk):
 
     # 팔로잉 버튼을 내 그룹 유무에 따라 다르게 표시.
     if my_group == group:
-        button_text = "CANCEL"
+        button_text ="DELETE GROUP"
     else:
-        button_text = "FOLLOW"    
+        button_text = "ADD GROUP"    
     # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
     for user in users:
         value = get_value_for_date(user)
@@ -926,6 +921,7 @@ def group(request,pk):
         else:
             value_dic[user.name] = value.end
 
+
     context = {
         'group': group,
         'users': users,
@@ -933,7 +929,6 @@ def group(request,pk):
         'button_text': button_text,
         'am_I_creator': am_I_creator,
         'users_length': len(users),
-        'current_user': current_user,
     }
     return render(request, 'main/group.html', context)
 
@@ -941,22 +936,22 @@ def group(request,pk):
 
 @csrf_exempt
 def follow_group(request):
-    buttonText = request.POST.get("buttonText")
+    buttonText = request.POST.get("group-button")
     group = request.POST.get("group")
     target_group = Group.objects.get(name=group)
     current_user = request.user
     text="오류"
 
-    if buttonText == "FOLLOW":
+    if buttonText == "ADD GROUP":
         current_user.my_group = target_group
-        text="CANCEL"
-    elif buttonText == "CANCEL":
+        text="DELETE GROUP"
+    elif buttonText =="DELETE GROUP":
         current_user.my_group = None
-        text="FOLLOW"
+        text="ADD GROUP"
 
     current_user.save()
 
-    return JsonResponse({'text': text, 'name': target_group.name, 'price': target_group.price, 'create_user': target_group.create_user, 'pk': target_group.pk})
+    return JsonResponse({'text': text})
 
 
 def create_group(request):
@@ -973,7 +968,8 @@ def create_group(request):
             user.my_group = Group.objects.get(name=content)
             user.save()
 
-            redirect(f'/main/group/{user.my_group.id}')
+            return JsonResponse({'result': 'Success'})
+        
         else:
             #그룹이 있는 경우
             return JsonResponse({'result': 'Exist'})
@@ -996,32 +992,26 @@ def delete_group(request,pk):
         group = Group.objects.get(pk=pk)
         group.delete()
         
-        return redirect('/main/')
+        return redirect('/main/search_group/')
     
-def add_price(user):
-    last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
-    my_group = user.my_group
-    if my_group is not None:
-        my_group.price += last_value.start - last_value.end
-        my_group.save()
+# def add_price(user):
+#     last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
+#     my_group = user.my_group
+#     if my_group is not None:
+#         my_group.price += last_value.start - last_value.end
+#         my_group.save()
 
-    return my_group.price
+#     return my_group.price
 
 # search에 그룹 검색 기능 추가
 # 그룹에 멤버가 0명이라면 삭제하기
 
 # group search에 관한 함수
 def search_group(request):
-    search_content = request.GET.get('search_content','')
     groups = Group.objects.all().order_by('-price')
     currentu_user = request.user
     filtered_groups = groups
     my_group = currentu_user.my_group
-
-    # 검색 필터 부분
-    if search_content:
-        filtered_users = Group.objects.all().filter(name__contains=search_content)
-
 
 
     ctx = {
@@ -1035,10 +1025,10 @@ def search_group(request):
 
 @csrf_exempt
 def search_group_ajax(request):
-    search_content = request.POST.get("text")
+    search_contents = request.POST.get("textContent")
 
-    if search_content is not None:
-        find_groups = Group.objects.filter(name__contains=search_content)
+    if search_contents is not None:
+        find_groups = Group.objects.filter(name__contains=search_contents)
     else:
         find_groups = Group.objects.all()
 

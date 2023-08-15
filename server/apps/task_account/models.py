@@ -47,7 +47,7 @@ class User(AbstractUser):
     followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
     # 그룹 기능을 위해 추가
-    my_group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='user_set',null=True)
+    my_group = models.ForeignKey(Group, on_delete=models.SET_NULL, related_name='user_set',null=True)
 
     def __str__(self):
         return self.username

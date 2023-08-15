@@ -1,6 +1,7 @@
 // follow부분
 
-const handleButtonClick = async (event, name, price) => {
+// ADD,DELETE 버튼을 클릭 했을 때 ajax 통신을 통해 그룹원 추가, 삭제
+const handleButtonClick = async (event) => {
   const addButton = document.querySelector("#add-button");
   const group = document.querySelector(".group-content__name").textContent;
   event.preventDefault();
@@ -8,7 +9,7 @@ const handleButtonClick = async (event, name, price) => {
   const url = "/main/group/follow_group/";
 
   const formData = new FormData(event.target);
-  formData.append("buttonText", addButton.textContent);
+  formData.append("group-button", addButton.textContent);
   formData.append("group", group);
   const res = await fetch(url, {
     method: "POST",
@@ -16,42 +17,39 @@ const handleButtonClick = async (event, name, price) => {
     body: formData,
   });
   const { text: text } = await res.json();
-  let id_name = `group-content__li-${name}`;
 
-  console.log(text, id_name, price, name);
-  handleButtonText(text, id_name, price, name);
+  console.log(text);
+  handleButtonText(text);
 };
 
-const handleButtonText = async (Text, id_name, price, name) => {
-  if (Text === "CANCEL") {
-    document.querySelector("#add-button").textContent = "CANCEL";
-
-    // 리스트에 사용자 추가
-    const ul = document.querySelector(".group-content__ul");
-    const li = document.createElement("li");
-    li.setAttribute("id", id_name);
-    li.innerHTML = `   
-    <div>그룹원 명: ${name}</div>
-    <div>그룹원 가격: ${price}</div>`;
-    ul.appendChild(li);
-
-    group_member = document.getElementById("group-member");
-    group_member = parseInt(group_member.textContent) - 1;
-  } else if (Text === "FOLLOW") {
-    document.querySelector("#add-button").textContent = "FOLLOW";
-
-    // 리스트에서 사용자 삭제
-    document.getElementById(id_name).remove();
-
-    group_member = document.getElementById("group-member");
-    group_member = parseInt(group_member.textContent) + 1;
+const handleButtonText = async (Text) => {
+  if (Text === "DELETE GROUP") {
+    document.querySelector("#add-button").textContent = "DELETE GROUP";
+    // 그룹원 수 감소 리로드를 통해
+    window.location.reload();
+  } else if (Text === "ADD GROUP") {
+    document.querySelector("#add-button").textContent = "ADD GROUP";
+    // 그룹원 수 증가 리로드를 통헤
+    window.location.reload();
   }
 };
 
 // update 부분
-const handleUpdateButtonClick = async (event) => {
-  event.preventDefault();
+// 그룹의 이름을 업데이트 시킨다
 
+// yes,no 창을 띄움
+const confirmModal = async (event) => {
+  console.log(event);
+  event.preventDefault();
+  if (window.confirm("정말 이름을 변경하시겠습니까?")) {
+    handleUpdateButtonClick(event);
+  } else {
+    console.log("취소. 변화 없음");
+    window.location.reload();
+  }
+};
+
+const handleUpdateButtonClick = async (event) => {
   const input_content = document.querySelector("#update-input").value;
   console.log(input_content);
   const url = "/main/group/update_group/";
