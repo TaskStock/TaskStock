@@ -41,7 +41,7 @@
                                     <form onsubmit="handleFollowButtonClick(event)">
                                         {% csrf_token %}
                                         <input type="hidden" name="group" value="{{ my_group.name }}">
-                                        <button type="submit" name="group-button" class="add-button">DELETE GROUP</button>
+                                        <button type="submit" name="group-button" class="add-button">LEAVE GROUP</button>
                                     </form>
                                 </div>
                                 <p>{{my_group.create_user}}</p>
@@ -73,9 +73,9 @@
                                         <input type="hidden" name="group" value="{{ group.name }}">
                                         <button type="submit" name="group-button" class="add-button">
                                             {% if group == my_group %}
-                                                DELETE GROUP
+                                                LEAVE GROUP
                                             {% else %}
-                                                ADD GROUP
+                                                JOIN GROUP
                                             {% endif %}
                                         </button>
                                     </form>
@@ -112,9 +112,9 @@
                                         <input type="hidden" name="group" value="{{ filtered_group.name }}">
                                         <button type="submit" name="group-button" class="add-button">
                                             {% if filtered_group == my_group %}
-                                                DELETE GROUP
+                                                LEAVE GROUP
                                             {% else %}
-                                                ADD GROUP
+                                                JOIN GROUP
                                             {% endif %}
                                         </button>
                                     </form>

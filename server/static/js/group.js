@@ -23,12 +23,12 @@ const handleButtonClick = async (event) => {
 };
 
 const handleButtonText = async (Text) => {
-  if (Text === "DELETE GROUP") {
-    document.querySelector("#add-button").textContent = "DELETE GROUP";
+  if (Text === "LEAVE GROUP") {
+    document.querySelector("#add-button").textContent = "LEAVE GROUP";
     // 그룹원 수 감소 리로드를 통해
     window.location.reload();
-  } else if (Text === "ADD GROUP") {
-    document.querySelector("#add-button").textContent = "ADD GROUP";
+  } else if (Text === "JOIN GROUP") {
+    document.querySelector("#add-button").textContent = "JOIN GROUP";
     // 그룹원 수 증가 리로드를 통헤
     window.location.reload();
   }
