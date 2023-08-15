@@ -898,160 +898,160 @@ def update_memory(request):
 
     return JsonResponse({'success':True})
 
-# # group
-# # URL 뒤의 pk값을 가져와 해당 그룹의 페이지를 보여줌.
-# def group(request,pk):
-#     # group = Group.objects.get(id=pk)
-#     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
-#     value_dic={}
-#     my_group = request.user.my_group
-#     current_user = request.user
+# group
+# URL 뒤의 pk값을 가져와 해당 그룹의 페이지를 보여줌.
+def group(request,pk):
+    # group = Group.objects.get(id=pk)
+    users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
+    value_dic={}
+    my_group = request.user.my_group
+    current_user = request.user
 
-#     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
-#     if group.create_user == request.user.name:
-#         am_I_creator = True
-#     else:
-#         am_I_creator = False
+    # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
+    if group.create_user == request.user.name:
+        am_I_creator = True
+    else:
+        am_I_creator = False
 
-#     # 팔로잉 버튼을 내 그룹 유무에 따라 다르게 표시.
-#     if my_group == group:
-#         button_text = "CANCEL"
-#     else:
-#         button_text = "FOLLOW"    
-#     # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
-#     for user in users:
-#         value = get_value_for_date(user)
-#         if value is None:
-#             value_dic[user.name] = 0
-#         else:
-#             value_dic[user.name] = value.end
+    # 팔로잉 버튼을 내 그룹 유무에 따라 다르게 표시.
+    if my_group == group:
+        button_text = "CANCEL"
+    else:
+        button_text = "FOLLOW"    
+    # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
+    for user in users:
+        value = get_value_for_date(user)
+        if value is None:
+            value_dic[user.name] = 0
+        else:
+            value_dic[user.name] = value.end
 
-#     context = {
-#         'group': group,
-#         'users': users,
-#         'value': value_dic,
-#         'button_text': button_text,
-#         'am_I_creator': am_I_creator,
-#         'users_length': len(users),
-#         'current_user': current_user,
-#     }
-#     return render(request, 'main/group.html', context)
-
-
-
-# @csrf_exempt
-# def follow_group(request):
-#     buttonText = request.POST.get("buttonText")
-#     group = request.POST.get("group")
-#     target_group = Group.objects.get(name=group)
-#     current_user = request.user
-#     text="오류"
-
-#     if buttonText == "FOLLOW":
-#         current_user.my_group = target_group
-#         text="CANCEL"
-#     elif buttonText == "CANCEL":
-#         current_user.my_group = None
-#         text="FOLLOW"
-
-#     current_user.save()
-
-#     return JsonResponse({'text': text, 'name': target_group.name, 'price': target_group.price, 'create_user': target_group.create_user, 'pk': target_group.pk})
+    context = {
+        'group': group,
+        'users': users,
+        'value': value_dic,
+        'button_text': button_text,
+        'am_I_creator': am_I_creator,
+        'users_length': len(users),
+        'current_user': current_user,
+    }
+    return render(request, 'main/group.html', context)
 
 
-# def create_group(request):
-#     user = request.user
-#     if request.method == 'POST':
-#         content = request.POST.get("name")
-#         if user.my_group is None:
-#             #그룹이 없는 경우에만 그룹 생성
-#             Group.objects.create(
-#                 name=content,
-#                 price=0,
-#                 create_user=user.name,
-#             )
-#             user.my_group = Group.objects.get(name=content)
-#             user.save()
 
-#             redirect(f'/main/group/{user.my_group.id}')
-#         else:
-#             #그룹이 있는 경우
-#             return JsonResponse({'result': 'Exist'})
+@csrf_exempt
+def follow_group(request):
+    buttonText = request.POST.get("buttonText")
+    group = request.POST.get("group")
+    target_group = Group.objects.get(name=group)
+    current_user = request.user
+    text="오류"
 
-# def update_group(request):
-#     if request.method == 'POST':
-#         update_content = request.POST.get("update_name")
-#         group_name = request.POST.get("group_name")
-#         group = Group.objects.get(name=group_name)
-#         # 중복 검사
-#         if Group.objects.filter(name=update_content).exists():
-#             return JsonResponse({'result': 'Exist'})
-#         else:
-#             group.name = update_content
-#             group.save()
-#             return JsonResponse({'result': 'Success'})
+    if buttonText == "FOLLOW":
+        current_user.my_group = target_group
+        text="CANCEL"
+    elif buttonText == "CANCEL":
+        current_user.my_group = None
+        text="FOLLOW"
 
-# def delete_group(request,pk):
-#     if request.method == 'POST':
-#         group = Group.objects.get(pk=pk)
-#         group.delete()
+    current_user.save()
+
+    return JsonResponse({'text': text, 'name': target_group.name, 'price': target_group.price, 'create_user': target_group.create_user, 'pk': target_group.pk})
+
+
+def create_group(request):
+    user = request.user
+    if request.method == 'POST':
+        content = request.POST.get("name")
+        if user.my_group is None:
+            #그룹이 없는 경우에만 그룹 생성
+            Group.objects.create(
+                name=content,
+                price=0,
+                create_user=user.name,
+            )
+            user.my_group = Group.objects.get(name=content)
+            user.save()
+
+            redirect(f'/main/group/{user.my_group.id}')
+        else:
+            #그룹이 있는 경우
+            return JsonResponse({'result': 'Exist'})
+
+def update_group(request):
+    if request.method == 'POST':
+        update_content = request.POST.get("update_name")
+        group_name = request.POST.get("group_name")
+        group = Group.objects.get(name=group_name)
+        # 중복 검사
+        if Group.objects.filter(name=update_content).exists():
+            return JsonResponse({'result': 'Exist'})
+        else:
+            group.name = update_content
+            group.save()
+            return JsonResponse({'result': 'Success'})
+
+def delete_group(request,pk):
+    if request.method == 'POST':
+        group = Group.objects.get(pk=pk)
+        group.delete()
         
-#         return redirect('/main/')
+        return redirect('/main/')
     
-# def add_price(user):
-#     last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
-#     my_group = user.my_group
-#     if my_group is not None:
-#         my_group.price += last_value.start - last_value.end
-#         my_group.save()
+def add_price(user):
+    last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
+    my_group = user.my_group
+    if my_group is not None:
+        my_group.price += last_value.start - last_value.end
+        my_group.save()
 
-#     return my_group.price
+    return my_group.price
 
 # search에 그룹 검색 기능 추가
 # 그룹에 멤버가 0명이라면 삭제하기
 
-# # group search에 관한 함수
-# def search_group(request):
-#     search_content = request.GET.get('search_content','')
-#     groups = Group.objects.all().order_by('-price')
-#     currentu_user = request.user
-#     filtered_groups = groups
-#     my_group = currentu_user.my_group
+# group search에 관한 함수
+def search_group(request):
+    search_content = request.GET.get('search_content','')
+    groups = Group.objects.all().order_by('-price')
+    currentu_user = request.user
+    filtered_groups = groups
+    my_group = currentu_user.my_group
 
-#     # 검색 필터 부분
-#     if search_content:
-#         filtered_users = Group.objects.all().filter(name__contains=search_content)
-
-
-
-    # ctx = {
-    #     'groups': groups,
-    #     'filtered_groups': filtered_groups,
-    #     'my_group': currentu_user.my_group,
-    # }
-
-    # return render(request, 'main/search_group.html',context=ctx)
+    # 검색 필터 부분
+    if search_content:
+        filtered_users = Group.objects.all().filter(name__contains=search_content)
 
 
-# @csrf_exempt
-# def search_group_ajax(request):
-#     search_content = request.POST.get("text")
 
-#     if search_content is not None:
-#         find_groups = Group.objects.filter(name__contains=search_content)
-#     else:
-#         find_groups = Group.objects.all()
+    ctx = {
+        'groups': groups,
+        'filtered_groups': filtered_groups,
+        'my_group': currentu_user.my_group,
+    }
 
-#     groups=[]
+    return render(request, 'main/search_group.html',context=ctx)
 
-#     for group in find_groups:
-#         group_data={
-#             "name":group.name,
-#             "price":group.price,
-#             "create_user":group.create_user,
-#             "pk":group.pk,
-#             # 추후 필요한 필드 추가
-#         }
-#         groups.append(group_data)
 
-#     return JsonResponse({"groups": groups})
+@csrf_exempt
+def search_group_ajax(request):
+    search_content = request.POST.get("text")
+
+    if search_content is not None:
+        find_groups = Group.objects.filter(name__contains=search_content)
+    else:
+        find_groups = Group.objects.all()
+
+    groups=[]
+
+    for group in find_groups:
+        group_data={
+            "name":group.name,
+            "price":group.price,
+            "create_user":group.create_user,
+            "pk":group.pk,
+            # 추후 필요한 필드 추가
+        }
+        groups.append(group_data)
+
+    return JsonResponse({"groups": groups})
