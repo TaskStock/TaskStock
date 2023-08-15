@@ -94,8 +94,10 @@ const handleCreateButtonClick = async (event) => {
 };
 
 const handleCreateResult = async (result) => {
-  if (result == "Exist") {
+  if (result == "my_group_exist") {
     alert("그룹은 1개만 가능합니다.");
+  } else if (result == "group_name_exist") {
+    alert("그룹명이 이미 존재합니다.");
   } else {
     alert("그룹이 생성되었습니다.");
     window.location.reload();

@@ -958,21 +958,24 @@ def create_group(request):
     user = request.user
     if request.method == 'POST':
         content = request.POST.get("name")
-        if user.my_group is None:
-            #그룹이 없는 경우에만 그룹 생성
-            Group.objects.create(
-                name=content,
-                price=0,
-                create_user=user.name,
-            )
-            user.my_group = Group.objects.get(name=content)
-            user.save()
-
-            return JsonResponse({'result': 'Success'})
+        if user.my_group is not None:
+            #그룹이 있는 경우에 그룹 생성 막음
+            return JsonResponse({'result': 'my_group_exist'})
         
         else:
-            #그룹이 있는 경우
-            return JsonResponse({'result': 'Exist'})
+            if Group.objects.filter(name=content).exists():
+                return JsonResponse({'result': 'group_name_exist'})
+            else:
+                Group.objects.create(
+                    name=content,
+                    price=0,
+                    create_user=user.name,
+                )
+                user.my_group = Group.objects.get(name=content)
+                user.save()
+                return JsonResponse({'result': 'Success'})
+
+            
 
 def update_group(request):
     if request.method == 'POST':
