@@ -97,6 +97,7 @@ const handleCreateResult = async (result) => {
   if (result == "Exist") {
     alert("그룹은 1개만 가능합니다.");
   } else {
+    alert("그룹이 생성되었습니다.");
     window.location.reload();
   }
 };

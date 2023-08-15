@@ -941,7 +941,8 @@ def create_group(request):
             user.my_group = Group.objects.get(name=content)
             user.save()
 
-            redirect(f'/main/group/{user.my_group.id}')
+            return JsonResponse({'result': 'Success'})
+        
         else:
             #그룹이 있는 경우
             return JsonResponse({'result': 'Exist'})
