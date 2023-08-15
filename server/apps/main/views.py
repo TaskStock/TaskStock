@@ -823,7 +823,7 @@ def update_category(request):
 @csrf_exempt
 def delete_category(request):
     pk = request.POST.get('pk')
-        
+    
     category = Category.objects.get(pk=pk)
 
     category.delete()

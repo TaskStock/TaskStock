@@ -77,3 +77,9 @@ const handleUpdateResult = async (result, updatedGroupName) => {
     document.querySelector("#update-input").value = "";
   }
 };
+
+{% block extra %}
+
+<script src="{% static 'js/group.js' %}"></script>
+
+{% endblock %}
