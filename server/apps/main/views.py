@@ -306,7 +306,7 @@ def home(request):
         value = createValue(current_user)
         print('home로딩하면서 createValue')
         
-    elif value.is_dummy:
+    elif value.is_dummy and not value.is_updated:
         #오늘의 데이터가 미리 만들어진 더미데이터면 업데이트로 접근
         loacl_today_arrow = get_current_arrow(current_user.tzinfo)
         utc_today_arrow  = local_to_utc(loacl_today_arrow)
@@ -314,7 +314,10 @@ def home(request):
         #더미데이터 빼고 정렬해서 가져와야 하기 때문에 date_lt 사용
         last_value = Value.objects.filter(user=current_user, date__lt=utc_today_arrow.datetime).order_by('-date').first()
 
-        value.start = value.end = value.low = value.high = last_value.end
+        value.start = value.end = last_value.end
+        value.low = last_value.end - value.low
+        value.high = last_value.end + value.high
+        value.is_updated = True
         value.save()
         
     
@@ -322,7 +325,7 @@ def home(request):
     date_id = value.pk
     todos_levels_dict = {}
     for todo in todos:
-        todos_levels_dict[todo.id] = todo.level
+        todos_levels_dict[todo.pk] = todo.level
 
     todos_sub_dict = {}
     for todo in todos:
@@ -469,6 +472,7 @@ Todo 추가 하는 함수
 @csrf_exempt
 def add_todo(request):
     if request.method == 'POST':
+        print('add_todo실행')
         req = json.loads(request.body)
         content = req['content']
         my_level = req['level']
@@ -500,11 +504,6 @@ def add_todo(request):
             print('add_todo에서 완료 눌렀을 때 value 없는 날이라 일단 0으로 다 박음, create된 datetime =', target_arrow )
             value = get_value_for_date(current_user, target_arrow)
         
-
-        # value 있긴 한데 더미데이터인 날
-        elif value.is_dummy:
-            print('add_todo에서 완료 눌렀을 때 더미데이터임. local target arrow =', target_arrow)
-
         # 현재 user의 caregory 객체 가져오기
         try:
             category = Category.objects.get(user=current_user, name=category_name)
@@ -529,17 +528,19 @@ def add_todo(request):
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
-        today_value = get_value_for_date(current_user)
+        target_value = todo.value   #todo에 연결된 value
+        # tododp 연결된 value.high값 업데이트
+        target_value.high += my_level * 1000
         
-        # todo의 high값 업데이트
-        today_value.high += my_level * 1000
+        # todo에 연결된 value.low값 업데이트
+        target_value.low -= my_level * 1000
+        target_value.save()
         
-        # todo의 low값 업데이트
-        today_value.low -= my_level * 1000
-        today_value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
         return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content, 'category_datas':category_datas})
+
+
 """
 Todo 삭제 하는 함수 
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트

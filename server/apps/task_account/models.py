@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from datetime import datetime, timedelta
 
 def user_directory_path(instance, filename):
     #파일을 user_<id>/<filename>에 저장
@@ -58,7 +59,8 @@ def user_created(sender, instance, created, **kwargs):
     if created:
         Value.objects.create(
             user=instance,
-            date=instance.date_joined,
+            #8월 16일 14:59:59 or 8월 15일 15:00:00
+            date=(instance.date_joined + timedelta(days=1)).replace(hour=14, minute=59, second=59),
             percentage=0,
             start=50000,
             end=50000,
@@ -75,7 +77,7 @@ class Value(models.Model):
     low = models.IntegerField(null=True, default=0)
     high = models.IntegerField(null=True, default=0)
     is_dummy = models.BooleanField(default=False)
-    
+    is_updated = models.BooleanField(default=False)
     def __str__(self):
         return f'{self.date} - {self.user.username}'
 
