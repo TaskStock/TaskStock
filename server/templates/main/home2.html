@@ -1,5 +1,5 @@
 {% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
-<main>
+<main id="main--home">
     <!-- 가정 먼저 실행되는 스크립트, 전역 변수 설정 -->
     <script>
         let global_chart_target_username="";
@@ -221,6 +221,12 @@
             </div>
             
         </div>
+    </div>
+    <div id="mb-main--nav">
+        <input type="radio" id="mb-nav--calendar" name="mb-btn" checked>
+        <label for="mb-nav--calendar">Calendar</label>
+        <input type="radio" id="mb-nav--chart" name="mb-btn">
+        <label for="mb-nav--chart">Chart</label>
     </div>
     
     

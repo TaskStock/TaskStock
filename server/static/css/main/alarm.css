@@ -1,15 +1,17 @@
 .alarm-main {
    
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
     color: var(--text-color);
     display: flex;
     justify-content: center;
+    padding: var(--offset);
 }
 
 .alarm-container {
     display: flex;
     flex-direction: column;
-    width: 90%;
+    width: 100%;
     gap: var(--gutter);
 } 
 

@@ -62,4 +62,27 @@ darkBtn.addEventListener('click', () => {
 })
 
 
+// mobile에서 chart, calendar 탭
+const mb_chartBtn = document.querySelector('#mb-nav--chart + label');
+const mb_chartBtn_input = document.querySelector('#mb-nav--chart');
+const mb_calBtn = document.querySelector('#mb-nav--calendar + label');
+const mb_calBtn_input = document.querySelector('#mb-nav--calendar');
+
+document.querySelector('#mb-main--nav').addEventListener('click', () => {
+    mb_tab();
+})
+function mb_tab(){
+    if (window.matchMedia("(max-width: 600px)").matches) {
+        if(mb_chartBtn_input.checked == true){
+            document.querySelector('.main-right').style.display = 'none';
+            document.querySelector('.main-left').style.display = 'flex';
+        }
+        else if(mb_chartBtn_input.checked == false){
+            document.querySelector('.main-left').style.display = 'none';
+            document.querySelector('.main-right').style.display = 'block';
+        }
+    }
+}
+mb_tab();
+
 
