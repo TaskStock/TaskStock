@@ -66,6 +66,7 @@ def user_created(sender, instance, created, **kwargs):
             end=50000,
             low=50000,
             high=50000,
+            is_updated=True,
         )
 
 class Value(models.Model):

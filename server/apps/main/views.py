@@ -245,7 +245,7 @@ def createValue(user, target_arrow=None):
         target_arrow = local_to_utc(current_local_aroow)
     
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
-    last_value = Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
+    last_value = Value.objects.filter(user=user, date__lt=target_arrow.datetime).order_by('-date').first()
 
     percentage = 0
     start = end = low = high = last_value.end
@@ -257,7 +257,7 @@ def createValue(user, target_arrow=None):
         start=start,
         end=end,
         low=low,
-        high=high,
+        high=high,  
     )
     # add_price(user)
     return value
@@ -302,16 +302,16 @@ def home(request):
     value = get_value_for_date(current_user)
     
     if value == None:
-        # 로그인 했을 때 value가 없는 경우는 create
+        #로그인 했을 때 value가 없는 경우 create
         value = createValue(current_user)
         print('home로딩하면서 createValue')
         
     elif value.is_dummy and not value.is_updated:
-        #오늘의 데이터가 미리 만들어진 더미데이터면 업데이트로 접근
+        #오늘의 데이터가 미리 만들어진 더미데이터면(add_todo, values_for_chart) 업데이트로 접근
         loacl_today_arrow = get_current_arrow(current_user.tzinfo)
         utc_today_arrow  = local_to_utc(loacl_today_arrow)
         
-        #더미데이터 빼고 정렬해서 가져와야 하기 때문에 date_lt 사용
+        #자기 이전 value까지만 정렬해서 가져와야 하기 때문에 date_lt 사용
         last_value = Value.objects.filter(user=current_user, date__lt=utc_today_arrow.datetime).order_by('-date').first()
 
         value.start = value.end = last_value.end
