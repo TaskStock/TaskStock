@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// 입력한 text에 해당하는 유저 목록을 가져오는 ajax 처리
 const searchGroupAjax = async (text) => {
   const formData = new FormData();
   formData.append("textContent", text);
@@ -30,6 +31,7 @@ const showGroupsList = (groups) => {
   );
   currentInput.innerHTML = "";
 
+  // 내 그룹인지 여부에 따라 버튼 내용이 달라짐
   const my_group = document.getElementById("my_group_name")
     ? document.getElementById("my_group_name").textContent
     : null;
@@ -43,6 +45,7 @@ const showGroupsList = (groups) => {
       const addButtonContent =
         group.name == my_group ? "DELETE GROUP" : "ADD GROUP";
 
+      // 검색 결과를 보여주는 부분
       atagInput.innerHTML = `
 <div class="search-result__container">
         <div class="search-result__right--container">
