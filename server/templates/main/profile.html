@@ -47,11 +47,11 @@
                 <span>3,634.7조</span>
             </div>
             <div class="total-todos">
-                <span>{{target_user.username}}'s Group Value</span>
+                <span>{{target_user.username}}'s Group({{target_user.my_group.name}}) Value</span>
                 <!-- 그룹에 참여한 시점부터 
                     개인별 (value.end - value.start)를 모두 합한 값
                 -->
-                <span>3,634.7조</span>
+                <span>{{target_user.my_group.price}}</span>
             </div>
         </div>
         <div id="chart"></div>

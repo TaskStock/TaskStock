@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", setupTextarea);
 
 // 글자수세기 기능
 function setupTextarea() {
-  const textarea = document.getElementById("proflie-description");
+  const textarea = document.getElementById("profile-description");
   const label = document.querySelector(".profile-description__textarea p");
 
   textarea.addEventListener("input", function () {
