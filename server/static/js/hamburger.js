@@ -20,7 +20,7 @@ document.addEventListener('click', (event) => {
     }
 });
 
-//  mobile hamburger
+//  tablet hamburger
 const left_section = document.querySelector('section');
 const tb_section = document.querySelector('#tb-section');
 
@@ -35,62 +35,77 @@ document.querySelector('#tb-hamburger').addEventListener('click', () => {
 
 // dark mode toggle
 const bodyEl = document.querySelector('body');
-const darkBtn = document.querySelector('.menu-right__darkmode');
+const darkBtn = document.querySelectorAll('.menu-right__darkmode');
 const activeTheme = localStorage.getItem('theme');
 
 if(activeTheme){
     bodyEl.classList.add('dark');
-    darkBtn.querySelector('i').classList.remove('gg-moon');
-    darkBtn.querySelector('i').classList.add('gg-sun');
-    darkBtn.querySelector('span').innerHTML = 'Light Mode';
+    darkBtn.forEach(btn => {
+        btn.querySelector('i').classList.remove('gg-moon');
+        btn.querySelector('i').classList.add('gg-sun');
+        btn.querySelector('span').innerHTML = 'Light Mode';
+    })
 }
 
-darkBtn.addEventListener('click', () => {
-    bodyEl.classList.toggle('dark');
-   
-    if(bodyEl.classList.contains('dark')){
-        localStorage.setItem('theme', 'dark');
-        darkBtn.querySelector('i').classList.remove('gg-moon');
-        darkBtn.querySelector('i').classList.add('gg-sun');
-        darkBtn.querySelector('span').innerHTML = 'Light Mode';
-    }else{
-        localStorage.removeItem('theme');
-        darkBtn.querySelector('i').classList.remove('gg-sun');
-        darkBtn.querySelector('i').classList.add('gg-moon');
-        darkBtn.querySelector('span').innerHTML = 'Dark Mode';
-    }
-})
+darkBtn.forEach(btn => {
+    btn.addEventListener('click', () => {
+        bodyEl.classList.toggle('dark');
+        console.log('clicked');
+    
+        if(bodyEl.classList.contains('dark')){
+            localStorage.setItem('theme', 'dark');
+            btn.querySelector('i').classList.remove('gg-moon');
+            btn.querySelector('i').classList.add('gg-sun');
+            btn.querySelector('span').innerHTML = 'Light Mode';
+        }else{
+            localStorage.removeItem('theme');
+            btn.querySelector('i').classList.remove('gg-sun');
+            btn.querySelector('i').classList.add('gg-moon');
+            btn.querySelector('span').innerHTML = 'Dark Mode';
+        }
+        if (window.matchMedia("(max-width: 600px)").matches){
+            document.querySelector('#mb--header .gg-menu-right-alt').classList.toggle('active');
+            document.querySelector('#tb-section').style.right = '-100%';
+        }        
+})})
 
-
-// mobile에서 chart, calendar 탭
-// const mb_chartBtn = document.querySelector('#mb-nav--chart + label');
-// const mb_chartBtn_input = document.querySelector('#mb-nav--chart');
-// const mb_calBtn = document.querySelector('#mb-nav--calendar + label');
-// const mb_calBtn_input = document.querySelector('#mb-nav--calendar');
-
-// document.querySelector('#mb-main--nav').addEventListener('click', () => {
-//     mb_tab();
-// })
-// function mb_tab(){
-//     if (window.matchMedia("(max-width: 600px)").matches) {
-//         if(mb_chartBtn_input.checked == true){
-//             document.querySelector('.main-right').style.display = 'none';
-//             document.querySelector('.main-left').style.display = 'flex';
-//         }
-//         else if(mb_chartBtn_input.checked == false){
-//             document.querySelector('.main-left').style.display = 'none';
-//             document.querySelector('.main-right').style.display = 'block';
-//         }
-//     }
-// }
-// mb_tab();
-
-if (window.matchMedia("(max-width: 600px)").matches) {
+if (window.matchMedia("(max-width: 600px)").matches){
+    // mobile에서 chart, calendar 탭
     const mb_ccBtn = document.querySelector('#mb-main--nav');
     mb_ccBtn.addEventListener('click', () => {
         mb_tab();
     })
     mb_tab();
+
+    // 차트 버튼 1 Week -> 1w
+    document.querySelector('#one_week + .chart-btn').innerHTML = '1주';
+    document.querySelector('#one_month + .chart-btn').innerHTML = '1달';
+    document.querySelector('#three_month + .chart-btn').innerHTML = '3달';
+    document.querySelector('#six_month + .chart-btn').innerHTML = '6딜';
+    document.querySelector('#one_year + .chart-btn').innerHTML = '1년';
+
+    // 모바일 햄버거 왼쪽
+    const mb_hbg_left = document.querySelector('#mb--header .gg-menu-left-alt');
+    const mb_hbg_right = document.querySelector('#mb--header .gg-menu-right-alt');
+    const right_section = document.querySelector('#tb-section');
+    mb_hbg_left.addEventListener('click', () => {
+        mb_hbg_left.classList.toggle('active');
+        if(mb_hbg_left.classList.contains('active')){
+            left_section.style.left = '0';    
+            right_section.style.right = '-100%';
+        }else{
+            left_section.style.left = '-90%';   
+        } 
+    })
+    mb_hbg_right.addEventListener('click', () => {
+        mb_hbg_right.classList.toggle('active');
+        if(mb_hbg_right.classList.contains('active')){
+            right_section.style.right = '-10%';
+            left_section.style.left = '-90%'; 
+        }else{
+            right_section.style.right = '-100%';
+        }
+    })
 }
 function mb_tab(){
     if (window.matchMedia("(max-width: 600px)").matches) {

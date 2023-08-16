@@ -5,57 +5,51 @@
     <div class="search-form-container">
         <form action="" class="search-form">
             <input type="text" placeholder="Search" name="search_content" id="search_content" autofocus>
-            <button type="submit"><i class="gg-search"></i></button>
         </form>
     </div>
     <!-- 실시간 순위 + 검색 결과 -->
     <div class="search-container">
         <!-- 실시간 순위 -->
         <div id="live-chart" class="live-chart">
-            <div class="search-label">
-                <h3>실시간 차트</h3>
-            </div>
-            <div class="search-result user-rank-container">
-                <ul class="user-rank-container__list">
-                    {% for user in users %}
-                    <li class="user-rank-container__list__user-rank">
-                        <a href="/main/profile/?username={{user.username}}">
-                            <div class="search-result__container">
-                                <div class="search-result__left-container">
-                                    <div class="friend-info-pic"></div>
-                                    <div class="search-result__name-container">
-                                        <h2>{{user.name}}</h2>
-                                        <p>Hi</p>
-                                    </div>
-                                </div>
-                                <div class="search-result__right-container">
-                                    <div class="search-result__info">
-                                        <div class="search-result__right-upper-container">
-                                            <img class="friend-info-pic" src="https://placekitten.com/15/15" alt="">
-                                        </div>
-                                        <p>13%</p>
-                                    </div>
-                                    
-                                </div>    
+            <h3 class="search-label">실시간 차트</h3>
+            {% for user in users %}
+            <a href="/main/profile/?username={{user.username}}">
+                <div class="search-result__container">
+                    <div class="search-result__left-container">
+                        <div class="friend-info-pic">
+                            <img class="friend-info-pic" src="https://placekitten.com/15/15" alt="">
+                        </div>
+                        <div class="search-result__name-container">
+                            <h2>{{user.name}}</h2>
+                            <p>Hi</p>
+                        </div>
+                    </div>
+                    <div class="search-result__right-container">
+                        <div class="search-result__info">
+                            <div class="search-result__right-upper-container">
+                                <!-- <img class="friend-info-pic" src="https://placekitten.com/15/15" alt=""> -->
                             </div>
-                        </a>
-                    </li>
-                {% endfor %}
-                </ul>
-            </div>
+                            <p>13%</p>
+                        </div>
+                        
+                    </div>    
+                </div>
+            </a>
+            {% endfor %}
+            
         </div>
         
         <!-- 검색 결과 -->
         <div id="search-users" class="displayNone">
-            <div class="search-label">
-                <h3>검색 결과</h3>
-            </div>
+            <h3 class="search-label">검색 결과</h3>
             <div class="search-result Scroll" id="search-users__result-container">
                 {% for filtered_user in filtered_users %}
                 <a href="/main/profile/?username={{filtered_user.username}}">
                     <div class="search-result__container searched-result__searched-user">
                         <div class="search-result__left-container searched-result__searched-user__left-container">
-                            <div class="friend-info__pic"></div>
+                            <div class="friend-info__pic">
+                                <img class="friend-info-pic" src="https://placekitten.com/15/15" alt="">
+                            </div>
                             <div class="search-result__name-container">
                                 <h2>{{filtered_user.name}}</h2>
                                 <p>Hi</p>
@@ -64,7 +58,7 @@
                         <div class="search-result__right-container searched-result__searched-user__right-container" >
                             <div class="search-result__info">
                                 <div class="search-result__right-upper-container">
-                                    <img src="https://placekitten.com/30/30" alt="">
+                                    
                                 </div>
                                 <p>13%</p>
                             </div>
@@ -130,34 +124,25 @@
                 atagInput.href="/main/profile/?username="+user.username;
 
                 atagInput.innerHTML = `
-                    <div class="search-result__container" data-aos="fade-up">
+                    <div class="search-result__container searched-result__searched-user">
                         <div class="search-result__left-container searched-result__searched-user__left-container">
-                            <img class="friend-info-pic " src="https://placekitten.com/60/50" alt="user image">
+                            <div class="friend-info__pic">
+                                <img class="friend-info-pic" src="https://placekitten.com/15/15" alt="">
+                            </div>
                             <div class="search-result__name-container">
                                 <h2>${user.name}</h2>
                                 <p>${tmpintrodue}</p>
                             </div>
                         </div>
-                        <div class="search-result__right-container searched-result__searched-user__right-container">
+                        <div class="search-result__right-container searched-result__searched-user__right-container" >
                             <div class="search-result__info">
                                 <div class="search-result__right-upper-container">
-                                    <img src="https://placekitten.com/30/30" alt="">
+                                    
                                 </div>
-                                <p class="search-result__right-upper-container__current-percent">13%</p>
+                                <p>13%</p>
                             </div>
-                            <div class="search-result__info">
-                                <div class="search-result__right-upper-container">
-                                    <h2>23</h2>
-                                </div>
-                                <p>following</p>
-                            </div>
-                            <div class="search-result__info">
-                                <div class="search-result__right-upper-container">
-                                    <h2>23</h2>
-                                </div>
-                                <p>follower</p>
-                            </div>
-                        </div>
+
+                        </div>    
                     </div>
                 `;
                 currentInput.appendChild(atagInput);
