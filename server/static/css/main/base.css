@@ -341,6 +341,7 @@ section header img,
         margin-right: -350px;
         z-index: 1000;
         transition: 1s;
+        flex-shrink: -1;
     }
     header #hamburger-tb{
         display: flex;

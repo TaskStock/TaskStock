@@ -207,17 +207,7 @@
 .settings-detail > div:not(:first-child){
     margin-top: 50px;
 }
-.alarm-image__container{
-    flex-shrink: 0;
-}
-.alarm-content__container p{
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-}
-.alarm-time{
-    white-space:nowrap;
-}
+
 /* set-alarm */
 /* 라디오 체크 부분 css로 활용함 */
 .settings-detail__set-alarm {
