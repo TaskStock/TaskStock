@@ -245,7 +245,7 @@ def createValue(user, target_arrow=None):
         target_arrow = local_to_utc(current_local_aroow)
     
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
-    last_value = Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
+    last_value = Value.objects.filter(user=user, date__lt=target_arrow.datetime).order_by('-date').first()
 
     percentage = 0
     start = end = low = high = last_value.end
@@ -257,7 +257,7 @@ def createValue(user, target_arrow=None):
         start=start,
         end=end,
         low=low,
-        high=high,
+        high=high,  
     )
     # add_price(user)
     return value
@@ -302,19 +302,22 @@ def home(request):
     value = get_value_for_date(current_user)
     
     if value == None:
-        # 로그인 했을 때 value가 없는 경우는 create
+        #로그인 했을 때 value가 없는 경우 create
         value = createValue(current_user)
         print('home로딩하면서 createValue')
         
-    elif value.is_dummy:
-        #오늘의 데이터가 미리 만들어진 더미데이터면 업데이트로 접근
+    elif value.is_dummy and not value.is_updated:
+        #오늘의 데이터가 미리 만들어진 더미데이터면(add_todo, values_for_chart) 업데이트로 접근
         loacl_today_arrow = get_current_arrow(current_user.tzinfo)
         utc_today_arrow  = local_to_utc(loacl_today_arrow)
         
-        #더미데이터 빼고 정렬해서 가져와야 하기 때문에 date_lt 사용
+        #자기 이전 value까지만 정렬해서 가져와야 하기 때문에 date_lt 사용
         last_value = Value.objects.filter(user=current_user, date__lt=utc_today_arrow.datetime).order_by('-date').first()
 
-        value.start = value.end = value.low = value.high = last_value.end
+        value.start = value.end = last_value.end
+        value.low = last_value.end - value.low
+        value.high = last_value.end + value.high
+        value.is_updated = True
         value.save()
         
     
@@ -322,7 +325,7 @@ def home(request):
     date_id = value.pk
     todos_levels_dict = {}
     for todo in todos:
-        todos_levels_dict[todo.id] = todo.level
+        todos_levels_dict[todo.pk] = todo.level
 
     todos_sub_dict = {}
     for todo in todos:
@@ -331,7 +334,9 @@ def home(request):
     followings_len = current_user.followings.count()
 
     categorys = Category.objects.all()
+    #today_value = get_value_for_date(current_user)
     
+    process_badges(value)
     context = {
         'user': current_user,
         'todos_levels_dict': todos_levels_dict,
@@ -469,6 +474,7 @@ Todo 추가 하는 함수
 @csrf_exempt
 def add_todo(request):
     if request.method == 'POST':
+        print('add_todo실행')
         req = json.loads(request.body)
         content = req['content']
         my_level = req['level']
@@ -500,11 +506,6 @@ def add_todo(request):
             print('add_todo에서 완료 눌렀을 때 value 없는 날이라 일단 0으로 다 박음, create된 datetime =', target_arrow )
             value = get_value_for_date(current_user, target_arrow)
         
-
-        # value 있긴 한데 더미데이터인 날
-        elif value.is_dummy:
-            print('add_todo에서 완료 눌렀을 때 더미데이터임. local target arrow =', target_arrow)
-
         # 현재 user의 caregory 객체 가져오기
         try:
             category = Category.objects.get(user=current_user, name=category_name)
@@ -529,17 +530,19 @@ def add_todo(request):
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
-        today_value = get_value_for_date(current_user)
+        target_value = todo.value   #todo에 연결된 value
+        # tododp 연결된 value.high값 업데이트
+        target_value.high += my_level * 1000
         
-        # todo의 high값 업데이트
-        today_value.high += my_level * 1000
+        # todo에 연결된 value.low값 업데이트
+        target_value.low -= my_level * 1000
+        target_value.save()
         
-        # todo의 low값 업데이트
-        today_value.low -= my_level * 1000
-        today_value.save()
         
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
         return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content, 'category_datas':category_datas})
+
+
 """
 Todo 삭제 하는 함수 
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
@@ -560,6 +563,10 @@ def delete_todo(request, pk):
         value.high -= 1000*todo.level
         #todo 삭제하기 전 연결된 value의 low값 업데이트
         value.low += 1000*todo.level
+        
+        #체크되어 있다면
+        if todo.goal_check:
+            value.end -= 1000*todo.level
         
         #저장
         value.save()
@@ -651,6 +658,7 @@ def check_todo(request, pk):
         #combo변화 처리
         my_combo = process_combo(current_user)
         todo_status = str(todo_status)
+        #badge 처리
         return JsonResponse({'my_combo': my_combo, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
         
 
@@ -713,7 +721,7 @@ combo처리하는 함수
 """
 def process_combo(user):
     # 사용자의 시간대를 기반으로 현재 arrow을 가져옴
-    current_local_arrow = get_current_arrow(user.tzinfo)
+    current_local_arrow = get_current_arrow(user.tzinfo).ceil('day')
     # UTC로 변환
     current_utc_arrow = local_to_utc(current_local_arrow)
     
@@ -737,8 +745,50 @@ def process_combo(user):
         
     user.combo = combo
     user.save()
+    
         
     return combo
+
+def process_badges(value):
+    user = value.user
+    acquired_badges = user.badges.values_list('name', flat=True)
+    
+    #지금이라도 사야해
+    if user.combo == 10 and "지금이라도 사야해" not in acquired_badges:
+        badge_to_add = Badge.objects.get(name="지금이라도 사야해")
+        user.badges.add(badge_to_add)
+
+    #개미의 선택
+    if value.end >= 100000 and '개미의 선택' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='개미의 선택')
+        user.badges.add(badge_to_add)
+    
+    #슈퍼 개미의 선택
+    if value.end >= 200000 and '슈퍼 개미의 선택' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='슈퍼 개미의 선택')
+        user.badges.add(badge_to_add)
+    
+    #우주 개미의 선택
+    if value.end >= 500000 and '우주 개미의 선택' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='우주 개미의 선택')
+        user.badges.add(badge_to_add)
+    
+    #화성 갈끄니까
+    if value.end >= 2000000 and '화성 갈끄니까' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='화성 갈끄니까')
+        user.badges.add(badge_to_add)
+    
+    #콩콩
+    if value.percentage == 22 and '콩콩' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='콩콩')
+        user.badges.add(badge_to_add)
+    
+    #콩콩
+    if value.percentage == 100 and '1+1' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='1+1')
+        user.badges.add(badge_to_add)
+        
+        
 
 
 #---선우 작업---#
@@ -938,13 +988,22 @@ def group(request,pk):
 def follow_group(request):
     buttonText = request.POST.get("group-button")
     group = request.POST.get("group")
+    password_input = request.POST.get("password")
     target_group = Group.objects.get(name=group)
     current_user = request.user
     text="오류"
 
     if buttonText == "JOIN GROUP":
-        current_user.my_group = target_group
-        text="LEAVE GROUP"
+        # 그룹이 존재하는 경우
+        if current_user.my_group is not None:
+            text = "ALREADY JOINED"
+        else:
+            if password_input == target_group.password:
+                current_user.my_group = target_group
+                text="LEAVE GROUP"
+            else: 
+                text="WRONG PASSWORD"   
+                
     elif buttonText =="LEAVE GROUP":
         current_user.my_group = None
         text="JOIN GROUP"
@@ -957,22 +1016,28 @@ def follow_group(request):
 def create_group(request):
     user = request.user
     if request.method == 'POST':
-        content = request.POST.get("name")
-        if user.my_group is None:
-            #그룹이 없는 경우에만 그룹 생성
-            Group.objects.create(
-                name=content,
-                price=0,
-                create_user=user.name,
-            )
-            user.my_group = Group.objects.get(name=content)
-            user.save()
+        name_content = request.POST.get("name")
+        password_content = request.POST.get("password")
 
-            return JsonResponse({'result': 'Success'})
+        if user.my_group is not None:
+            #그룹이 있는 경우에 그룹 생성 막음
+            return JsonResponse({'result': 'my_group_exist'})
         
         else:
-            #그룹이 있는 경우
-            return JsonResponse({'result': 'Exist'})
+            if Group.objects.filter(name=name_content).exists():
+                return JsonResponse({'result': 'group_name_exist'})
+            else:
+                Group.objects.create(
+                    name=name_content,
+                    price=0,
+                    create_user=user.name,
+                    password = password_content,
+                )
+                user.my_group = Group.objects.get(name=name_content)
+                user.save()
+                return JsonResponse({'result': 'Success'})
+
+            
 
 def update_group(request):
     if request.method == 'POST':
@@ -1045,3 +1110,4 @@ def search_group_ajax(request):
         groups.append(group_data)
 
     return JsonResponse({"groups": groups})
+
