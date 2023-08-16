@@ -435,3 +435,22 @@ section header img,
     }
     
 }
+
+/* alarm 있을 때 붉은 점 표시 */
+.hamburger{
+    position: relative;
+}
+
+.menu-right__notif{
+    position: relative;
+}
+
+.alarm_red_dot{
+    position: absolute;
+    background-color: var(--red_error) !important;
+    width: 8px !important;
+    height: 8px !important;
+    top: 2px;
+    right: -1px;
+    border-radius: 50%;
+}

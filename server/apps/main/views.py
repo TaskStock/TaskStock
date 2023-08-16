@@ -346,6 +346,12 @@ def home(request):
 
     categorys = Category.objects.all()
     #today_value = get_value_for_date(current_user)
+
+    check_non_read_alarms = Alarm.objects.filter(user=current_user, is_read=False)
+    if not check_non_read_alarms:
+        alarm=False
+    else:
+        alarm=True
     
     process_badges(value)
     context = {
@@ -356,6 +362,7 @@ def home(request):
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
         'categorys': categorys,
+        'alarm': alarm,
     }
     return render(request, 'main/home2.html', context)
 
@@ -828,7 +835,19 @@ def landing_page(request):
 
 # alarm
 def alarm(request):
-    return render(request, 'main/alarm.html')
+    non_read_alarm=Alarm.objects.filter(user=request.user, is_read=False)
+    read_alarm=Alarm.objects.filter(user=request.user, is_read=True).exclude(pk__in=[alarm.pk for alarm in non_read_alarm])
+
+    for alarm in non_read_alarm:
+        alarm.is_read=True
+        alarm.save()
+
+    ctx = {
+        'non_read_alarm': non_read_alarm,
+        'read_alarm': read_alarm,
+    }
+
+    return render(request, 'main/alarm.html',context=ctx)
 
 
 # category
