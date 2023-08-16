@@ -14,7 +14,10 @@
         <div id="live-group-chart" class="live-group-chart">
             <form onsubmit="handleCreateButtonClick(event)" class="create-form">
                 {% csrf_token %}
-                <input type="text" name="group-create-input"  id="create-input">
+                <div>그룹 이름</div>
+                <input type="text" name="group-name-input"  id="name-input">
+                <div>비밀 번호</div>
+                <input type="text" name="group-password-input"  id="password-input">
                 <button type="submit" name="group-create-button" id="create-button">Create</button>
             </form>
             <div class="search-result">

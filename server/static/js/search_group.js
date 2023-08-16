@@ -78,12 +78,15 @@ const showGroupsList = (groups) => {
 const handleCreateButtonClick = async (event) => {
   event.preventDefault();
 
-  const input_content = document.querySelector("#create-input").value;
-  console.log(input_content);
+  const name_content = document.querySelector("#name-input").value;
+  const password_content = document.querySelector("#password-input").value;
+
   const url = "/main/group/create_group/";
 
   const formData = new FormData(event.target);
-  formData.append("name", input_content);
+  formData.append("name", name_content);
+  formData.append("password", password_content);
+
   const res = await fetch(url, {
     method: "POST",
     headers: {},
