@@ -4,6 +4,7 @@
     /* justify-content: center; */
     height: 100vh;
     overflow: hidden;
+
 }
 .settigs-header{
     padding: var(--offset) var(--offset) 0;
@@ -62,7 +63,9 @@
 .settings-menu__h3:hover {
     font-size: var(--subheading); 
 } 
-
+.settings-detail-element{
+    font-size: var(--body2);
+}
 .settings-detail-element > h1 {
     font-size: var(--body1);
     font-weight: var(--weight3);
@@ -250,4 +253,46 @@ input[type="radio"]:checked {
         display: none;
     }
 }
+@media screen and (max-width: 600px){
+    .main--settings{
+        width: 100%;;
+    }
+    .profile-description__textarea{
+        /* flex-wrap: wrap; */
+    }
+    .profile-description__textarea > p{
+        /* justify-self: flex-end; */
+    }
+    .profile-name__input,
+    .profile-image__input,
+    .profile-description__textarea,
+    .reset-password__container{
+        flex-direction: column;
+        align-items: flex-start;
 
+    }
+    .profile-name__input label,
+    .profile-image__input label,
+    .profile-description__textarea label,
+    .reset-password__container label{
+        padding-bottom: var(--gutter);
+        font-weight: var(--weight3);
+
+    }
+    .profile-name__input input,
+    .profile-description__textarea textarea{
+        width: 100%;
+    }
+    .profile-description__textarea > textarea + p{
+        display: block;
+        margin-left: auto;
+        padding-top: var(--gutter);
+    }
+    .reset-password__container input{
+        width: 100%;
+    }
+    .settings-detail{
+        padding: var(--gutter);
+    }
+
+}

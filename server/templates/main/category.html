@@ -6,10 +6,12 @@
         <i class="gg-info"></i>
         <!-- <div class="info-container">
             <p>
-                현재 진행중인 프로젝트가 있으신가요?
-                성장일기, 회고록, 간단한 메모, 느낀점 등등 자유로운 형태로 내가 성장하는 과정을 이곳에 기록해보세요!
+                
             </p>
         </div> -->
+        <div class="mb-backToList">
+            <i class="fa-solid fa-list"></i>
+        </div>
     </div>
     <div id="category-content">
         <div id="category-container">
@@ -318,6 +320,11 @@
 
     // 카테고리 리스트에서 카테고리를 클릭했을 때
     const click_category = async (pk, type) =>{
+        // media screen 600px 이하일 때 
+        if (window.matchMedia("(max-width: 600px)").matches){
+            document.querySelector('#category-detail-container').style.display = 'block';
+            document.querySelector(' #category-container').style.display = 'none';
+        }
 
         const formData = new FormData();
         formData.append('pk', pk);
@@ -388,6 +395,18 @@
             </div>
             `;
         }
+        if (window.matchMedia("(max-width: 600px)").matches){
+            document.querySelector('.mb-backToList').classList.add('showCat');
+        }
+    }
+    if (window.matchMedia("(max-width: 600px)").matches){
+        const backToList = document.querySelector('.mb-backToList');
+        backToList.addEventListener('click', () => {
+            backToList.classList.remove('showCat');
+            document.querySelector('#category-detail-container').style.display = 'none';
+            document.querySelector(' #category-container').style.display = 'block';
+
+        })
     }
 
 </script>
