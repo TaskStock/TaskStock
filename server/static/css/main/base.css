@@ -90,11 +90,24 @@ section header{
     justify-content: space-between;
     position: relative;
 }
-section header h1{
+section header h1,
+#mb--header h1{
     font-size: 0;
 }
-section header img{
+section header img,
+#mb--header h1 img{
     height: 30px;
+}
+#mb--header{
+    background-color: var(--section-color);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    display: none;
+    justify-content: space-between;
+    padding: var(--gutter);
+    align-items: center;
+    z-index: 2000;
 }
 .my-info--container{
     width: 100%;
@@ -150,9 +163,7 @@ section header img{
 .my-info--sff span{
     cursor: pointer;
 }
-#hamburger-tb{
-    display: none !important;
-}
+
 .hamburger,
 #hamburger-tb,
 #tb-hamburger{
@@ -331,8 +342,8 @@ section header img{
         z-index: 1000;
         transition: 1s;
     }
-    #hamburger-tb{
-        display: flex !important;
+    header #hamburger-tb{
+        display: flex;
     }
     #tb-section{
         width: 70px;
@@ -354,33 +365,72 @@ section header img{
         align-items: center;
         margin: auto 0;
     }
-    .tb-hamburger-contents a,
-    .menu-right__darkmode{
+   
+    .tb-hamburger-contents a > span,
+    .tb-hamburger-contents .tb-menu-right__darkmode > span{
+       display: none;
+    }
+}
+@media screen and (max-width: 600px) {
+    html{
+        overflow: hidden;
+    }
+    body{
         position: relative;
+        overflow-x: hidden !important;
+        width: 100%;
+    }
+    section{
+        width: 90%;
+        left: -90%;
+        margin-right: -90%;
+    }
+    main{
+        margin-top: 62px;
+        overflow-x: hidden;
+        
+    }
+    #mb--header{
+        display: flex;
+        width: 100%;
+    }
+
+    #tb-section{
+        width: 90%;
+        margin-right: -90%;
+        right: -100%;
+        position: relative;
+        top: 0;
+        z-index: 1000;
+        align-items: flex-start;
+        z-index: 600;
+        transition: all 1s;
+    }
+    .tb-hamburger-contents{
+        align-items: flex-start;
+        padding-left: var(--gutter);
+        justify-content: flex-start;
+        margin: var(--offset);
+        gap: 30px;
     }
     .tb-hamburger-contents a > span,
-    .tb-hamburger-contents .menu-right__darkmode > span{
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
+    .tb-hamburger-contents .tb-menu-right__darkmode > span{
+        display: block;
         font-size: var(--caption);
-        font-weight: var(--weight2);
-        color: black;
-        visibility: hidden;
-        opacity: 0;
-        white-space: nowrap;
-        padding: 7px 10px;
-        transition: var(--transition);
-        border-radius: var(--border-r);
-        z-index: 5;
-        
-        background-color: var(--bg-3);
-    }
-    .tb-hamburger-contents a:hover span,
-    .tb-hamburger-contents > div:hover span{
-        left: 50px;
+        color: white;
         visibility: visible;
         opacity: 1;
+        white-space: nowrap;
+        background-color: transparent;
+        z-index: 5;
+        
     }
+    .tb-hamburger-contents a,
+    .tb-hamburger-contents .tb-menu-right__darkmode{
+        display: flex;
+        align-items: center;
+        gap: var(--gutter);
+
+    }
+    
 }

@@ -4,6 +4,12 @@
     <div class="category-header">
         <h1>Project</h1>
         <i class="gg-info"></i>
+        <!-- <div class="info-container">
+            <p>
+                현재 진행중인 프로젝트가 있으신가요?
+                성장일기, 회고록, 간단한 메모, 느낀점 등등 자유로운 형태로 내가 성장하는 과정을 이곳에 기록해보세요!
+            </p>
+        </div> -->
     </div>
     <div id="category-content">
         <div id="category-container">
@@ -18,35 +24,37 @@
                     <button type="submit">만들기</button>
                 </form>
             </div>
-            <div id="category-not-finish-list">
-                <h2>진행중인 프로젝트</h2>
-                <h2 id="cnff-h2" {% if not_finish_categorys %} class="displayNone" {% endif %} >진행중인 카테고리가 없습니다.</h2>
-                <div id="category-not-finish-for">
-                    {% for category in not_finish_categorys %}
-                    <div class="category-item" id="nf-category-{{category.pk}}" onclick="click_category({{category.pk}}, 'unfinish')">
-                        <h2 id="tag-{{category.pk}}">{{category.name}}</h2>
-                        <i class="fa-solid fa-chevron-right"></i>
+            <div class="categories-container">
+                <div id="category-not-finish-list">
+                    <h2>진행중인 프로젝트</h2>
+                    <h2 id="cnff-h2" {% if not_finish_categorys %} class="displayNone" {% endif %} >진행중인 카테고리가 없습니다.</h2>
+                    <div id="category-not-finish-for">
+                        {% for category in not_finish_categorys %}
+                        <div class="category-item" id="nf-category-{{category.pk}}" onclick="click_category({{category.pk}}, 'unfinish')">
+                            <h2 id="tag-{{category.pk}}">{{category.name}}</h2>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
-                </div>
                 
-            </div>
-            <div id="category-finish-list">
-                <h2>완료한 프로젝트</h2>
-                <h2 id="cff-h2" {% if finish_categorys %} class="displayNone" {% endif %} >완료된 카테고리가 없습니다.</h2>
-                <div id="category-finish-for">
-                    {% for category in finish_categorys %}
-                    <div class="category-item" id="f-category-{{category.pk}}" onclick="click_category({{category.pk}}, 'finish')">
-                        <h2 id="tag-{{category.pk}}">{{category.name}}</h2>
-                        <i class="fa-solid fa-chevron-right"></i>
+                </div>
+                <div id="category-finish-list">
+                    <h2>완료한 프로젝트</h2>
+                    <h2 id="cff-h2" {% if finish_categorys %} class="displayNone" {% endif %} >완료한 카테고리가 없습니다.</h2>
+                    <div id="category-finish-for">
+                        {% for category in finish_categorys %}
+                        <div class="category-item" id="f-category-{{category.pk}}" onclick="click_category({{category.pk}}, 'finish')">
+                            <h2 id="tag-{{category.pk}}">{{category.name}}</h2>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
             </div>
             
         </div>
         <div id="category-detail-container">
-            <h2>카테고리를 선택 또는 추가해주세요.</h2>
+            <h2>카테고리를 선택하거나 추가해주세요.</h2>
         </div>
     </div>
     
@@ -58,6 +66,15 @@
 
 {% block extra %}
 <script>
+    // info toggle
+    const info = document.querySelector('.info-container');
+    const info_btn = document.querySelector('.gg-info');
+    info_btn.addEventListener('click', () => {
+        info.classList.toggle('show');
+    })
+
+
+
     // 리스트에 카테고리가 없다면 없다고 알리는 알림 문구 표시
     const update_noneAlarm = () =>{
         const cnffAlarmInput = document.querySelector('#cnff-h2');
@@ -138,16 +155,22 @@
         const tmpname = h2Input.textContent;
         const categoryBox = document.querySelector('#cdc-name-box');
 
+        
         const inputElement = document.createElement('input');
         inputElement.setAttribute('type', 'text');
         inputElement.setAttribute('value', tmpname);
         inputElement.setAttribute('id', 'update_name-'+pk);
         inputElement.setAttribute('name', 'name');
-
+        inputElement.setAttribute('class', 'edit-name--input');
+        
         h2Input.remove();
-
+        
         categoryBox.insertBefore(inputElement, categoryBox.firstChild);
         inputElement.focus();
+        
+        // 커서 마지막으로 
+        inputElement.value = '';
+        inputElement.value = tmpname; 
 
         inputElement.addEventListener('blur', ()=>{
             const updatedName = inputElement.value;
@@ -332,13 +355,14 @@
                 <button onclick="update_memory(${pk});">수정완료</button>
             </div>
             <div id="cdc-finish-box">
-                <label>
-                    <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})" checked/>
-                    프로젝트 끝내기
+                <label class="control control--checkbox">
+                    프로젝트 마무리하기
+                    <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})"/>
+                    <div class="control__indicator"></div>
                 </label>
             </div>
             <div id="cdc-delete-box">
-                <button onclick="delete_category(${pk}, 'finish');">프로젝트 삭제</button>
+                <button class="btn-delete" onclick="delete_category(${pk}, 'finish');">프로젝트 삭제</button>
             </div>
             `;
         }else if(type=="unfinish"){
@@ -353,13 +377,14 @@
                 <button onclick="update_memory(${pk});">수정완료</button>
             </div>
             <div id="cdc-finish-box">
-                <label>
+                <label class="control control--checkbox">
+                    프로젝트 마무리하기
                     <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})"/>
-                    프로젝트 끝내기
+                    <div class="control__indicator"></div>
                 </label>
             </div>
             <div id="cdc-delete-box">
-                <button onclick="delete_category(${pk}, 'unfinish');">프로젝트 삭제</button>
+                <button class="btn-delete" onclick="delete_category(${pk}, 'finish');">프로젝트 삭제</button>
             </div>
             `;
         }
