@@ -14,14 +14,14 @@
             <div class="price--marketcap">
                 <span>My Value</span>
                 <!-- value개수 * value.end -->
-                <span>3,634.7조</span>
+                <span>3,324</span>
             </div>
             <div class="total-todos">
-                <span>Group Value</span>
+                <span>Group({{user.my_group.name}}) Value</span>
                 <!-- 그룹에 참여한 시점부터 
                     개인별 (value.end - value.start)를 모두 합한 값
                 -->
-                <span>3,634.7조</span>
+                <span>{{user.my_group.price}}</span>
             </div>
         </div>
         <div id="chart"></div>
