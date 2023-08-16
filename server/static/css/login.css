@@ -98,6 +98,7 @@ main{
     text-align: center;
     margin-bottom: 20px;
 }
+
 .login__google{
     width: 320px;
     height: 34px;
@@ -105,6 +106,9 @@ main{
     border: 1px solid var(--grey_border);
     gap: var(--gutter);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .login__google:hover{
     background-color: var(--grey_bg);
@@ -121,6 +125,10 @@ main{
 .login__signup a{
     text-decoration: underline;
     cursor: pointer;
+    font-size: var(--body2);
+}
+.login__signup{
+    font-size: var(--body2);
 }
 .auth-email,
 .signup-code,
@@ -129,7 +137,6 @@ main{
 .find-password-code{
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
     gap: 8px;
 }
 .auth-email label,
@@ -141,7 +148,6 @@ main{
 .password-for-change label{
     font-size: var(--caption);
     color: var(--grey_400);
-    
 }
 .auth-email input,
 .signup-code input,
@@ -156,6 +162,7 @@ main{
     border: 1px solid var(--grey_border);
     background-color: var(--grey_bg);
     padding: 0 var(--gutter);
+    margin-top: 5px;
 }
 #password, #password-check{
     margin-bottom: var(--gutter);
@@ -198,6 +205,7 @@ main{
 /* 회원가입 실패 css */
 .error{
     border: 1px solid var(--red) !important;
+    font-size: var(--body2);
 }
 
 .displayNone{

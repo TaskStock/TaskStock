@@ -272,6 +272,23 @@
 {% endblock %}
 
 {% block extra %}
+<script>
+    // mobile에서 chart, calendar 탭
+    if (window.matchMedia("(max-width: 600px)").matches){
+        const mb_ccBtn = document.querySelector('#mb-main--nav');
+        mb_ccBtn.addEventListener('click', () => {
+            mb_tab();
+        })
+        mb_tab();
+
+        // 차트 버튼 1 Week -> 1w
+        document.querySelector('#one_week + .chart-btn').innerHTML = '1주';
+        document.querySelector('#one_month + .chart-btn').innerHTML = '1달';
+        document.querySelector('#three_month + .chart-btn').innerHTML = '3달';
+        document.querySelector('#six_month + .chart-btn').innerHTML = '6딜';
+        document.querySelector('#one_year + .chart-btn').innerHTML = '1년';
+    }
+</script>
 <script src="{% static 'js/candlestick.js' %}"></script>
 <script src="{% static 'js/time.js' %}"></script>
 <script src="{% static 'js/calendar.js' %}"></script>
