@@ -334,7 +334,9 @@ def home(request):
     followings_len = current_user.followings.count()
 
     categorys = Category.objects.all()
+    #today_value = get_value_for_date(current_user)
     
+    process_badges(value)
     context = {
         'user': current_user,
         'todos_levels_dict': todos_levels_dict,
@@ -719,7 +721,7 @@ combo처리하는 함수
 """
 def process_combo(user):
     # 사용자의 시간대를 기반으로 현재 arrow을 가져옴
-    current_local_arrow = get_current_arrow(user.tzinfo)
+    current_local_arrow = get_current_arrow(user.tzinfo).ceil('day')
     # UTC로 변환
     current_utc_arrow = local_to_utc(current_local_arrow)
     
@@ -748,7 +750,7 @@ def process_combo(user):
     return combo
 
 def process_badges(value):
-    user = value.value_user
+    user = value.user
     acquired_badges = user.badges.values_list('name', flat=True)
     
     #지금이라도 사야해
@@ -771,15 +773,23 @@ def process_badges(value):
         badge_to_add = Badge.objects.get(name='우주 개미의 선택')
         user.badges.add(badge_to_add)
     
-    #콩콩
-    if value.percentage == 22 and '콩콩' not in acquired_badges:
-        badge_to_add = Badge.objects.get(name='콩콩')
-        user.badges.add(badge_to_add)
-        
     #화성 갈끄니까
     if value.end >= 2000000 and '화성 갈끄니까' not in acquired_badges:
         badge_to_add = Badge.objects.get(name='화성 갈끄니까')
         user.badges.add(badge_to_add)
+    
+    #콩콩
+    if value.percentage == 22 and '콩콩' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='콩콩')
+        user.badges.add(badge_to_add)
+    
+    #콩콩
+    if value.percentage == 100 and '1+1' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='1+1')
+        user.badges.add(badge_to_add)
+        
+        
+
 
 #---선우 작업---#
 
