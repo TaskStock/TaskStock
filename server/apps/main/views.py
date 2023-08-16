@@ -794,15 +794,10 @@ def process_badges(value):
 #---선우 작업---#
 
 def search(request):
-    search_content = request.GET.get('search_content','')
-    users = User.objects.all()
-    filtered_users = users
-    if search_content:
-        filtered_users = User.objects.all().filter(name__contains=search_content)
+    top_users = User.objects.annotate(max_end=models.Max('value_user__end')).order_by('-max_end')[:5]
 
     ctx = {
-        'users': users,
-        'filtered_users': filtered_users,
+        'users': top_users,
     }
 
     return render(request, 'main/search.html',context=ctx)
