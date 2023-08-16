@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime, timedelta
+import pytz
 
 def user_directory_path(instance, filename):
     #파일을 user_<id>/<filename>에 저장
@@ -56,11 +56,18 @@ class User(AbstractUser):
 # User 모델 객체가 생성될 때 실행할 함수
 @receiver(post_save, sender=User)
 def user_created(sender, instance, created, **kwargs):
+    now_kst = datetime.utcnow().replace(tzinfo=pytz.utc).astimezone(pytz.timezone('Asia/Seoul'))
+
+    if now_kst.hour < 9:
+        final_time = (now_kst - timedelta(days=1)).replace(hour=14, minute=59, second=59).replace(tzinfo=pytz.utc)
+    else:
+        final_time = now_kst.replace(hour=14, minute=59, second=59).replace(tzinfo=pytz.utc)
+
     if created:
         Value.objects.create(
             user=instance,
-            #8월 16일 14:59:59 or 8월 15일 15:00:00
-            date=(instance.date_joined + timedelta(days=1)).replace(hour=14, minute=59, second=59),
+            #오늘이 한국시간 기준 8월 16일 이면 utc 8월 15일 15:00:00 부터 8월 16일 14:59:59 조회함 
+            date=final_time,
             percentage=0,
             start=50000,
             end=50000,
@@ -103,7 +110,8 @@ class Todo(models.Model):
 #Badge 모델
 class Badge(models.Model):
     users = models.ManyToManyField(User, related_name="badges")
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, null=True)
+    description = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.name

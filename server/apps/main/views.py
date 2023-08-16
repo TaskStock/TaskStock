@@ -656,6 +656,7 @@ def check_todo(request, pk):
         #combo변화 처리
         my_combo = process_combo(current_user)
         todo_status = str(todo_status)
+        #badge 처리
         return JsonResponse({'my_combo': my_combo, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
         
 
@@ -743,13 +744,42 @@ def process_combo(user):
     user.combo = combo
     user.save()
     
-    acquired_badges = user.badges.values_list('name', flat=True)
-    if user.combo == 10 and "지금이라도 사야해" not in acquired_badges:
-        badge_to_add = Badge.objects.get(name="지금이라도 사야해")
-        user.badges.add(badge_to_add)
         
     return combo
 
+def process_badges(value):
+    user = value.value_user
+    acquired_badges = user.badges.values_list('name', flat=True)
+    
+    #지금이라도 사야해
+    if user.combo == 10 and "지금이라도 사야해" not in acquired_badges:
+        badge_to_add = Badge.objects.get(name="지금이라도 사야해")
+        user.badges.add(badge_to_add)
+
+    #개미의 선택
+    if value.end >= 100000 and '개미의 선택' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='개미의 선택')
+        user.badges.add(badge_to_add)
+    
+    #슈퍼 개미의 선택
+    if value.end >= 200000 and '슈퍼 개미의 선택' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='슈퍼 개미의 선택')
+        user.badges.add(badge_to_add)
+    
+    #우주 개미의 선택
+    if value.end >= 500000 and '우주 개미의 선택' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='우주 개미의 선택')
+        user.badges.add(badge_to_add)
+    
+    #콩콩
+    if value.percentage == 22 and '콩콩' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='콩콩')
+        user.badges.add(badge_to_add)
+        
+    #화성 갈끄니까
+    if value.end >= 2000000 and '화성 갈끄니까' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='화성 갈끄니까')
+        user.badges.add(badge_to_add)
 
 #---선우 작업---#
 
