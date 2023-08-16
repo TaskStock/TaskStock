@@ -53,6 +53,7 @@
                 <div></div>
                 <div></div>
                 <div></div>
+                <div class="alarm_red_dot {% if not alarm %}displayNone{% endif %}"></div>
             </div>
             <div id="hamburger-tb">
                 <div></div>
@@ -71,6 +72,7 @@
                 <a href="/main/alarm/" class="menu-right__notif">
                     <div><i class="gg-bell"></i></div>
                     <span>Notification</span>
+                    <div class="alarm_red_dot {% if not alarm %}displayNone{% endif %}"></div>
                 </a>
                 <a href="/main/category/" class="menu-right__category">
                     <div><i class="gg-feed"></i></div>
@@ -126,7 +128,7 @@
                     </div>
                     <div class="my-info--sff sff-fr">
                         <span>Follower</span>
-                        <span id="follower_list">30</span>
+                        <span id="follower_list">{{user.followers.all.count}}</span>
                     </div>
                 </div>
             </div>
