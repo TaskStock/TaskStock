@@ -37,7 +37,7 @@ SECRET_KEY = my_settings.SECRET_KEY
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -150,10 +150,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/' 
 STATICFILES_DIRS = [ BASE_DIR / 'static', ] 
-#if DEBUG == True:
-#    STATIC_ROOT = BASE_DIR / 'static'
-#else:
-#    STATIC_ROOT = BASE_DIR / 'staticfiles'
+if DEBUG == True:
+   STATIC_ROOT = BASE_DIR / 'static'
+else:
+   STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
