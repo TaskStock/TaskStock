@@ -417,6 +417,7 @@ def get_value_for_date(user, target_arrow=None):
     except Value.DoesNotExist:
         value_object = None
         print('get_value_for_date Value가 검색 범위 내 없음, Value=None 반환')
+        print('get_value_for_date except 실행:, 검색범위', start_utc_arrow,'부터',end_utc_arrow )
 
     return value_object
 
@@ -425,7 +426,6 @@ def get_value_for_date(user, target_arrow=None):
 def click_date(request):
     # 자바스크립트에서 날짜를 전달한다
     date_str = request.POST.get('str')  # '8/21/2023' 브라우저의로컬 시간대 들어온다
-    print('click_date date_str:',date_str)
     username = request.POST.get("username")
     
     if username == "":
@@ -438,7 +438,6 @@ def click_date(request):
     # target_user의 타임존을 기반으로 local_datetime_object를 UTC로 변환
     local_arrow_start = local_arrow_object.floor('day') #자정
     local_arrow_end = local_arrow_object.ceil('day')    #23:59:59
-    print('click_date local:', local_arrow_start, '부터',local_arrow_end)
 
     utc_arrow_start = local_to_utc(local_arrow_start)
     utc_arrow_end = local_to_utc(local_arrow_end)
@@ -447,7 +446,6 @@ def click_date(request):
     todos = []
     try:
         value = Value.objects.get(user=target_user, date__gte=utc_arrow_start.datetime, date__lte=utc_arrow_end.datetime)
-        print('click_date try 실행:, 검색범위', utc_arrow_start,'부터',utc_arrow_end )
         todo_objects = Todo.objects.filter(value=value)
         
         for todo in todo_objects:
@@ -1090,17 +1088,15 @@ def delete_group(request,pk):
         
         return redirect('/main/search_group/')
     
-# def add_price(user):
-#     last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
-#     my_group = user.my_group
-#     if my_group is not None:
-#         my_group.price += last_value.start - last_value.end
-#         my_group.save()
+def add_price(user, target_arrow):
+    last_value = get_value_for_date(user, target_arrow) #local arrow 받아야함
+    my_group = user.my_group
+    if my_group != None and last_value != None:
+            my_group.price += (last_value.end - last_value.start)
+            my_group.save()
 
-#     return my_group.price
+    return 
 
-# search에 그룹 검색 기능 추가
-# 그룹에 멤버가 0명이라면 삭제하기
 
 # group search에 관한 함수
 def search_group(request):
