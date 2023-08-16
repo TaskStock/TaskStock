@@ -39,36 +39,43 @@ const showGroupsList = (groups) => {
   // users가 [] 인 경우 빈 배열이므로 null이 아님
   if (groups.length > 0) {
     for (const group of groups) {
-      atagInput = document.createElement("a");
-      atagInput.href = `/main/group/${group.pk}/`;
+      divtagInput = document.createElement("div");
+      divtagInput.classList.add("search-result__container");
+      const href = `/main/group/${group.pk}/`;
 
       const addButtonContent =
         group.name == my_group ? "LEAVE GROUP" : "JOIN GROUP";
 
+      const inputForm =
+        addButtonContent == "JOIN GROUP"
+          ? '<input type="text" name="group-password-verify-input" id="password-verify-input">'
+          : "";
+
       // 검색 결과를 보여주는 부분
-      atagInput.innerHTML = `
-<div class="search-result__container">
+      divtagInput.innerHTML = `
         <div class="search-result__right--container">
             <div class="friend-info--pic"></div>
-            <div class="search-result__name-container">
-                <h2>${group.name}</h2>
-                <p>${group.price}</p>
-            </div>
+            <a href="${href}">
+              <div class="search-result__name-container">
+                  <h2>${group.name}</h2>
+                  <p>${group.price}</p>
+              </div>
+            </a>
         </div>
         <div class="search-result__right-container">
             <div class="search-result__info">
                 <div class="search-result__right-upper-container">
                     <form onsubmit="handleFollowButtonClick(event)">
                         <input type="hidden" name="group" value="${group.name}">
+                        ${inputForm}
                         <button type="submit" name="group-button" class="add-button">${addButtonContent}</button>
                     </form>
                 </div>
                 <p>${group.create_user}</p>
             </div>                           
         </div>    
-    </div>
                 `;
-      currentInput.appendChild(atagInput);
+      currentInput.appendChild(divtagInput);
     }
   }
 };
@@ -115,7 +122,12 @@ const handleFollowButtonClick = async (event) => {
   ).textContent; // Get the button element
   const groupInput = event.target.querySelector("[name=group]"); // Get the input element
   const group = groupInput.value; // Get the value of the input element
+  const passwordInput = event.target.querySelector(
+    "[name=group-password-verify-input]"
+  ); // Get the input element
   event.preventDefault();
+
+  const password = passwordInput ? passwordInput.value : null; // 값이 존재하지 않으면 null 반환
 
   console.log(group);
   console.log(addButton_text.trim());
@@ -124,6 +136,7 @@ const handleFollowButtonClick = async (event) => {
   const formData = new FormData(event.target);
   formData.append("group-button", addButton_text.trim());
   formData.append("group", group);
+  formData.append("password", password);
   const res = await fetch(url, {
     method: "POST",
     headers: {},
@@ -133,12 +146,21 @@ const handleFollowButtonClick = async (event) => {
   handleFollowButtonText(text, event);
 };
 const handleFollowButtonText = async (text, event) => {
+  console.log(text);
   const addButton = event.target.querySelector("[name=group-button]");
   if (text === "LEAVE GROUP") {
+    alert("그룹에 가입되었습니다.");
     addButton.textContent = "LEAVE GROUP";
+    // 그룹원 수 감소 리로드를 통해
     window.location.reload();
   } else if (text === "JOIN GROUP") {
+    alert("그룹에서 탈퇴되었습니다.");
     addButton.textContent = "JOIN GROUP";
+    // 그룹원 수 증가 리로드를 통해
     window.location.reload();
+  } else if (text === "WRONG PASSWORD") {
+    alert("비밀번호가 틀렸습니다.");
+  } else if (text == "ALREADY JOINED") {
+    alert("이미 가입된 그룹이 존재합니다.");
   }
 };

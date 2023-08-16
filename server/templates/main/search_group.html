@@ -59,14 +59,15 @@
                     <h3>실시간 차트</h3>
                 </div>
                 {% for group in groups %}
-                <a href="/main/group/{{group.pk}}/">
                     <div class="search-result__container">
                         <div class="search-result__right--container">
                             <div class="friend-info--pic"></div>
-                            <div class="search-result__name-container">
-                                <h2>{{group.name}}</h2>
-                                <p>{{group.price}}</p>
-                            </div>
+                            <a href="/main/group/{{group.pk}}/">
+                                <div class="search-result__name-container">
+                                    <h2>{{group.name}}</h2>
+                                    <p>{{group.price}}</p>
+                                </div>
+                            </a>
                         </div>
                         <div class="search-result__right-container">
                             <div class="search-result__info">
@@ -74,6 +75,9 @@
                                     <form onsubmit="handleFollowButtonClick(event)">
                                         {% csrf_token %}
                                         <input type="hidden" name="group" value="{{ group.name }}">
+                                        {% if group != my_group %}
+                                            <input type="text" name="group-password-verify-input"  id="password-verify-input">
+                                        {% endif %}    
                                         <button type="submit" name="group-button" class="add-button">
                                             {% if group == my_group %}
                                                 LEAVE GROUP
@@ -88,7 +92,6 @@
                             
                         </div>    
                     </div>
-                </a>
                 {% endfor %}
             </div>
         </div>
@@ -98,14 +101,15 @@
             </div>
             <div class="search-result Scroll" id="search-groups__result-container">
                 {% for filtered_group in filtered_groups %}
-                <a href="/main/group/{{filtered_group.pk}}/">
                     <div class="search-result__container">
                         <div class="search-result__right--container">
                             <div class="friend-info--pic"></div>
-                            <div class="search-result__name-container">
-                                <h2>{{filtered_group.name}}</h2>
-                                <p>{{filtered_group.price}}</p>
-                            </div>
+                            <a href="/main/group/{{filtered_group.pk}}/">
+                                <div class="search-result__name-container">
+                                    <h2>{{filtered_group.name}}</h2>
+                                    <p>{{filtered_group.price}}</p>
+                                </div>
+                            </a>
                         </div>
                         <div class="search-result__right-container">
                             <div class="search-result__info">
@@ -113,6 +117,9 @@
                                     <form onsubmit="handleFollowButtonClick(event)">
                                         {% csrf_token %}
                                         <input type="hidden" name="group" value="{{ filtered_group.name }}">
+                                        {% if filtered_group != my_group %}
+                                            <input type="text" name="group-password-verify-input"  id="password-verify-input">
+                                        {% endif %}    
                                         <button type="submit" name="group-button" class="add-button">
                                             {% if filtered_group == my_group %}
                                                 LEAVE GROUP
@@ -126,7 +133,6 @@
                             </div>                           
                         </div>    
                     </div>
-                </a>
                 {% endfor %}
             </div>
         </div>

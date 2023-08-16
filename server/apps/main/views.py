@@ -944,11 +944,16 @@ def follow_group(request):
     text="오류"
 
     if buttonText == "JOIN GROUP":
-        if password_input == target_group.password:
-            current_user.my_group = target_group
-            text="LEAVE GROUP"
-        else: 
-            text="WRONG PASSWORD"   
+        # 그룹이 존재하는 경우
+        if current_user.my_group is not None:
+            text = "ALREADY JOINED"
+        else:
+            if password_input == target_group.password:
+                current_user.my_group = target_group
+                text="LEAVE GROUP"
+            else: 
+                text="WRONG PASSWORD"   
+                
     elif buttonText =="LEAVE GROUP":
         current_user.my_group = None
         text="JOIN GROUP"
