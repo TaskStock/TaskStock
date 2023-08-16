@@ -31,9 +31,10 @@ class User(AbstractUser):
     email_alarm = models.BooleanField(null=True, default=False)
     img = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     tzinfo = models.CharField(max_length=50, default='Asia/Seoul')
+    todo_cnt = models.IntegerField(default=0)
     percentage = models.FloatField(default=0)
-
     custom_active = models.BooleanField(default=False)
+
 
     # false = public, true = private
     hide = models.BooleanField(null=True, default=False)

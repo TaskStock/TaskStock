@@ -326,7 +326,7 @@ def home(request):
         last_value = Value.objects.filter(user=current_user, date__lt=utc_today_arrow.datetime).order_by('-date').first()
 
         value.start = value.end = last_value.end
-        value.low = last_value.end - value.low
+        value.low = last_value.end + value.low
         value.high = last_value.end + value.high
         value.is_updated = True
         value.save()
@@ -345,7 +345,6 @@ def home(request):
     followings_len = current_user.followings.count()
 
     categorys = Category.objects.all()
-    #today_value = get_value_for_date(current_user)
 
     check_non_read_alarms = Alarm.objects.filter(user=current_user, is_read=False)
     if not check_non_read_alarms:
@@ -353,7 +352,12 @@ def home(request):
     else:
         alarm=True
     
+    #badge 처리
     process_badges(value)
+    
+    #시가 총액 처리(my value)
+    cap = current_user.todo_cnt * value.end
+    market_cap = max(cap, 0)
     context = {
         'user': current_user,
         'todos_levels_dict': todos_levels_dict,
@@ -362,8 +366,11 @@ def home(request):
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
         'categorys': categorys,
+        'market_cap': market_cap,
+        'value':value,
         'alarm': alarm,
     }
+    
     return render(request, 'main/home2.html', context)
 
 
@@ -375,12 +382,6 @@ def update_userinfo(request):
         image = request.FILES.get('img')
         name = request.POST.get('name')
         introduce = request.POST.get('profile-description')
-
-        #새 이미지가 제출되었을 경우, 이전 이미지를 삭제
-        if image and user.img:
-            old_image_path = user.img.path
-            if os.path.isfile(old_image_path):
-                os.remove(old_image_path)
 
         if image:
             user.img = image
@@ -659,9 +660,11 @@ def check_todo(request, pk):
         if todo_status == 'True':
             todo.goal_check = True
             value.end += 1000*todo.level
+            current_user.todo_cnt += 1
         else:
             todo.goal_check = False
             value.end -= 1000*todo.level
+            current_user.todo_cnt -= 1
         
         #value의 percentage값 업데이트 -> 소수점 둘째자리까지
         if value.start == 0:
