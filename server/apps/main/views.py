@@ -102,13 +102,34 @@ def profile(request):
         follow_text='FOLLOW'
 
     # home 로직 가져옴
-    process_combo(target_user)
-    value = get_value_for_date(target_user)
-    
-    if value is None:
-        # 로그인 했을 때 value가 없는 경우
+
+    if value == None:
+        #로그인 했을 때 value가 없는 경우 create
         value = createValue(target_user)
+        print('home로딩하면서 createValue')
         
+    elif value.is_dummy and not value.is_updated:
+        #오늘의 데이터가 미리 만들어진 더미데이터면(add_todo, values_for_chart) 업데이트로 접근
+        loacl_today_arrow = get_current_arrow(target_user.tzinfo)
+        utc_today_arrow  = local_to_utc(loacl_today_arrow)
+        
+        #자기 이전 value까지만 정렬해서 가져와야 하기 때문에 date_lt 사용
+        last_value = Value.objects.filter(user=target_user, date__lt=utc_today_arrow.datetime).order_by('-date').first()
+
+        value.start = value.end = last_value.end
+        value.low = last_value.end + value.low
+        value.high = last_value.end + value.high
+        value.is_updated = True
+        value.save()    
+
+    #combo 처리
+    process_combo(target_user)
+    #badge 처리
+    process_badges(target_user)
+    #시가 총액 처리(my value)
+    cap = current_user.todo_cnt * value.end
+    market_cap = max(cap, 0)
+    
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
     todos_levels_dict = {}
@@ -128,6 +149,8 @@ def profile(request):
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
         'percentage': value.percentage,
+        'market_cap':market_cap,
+        'value':value,
     }
     return render(request, 'main/profile.html', context=ctx)
 
