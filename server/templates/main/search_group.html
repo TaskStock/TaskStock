@@ -3,21 +3,24 @@
 
 <!-- search.html, search.js의 기능을 대부분 그대로 가져옴. search view함수역시 거의 동일하게 가져옴 -->
 <!-- search.css를 그대로 연결 사용 -->
-<main class="search-main">
-    <div class="search-form-container">
-        <form action="" class="search-form">
+<main class="search-group-main">
+    <div class="search-group-form-container">
+        <form action="" class="search-group-form">
             <input type="text" placeholder="Search" name="search-group_content" id="search-group_content" autofocus>
             <button type="submit"><i class="gg-search"></i></button>
         </form>
     </div>
-    <div class="search-container">
+    <div class="search-group-container">
         <div id="live-group-chart" class="live-group-chart">
             <form onsubmit="handleCreateButtonClick(event)" class="create-form">
                 {% csrf_token %}
-                <input type="text" name="group-create-input"  id="create-input">
+                <div>그룹 이름</div>
+                <input type="text" name="group-name-input"  id="name-input">
+                <div>비밀 번호</div>
+                <input type="text" name="group-password-input"  id="password-input">
                 <button type="submit" name="group-create-button" id="create-button">Create</button>
             </form>
-            <div class="search-result">
+            <div class="search-group-result">
                 {% if my_group == None %}
                 <h3>내 그룹</h3>
                 <div class="my-group__container">
@@ -27,21 +30,21 @@
                 <h3>내 그룹</h3>
                 <div class="my-group__container">
                 <a href="/main/group/{{my_group.pk}}/">
-                    <div class="search-result__container">
-                        <div class="search-result__right--container">
-                            <div class="friend-info--pic"></div>
-                            <div class="search-result__name-container">
+                    <div class="search-group-result__container">
+                        <div class="search-group-result__right--container">
+                            <div class="friend-group-info--pic"></div>
+                            <div class="search-group-result__name-container">
                                 <h2 id="my_group_name">{{my_group.name}}</h2>
                                 <p>{{my_group.price}}</p>
                             </div>
                         </div>
-                        <div class="search-result__right-container">
-                            <div class="search-result__info">
-                                <div class="search-result__right-upper-container">
+                        <div class="search-group-result__right-container">
+                            <div class="search-group-result__info">
+                                <div class="search-group-result__right-upper-container">
                                     <form onsubmit="handleFollowButtonClick(event)">
                                         {% csrf_token %}
                                         <input type="hidden" name="group" value="{{ my_group.name }}">
-                                        <button type="submit" name="group-button" class="add-button">DELETE GROUP</button>
+                                        <button type="submit" name="group-button" class="add-button">LEAVE GROUP</button>
                                     </form>
                                 </div>
                                 <p>{{my_group.create_user}}</p>
@@ -52,30 +55,34 @@
                 </a>
                 </div>
                 {% endif %}
-                <div class="search-label">
+                <div class="search-group-label">
                     <h3>실시간 차트</h3>
                 </div>
                 {% for group in groups %}
-                <a href="/main/group/{{group.pk}}/">
-                    <div class="search-result__container">
-                        <div class="search-result__right--container">
-                            <div class="friend-info--pic"></div>
-                            <div class="search-result__name-container">
-                                <h2>{{group.name}}</h2>
-                                <p>{{group.price}}</p>
-                            </div>
+                    <div class="search-group-result__container">
+                        <div class="search-group-result__right--container">
+                            <div class="friend-group-info--pic"></div>
+                            <a href="/main/group/{{group.pk}}/">
+                                <div class="search-group-result__name-container">
+                                    <h2>{{group.name}}</h2>
+                                    <p>{{group.price}}</p>
+                                </div>
+                            </a>
                         </div>
-                        <div class="search-result__right-container">
-                            <div class="search-result__info">
-                                <div class="search-result__right-upper-container">
+                        <div class="search-group-result__right-container">
+                            <div class="search-group-result__info">
+                                <div class="search-group-result__right-upper-container">
                                     <form onsubmit="handleFollowButtonClick(event)">
                                         {% csrf_token %}
                                         <input type="hidden" name="group" value="{{ group.name }}">
+                                        {% if group != my_group %}
+                                            <input type="text" name="group-password-verify-input"  id="password-verify-input">
+                                        {% endif %}    
                                         <button type="submit" name="group-button" class="add-button">
                                             {% if group == my_group %}
-                                                DELETE GROUP
+                                                LEAVE GROUP
                                             {% else %}
-                                                ADD GROUP
+                                                JOIN GROUP
                                             {% endif %}
                                         </button>
                                     </form>
@@ -85,36 +92,39 @@
                             
                         </div>    
                     </div>
-                </a>
                 {% endfor %}
             </div>
         </div>
-        <div class="search-users">
-            <div class="search-label">
+        <div class="search-group-users">
+            <div class="search-group-label">
                 <h3>검색 결과</h3>
             </div>
-            <div class="search-result Scroll" id="search-groups__result-container">
+            <div class="search-group-result Scroll" id="search-groups__result-container">
                 {% for filtered_group in filtered_groups %}
-                <a href="/main/group/{{filtered_group.pk}}/">
-                    <div class="search-result__container">
-                        <div class="search-result__right--container">
-                            <div class="friend-info--pic"></div>
-                            <div class="search-result__name-container">
-                                <h2>{{filtered_group.name}}</h2>
-                                <p>{{filtered_group.price}}</p>
-                            </div>
+                    <div class="search-group-result__container">
+                        <div class="search-group-result__right--container">
+                            <div class="friend-group-info--pic"></div>
+                            <a href="/main/group/{{filtered_group.pk}}/">
+                                <div class="search-group-result__name-container">
+                                    <h2>{{filtered_group.name}}</h2>
+                                    <p>{{filtered_group.price}}</p>
+                                </div>
+                            </a>
                         </div>
-                        <div class="search-result__right-container">
-                            <div class="search-result__info">
-                                <div class="search-result__right-upper-container">
+                        <div class="search-group-result__right-container">
+                            <div class="search-group-result__info">
+                                <div class="search-group-result__right-upper-container">
                                     <form onsubmit="handleFollowButtonClick(event)">
                                         {% csrf_token %}
                                         <input type="hidden" name="group" value="{{ filtered_group.name }}">
+                                        {% if filtered_group != my_group %}
+                                            <input type="text" name="group-password-verify-input"  id="password-verify-input">
+                                        {% endif %}    
                                         <button type="submit" name="group-button" class="add-button">
                                             {% if filtered_group == my_group %}
-                                                DELETE GROUP
+                                                LEAVE GROUP
                                             {% else %}
-                                                ADD GROUP
+                                                JOIN GROUP
                                             {% endif %}
                                         </button>
                                     </form>
@@ -123,7 +133,6 @@
                             </div>                           
                         </div>    
                     </div>
-                </a>
                 {% endfor %}
             </div>
         </div>

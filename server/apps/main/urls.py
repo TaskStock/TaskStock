@@ -12,8 +12,8 @@ urlpatterns = [
     path('settings/', settings), # /main/settings/name/
     path('settings/update_userinfo/', update_userinfo), # /main/settings/update_userinfo/
     path('category/', category), #/main/category/
-    # path('group/<int:pk>/', group), #/main/group/
-    # path('search_group/', search_group), #/main/search_group/
+    path('group/<int:pk>/', group), #/main/group/
+    path('search_group/', search_group), #/main/search_group/
 
     # 다른 유저의 상세 페이지
     path('profile/', profile), # /main/profile/
@@ -31,12 +31,12 @@ urlpatterns = [
     # follow ajax
     path('follow/', follow), # /main/follow/
 
-    # # group ajax
-    # path('group/follow_group/', follow_group), # /main/follow_group/
-    # path('group/create_group/', create_group), # /main/create_group/
-    # path('group/delete_group/<int:pk>/', delete_group), # /main/delete_group/
-    # path('group/update_group/', update_group), # /main/update_group/
-    # path('group/search_group/ajax/', search_group_ajax), # /main/invite_group/
+    # group ajax
+    path('group/follow_group/', follow_group), # /main/follow_group/
+    path('group/create_group/', create_group), # /main/create_group/
+    path('group/delete_group/<int:pk>/', delete_group), # /main/delete_group/
+    path('group/update_group/', update_group), # /main/update_group/
+    path('group/search_group/ajax/', search_group_ajax), # /main/invite_group/
 
     # category ajax
     path('create_category/', create_category), # /main/create_category/

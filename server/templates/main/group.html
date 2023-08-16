@@ -14,6 +14,9 @@
                 <form onsubmit="handleButtonClick(event)">
                     {% csrf_token %}
                     <input type="hidden" name="group" value="{{ group.name }}">
+                    {% if button_text == "JOIN GROUP" %}
+                    <input type="text" name="group-password-verify-input"  id="password-verify-input">
+                    {% endif %}
                     <button type="submit" name="group-button" id="add-button">{{button_text}}</button>
                 </form>
             </div>
