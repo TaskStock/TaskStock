@@ -102,7 +102,8 @@ def profile(request):
         follow_text='FOLLOW'
 
     # home 로직 가져옴
-
+    value = get_value_for_date(current_user)
+    
     if value == None:
         #로그인 했을 때 value가 없는 경우 create
         value = createValue(target_user)
@@ -125,7 +126,7 @@ def profile(request):
     #combo 처리
     process_combo(target_user)
     #badge 처리
-    process_badges(target_user)
+    process_badges(value)
     #시가 총액 처리(my value)
     cap = current_user.todo_cnt * value.end
     market_cap = max(cap, 0)
