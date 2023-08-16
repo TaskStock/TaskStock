@@ -938,13 +938,22 @@ def group(request,pk):
 def follow_group(request):
     buttonText = request.POST.get("group-button")
     group = request.POST.get("group")
+    password_input = request.POST.get("password")
     target_group = Group.objects.get(name=group)
     current_user = request.user
     text="오류"
 
     if buttonText == "JOIN GROUP":
-        current_user.my_group = target_group
-        text="LEAVE GROUP"
+        # 그룹이 존재하는 경우
+        if current_user.my_group is not None:
+            text = "ALREADY JOINED"
+        else:
+            if password_input == target_group.password:
+                current_user.my_group = target_group
+                text="LEAVE GROUP"
+            else: 
+                text="WRONG PASSWORD"   
+                
     elif buttonText =="LEAVE GROUP":
         current_user.my_group = None
         text="JOIN GROUP"
@@ -957,22 +966,28 @@ def follow_group(request):
 def create_group(request):
     user = request.user
     if request.method == 'POST':
-        content = request.POST.get("name")
-        if user.my_group is None:
-            #그룹이 없는 경우에만 그룹 생성
-            Group.objects.create(
-                name=content,
-                price=0,
-                create_user=user.name,
-            )
-            user.my_group = Group.objects.get(name=content)
-            user.save()
+        name_content = request.POST.get("name")
+        password_content = request.POST.get("password")
 
-            return JsonResponse({'result': 'Success'})
+        if user.my_group is not None:
+            #그룹이 있는 경우에 그룹 생성 막음
+            return JsonResponse({'result': 'my_group_exist'})
         
         else:
-            #그룹이 있는 경우
-            return JsonResponse({'result': 'Exist'})
+            if Group.objects.filter(name=name_content).exists():
+                return JsonResponse({'result': 'group_name_exist'})
+            else:
+                Group.objects.create(
+                    name=name_content,
+                    price=0,
+                    create_user=user.name,
+                    password = password_content,
+                )
+                user.my_group = Group.objects.get(name=name_content)
+                user.save()
+                return JsonResponse({'result': 'Success'})
+
+            
 
 def update_group(request):
     if request.method == 'POST':
