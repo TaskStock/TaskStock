@@ -356,7 +356,6 @@
 
 .edit-name--input{
     width: 300px;
-    /* height: 36px; */
     padding: 7px 10px;
     color: var(--text-color);
     font-size: var(--heading3);
@@ -364,4 +363,35 @@
     background-color: transparent;
     border-radius: var(--border-r);
     border: 1px solid var(--border-color);
+}
+.mb-backToList{
+    display: none;
+}
+@media screen and (max-width: 600px) {
+    #category-container {
+        width: 100%;
+        height: auto;
+    }
+    #category-detail-container{
+        display: none;
+        height: 100%;
+        padding: 30px var(--gutter);
+    }
+    .categories-container{
+        display: grid;
+        grid-template-columns: auto;
+        gap: var(--gutter);
+    }
+    .mb-backToList{
+        margin-left: auto;
+        cursor: pointer;
+    }
+    .mb-backToList.showCat{
+        display: block;
+
+    }
+    .mb-backToList i{
+        font-size: var(--subheading);
+    }
+    
 }
