@@ -19,7 +19,7 @@ def login(request):
             user = form.get_user()
             auth.login(request, user)
             
-            if not request.user.is_active:
+            if not request.user.custom_active:
                 return redirect('/signup/step2/')
             else:
                 return redirect('/main/')
@@ -85,7 +85,6 @@ def signup1(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user.is_active=False
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth.login(request, user)
 
@@ -204,7 +203,7 @@ def activate_account(request, username):
     except User.DoesNotExist:
         raise Http404("User does not exist")
     
-    user.is_active=True
+    user.custom_active=True
     user.save()
 
     return redirect('/login/')
