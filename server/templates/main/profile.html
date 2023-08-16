@@ -155,26 +155,22 @@
                         <div class="todo-checkbox todo-checkbox-{{todo.pk}} {{todo.goal_check}}"></div>
                         
                         <input type="text" 
-                               class="todo-contents" 
-                               onclick="edit_todo({{todo.pk}})"
-                               value="{{todo.content}}"
-                               readonly>
+                            class="todo-contents" 
+                            onclick="edit_todo({{todo.pk}})"
+                            value="{{todo.content}}"
+                            readonly>
                         <div class="todo-level todo-level-{{todo.pk}}">
-                      
-                         
-          
+
                         {% with level=todos_levels_dict|get_item:todo.id %}
                             {% for i in level|to_range %}
                                 <div level="{{level}}" class="active"></div>
                             {% endfor %}
-                         
                         {% endwith %} 
 
                         {% with sub=todos_sub_dict|get_item:todo.id %}
                             {% for i in sub|to_range %}
                                 <div level="{{sub}}"></div>
                             {% endfor %}
-                         
                         {% endwith %} 
                             
                         </div>
