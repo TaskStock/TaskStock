@@ -15,12 +15,12 @@
             </div>
             <div class="user-info--about">
                 <div class="user-info--name">{{target_user.username}}</div>
-                <div class="user-info--comment">Hello world!</div>
+                <div class="user-info--comment">{{target_user.introduce}}</div>
             </div>
             <div class="user-info--sff__container">
                 <div class="user-info--sff sff-s">
                     <span>Today</span>
-                    <span>0%</span>
+                    <span>{{percentage}}</span>
                 </div>
                 <div class="user-info--sff sff-fg">
                     <span>Following</span>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="user-info--sff sff-fr">
                     <span>Follower</span>
-                    <span id="follower_list">30</span>
+                    <span id="follower_list">{{target_user.followers.all.count}}</span>
                 </div>
             </div>
             <div class="follow-btn">
@@ -47,11 +47,11 @@
                 <span>3,634.7조</span>
             </div>
             <div class="total-todos">
-                <span>{{target_user.username}}'s Group Value</span>
+                <span>{{target_user.username}}'s Group({{target_user.my_group.name}}) Value</span>
                 <!-- 그룹에 참여한 시점부터 
                     개인별 (value.end - value.start)를 모두 합한 값
                 -->
-                <span>3,634.7조</span>
+                <span>{{target_user.my_group.price}}</span>
             </div>
         </div>
         <div id="chart"></div>
@@ -80,7 +80,7 @@
             </form>
         </div> 
         <div class="dashboard">
-            <div id="username_save" style="display:none;">{{user.username}}</div>
+            <div id="username_save" style="display:none;">{{target_user.username}}</div>
             <script>
                 const username = document.querySelector("#username_save");
                 if(username==null){
@@ -150,7 +150,7 @@
                     
                     <div class="todo-item todo-item-{{todo.pk}} ">
                         
-                        <div class="todo-checkbox todo-checkbox-{{todo.pk}} {{todo.goal_check}}" onclick="check_todo({{todo.pk}})"></div>
+                        <div class="todo-checkbox todo-checkbox-{{todo.pk}} {{todo.goal_check}}"></div>
                         
                         <input type="text" 
                                class="todo-contents" 
@@ -177,31 +177,6 @@
                             
                         </div>
                         <!-- edit page -->
-                        <div class="todo-item--edit todo-item--edit-{{todo.pk}}">
-                            <div class="todo-item--date">8월 7일 월요일</div>
-                            <div class="todo-item--input">
-                                <span>할 일을 수정하세요</span>
-                                <input type="text"
-                                placeholder="{{todo.content}}"
-                                value="{{todo.content}}"
-                                
-                                >
-                            </div>
-                            <div class="todo-item--level">
-                                <span>난이도를 수정하세요</span>
-                                <div class="edit-todo-level" curr-level="{{todo.level}}">
-                                    <div level="1"></div>
-                                    <div level="2"></div>
-                                    <div level="3"></div>
-                                    <div level="4"></div>
-                                    <div level="5"></div>
-                                </div>
-                            </div>
-                            <div class="edit-btn--container">
-                                <div class="todo-edit--delete-btn" onclick="delete_todo({{todo.pk}})">삭제</div>
-                                <div class="todo-edit--submit-btn" onclick="update_todo({{todo.pk}})">완료</div>
-                            </div>
-                        </div>
                     </div>
 
                     {% endfor %}
@@ -219,6 +194,7 @@
 {% block extra %}
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/candlestick.js' %}"></script>
+<script src="{% static 'js/todo2.js' %}"></script>
 <script>
     const followClick = async () =>{
         const followButton = document.querySelector("#followBtn");

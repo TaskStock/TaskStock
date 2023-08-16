@@ -20,11 +20,11 @@
                 <span>{{market_cap}} KRW</span>
             </div>
             <div class="total-todos">
-                <span>Group Market Cap</span>
+                <span>Group({{user.my_group.name}}) Value</span>
                 <!-- 그룹에 참여한 시점부터 
                     개인별 (value.end - value.start)를 모두 합한 값
                 -->
-                <span>3,634.7조</span>
+                <span>{{user.my_group.price}}</span>
             </div>
         </div>
         <div id="chart"></div>
@@ -275,12 +275,6 @@
 {% endblock %}
 
 {% block extra %}
-<script>
-    // home2를 랜더링했을 때 가장 먼제 실행하는 스크립트
-    document.addEventListener("DOMContentLoaded", function(){
-        
-    });
-</script>
 <script src="{% static 'js/candlestick.js' %}"></script>
 <script src="{% static 'js/time.js' %}"></script>
 <script src="{% static 'js/calendar.js' %}"></script>

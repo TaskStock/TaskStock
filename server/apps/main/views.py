@@ -127,6 +127,7 @@ def profile(request):
         'date_id':date_id, 
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
+        'percentage': value.percentage,
     }
     return render(request, 'main/profile.html', context=ctx)
 
@@ -194,10 +195,20 @@ def search_ajax(request):
     users=[]
 
     for user in find_users:
+        if user.img:
+            img_src=user.img.url
+            img_alt="Profile Image"
+        else:
+            img_src="/static/img/blank-profile-picture.png"
+            img_alt="Default Profile Image"
         user_data={
             "name":user.name,
             "username":user.username,
             "introduce":user.introduce,
+            "percentage":user.percentage,
+            "img_src":img_src,
+            "img_alt":img_alt,
+
             # 추후 필요한 필드 추가
         }
         users.append(user_data)
@@ -334,6 +345,12 @@ def home(request):
     followings_len = current_user.followings.count()
 
     categorys = Category.objects.all()
+
+    check_non_read_alarms = Alarm.objects.filter(user=current_user, is_read=False)
+    if not check_non_read_alarms:
+        alarm=False
+    else:
+        alarm=True
     
     #badge 처리
     process_badges(value)
@@ -348,10 +365,10 @@ def home(request):
         'date_id':date_id, 
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
-        'percent': value.percentage,
         'categorys': categorys,
         'market_cap': market_cap,
         'value':value,
+        'alarm': alarm,
     }
     
     return render(request, 'main/home2.html', context)
@@ -654,6 +671,10 @@ def check_todo(request, pk):
             value.percentage = round((value.end - 50000)/50000 * 100, 2)
         else:
             value.percentage = round((value.end - value.start)/value.start *100, 2) 
+
+
+        current_user.percentage=value.percentage
+        current_user.save()
             
         todo.save()
         value.save()
@@ -797,15 +818,10 @@ def process_badges(value):
 #---선우 작업---#
 
 def search(request):
-    search_content = request.GET.get('search_content','')
-    users = User.objects.all()
-    filtered_users = users
-    if search_content:
-        filtered_users = User.objects.all().filter(name__contains=search_content)
+    top_users = User.objects.annotate(max_end=models.Max('value_user__end')).order_by('-max_end')[:5]
 
     ctx = {
-        'users': users,
-        'filtered_users': filtered_users,
+        'users': top_users,
     }
 
     return render(request, 'main/search.html',context=ctx)
@@ -822,7 +838,19 @@ def landing_page(request):
 
 # alarm
 def alarm(request):
-    return render(request, 'main/alarm.html')
+    non_read_alarm=Alarm.objects.filter(user=request.user, is_read=False)
+    read_alarm=Alarm.objects.filter(user=request.user, is_read=True).exclude(pk__in=[alarm.pk for alarm in non_read_alarm])
+
+    for alarm in non_read_alarm:
+        alarm.is_read=True
+        alarm.save()
+
+    ctx = {
+        'non_read_alarm': non_read_alarm,
+        'read_alarm': read_alarm,
+    }
+
+    return render(request, 'main/alarm.html',context=ctx)
 
 
 # category

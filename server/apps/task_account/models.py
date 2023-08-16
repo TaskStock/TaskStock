@@ -26,12 +26,15 @@ class User(AbstractUser):
     combo = models.IntegerField(null=True, default=0)
     first_name=None
     last_name=None
-    name = models.CharField(max_length=30, default="닉네임을 설정하세요")
+    name = models.CharField(max_length=30, default="관리자")
     introduce = models.CharField(max_length=50, null=True, blank=True)
     email_alarm = models.BooleanField(null=True, default=False)
     img = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     tzinfo = models.CharField(max_length=50, default='Asia/Seoul')
     todo_cnt = models.IntegerField(default=0)
+    percentage = models.FloatField(default=0)
+    custom_active = models.BooleanField(default=False)
+
 
     # false = public, true = private
     hide = models.BooleanField(null=True, default=False)
@@ -77,6 +80,11 @@ def user_created(sender, instance, created, **kwargs):
             high=50000,
             is_updated=True,
         )
+        Alarm.objects.create(
+            user=instance,
+            content=instance.name+" 님의 가입을 축하드립니다! 주가 상승을 기원하겠습니다.",
+            alarm_type="account",
+        )
 
 class Value(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='value_user')
@@ -120,3 +128,21 @@ class Badge(models.Model):
 
     #배지 부여할 때
     #user.badges.add(some_badge)
+
+
+class Alarm(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='alarm_user')
+    content = models.TextField()
+    img = models.TextField(null=True, default="base_img")
+    alarm_type = models.CharField(max_length=30)
+    is_read = models.BooleanField(null=True, default=False)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # 유저
+    # 내용
+    # 이미지 경로
+    # 알림 유형 ( account, follow, badge, category, group, ranking )
+    # 읽음 여부
+
+    # 생성 일자

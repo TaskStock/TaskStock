@@ -17,11 +17,15 @@
                 <div class="search-result__container">
                     <div class="search-result__left-container">
                         <div class="friend-info-pic">
-                            <img class="friend-info-pic" src="https://placekitten.com/15/15" alt="">
+                            {% if user.img %}
+                                <img class="friend-info-pic" src="{{ user.img.url }}" alt="Profile Image">
+                            {% else %}
+                                <img class="friend-info-pic" src="{% static 'img/blank-profile-picture.png' %}" alt="Default Profile Image">
+                            {% endif %}
                         </div>
                         <div class="search-result__name-container">
                             <h2>{{user.name}}</h2>
-                            <p>Hi</p>
+                            <p>{% if user.introduce %}{{ user.introduce }}{% endif %}</p>
                         </div>
                     </div>
                     <div class="search-result__right-container">
@@ -29,7 +33,7 @@
                             <div class="search-result__right-upper-container">
                                 <!-- <img class="friend-info-pic" src="https://placekitten.com/15/15" alt=""> -->
                             </div>
-                            <p>13%</p>
+                            <p>{{ user.percentage }} %</p>
                         </div>
                         
                     </div>    
@@ -43,30 +47,6 @@
         <div id="search-users" class="displayNone">
             <h3 class="search-label">검색 결과</h3>
             <div class="search-result Scroll" id="search-users__result-container">
-                {% for filtered_user in filtered_users %}
-                <a href="/main/profile/?username={{filtered_user.username}}">
-                    <div class="search-result__container searched-result__searched-user">
-                        <div class="search-result__left-container searched-result__searched-user__left-container">
-                            <div class="friend-info__pic">
-                                <img class="friend-info-pic" src="https://placekitten.com/15/15" alt="">
-                            </div>
-                            <div class="search-result__name-container">
-                                <h2>{{filtered_user.name}}</h2>
-                                <p>Hi</p>
-                            </div>
-                        </div>
-                        <div class="search-result__right-container searched-result__searched-user__right-container" >
-                            <div class="search-result__info">
-                                <div class="search-result__right-upper-container">
-                                    
-                                </div>
-                                <p>13%</p>
-                            </div>
-
-                        </div>    
-                    </div>
-                </a>
-                {% endfor %}
             </div>
         </div>
     </div>
@@ -127,7 +107,7 @@
                     <div class="search-result__container searched-result__searched-user">
                         <div class="search-result__left-container searched-result__searched-user__left-container">
                             <div class="friend-info__pic">
-                                <img class="friend-info-pic" src="https://placekitten.com/15/15" alt="">
+                                <img class="friend-info-pic" src="${user.img_src}" alt="${user.img_alt}">
                             </div>
                             <div class="search-result__name-container">
                                 <h2>${user.name}</h2>
@@ -139,7 +119,7 @@
                                 <div class="search-result__right-upper-container">
                                     
                                 </div>
-                                <p>13%</p>
+                                <p>${user.percentage} %</p>
                             </div>
 
                         </div>    
