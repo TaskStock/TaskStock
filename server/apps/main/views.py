@@ -127,6 +127,7 @@ def profile(request):
         'date_id':date_id, 
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
+        'percentage': value.percentage,
     }
     return render(request, 'main/profile.html', context=ctx)
 
@@ -194,10 +195,20 @@ def search_ajax(request):
     users=[]
 
     for user in find_users:
+        if user.img:
+            img_src=user.img.url
+            img_alt="Profile Image"
+        else:
+            img_src="/static/img/blank-profile-picture.png"
+            img_alt="Default Profile Image"
         user_data={
             "name":user.name,
             "username":user.username,
             "introduce":user.introduce,
+            "percentage":user.percentage,
+            "img_src":img_src,
+            "img_alt":img_alt,
+
             # 추후 필요한 필드 추가
         }
         users.append(user_data)
@@ -344,7 +355,6 @@ def home(request):
         'date_id':date_id, 
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
-        'percent': value.percentage,
         'categorys': categorys,
     }
     return render(request, 'main/home2.html', context)
@@ -651,6 +661,10 @@ def check_todo(request, pk):
             value.percentage = round((value.end - 50000)/50000 * 100, 2)
         else:
             value.percentage = round((value.end - value.start)/value.start *100, 2) 
+
+
+        current_user.percentage=value.percentage
+        current_user.save()
             
         todo.save()
         value.save()

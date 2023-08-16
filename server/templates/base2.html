@@ -30,6 +30,9 @@
     <title>TASKSTOCK</title>
 </head>
 <body>
+    <script>
+        let global_current_username="";
+    </script>
     <div id="mb--header">
         <i class="gg-menu-left-alt"></i>
         <a href="/main/">
@@ -102,12 +105,20 @@
                 {% endif %}
             </div>
             <div class="my-info--about">
-                <div class="my-info--name">{{user}}</div>
+                <div id="base-current-user-name" class="my-info--name">{{user}}</div>
+                <script>
+                    const current_username = document.querySelector("#base-current-user-name");
+                    if(current_username==null){
+                        global_chart_target_username="";
+                    }else{
+                        global_chart_target_username=current_username.textContent;
+                    }
+                </script>
                 <div class="my-info--comment">{{user.textContent}}</div>
                 <div class="my-info--sff__container">
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
-                        <span>{{ percent }}</span>
+                        <span>{{ user.percentage }} %</span>
                     </div>
                     <div class="my-info--sff sff-fg">
                         <span>Following</span>

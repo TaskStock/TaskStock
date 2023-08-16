@@ -26,11 +26,12 @@ class User(AbstractUser):
     combo = models.IntegerField(null=True, default=0)
     first_name=None
     last_name=None
-    name = models.CharField(max_length=30, default="닉네임을 설정하세요")
+    name = models.CharField(max_length=30, default="관리자")
     introduce = models.CharField(max_length=50, null=True, blank=True)
     email_alarm = models.BooleanField(null=True, default=False)
     img = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     tzinfo = models.CharField(max_length=50, default='Asia/Seoul')
+    percentage = models.FloatField(default=0)
 
     # false = public, true = private
     hide = models.BooleanField(null=True, default=False)

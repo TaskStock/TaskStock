@@ -6,8 +6,10 @@ const edit_containers = document.querySelectorAll('.todo-item--edit');
 let Add_width = container.clientWidth * 0.8; 
 let Edit_width = container.clientWidth * 0.9; 
 let Add_right = Add_width + 30;
-add_container.style.width = `${Add_width}px`;
-add_container.style.left = `80px`;
+if(add_container != null){
+    add_container.style.width = `${Add_width}px`;
+    add_container.style.left = `80px`;
+}
 edit_containers.forEach(box => {
     box.style.width = `${Edit_width}px`;
 })
@@ -33,9 +35,12 @@ function paintStar(level){
     })
 }
 
-plus.addEventListener('click', () => {
-    document.querySelector('.todo-plus').classList.toggle('active');
-})
+if(plus != null){
+    plus.addEventListener('click', () => {
+        document.querySelector('.todo-plus').classList.toggle('active');
+    });
+}
+
 
 const add_todo = async(date_id) => {
     const url = '/main/add_todo/';
@@ -97,54 +102,74 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
             category_html+=`<option value='${c_name}'>${c_name}</option>`;
     }
 
-    
-    document.querySelector('.todo-paint').innerHTML += `
-    <div class="todo-item todo-item-${todo_id}">
-        <div class="todo-checkbox todo-checkbox-${todo_id}" onclick="check_todo(${todo_id})"></div>
-        
-        <input type="text" 
-            class="todo-contents" 
-            onclick="edit_todo(${todo_id})"
-            value="${content}"
-            readonly>
-        <div class="todo-level todo-level-${todo_id}">
-            ${paintedLevel}
-            ${emptyLevel}
-        </div>
-        
-        <div class="todo-item--edit todo-item--edit-${todo_id}">
-            <div class="todo-item--date"></div>
-            <div class="todo-item--input">
-                <span>할 일을 수정하세요</span>
-                <input type="text"
-                placeholder="${content}"
+    if(global_chart_target_username == global_current_username){
+        document.querySelector('.todo-paint').innerHTML += `
+        <div class="todo-item todo-item-${todo_id}">
+            <div class="todo-checkbox todo-checkbox-${todo_id}" onclick="check_todo(${todo_id})"></div>
+            
+            <input type="text" 
+                class="todo-contents" 
+                onclick="edit_todo(${todo_id})"
                 value="${content}"
-                >
+                readonly>
+            <div class="todo-level todo-level-${todo_id}">
+                ${paintedLevel}
+                ${emptyLevel}
             </div>
-            <div class="todo-item--level">
-                <span>난이도를 수정하세요</span>
-                <div class="edit-todo-level" curr-level="${level}">
-                    <div level="1"></div>
-                    <div level="2"></div>
-                    <div level="3"></div>
-                    <div level="4"></div>
-                    <div level="5"></div>
+            
+        </div>
+        `;
+    }else{
+        document.querySelector('.todo-paint').innerHTML += `
+        <div class="todo-item todo-item-${todo_id}">
+            <div class="todo-checkbox todo-checkbox-${todo_id}" onclick="check_todo(${todo_id})"></div>
+            
+            <input type="text" 
+                class="todo-contents" 
+                onclick="edit_todo(${todo_id})"
+                value="${content}"
+                readonly>
+            <div class="todo-level todo-level-${todo_id}">
+                ${paintedLevel}
+                ${emptyLevel}
+            </div>
+            
+            <div class="todo-item--edit todo-item--edit-${todo_id}">
+                <div class="todo-item--date"></div>
+                <div class="todo-item--input">
+                    <span>할 일을 수정하세요</span>
+                    <input type="text"
+                    placeholder="${content}"
+                    value="${content}"
+                    >
+                </div>
+                <div class="todo-item--level">
+                    <span>난이도를 수정하세요</span>
+                    <div class="edit-todo-level" curr-level="${level}">
+                        <div level="1"></div>
+                        <div level="2"></div>
+                        <div level="3"></div>
+                        <div level="4"></div>
+                        <div level="5"></div>
+                    </div>
+                </div>
+                <div class="todo-add--category">
+                    <span>카테고리를 수정하세요</span>
+                    <select class="todo-edit--select">
+                        <option value="">None</option>
+                        ${category_html}
+                    </select>
+                </div>
+                <div class="edit-btn--container">
+                    <div class="todo-edit--delete-btn" onclick="delete_todo(${todo_id})">삭제</div>
+                    <div class="todo-edit--submit-btn" onclick="update_todo(${todo_id})">완료</div>
                 </div>
             </div>
-            <div class="todo-add--category">
-                <span>카테고리를 수정하세요</span>
-                <select class="todo-edit--select">
-                    <option value="">None</option>
-                    ${category_html}
-                </select>
-            </div>
-            <div class="edit-btn--container">
-                <div class="todo-edit--delete-btn" onclick="delete_todo(${todo_id})">삭제</div>
-                <div class="todo-edit--submit-btn" onclick="update_todo(${todo_id})">완료</div>
-            </div>
         </div>
-    </div>
-    `;
+        `;
+    }
+    
+    
     update_chart();
     has_unchecked_todos();
 }
@@ -164,28 +189,29 @@ const edit_todo = (todo_id) => {
 
     // 열고 닫기
     const edit_container = document.querySelector(`.todo-item--edit-${todo_id}`);
-    edit_container.classList.toggle('active');
-    edit_container.style.width = `${Edit_width}px`;
-   
-    let curr_level = edit_container.querySelector(`.edit-todo-level`).getAttribute('curr-level');
-    epaintStar(todo_id, curr_level);
+    if(edit_container!=null){
+        edit_container.classList.toggle('active');
+        edit_container.style.width = `${Edit_width}px`;
 
-    if(edit_container.classList.contains('active')){
-        const content = edit_container.querySelector('input');
-        content.focus();
-     
-        edit_container.querySelectorAll(`.edit-todo-level > div`).forEach(star => {
-            star.addEventListener('click', () => {
-                
-                updated_level = star.getAttribute('level');
-                epaintStar(todo_id, updated_level);
-                edited_star = true;
-                
-            }
-        )})
+        let curr_level = edit_container.querySelector(`.edit-todo-level`).getAttribute('curr-level');
+        epaintStar(todo_id, curr_level);
+
+        if(edit_container.classList.contains('active')){
+            const content = edit_container.querySelector('input');
+            content.focus();
+         
+            edit_container.querySelectorAll(`.edit-todo-level > div`).forEach(star => {
+                star.addEventListener('click', () => {
+                    
+                    updated_level = star.getAttribute('level');
+                    epaintStar(todo_id, updated_level);
+                    edited_star = true;
+                    
+                }
+            )})
+        }
+        paintDate();
     }
-    paintDate();
-   
 }
 
 // 문서 전체에 클릭 이벤트 리스너 추가
@@ -200,9 +226,12 @@ document.addEventListener('click', (event) => {
         const editContainer = container.querySelector(`.todo-item--edit`);
         const editInput = container.querySelector('input');
         
-        if (editContainer.contains(event.target) || event.target.classList.contains('todo-contents')) {
-            clickedInsideEditContainer = true;
+        if(editContainer!=null){
+            if (editContainer.contains(event.target) || event.target.classList.contains('todo-contents')) {
+                clickedInsideEditContainer = true;
+            }
         }
+        
     });
 
     // 클릭된 요소가 editContainer 내부에 속하지 않는 경우 모든 editContainer의 'active' 클래스 제거
