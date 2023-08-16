@@ -57,6 +57,7 @@
 .user-info--pic{
     width: 90px;
     height: 90px;
+    overflow: hidden;
 }
 .user-info--pic img{
     height: 100%;

@@ -1,7 +1,5 @@
 .alarm-main {
     width: calc(100% - 350px);
-    overflow-x: scroll;
-    overflow-y: scroll;
     color: var(--text-color);
     display: flex;
     justify-content: center;
@@ -17,6 +15,7 @@
     flex-direction: column;
     width: 100%;
     gap: var(--gutter);
+    overflow-y: scroll;
     /* background-color: red; */
 } 
 .alarm-image__container{
