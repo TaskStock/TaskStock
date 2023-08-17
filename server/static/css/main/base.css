@@ -464,3 +464,9 @@ section header img,
     right: -1px;
     border-radius: 50%;
 }
+.search-result__right-upper-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
