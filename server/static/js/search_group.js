@@ -117,6 +117,20 @@ const handleCreateResult = async (result) => {
 // follow 부분
 
 const handleFollowButtonClick = async (event) => {
+  event.preventDefault();
+  if (
+    event.target.querySelector("[name=group-button]").textContent ===
+    "LEAVE GROUP"
+  ) {
+    if (window.confirm("정말 탈퇴하시겠습니까?")) {
+      handleButtonClickSend(event);
+    }
+  } else {
+    handleButtonClickSend(event);
+  }
+};
+
+const handleButtonClickSend = async (event) => {
   const addButton_text = event.target.querySelector(
     "[name=group-button]"
   ).textContent; // Get the button element

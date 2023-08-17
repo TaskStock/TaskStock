@@ -11,7 +11,7 @@
             <span class="group-content__text">가격: {{group.price}}</span>
             <span class="group-content__text" id="group-member">그룹원 인원 수 : {{users_length}}</span>
             <div class="add-button__container">
-                <form onsubmit="handleButtonClick(event)">
+                <form onsubmit="handleButtonClickMessage(event)">
                     {% csrf_token %}
                     <input type="hidden" name="group" value="{{ group.name }}">
                     {% if button_text == "JOIN GROUP" %}

@@ -1,5 +1,15 @@
 // follow부분
-
+const handleButtonClickMessage = async (event) => {
+  event.preventDefault();
+  const addButton = document.querySelector("#add-button");
+  if (addButton.textContent === "LEAVE GROUP") {
+    if (window.confirm("정말 탈퇴하시겠습니까?")) {
+      handleButtonClick(event);
+    }
+  } else {
+    handleButtonClick(event);
+  }
+};
 // ADD,DELETE 버튼을 클릭 했을 때 ajax 통신을 통해 그룹원 추가, 삭제
 const handleButtonClick = async (event) => {
   event.preventDefault();
