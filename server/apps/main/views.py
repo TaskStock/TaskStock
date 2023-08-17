@@ -86,13 +86,13 @@ def settings(request):
 def profile(request):
     username=request.GET.get('username')
     try:
-        target_user = User.objects.get(username=username)
+        target_user = User.objects.get(username=username)   #해당 페이지의 주인 user
     except User.DoesNotExist:
         return redirect('/main/')
     if target_user.is_superuser:
         return redirect('/main/')
 
-    current_user=request.user
+    current_user=request.user   #현재 로그인한 유저(다른 사람의 페이지를 볼려고 시도하는 유저)
     if target_user == current_user:
         return redirect('/main/settings/')
     
@@ -102,7 +102,7 @@ def profile(request):
         follow_text='FOLLOW'
 
     # home 로직 가져옴
-    value = get_value_for_date(current_user)
+    value = get_value_for_date(target_user)
     
     if value == None:
         #로그인 했을 때 value가 없는 경우 create
@@ -460,7 +460,7 @@ def click_date(request):
     #date_str을 arrow 자료형으로 변환
     local_arrow_object = arrow.get(date_str, 'M/D/YYYY', tzinfo=target_user.tzinfo)
     # target_user의 타임존을 기반으로 local_datetime_object를 UTC로 변환
-    local_arrow_start = local_arrow_object.floor('day') #자정
+    local_arrow_start = local_arrow_object.floor('day') #00:00:00 
     local_arrow_end = local_arrow_object.ceil('day')    #23:59:59
 
     utc_arrow_start = local_to_utc(local_arrow_start)
@@ -606,7 +606,8 @@ def delete_todo(request, pk):
         
         #체크되어 있다면
         if todo.goal_check:
-            value.end -= 1000*todo.level
+            today_value = get_value_for_date(current_user)
+            today_value.end -= 1000*todo.level
         
         #저장
         value.save()
@@ -674,6 +675,7 @@ def check_todo(request, pk):
         current_user = request.user
         #오늘의 value 가져오기
         value = get_value_for_date(current_user)
+        print('check_todo에서 가져온 value 날짜:', value.date)
         
         #해당되는 todo 가져오기
         todo = Todo.objects.get(pk=todo_id)

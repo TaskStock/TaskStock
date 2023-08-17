@@ -46,8 +46,8 @@
             </div>
             <div class="price--marketcap">
                 <span>Stock Market Cap</span>
-                <!-- value개수 * value.end -->
-                <span>{{market_cap}} KRW</span>
+                <!-- value개market_cap수 * value.end -->
+                <span>{{ market_cap }} KRW</span>
             </div>
             <div class="total-todos">
                 <!-- group name -->
@@ -97,7 +97,7 @@
             </div>
             <div class="dashboard--completed">
                 <span>Completed Todos</span>
-                <span>✔︎ 56</span>
+                <span>✔︎ {{ target_user.todo_cnt }}</span>
             </div>
             <div class="dashboard--badge">
                 <span>Badge</span>
