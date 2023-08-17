@@ -2,7 +2,7 @@
 const handleButtonClickMessage = async (event) => {
   event.preventDefault();
   const addButton = document.querySelector("#add-button");
-  if (addButton.textContent === "LEAVE GROUP") {
+  if (addButton.textContent === "탈퇴") {
     if (window.confirm("정말 탈퇴하시겠습니까?")) {
       handleButtonClick(event);
     }
@@ -60,14 +60,14 @@ const handleButtonClick = async (event) => {
   handleButtonText(text);
 };
 const handleButtonText = async (Text) => {
-  if (Text === "LEAVE GROUP") {
+  if (Text === "탈퇴") {
     alert("그룹에 가입되었습니다.");
-    document.querySelector("#add-button").textContent = "LEAVE GROUP";
+    document.querySelector("#add-button").textContent = "탈퇴";
     // 그룹원 수 감소 리로드를 통해
     window.location.reload();
-  } else if (Text === "JOIN GROUP") {
+  } else if (Text === "가입") {
     alert("그룹에서 탈퇴되었습니다.");
-    document.querySelector("#add-button").textContent = "JOIN GROUP";
+    document.querySelector("#add-button").textContent = "가입";
     // 그룹원 수 증가 리로드를 통해
     window.location.reload();
   } else if (Text == "ALREADY JOINED") {
@@ -120,4 +120,11 @@ const handleUpdateResult = async (result, updatedGroupName) => {
 };
 
 
+
 groupNameEditToggle();
+
+// delete 부분
+function confirmDelete() {
+  return confirm("정말로 삭제하시겠습니까?");
+}
+

@@ -26,7 +26,6 @@
                 <h3>Stock Market Cap</h3>
                 <!-- value개수 * value.end -->
                 <span>{{market_cap}} ₩</span>
-
                 {% if user.my_group == None %}
                 <h3>Group Value</h3> 
                 <span>가입 그룹이 존재하지 않습니다.</span>
@@ -35,8 +34,9 @@
                       개인별 (value.end - value.start)를 모두 합한 값
                   -->
                 <h3><a href="/main/group/{{user.my_group.pk}}">{{user.my_group.name}} Value</a></h3>          
-                <span>{{user.my_group.price}} ₩</span>
+                <span>{{user.my_group.delta}} ₩</span>
                   
+
                 {% endif %}
             </div>
           

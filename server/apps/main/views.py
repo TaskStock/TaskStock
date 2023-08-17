@@ -382,6 +382,7 @@ def home(request):
     #시가 총액 처리(my value)
     cap = current_user.todo_cnt * value.end
     market_cap = max(cap, 0)
+    
     context = {
         'user': current_user,
         'todos_levels_dict': todos_levels_dict,
@@ -1015,16 +1016,16 @@ def group(request,pk):
 
     # 팔로잉 버튼을 내 그룹 유무에 따라 다르게 표시.
     if my_group == group:
-        button_text ="LEAVE GROUP"
+        button_text ="탈퇴"
     else:
-        button_text = "JOIN GROUP"    
+        button_text = "가입"    
     # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
     for user in users:
         value = get_value_for_date(user)
         if value is None:
             value_dic[user.name] = 0
         else:
-            value_dic[user.name] = value.end
+            value_dic[user.name] = value.end    #key: user.name / value: user value의 종가
 
 
     context = {
@@ -1047,18 +1048,18 @@ def follow_group(request):
     current_user = request.user
     text="오류"
 
-    if buttonText == "JOIN GROUP":
+    if buttonText == "가입":
         if current_user.my_group is not None:
             text = "ALREADY JOINED"
         else:
             current_user.my_group = target_group
             add_group_price(current_user)
-            text="LEAVE GROUP"
+            text="탈퇴"
                 
-    elif buttonText =="LEAVE GROUP":
+    elif buttonText =="탈퇴":
         current_user.my_group = None
         delete_group_price(current_user)
-        text="JOIN GROUP"
+        text="가입"
 
     current_user.save()
 
@@ -1089,7 +1090,6 @@ def create_group(request):
                 add_group_price(user)
                 return JsonResponse({'result': 'Success'})
 
-            
 
 def update_group(request):
     if request.method == 'POST':
@@ -1111,13 +1111,22 @@ def delete_group(request,pk):
         
         return redirect('/main/search_group/')
     
+
+def add_delta_to_group(user, target_arrow):
+    last_value = get_value_for_date(user, target_arrow) #local arrow 
+    
+    my_group = user.my_group
+    if my_group and last_value:
+            my_group.delta += (last_value.end - last_value.start)
+            my_group.save()
+
+    return
+
 # group search에 관한 함수
 def search_group(request):
     groups = Group.objects.all().order_by('-price')
     current_user = request.user
     filtered_groups = groups
-    my_group = current_user.my_group
-
 
     ctx = {
         'groups': groups,

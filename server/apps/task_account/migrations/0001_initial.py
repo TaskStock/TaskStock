@@ -71,6 +71,7 @@ class Migration(migrations.Migration):
                 ('create_user', models.CharField(default='', max_length=30)),
                 ('create_user_id', models.CharField(default='', max_length=30)),
                 ('price', models.IntegerField(default=0, null=True)),
+                ('delta', models.IntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(

@@ -1,22 +1,28 @@
 // 그룹 생성 active toggle
-const createGroupBtn = document.querySelector('#create-group i');
+const createGroupBtn = document.querySelector("#create-group i");
 
-createGroupBtn.addEventListener('click', () => {
-  document.querySelector('.create-group').classList.toggle('active');
-})
-
-
+createGroupBtn.addEventListener("click", () => {
+  document.querySelector(".create-group").classList.toggle("active");
+});
 
 // 검색 창에 입력할 때마다 ajax로 유저 목록
 document.addEventListener("DOMContentLoaded", function () {
   const textInput = document.querySelector("#search-group_content");
   console.log(textInput);
   textInput.addEventListener("input", function () {
-    const liveGroupChartInput = document.querySelector("#live-group-chart");
-    if (textInput.value == "")
+    const liveGroupChartInput = document.querySelector(
+      ".search-group--contents"
+    );
+    const searchContainer = document.querySelector(".search-group-users");
+
+    if (textInput.value == "") {
       liveGroupChartInput.classList.remove("displayNone");
-    else liveGroupChartInput.classList.add("displayNone");
-    searchGroupAjax(textInput.value);
+      searchContainer.classList.add("displayNone");
+    } else {
+      liveGroupChartInput.classList.add("displayNone");
+      searchContainer.classList.remove("displayNone");
+      searchGroupAjax(textInput.value);
+    }
   });
 });
 
@@ -52,8 +58,7 @@ const showGroupsList = (groups) => {
       divtagInput.classList.add("search-group-result__container");
       const href = `/main/group/${group.pk}/`;
 
-      const addButtonContent =
-        group.name == my_group ? "LEAVE GROUP" : "JOIN GROUP";
+      const addButtonContent = group.name == my_group ? "탈퇴" : "가입";
 
       // 검색 결과를 보여주는 부분
       divtagInput.innerHTML = `
@@ -102,7 +107,7 @@ const handleCreateButtonClick = async (event) => {
   });
   const { result: result } = await res.json();
   handleCreateResult(result);
-  document.querySelector('.create-group').classList.remove('active');
+  document.querySelector(".create-group").classList.remove("active");
 };
 
 const handleCreateResult = async (result) => {
@@ -121,8 +126,7 @@ const handleCreateResult = async (result) => {
 const handleFollowButtonClick = async (event) => {
   event.preventDefault();
   if (
-    event.target.querySelector("[name=group-button]").textContent ===
-    "LEAVE GROUP"
+    event.target.querySelector("[name=group-button]").textContent === "탈퇴"
   ) {
     if (window.confirm("정말 탈퇴하시겠습니까?")) {
       handleButtonClickSend(event);
@@ -158,14 +162,14 @@ const handleButtonClickSend = async (event) => {
 const handleFollowButtonText = async (text, event) => {
   console.log(text);
   const addButton = event.target.querySelector("[name=group-button]");
-  if (text === "LEAVE GROUP") {
+  if (text === "탈퇴") {
     alert("그룹에 가입되었습니다.");
-    addButton.textContent = "LEAVE GROUP";
+    addButton.textContent = "탈퇴";
     // 그룹원 수 감소 리로드를 통해
     window.location.reload();
-  } else if (text === "JOIN GROUP") {
+  } else if (text === "가입") {
     alert("그룹에서 탈퇴되었습니다.");
-    addButton.textContent = "JOIN GROUP";
+    addButton.textContent = "가입";
     // 그룹원 수 증가 리로드를 통해
     window.location.reload();
   } else if (text == "ALREADY JOINED") {

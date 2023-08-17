@@ -3,8 +3,6 @@ from django.contrib.auth.models import AbstractUser
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-# from datetime import datetime, timedelta
-# import pytz
 import arrow
 
 def user_directory_path(instance, filename):
@@ -17,6 +15,7 @@ class Group(models.Model):
     create_user = models.CharField(max_length=30, default= "")
     create_user_id = models.CharField(max_length=30, default= "")
     price = models.IntegerField(null=True, default=0)
+    delta = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
