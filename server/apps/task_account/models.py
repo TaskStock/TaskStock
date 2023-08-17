@@ -16,6 +16,7 @@ class Group(models.Model):
     create_user_id = models.CharField(max_length=30, default= "")
     price = models.IntegerField(null=True, default=0)
     delta = models.IntegerField(default=0)
+    member_cnt = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name

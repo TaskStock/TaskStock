@@ -327,16 +327,17 @@ const delete_todo = async(todo_id) => {
         },
         body: JSON.stringify({todo_id}),
     })
-    const {my_combo: my_combo, id: id, d_id: d_id} = await res.json();
-    handleDelTodoRes(my_combo, id, d_id);
+    const {my_combo: my_combo, id: id, d_id: d_id, todo_cnt:todo_cnt} = await res.json();
+    handleDelTodoRes(my_combo, id, d_id, todo_cnt);
 }
-const handleDelTodoRes = async(my_combo, todo_id, date_id) => {
+const handleDelTodoRes = async(my_combo, todo_id, date_id, todo_cnt) => {
     // delete container
     const container = document.querySelector(`.todo-item-${todo_id}`);
     container.remove();
     update_chart();
     has_unchecked_todos();
     handleCombo(my_combo);
+    handleCompletedTodos(todo_cnt)
 }
 
 
@@ -362,12 +363,12 @@ const check_todo = async(todo_id) => {
         },
         body: JSON.stringify({todo_id, status}),
     })
+    const {'my_combo': my_combo, 'color': color, 'todo_status': todo_status, 't_id': t_id, 'todo_cnt':todo_cnt} = await res.json();
     
-    const {'my_combo': my_combo, 'color': color, 'todo_status': todo_status, 't_id': t_id} = await res.json();
-    handleCheckTodoRes(my_combo, color, todo_status, t_id);
+    handleCheckTodoRes(my_combo, color, todo_status, t_id, todo_cnt);
 }
 
-function handleCheckTodoRes(my_combo, color, status, todo_id){
+function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt){
     const checkBox = document.querySelector(`.todo-checkbox-${todo_id}`);
     if (status == 'True'){
         checkBox.classList.add('True');
@@ -378,6 +379,7 @@ function handleCheckTodoRes(my_combo, color, status, todo_id){
     handleCombo(my_combo);
     update_chart();
     has_unchecked_todos();
+    handleCompletedTodos(todo_cnt);
 }
 
 function has_unchecked_todos(){
@@ -459,6 +461,10 @@ function handleCombo(combo){
     }, { once: true });
 }
 
-
+// completed_todos
+function handleCompletedTodos(todo_cnt){
+    const completedTodosElement = document.querySelector('.dashboard--completed span:last-child');
+    completedTodosElement.innerText = `✔︎ ${todo_cnt}`;
+}
 
 has_unchecked_todos();
