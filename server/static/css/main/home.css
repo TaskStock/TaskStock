@@ -1,7 +1,8 @@
 main{
-    display: flex;
     height: 100vh;
-
+}
+#main--home{
+    display: flex;
 }
 .main-left{
     width: 60%;
@@ -348,12 +349,12 @@ main{
     gap: 7px;
     background-color: var(--bg-5);
 }
-.price > div > h3,
+.price > div  h3,
 .dashboard > div > span:first-child{
     font-size: var(--body1);
     font-weight: var(--weight1);
 }
-.price > div > span,
+.price > div span,
 .dashboard > div > span:last-child{
     color: var(--checked-border);
     font-weight: var(--weight2);
