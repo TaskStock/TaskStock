@@ -86,13 +86,13 @@ def settings(request):
 def profile(request):
     username=request.GET.get('username')
     try:
-        target_user = User.objects.get(username=username)
+        target_user = User.objects.get(username=username)   #해당 페이지의 주인 user
     except User.DoesNotExist:
         return redirect('/main/')
     if target_user.is_superuser:
         return redirect('/main/')
 
-    current_user=request.user
+    current_user=request.user   #현재 로그인한 유저(다른 사람의 페이지를 볼려고 시도하는 유저)
     if target_user == current_user:
         return redirect('/main/settings/')
     
@@ -102,13 +102,35 @@ def profile(request):
         follow_text='FOLLOW'
 
     # home 로직 가져옴
-    process_combo(target_user)
     value = get_value_for_date(target_user)
     
-    if value is None:
-        # 로그인 했을 때 value가 없는 경우
+    if value == None:
+        #로그인 했을 때 value가 없는 경우 create
         value = createValue(target_user)
+        print('home로딩하면서 createValue')
         
+    elif value.is_dummy and not value.is_updated:
+        #오늘의 데이터가 미리 만들어진 더미데이터면(add_todo, values_for_chart) 업데이트로 접근
+        loacl_today_arrow = get_current_arrow(target_user.tzinfo)
+        utc_today_arrow  = local_to_utc(loacl_today_arrow)
+        
+        #자기 이전 value까지만 정렬해서 가져와야 하기 때문에 date_lt 사용
+        last_value = Value.objects.filter(user=target_user, date__lt=utc_today_arrow.datetime).order_by('-date').first()
+
+        value.start = value.end = last_value.end
+        value.low = last_value.end + value.low
+        value.high = last_value.end + value.high
+        value.is_updated = True
+        value.save()    
+
+    #combo 처리
+    process_combo(target_user)
+    #badge 처리
+    process_badges(value)
+    #시가 총액 처리(my value)
+    cap = target_user.todo_cnt * value.end
+    market_cap = max(cap, 0)
+    
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
     todos_levels_dict = {}
@@ -128,6 +150,8 @@ def profile(request):
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
         'percentage': value.percentage,
+        'market_cap':market_cap,
+        'value':value,
     }
     return render(request, 'main/profile.html', context=ctx)
 
@@ -417,6 +441,7 @@ def get_value_for_date(user, target_arrow=None):
     except Value.DoesNotExist:
         value_object = None
         print('get_value_for_date Value가 검색 범위 내 없음, Value=None 반환')
+        print('get_value_for_date except 실행:, 검색범위', start_utc_arrow,'부터',end_utc_arrow )
 
     return value_object
 
@@ -425,7 +450,6 @@ def get_value_for_date(user, target_arrow=None):
 def click_date(request):
     # 자바스크립트에서 날짜를 전달한다
     date_str = request.POST.get('str')  # '8/21/2023' 브라우저의로컬 시간대 들어온다
-    print('click_date date_str:',date_str)
     username = request.POST.get("username")
     
     if username == "":
@@ -436,9 +460,8 @@ def click_date(request):
     #date_str을 arrow 자료형으로 변환
     local_arrow_object = arrow.get(date_str, 'M/D/YYYY', tzinfo=target_user.tzinfo)
     # target_user의 타임존을 기반으로 local_datetime_object를 UTC로 변환
-    local_arrow_start = local_arrow_object.floor('day') #자정
+    local_arrow_start = local_arrow_object.floor('day') #00:00:00 
     local_arrow_end = local_arrow_object.ceil('day')    #23:59:59
-    print('click_date local:', local_arrow_start, '부터',local_arrow_end)
 
     utc_arrow_start = local_to_utc(local_arrow_start)
     utc_arrow_end = local_to_utc(local_arrow_end)
@@ -447,7 +470,6 @@ def click_date(request):
     todos = []
     try:
         value = Value.objects.get(user=target_user, date__gte=utc_arrow_start.datetime, date__lte=utc_arrow_end.datetime)
-        print('click_date try 실행:, 검색범위', utc_arrow_start,'부터',utc_arrow_end )
         todo_objects = Todo.objects.filter(value=value)
         
         for todo in todo_objects:
@@ -584,7 +606,8 @@ def delete_todo(request, pk):
         
         #체크되어 있다면
         if todo.goal_check:
-            value.end -= 1000*todo.level
+            today_value = get_value_for_date(current_user)
+            today_value.end -= 1000*todo.level
         
         #저장
         value.save()
@@ -652,6 +675,7 @@ def check_todo(request, pk):
         current_user = request.user
         #오늘의 value 가져오기
         value = get_value_for_date(current_user)
+        print('check_todo에서 가져온 value 날짜:', value.date)
         
         #해당되는 todo 가져오기
         todo = Todo.objects.get(pk=todo_id)
@@ -1090,17 +1114,15 @@ def delete_group(request,pk):
         
         return redirect('/main/search_group/')
     
-# def add_price(user):
-#     last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
-#     my_group = user.my_group
-#     if my_group is not None:
-#         my_group.price += last_value.start - last_value.end
-#         my_group.save()
+def add_price(user, target_arrow):
+    last_value = get_value_for_date(user, target_arrow) #local arrow 받아야함
+    my_group = user.my_group
+    if my_group != None and last_value != None:
+            my_group.price += (last_value.end - last_value.start)
+            my_group.save()
 
-#     return my_group.price
+    return 
 
-# search에 그룹 검색 기능 추가
-# 그룹에 멤버가 0명이라면 삭제하기
 
 # group search에 관한 함수
 def search_group(request):
