@@ -56,14 +56,15 @@
                 </div>
                 {% endif %}
                 <div class="search-group-label">
-                    <h3>실시간 차트</h3>
+                    <h3>실시간 차트 top3</h3>
                 </div>
-                {% for group in groups %}
+                {% for group in groups|slice:":3" %}
                     <div class="search-group-result__container">
                         <div class="search-group-result__right--container">
                             <div class="friend-group-info--pic"></div>
                             <a href="/main/group/{{group.pk}}/">
                                 <div class="search-group-result__name-container">
+                                    <p>{{ forloop.counter }}위</p>
                                     <h2>{{group.name}}</h2>
                                     <p>{{group.price}}</p>
                                 </div>

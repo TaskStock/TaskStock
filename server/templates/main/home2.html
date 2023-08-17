@@ -21,10 +21,18 @@
             </div>
             <div class="total-todos">
                 <span>Group({{user.my_group.name}}) Value</span>
+
+            {% if user.my_group == None %}
+                <span>가입 그룹이 존재하지 않습니다.</span>
+            {% else %}
                 <!-- 그룹에 참여한 시점부터 
                     개인별 (value.end - value.start)를 모두 합한 값
                 -->
-                <span>{{user.my_group.price}}</span>
+                <a href="/main/group/{{user.my_group.pk}}">
+                    <span>{{user.my_group.price}}</span>
+                </a>
+
+            {% endif %}
             </div>
         </div>
         <div id="chart"></div>
