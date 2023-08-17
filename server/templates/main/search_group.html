@@ -16,8 +16,6 @@
                 {% csrf_token %}
                 <div>그룹 이름</div>
                 <input type="text" name="group-name-input"  id="name-input">
-                <div>비밀 번호</div>
-                <input type="text" name="group-password-input"  id="password-input">
                 <button type="submit" name="group-create-button" id="create-button">Create</button>
             </form>
             <div class="search-group-result">
@@ -75,10 +73,7 @@
                                 <div class="search-group-result__right-upper-container">
                                     <form onsubmit="handleFollowButtonClick(event)">
                                         {% csrf_token %}
-                                        <input type="hidden" name="group" value="{{ group.name }}">
-                                        {% if group != my_group %}
-                                            <input type="text" name="group-password-verify-input"  id="password-verify-input">
-                                        {% endif %}    
+                                        <input type="hidden" name="group" value="{{ group.name }}">   
                                         <button type="submit" name="group-button" class="add-button">
                                             {% if group == my_group %}
                                                 LEAVE GROUP
@@ -118,9 +113,6 @@
                                     <form onsubmit="handleFollowButtonClick(event)">
                                         {% csrf_token %}
                                         <input type="hidden" name="group" value="{{ filtered_group.name }}">
-                                        {% if filtered_group != my_group %}
-                                            <input type="text" name="group-password-verify-input"  id="password-verify-input">
-                                        {% endif %}    
                                         <button type="submit" name="group-button" class="add-button">
                                             {% if filtered_group == my_group %}
                                                 LEAVE GROUP

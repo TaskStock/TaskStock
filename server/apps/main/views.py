@@ -1019,21 +1019,16 @@ def group(request,pk):
 def follow_group(request):
     buttonText = request.POST.get("group-button")
     group = request.POST.get("group")
-    password_input = request.POST.get("password")
     target_group = Group.objects.get(name=group)
     current_user = request.user
     text="오류"
 
     if buttonText == "JOIN GROUP":
-        # 그룹이 존재하는 경우
         if current_user.my_group is not None:
             text = "ALREADY JOINED"
         else:
-            if password_input == target_group.password:
-                current_user.my_group = target_group
-                text="LEAVE GROUP"
-            else: 
-                text="WRONG PASSWORD"   
+            current_user.my_group = target_group
+            text="LEAVE GROUP"
                 
     elif buttonText =="LEAVE GROUP":
         current_user.my_group = None
@@ -1048,7 +1043,6 @@ def create_group(request):
     user = request.user
     if request.method == 'POST':
         name_content = request.POST.get("name")
-        password_content = request.POST.get("password")
 
         if user.my_group is not None:
             #그룹이 있는 경우에 그룹 생성 막음
@@ -1062,7 +1056,6 @@ def create_group(request):
                     name=name_content,
                     price=0,
                     create_user=user.name,
-                    password = password_content,
                 )
                 user.my_group = Group.objects.get(name=name_content)
                 user.save()

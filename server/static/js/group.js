@@ -15,16 +15,12 @@ const handleButtonClick = async (event) => {
   event.preventDefault();
   const addButton = document.querySelector("#add-button");
   const group = document.querySelector(".group-content__name").textContent;
-  const passwordInput = document.getElementById("password-verify-input");
-  const password = passwordInput ? passwordInput.value : null; // 값이 존재하지 않으면 null 반환
-  console.log(password);
 
   const url = "/main/group/follow_group/";
 
   const formData = new FormData(event.target);
   formData.append("group-button", addButton.textContent);
   formData.append("group", group);
-  formData.append("password", password);
   const res = await fetch(url, {
     method: "POST",
     headers: {},
@@ -46,8 +42,6 @@ const handleButtonText = async (Text) => {
     document.querySelector("#add-button").textContent = "JOIN GROUP";
     // 그룹원 수 증가 리로드를 통해
     window.location.reload();
-  } else if (Text === "WRONG PASSWORD") {
-    alert("비밀번호가 틀렸습니다.");
   } else if (Text == "ALREADY JOINED") {
     alert("이미 가입된 그룹이 존재합니다.");
   }

@@ -15,7 +15,6 @@ class Group(models.Model):
     name = models.CharField(max_length=30)
     create_user = models.CharField(max_length=30, default= "")
     price = models.IntegerField(null=True, default=0)
-    password = models.CharField(max_length=30, null=True, blank=True)
 
     def __str__(self):
         return self.name
