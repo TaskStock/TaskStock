@@ -1008,7 +1008,7 @@ def group(request,pk):
     my_group = request.user.my_group
 
     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
-    if group.create_user == request.user.name:
+    if group.create_user_id == request.user.username:
         am_I_creator = True
     else:
         am_I_creator = False
@@ -1052,10 +1052,12 @@ def follow_group(request):
             text = "ALREADY JOINED"
         else:
             current_user.my_group = target_group
+            add_group_price(current_user)
             text="LEAVE GROUP"
                 
     elif buttonText =="LEAVE GROUP":
         current_user.my_group = None
+        delete_group_price(current_user)
         text="JOIN GROUP"
 
     current_user.save()
@@ -1080,9 +1082,11 @@ def create_group(request):
                     name=name_content,
                     price=0,
                     create_user=user.name,
+                    create_user_id = user.username,
                 )
                 user.my_group = Group.objects.get(name=name_content)
                 user.save()
+                add_group_price(user)
                 return JsonResponse({'result': 'Success'})
 
             
@@ -1107,16 +1111,6 @@ def delete_group(request,pk):
         
         return redirect('/main/search_group/')
     
-def add_price(user, target_arrow):
-    last_value = get_value_for_date(user, target_arrow) #local arrow 받아야함
-    my_group = user.my_group
-    if my_group != None and last_value != None:
-            my_group.price += (last_value.end - last_value.start)
-            my_group.save()
-
-    return 
-
-
 # group search에 관한 함수
 def search_group(request):
     groups = Group.objects.all().order_by('-price')
@@ -1157,3 +1151,16 @@ def search_group_ajax(request):
 
     return JsonResponse({"groups": groups})
 
+# group_price 관련 함수
+
+def add_group_price(current_user):
+    value = get_value_for_date(current_user).end
+    current_user.my_group.price += value
+    
+    current_user.my_group.save()
+
+def delete_group_price(current_user):
+    value = get_value_for_date(current_user).end
+    current_user.my_group.price -= value
+    
+    current_user.my_group.save()
