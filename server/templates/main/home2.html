@@ -34,10 +34,9 @@
                   <!-- 그룹에 참여한 시점부터 
                       개인별 (value.end - value.start)를 모두 합한 값
                   -->
-                  <a href="/main/group/{{user.my_group.pk}}">
-                      <h3>Group name: ({{user.my_group.name}})</h3>          
-                      <span>Value change of the group: {{user.my_group.price}}</span>
-                  </a>
+                <h3><a href="/main/group/{{user.my_group.pk}}">{{user.my_group.name}} Value</a></h3>          
+                <span>{{user.my_group.price}} ₩</span>
+                  
                 {% endif %}
             </div>
           
