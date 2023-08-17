@@ -46,11 +46,6 @@ const showGroupsList = (groups) => {
       const addButtonContent =
         group.name == my_group ? "LEAVE GROUP" : "JOIN GROUP";
 
-      const inputForm =
-        addButtonContent == "JOIN GROUP"
-          ? '<input type="text" name="group-password-verify-input" id="password-verify-input">'
-          : "";
-
       // 검색 결과를 보여주는 부분
       divtagInput.innerHTML = `
         <div class="search-group-result__right--container">
@@ -67,7 +62,6 @@ const showGroupsList = (groups) => {
                 <div class="search-group-result__right-upper-container">
                     <form onsubmit="handleFollowButtonClick(event)">
                         <input type="hidden" name="group" value="${group.name}">
-                        ${inputForm}
                         <button type="submit" name="group-button" class="add-button">${addButtonContent}</button>
                     </form>
                 </div>
@@ -86,13 +80,11 @@ const handleCreateButtonClick = async (event) => {
   event.preventDefault();
 
   const name_content = document.querySelector("#name-input").value;
-  const password_content = document.querySelector("#password-input").value;
 
   const url = "/main/group/create_group/";
 
   const formData = new FormData(event.target);
   formData.append("name", name_content);
-  formData.append("password", password_content);
 
   const res = await fetch(url, {
     method: "POST",
@@ -117,17 +109,26 @@ const handleCreateResult = async (result) => {
 // follow 부분
 
 const handleFollowButtonClick = async (event) => {
+  event.preventDefault();
+  if (
+    event.target.querySelector("[name=group-button]").textContent ===
+    "LEAVE GROUP"
+  ) {
+    if (window.confirm("정말 탈퇴하시겠습니까?")) {
+      handleButtonClickSend(event);
+    }
+  } else {
+    handleButtonClickSend(event);
+  }
+};
+
+const handleButtonClickSend = async (event) => {
   const addButton_text = event.target.querySelector(
     "[name=group-button]"
   ).textContent; // Get the button element
   const groupInput = event.target.querySelector("[name=group]"); // Get the input element
   const group = groupInput.value; // Get the value of the input element
-  const passwordInput = event.target.querySelector(
-    "[name=group-password-verify-input]"
-  ); // Get the input element
   event.preventDefault();
-
-  const password = passwordInput ? passwordInput.value : null; // 값이 존재하지 않으면 null 반환
 
   console.log(group);
   console.log(addButton_text.trim());
@@ -136,7 +137,6 @@ const handleFollowButtonClick = async (event) => {
   const formData = new FormData(event.target);
   formData.append("group-button", addButton_text.trim());
   formData.append("group", group);
-  formData.append("password", password);
   const res = await fetch(url, {
     method: "POST",
     headers: {},
@@ -158,8 +158,6 @@ const handleFollowButtonText = async (text, event) => {
     addButton.textContent = "JOIN GROUP";
     // 그룹원 수 증가 리로드를 통해
     window.location.reload();
-  } else if (text === "WRONG PASSWORD") {
-    alert("비밀번호가 틀렸습니다.");
   } else if (text == "ALREADY JOINED") {
     alert("이미 가입된 그룹이 존재합니다.");
   }
