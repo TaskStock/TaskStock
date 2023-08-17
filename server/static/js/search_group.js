@@ -13,10 +13,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const liveGroupChartInput = document.querySelector(
       ".search-group--contents"
     );
-    if (textInput.value == "")
+    const searchContainer = document.querySelector(".search-group-users");
+
+    if (textInput.value == "") {
       liveGroupChartInput.classList.remove("displayNone");
-    else liveGroupChartInput.classList.add("displayNone");
-    searchGroupAjax(textInput.value);
+      searchContainer.classList.add("displayNone");
+    } else {
+      liveGroupChartInput.classList.add("displayNone");
+      searchContainer.classList.remove("displayNone");
+      searchGroupAjax(textInput.value);
+    }
   });
 });
 
