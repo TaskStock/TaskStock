@@ -1114,15 +1114,15 @@ def delete_group(request,pk):
 # group search에 관한 함수
 def search_group(request):
     groups = Group.objects.all().order_by('-price')
-    currentu_user = request.user
+    current_user = request.user
     filtered_groups = groups
-    my_group = currentu_user.my_group
+    my_group = current_user.my_group
 
 
     ctx = {
         'groups': groups,
         'filtered_groups': filtered_groups,
-        'my_group': currentu_user.my_group,
+        'my_group': current_user.my_group,
     }
 
     return render(request, 'main/search_group.html',context=ctx)

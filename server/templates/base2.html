@@ -76,7 +76,7 @@
                 </a>
                 <a href="/main/category/" class="menu-right__category">
                     <div><i class="gg-feed"></i></div>
-                    <span>Category</span>
+                    <span>Project</span>
                 </a>
                 <a href="/main/search_group/" class="menu-right__group">
                     <div><i class="gg-flag-alt"></i></div>
@@ -121,14 +121,20 @@
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
                         {% if user.percentage > 0 %}
-                        <i class="fa-solid fa-chevron-up" style="color: red;"></i>
-                        <span>{{ user.percentage }} %</span>
+                        <span>
+                            <span>{{ user.percentage }} %</span>
+                            <i class="fa-solid fa-chevron-up" style="color: red;"></i>
+                        </span>
                         {% elif user.percentage < 0 %}
-                        <i class="fa-solid fa-chevron-down" style="color: blue;"></i>
-                        <span>{{ user.percentage }} %</span>
+                        <span>
+                            <span>{{ user.percentage }} %</span>
+                            <i class="fa-solid fa-chevron-down" style="color: blue;"></i>
+                        </span>
                         {% else %}
-                        <i class="fa-solid fa-minus"></i>
-                        <span style="color: none;">{{ user.percentage }} %</span>
+                        <span>
+                            <span style="color: none;">{{ user.percentage }} %</span>
+                            <i class="fa-solid fa-minus"></i>
+                        </span>
                         {% endif %}
 
                     </div>
@@ -176,9 +182,9 @@
             </a>
             <a href="/main/category/" class="menu-right__category">
                 <div><i class="gg-feed"></i></div>
-                <span>Category</span>
+                <span>Project</span>
             </a>
-            <a href="/main/group/" class="menu-right__group">
+            <a href="/main/search_group/" class="menu-right__group">
                 <div><i class="gg-flag-alt"></i></div>
                 <span>Group</span>
             </a>
@@ -309,7 +315,6 @@
     <script src="{% static 'js/hamburger.js' %}"></script>
     <script src="https://kit.fontawesome.com/6fbcf91afd.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="{% static 'js/heatmap.js' %}"></script>
 
     
     {% block extra %}

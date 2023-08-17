@@ -7,31 +7,40 @@
     <div class="main-left">
         <div class="price">
             <div class="price--taspi">
-                <span>Stock Info</span>
+                <h3>Today</h3>
                 <!-- 나의 오늘 value -->
-                <span>Opening Price: {{ value.start }} KRW</span>
-                <span>Closing Price: {{ value.end }} KRW</span>
-                <span>Maximum Upside: {{ value.high }} KRW</span>
-                <span>Maximum Downsie: {{ value.low }} KRW</span>
+                <div class="ochl-container">
+                    <div>
+                        <span>Open: {{ value.start }} ₩</span>
+                        <span>Close: {{ value.end }} ₩</span>
+                    </div>
+                    <div id="ochl-bar"></div>
+                    <div>
+                        <span>High: {{ value.high }} ₩</span>
+                        <span>Low: {{ value.low }} ₩</span>
+                    </div>
+                </div>
+                
             </div>
             <div class="price--marketcap">
-                <span>Stock Market Cap</span>
+                <h3>Stock Market Cap</h3>
                 <!-- value개수 * value.end -->
-                <span>{{market_cap}} KRW</span>
-            </div>
-            <div class="total-todos"> 
-              {% if user.my_group == None %}
-                  <span>가입 그룹이 존재하지 않습니다.</span>
-              {% else %}
+                <span>{{market_cap}} ₩</span>
+
+                {% if user.my_group == None %}
+                <h3>Group Value</h3> 
+                <span>가입 그룹이 존재하지 않습니다.</span>
+                {% else %}
                   <!-- 그룹에 참여한 시점부터 
                       개인별 (value.end - value.start)를 모두 합한 값
                   -->
                   <a href="/main/group/{{user.my_group.pk}}">
-                      <span>Group name: ({{user.my_group.name}})</span>          
+                      <h3>Group name: ({{user.my_group.name}})</h3>          
                       <span>Value change of the group: {{user.my_group.price}}</span>
                   </a>
-              {% endif %}
+                {% endif %}
             </div>
+          
         </div>
         <div id="chart"></div>
         <div class="chart-btn--container">
@@ -280,6 +289,23 @@
 {% endblock %}
 
 {% block extra %}
+<script>
+    // mobile에서 chart, calendar 탭
+    if (window.matchMedia("(max-width: 600px)").matches){
+        const mb_ccBtn = document.querySelector('#mb-main--nav');
+        mb_ccBtn.addEventListener('click', () => {
+            mb_tab();
+        })
+        mb_tab();
+
+        // 차트 버튼 1 Week -> 1w
+        document.querySelector('#one_week + .chart-btn').innerHTML = '1주';
+        document.querySelector('#one_month + .chart-btn').innerHTML = '1달';
+        document.querySelector('#three_month + .chart-btn').innerHTML = '3달';
+        document.querySelector('#six_month + .chart-btn').innerHTML = '6딜';
+        document.querySelector('#one_year + .chart-btn').innerHTML = '1년';
+    }
+</script>
 <script src="{% static 'js/candlestick.js' %}"></script>
 <script src="{% static 'js/time.js' %}"></script>
 <script src="{% static 'js/calendar.js' %}"></script>

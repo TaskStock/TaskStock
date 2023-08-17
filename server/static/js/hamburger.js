@@ -1,24 +1,26 @@
-const hamburger = document.querySelector('.hamburger');
-const contents = document.querySelector('.hamburger-contents');
-
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-})
 
 // 문서 전체에 클릭 이벤트 리스너 추가
-document.addEventListener('click', (event) => {
-    // 클릭된 요소가 hamburger contents 내부에 속하는지 확인
-    let clickedInsideEditContainer = false;
+if (window.matchMedia("(min-width: 1081px)").matches){
+    const hamburger = document.querySelector('.hamburger');
+    const contents = document.querySelector('.hamburger-contents');
     
-    if (contents.contains(event.target) || event.target.parentNode.classList.contains('hamburger') || event.target.classList.contains('hamburger')) {
-        clickedInsideEditContainer = true;
-    }
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+    })
+    document.addEventListener('click', (event) => {
+        // 클릭된 요소가 hamburger contents 내부에 속하는지 확인
+        let clickedInsideEditContainer = false;
+        
+        if (contents.contains(event.target) || event.target.parentNode.classList.contains('hamburger') || event.target.classList.contains('hamburger')) {
+            clickedInsideEditContainer = true;
+        }
 
-    // 클릭된 요소가 editContainer 내부에 속하지 않는 경우 모든 editContainer의 'active' 클래스 제거
-    if (!clickedInsideEditContainer) {
-        hamburger.classList.remove('active');
-    }
-});
+        // 클릭된 요소가 editContainer 내부에 속하지 않는 경우 모든 editContainer의 'active' 클래스 제거
+        if (!clickedInsideEditContainer) {
+            hamburger.classList.remove('active');
+        }
+    });
+}
 
 //  tablet hamburger
 const left_section = document.querySelector('section');
@@ -70,20 +72,6 @@ darkBtn.forEach(btn => {
 })})
 
 if (window.matchMedia("(max-width: 600px)").matches){
-    // mobile에서 chart, calendar 탭
-    const mb_ccBtn = document.querySelector('#mb-main--nav');
-    mb_ccBtn.addEventListener('click', () => {
-        mb_tab();
-    })
-    mb_tab();
-
-    // 차트 버튼 1 Week -> 1w
-    document.querySelector('#one_week + .chart-btn').innerHTML = '1주';
-    document.querySelector('#one_month + .chart-btn').innerHTML = '1달';
-    document.querySelector('#three_month + .chart-btn').innerHTML = '3달';
-    document.querySelector('#six_month + .chart-btn').innerHTML = '6딜';
-    document.querySelector('#one_year + .chart-btn').innerHTML = '1년';
-
     // 모바일 햄버거 왼쪽
     const mb_hbg_left = document.querySelector('#mb--header .gg-menu-left-alt');
     const mb_hbg_right = document.querySelector('#mb--header .gg-menu-right-alt');
