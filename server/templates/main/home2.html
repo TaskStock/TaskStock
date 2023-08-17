@@ -23,12 +23,9 @@
               {% if user.my_group == None %}
                   <span>가입 그룹이 존재하지 않습니다.</span>
               {% else %}
-                  <!-- 그룹에 참여한 시점부터 
-                      개인별 (value.end - value.start)를 모두 합한 값
-                  -->
                   <a href="/main/group/{{user.my_group.pk}}">
                       <span>Group name: ({{user.my_group.name}})</span>          
-                      <span>Value change of the group: {{user.my_group.price}}</span>
+                      <span>Value change of the group: {{user.my_group.delta}}</span>
                   </a>
               {% endif %}
             </div>

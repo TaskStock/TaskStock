@@ -382,6 +382,7 @@ def home(request):
     #시가 총액 처리(my value)
     cap = current_user.todo_cnt * value.end
     market_cap = max(cap, 0)
+    
     context = {
         'user': current_user,
         'todos_levels_dict': todos_levels_dict,
@@ -1024,7 +1025,7 @@ def group(request,pk):
         if value is None:
             value_dic[user.name] = 0
         else:
-            value_dic[user.name] = value.end
+            value_dic[user.name] = value.end    #key: user.name / value: user value의 종가
 
 
     context = {
@@ -1085,7 +1086,6 @@ def create_group(request):
                 user.save()
                 return JsonResponse({'result': 'Success'})
 
-            
 
 def update_group(request):
     if request.method == 'POST':
@@ -1107,14 +1107,15 @@ def delete_group(request,pk):
         
         return redirect('/main/search_group/')
     
-def add_price(user, target_arrow):
-    last_value = get_value_for_date(user, target_arrow) #local arrow 받아야함
+def add_delta_to_group(user, target_arrow):
+    last_value = get_value_for_date(user, target_arrow) #local arrow 
+    
     my_group = user.my_group
-    if my_group != None and last_value != None:
-            my_group.price += (last_value.end - last_value.start)
+    if my_group and last_value:
+            my_group.delta += (last_value.end - last_value.start)
             my_group.save()
 
-    return 
+    return
 
 
 # group search에 관한 함수
@@ -1122,8 +1123,6 @@ def search_group(request):
     groups = Group.objects.all().order_by('-price')
     currentu_user = request.user
     filtered_groups = groups
-    my_group = currentu_user.my_group
-
 
     ctx = {
         'groups': groups,
