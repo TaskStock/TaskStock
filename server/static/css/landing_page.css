@@ -11,6 +11,17 @@
   --heading3: min(5vh, min(7vw, 48px));
   --body1: min(4vh, min(5vw, 28px));
   --paragraph: min(2.8vh, min(3.8vw, 16px));
+
+
+   /* font */
+   --hero: 50px;
+   /* --heading1: 38px; */
+   /* --heading2: 28px; */
+   /* --heading3: 22px; */
+   --subheading: 18px;
+   /* --body1: 16px; */
+   --body2: 14px;
+   --caption: 12px;
 }
 
 /* layout */
@@ -22,7 +33,7 @@ body {
 
 body {
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-size: var(--body2);
   color: var(--msk-color);
   background-color: var(--msk-bg);
   overflow-x: hidden;
@@ -59,7 +70,10 @@ nav {
   justify-content: center;
   gap: var(--gutter);
 }
+.page-nav__button-container span{
+  font-size: var(--paragraph);
 
+}
 .page-nav__button-container--content > a:hover {
   opacity: 0.8;
 }
@@ -130,7 +144,9 @@ main {
   align-items: center;
   background-color: var(--msk-bg);
 }
-
+#page-banner__btn-text{
+  font-size: var(--paragraph);
+}
 .container-box__container {
   display: flex;
   flex-direction: column;

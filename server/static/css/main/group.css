@@ -1,26 +1,196 @@
-.hidden {
-    display: none;
-}
-.group-main {
-    width: 100%;
-    height: 100vh;
-    padding: var(--gutter) var(--gutter);
+#search-group-main{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+}
+.search-group-header,
+.group-header{
+    padding: var(--offset) var(--offset) 0;
+}
+.search-group-header{
+    display: flex;
+    justify-content: space-between;
+}
+.search-group-header > h1,
+.group-header > h1 {
+    font-size: var(--heading3);
+    font-weight: var(--weight3);
+    color: var(--checked-border);
+}
+.group-header--right{
+    display: flex;
     align-items: center;
     gap: var(--gutter);
-
+}
+.create-group{
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--heading3);
+    cursor: pointer;
+    position: relative;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+.create-group > i{
+    transition: var(--transition);
+}
+.create-group.active > i{
+    transform: rotate(45deg);
+}
+.create-group:hover{
+    background-color: var(--box-color);
+}
+.search-group-header form input{
+    color: var(--checked-border);
+    height: 30px;
+    width: 250px;
+    border-radius: var(--border-r);
+    border: 1px solid var(--grey_border);
+    box-shadow: var(--shadow);
+    background-color: transparent;
+    padding: var(--gutter);
+}
+.create-group--show{
+    position: absolute;
+    top: 60px;
+    right: -13px;
+    padding: var(--gutter);
+    font-size: var(--body2);
+    background-color: var(--section-color);
+    color: white;
+    border-radius: var(--border-r);  
+    align-items: flex-start;
+    transition: var(--transition);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 2000;
+}
+.create-group.active .create-group--show{
+    opacity: 1;
+    visibility: visible;
+}
+.create-group--show form{
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+}
+#create-button{
+    margin-left: auto;
+}
+.create-group--show::before{
+    content: '';
+    position: absolute;
+	right: 4%;
+	top: 0%;
+	width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-bottom-color: var(--bg-1);
+	border-top: 0;
+	margin-top: -20px;
+	margin-left: -20px;
+}
+/* header 끝 */
+.search-group--contents{
+    padding: 0 var(--offset);
+}
+.my-group{
+    margin-bottom: var(--offset);
+}
+.my-group h3,
+.group-top10 h3{
+    font-size: var(--subheading);
+    font-weight: var(--weight3);
+    color: var(--checked-border);
+    margin: var(--gutter) 0;
+}
+.my-group__container{
+    width: calc((100% - 4 * var(--gutter)) / 5);
+}
+.my-group__container,
+.group-top10__container{
+    padding: var(--gutter);
+    border-radius: var(--border-r);
+    background-color: var(--box-color);
+}
+.my-group__container a,
+.group-top10__container{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.group-header{
-    padding-left: var(--offset);
-    padding-top: var(--gutter);
+.my-group__container a h2,
+.group-top10__container a h2{
+    width: 100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    font-size: var(--subheading);
+    color: var(--checked-border);
+    padding-bottom: var(--gutter);
+}
+.group-top10__container a h2{
+    width: 100px;
+}
+.my-group__container p,
+.group-top10__container p{
+    font-size: var(--body2);
+    display: flex;
+    gap: 5px;
+}
+.my-group__container p i,
+.group-top10__container p i{
+    width: 15px;
+}
+.my-group__none{
+    font-size: var(--body2);
+    text-align: center;
+}
+.topGroup-wrap{
+    display: grid;
+    /* grid-template-columns: repeat(5, auto); */
+    grid-template-columns: repeat(5, calc((100% - 4 * var(--gutter)) / 5));
+
+    gap: var(--gutter);
+    flex-wrap: wrap;
 }
 
-.group-header > span {
-    font-size: var(--heading1);
-    font-weight: 600;
+.group-top10__header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.group-top10__header form{
+    padding-bottom: var(--gutter);
+}
+.group-top10__header form .add-button{
+    background-color: var(--body-color);
+    padding: 7px 10px;
+    border-radius: var(--border-r);
+    color: var(--text-color);
+}
+.group-top10__header form .add-button:hover{
+    position: relative;
+    top: -2px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*  */
+.hidden {
+    display: none;
 }
 
 .group-content {

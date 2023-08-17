@@ -27,13 +27,15 @@ main{
         flex-direction: column;
     }
     .main-left{
+        order: 2;
         border-right: none;
-        border-bottom:  1px solid var(--border-color);
         width: 100%;
         height: 50%;
         display: flex;
+        border: none;
     }
     .main-right{
+        border-bottom:  1px solid var(--border-color);
         width: 100%;
         height: 50%;
         display: block;
@@ -71,7 +73,6 @@ main{
 .todo-plus--btn{
     cursor: pointer;
     background-color: var(--body-color);
-
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -315,10 +316,28 @@ main{
 }
 .price{
     display: grid;
-    grid-template-columns: repeat(3, calc((100% - 2 * var(--gutter)) / 3));
+    /* grid-template-columns: repeat(3, calc((100% - 2 * var(--gutter)) / 3)); */
+    grid-template-columns: repeat(3, auto);
     gap: var(--gutter);
     margin: 0 var(--gutter);
     
+}
+.price--taspi > .ochl-container{
+    display: flex;
+    justify-content: space-between;
+    gap: var(--gutter);
+}
+.price--taspi > .ochl-container > div{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: var(--checked-border);
+    font-size: var(--body2);
+}
+#ochl-bar{
+    width: 1px;
+    height: 100%;
+    background-color: var(--checked-border);
 }
 .price > div,
 .dashboard > div{
@@ -329,17 +348,18 @@ main{
     gap: 7px;
     background-color: var(--bg-5);
 }
-.price > div > span:first-child,
+.price > div > h3,
 .dashboard > div > span:first-child{
     font-size: var(--body1);
     font-weight: var(--weight1);
 }
-.price > div > span:last-child,
+.price > div > span,
 .dashboard > div > span:last-child{
     color: var(--checked-border);
     font-weight: var(--weight2);
-    font-size: var(--heading3);
+    font-size: var(--body2);
 }
+
 .dashboard{
     display: flex;
     gap: var(--gutter);
@@ -353,6 +373,7 @@ main{
     flex-grow: 1;
     /* height: 70px; */
 }
+
 @media screen and (max-width: 600px) {
     body{
         position: relative;
@@ -372,7 +393,7 @@ main{
     }
     #mb-main--nav i{
         font-size: var(--heading3);
-        color: black;
+        color: var(--checked-border);
     }
     .main-left,
     .main-right{
@@ -417,7 +438,7 @@ main{
     .dashboard .dashboard--completed,
     .price .price--taspi,
     .price .total-todos{
-        background-color: white;
+        background-color: var(--body-color);
     }
    
     

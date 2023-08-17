@@ -80,7 +80,7 @@ const showChart = (dataset) => {
       enabled: false,
     },
     toolbar: {
-      show: false
+      show: false,
     },
   },
   plotOptions: {
@@ -95,7 +95,7 @@ const showChart = (dataset) => {
   grid: {
     yaxis: {
       lines: {
-        // show: false
+        show: true,
       }
     }
   },
@@ -129,13 +129,16 @@ const showChart = (dataset) => {
   },
   yaxis: {
     labels: {
-      show: false,
+      // show: false,
+      style: {
+        colors: 'var(--text-color)'
+      },
     },
-    // tooltip:{
-    //   enabled: true,
-    // },
-    
-  }
+  },
+  tooltip: {
+    enabled: false,
+  },
+ 
   };
 
   var chart = new ApexCharts(document.querySelector("#chart"), options);
