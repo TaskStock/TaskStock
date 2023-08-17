@@ -90,3 +90,8 @@ const handleUpdateResult = async (result, updatedGroupName) => {
     document.querySelector("#update-input").value = "";
   }
 };
+
+// delete 부분
+function confirmDelete() {
+  return confirm("정말로 삭제하시겠습니까?");
+}

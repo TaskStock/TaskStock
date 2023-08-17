@@ -25,7 +25,7 @@
                     <input type="text" name="group-create-inpput"  id="update-input">
                     <button type="submit" name="group-update-button" id="update-button">Update</button>
                 </form>
-                <form action="/main/group/delete_group/{{ group.pk }}/" method="post">
+                <form action="/main/group/delete_group/{{ group.pk }}/" method="post"  onsubmit="return confirmDelete()">
                     {% csrf_token %}
                     <button type="submit" name="group-delete-button" id="delete-button">Delete</button>
                 </form>
