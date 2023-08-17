@@ -1154,13 +1154,23 @@ def search_group_ajax(request):
 # group_price 관련 함수
 
 def add_group_price(current_user):
-    value = get_value_for_date(current_user).end
-    current_user.my_group.price += value
+    my_group = current_user.my_group
+
+    if my_group is not None:
+        value = get_value_for_date(current_user).end
+        my_group.price += value
     
-    current_user.my_group.save()
+        current_user.my_group.save()
+    else:
+        pass
 
 def delete_group_price(current_user):
-    value = get_value_for_date(current_user).end
-    current_user.my_group.price -= value
+    my_group = current_user.my_group
+
+    if my_group is not None:
+        value = get_value_for_date(current_user).end
+        my_group.price -= value
     
-    current_user.my_group.save()
+        current_user.my_group.save()
+    else:
+        pass
