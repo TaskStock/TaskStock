@@ -17,38 +17,57 @@
     </div>
     <div class="group-content">
         <div class="group-content__info">
-            <span class="group-content__text">Group Head: {{group.create_user}}</span>
-            <div class="bar"></div>
             <span class="group-content__text">Group Value: {{group.price}} ₩</span>
+            <div class="bar"></div>
+            <span class="group-content__text">Today's Earnings: {{group.delta}} ₩</span>
             <div class="bar"></div>
             <span class="group-content__text" id="group-member">Members: {{users_length}}</span>
             <div class="bar"></div>
-            <span class="group-content__text">오늘 번돈: {{group.delta}}</span>
+            <span class="group-content__text">Group Head: {{group.create_user}}</span>
             
         </div>
        
+        <h3><i class="fa-solid fa-crown"></i> Members Ranking</h3>
         <ul class="group-content__ul">
             {% for key, value in value.items %}
-            <li id="group-content__li-{{key}}">
-                <div>그룹원 명: {{ key }}</div>
-                <div><i class="fa-solid fa-coins"></i> {{ value }}</div>
+            <li id="group-content__li-{{key}}" class="group-user">
+                {% if forloop.counter < 4 %}
+                <div class="members-top3-trophy">
+                    {% if forloop.counter == 1 %} 
+                    <i class="fa-solid fa-trophy" style="color: yellow;"></i>
+                    {% elif forloop.counter == 2 %} 
+                    <i class="fa-solid fa-trophy" style="color: silver;"></i>
+                    {% elif forloop.counter == 3 %} 
+                    <i class="fa-solid fa-trophy" style="color: #CD7F32;"></i>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="group-user__username">{{ key }}</div>
+                <div class="group-user__value"><i class="fa-solid fa-coins"></i> {{ value }}</div>
             </li>
             {% endfor %}
         </ul>
+        <form onsubmit="handleButtonClickMessage(event)">
+            {% csrf_token %}
+            <input type="hidden" name="group" value="{{ group.name }}">
+            {% if button_text == '탈퇴' %}
+            <!-- <button type="submit" name="group-button" id="add-button">{{button_text}}</button> -->
+            <button type="submit" name="group-button" id="add-button" class="leaveGroupBtn">탈퇴</button>
+            {% else %}
+            <button type="submit" name="group-button" id="add-button" class="joinGroupBtn">가입</button>
+            {% endif %}
+        </form>
+        {% if am_I_creator %}
+        <form action="/main/group/delete_group/{{ group.pk }}/" method="post">
+            {% csrf_token %}
+            <button type="submit" name="group-delete-button" id="delete-button">그룹 삭제</button>
+        </form>
+        {% endif %}
     </div>
 
 
-    <form onsubmit="handleButtonClickMessage(event)">
-        {% csrf_token %}
-        <input type="hidden" name="group" value="{{ group.name }}">
-        <button type="submit" name="group-button" id="add-button">{{button_text}}</button>
-    </form>
-    {% if am_I_creator %}
-    <form action="/main/group/delete_group/{{ group.pk }}/" method="post">
-        {% csrf_token %}
-        <button type="submit" name="group-delete-button" id="delete-button">Delete Group</button>
-    </form>
-    {% endif %}
+   
 </main>
 
 

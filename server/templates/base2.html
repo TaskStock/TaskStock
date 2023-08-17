@@ -274,9 +274,9 @@
 
                     if(user.percent<0) {
                         up_down_image = '<img src="{% static "img/icon-stock-down.png" %}">';
-                        percent_color = 'blue'
+                        percent_color = 'blue';
                     } else if (user.percent>0) {
-                        percent_color = 'red'
+                        percent_color = 'var(--red-1)';
                         up_down_image = '<img src="{% static "img/icon-stock-up.png" %}">'; 
                     }
 
