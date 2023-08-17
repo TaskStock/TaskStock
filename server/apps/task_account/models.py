@@ -3,8 +3,6 @@ from django.contrib.auth.models import AbstractUser
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-# from datetime import datetime, timedelta
-# import pytz
 import arrow
 
 def user_directory_path(instance, filename):
