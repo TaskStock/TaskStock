@@ -128,7 +128,7 @@ def profile(request):
     #badge 처리
     process_badges(value)
     #시가 총액 처리(my value)
-    cap = current_user.todo_cnt * value.end
+    cap = target_user.todo_cnt * value.end
     market_cap = max(cap, 0)
     
     todos = Todo.objects.filter(value=value)
