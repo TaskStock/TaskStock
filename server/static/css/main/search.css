@@ -87,7 +87,6 @@
 .search-result__right-upper-container{
     width: 30px;
     height: 30px;
-    background-color: grey;
     margin-bottom: 5px;
 }
 .search-result__right-upper-container + p{
