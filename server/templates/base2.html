@@ -120,7 +120,14 @@
                 <div class="my-info--sff__container">
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
-                        <span>{{ user.percentage }} %</span>
+                        {% if user.percentage > 0 %}
+                        <span style="color: red;">{{ user.percentage }} %</span>
+                        {% elif user.percentage < 0 %}
+                        <span style="color: blue;">{{ user.percentage }} %</span>
+                        {% else %}
+                        <span style="color: none;">{{ user.percentage }} %</span>
+                        {% endif %}
+
                     </div>
                     <div class="my-info--sff sff-fg">
                         <span>Following</span>
@@ -241,7 +248,11 @@
         }
         const showFollowList = (users) => {
             const currentInput = document.querySelector('#friends-info--container');    
-            currentInput.innerHTML="";        
+            currentInput.innerHTML="";
+            let up_down_image = "{% static 'img/icon-stock-up.png' %}";
+            let percent_color = "none"
+            
+            
 
             // users가 [] 인 경우 빈 배열이므로 null이 아님
             if(users.length > 0){
@@ -250,6 +261,13 @@
                         tmpintrodue="";
                     }else{
                         tmpintrodue=user.introduce;
+                    }
+
+                    if(user.percent<0) {
+                        up_down_image = "{% static 'img/icon-stock-down.png' %}";
+                        percent_color = 'blue'
+                    } else if (user.percent>0) {
+                        percent_color = 'red'
                     }
 
                     atagInput = document.createElement('a');
@@ -270,9 +288,9 @@
                             <div class="search-result__right-container">
                                 <div class="search-result__info">
                                     <div class="search-result__right-upper-container">
-                                        
+                                        <img src=${up_down_image}>
                                     </div>
-                                    <p>${user.percent}%</p>
+                                    <p style="color: ${percent_color};">${user.percent}%</p>
                                 </div>
                             </div>
                         </div>
