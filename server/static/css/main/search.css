@@ -23,7 +23,7 @@
 
 
 .search-form input {
-    color: var(--bg-1);
+    color: var(--checked-border);
     height: 34px;
     border-radius: var(--border-r);
     border: 1px solid var(--grey_border);

@@ -317,10 +317,28 @@ main{
 }
 .price{
     display: grid;
-    grid-template-columns: repeat(3, calc((100% - 2 * var(--gutter)) / 3));
+    /* grid-template-columns: repeat(3, calc((100% - 2 * var(--gutter)) / 3)); */
+    grid-template-columns: repeat(3, auto);
     gap: var(--gutter);
     margin: 0 var(--gutter);
     
+}
+.price--taspi > .ochl-container{
+    display: flex;
+    justify-content: space-between;
+    gap: var(--gutter);
+}
+.price--taspi > .ochl-container > div{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: var(--checked-border);
+    font-size: var(--body2);
+}
+#ochl-bar{
+    width: 1px;
+    height: 100%;
+    background-color: var(--checked-border);
 }
 .price > div,
 .dashboard > div{
@@ -340,7 +358,11 @@ main{
 .dashboard > div > span:last-child{
     color: var(--checked-border);
     font-weight: var(--weight2);
-    font-size: var(--heading3);
+    font-size: var(--subheading);
+}
+.price--taspi > span:last-child{
+    font-size: var(--body2);
+    font-weight: var(--weight2);
 }
 .dashboard{
     display: flex;
@@ -355,6 +377,7 @@ main{
     flex-grow: 1;
     /* height: 70px; */
 }
+
 @media screen and (max-width: 600px) {
     body{
         position: relative;

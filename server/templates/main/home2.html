@@ -7,17 +7,25 @@
     <div class="main-left">
         <div class="price">
             <div class="price--taspi">
-                <span>Stock Info</span>
+                <span>Today</span>
                 <!-- 나의 오늘 value -->
-                <span>Opening Price: {{ value.start }} KRW</span>
-                <span>Closing Price: {{ value.end }} KRW</span>
-                <span>Maximum Upside: {{ value.high }} KRW</span>
-                <span>Maximum Downsie: {{ value.low }} KRW</span>
+                <div class="ochl-container">
+                    <div>
+                        <span>Open: {{ value.start }} ₩</span>
+                        <span>Close: {{ value.end }} ₩</span>
+                    </div>
+                    <div id="ochl-bar"></div>
+                    <div>
+                        <span>High: {{ value.high }} ₩</span>
+                        <span>Low: {{ value.low }} ₩</span>
+                    </div>
+                </div>
+                
             </div>
             <div class="price--marketcap">
                 <span>Stock Market Cap</span>
                 <!-- value개수 * value.end -->
-                <span>{{market_cap}} KRW</span>
+                <span>{{market_cap}} ₩</span>
             </div>
             <div class="total-todos">
                 <span>Group({{user.my_group.name}}) Value</span>

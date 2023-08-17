@@ -4,14 +4,21 @@
     <div class="category-header">
         <h1>Project</h1>
         <i class="gg-info"></i>
-        <!-- <div class="info-container">
+        <div class="info-container">
             <p>
-                
+                "프로젝트" 페이지는 당신이 얼마나 멋지게 발전하고 있는지 느낄 수 있게 도와줄 거예요. 
+                이곳에 당신이 무엇을 경험했는지, 무엇을 느꼈는지 기록해보며 얼마나 성장했는지 회고해 보세요! 
             </p>
-        </div> -->
+        </div>
         <div class="mb-backToList">
             <i class="fa-solid fa-list"></i>
         </div>
+    </div>
+    <div class="mb-info-container">
+        <p>
+            "프로젝트" 페이지는 당신이 얼마나 멋지게 발전하고 있는지 느낄 수 있게 도와줄 거예요. 
+            이곳에 당신이 무엇을 경험했는지, 무엇을 느꼈는지 기록해보며 얼마나 성장했는지 회고해 보세요! 
+        </p>
     </div>
     <div id="category-content">
         <div id="category-container">
@@ -69,11 +76,20 @@
 {% block extra %}
 <script>
     // info toggle
-    const info = document.querySelector('.info-container');
-    const info_btn = document.querySelector('.gg-info');
-    info_btn.addEventListener('click', () => {
-        info.classList.toggle('show');
-    })
+    if (window.matchMedia("(min-width: 601px)").matches){
+        const info = document.querySelector('.info-container');
+        const info_btn = document.querySelector('.gg-info');
+        info_btn.addEventListener('click', () => {
+            info.classList.toggle('show');
+        })
+    }
+    if (window.matchMedia("(max-width: 600px)").matches){
+        const info = document.querySelector('.mb-info-container');
+        const info_btn = document.querySelector('.gg-info');
+        info_btn.addEventListener('click', () => {
+            info.classList.toggle('show');
+        })
+    }
 
 
 
