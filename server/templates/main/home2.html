@@ -7,7 +7,7 @@
     <div class="main-left">
         <div class="price">
             <div class="price--taspi">
-                <span>Today</span>
+                <h3>Today</h3>
                 <!-- 나의 오늘 value -->
                 <div class="ochl-container">
                     <div>
@@ -23,23 +23,24 @@
                 
             </div>
             <div class="price--marketcap">
-                <span>Stock Market Cap</span>
+                <h3>Stock Market Cap</h3>
                 <!-- value개수 * value.end -->
                 <span>{{market_cap}} ₩</span>
-            </div>
-            <div class="total-todos"> 
-              {% if user.my_group == None %}
-                  <span>가입 그룹이 존재하지 않습니다.</span>
-              {% else %}
+
+                {% if user.my_group == None %}
+                <h3>Group Value</h3> 
+                <span>가입 그룹이 존재하지 않습니다.</span>
+                {% else %}
                   <!-- 그룹에 참여한 시점부터 
                       개인별 (value.end - value.start)를 모두 합한 값
                   -->
                   <a href="/main/group/{{user.my_group.pk}}">
-                      <span>Group name: ({{user.my_group.name}})</span>          
+                      <h3>Group name: ({{user.my_group.name}})</h3>          
                       <span>Value change of the group: {{user.my_group.price}}</span>
                   </a>
-              {% endif %}
+                {% endif %}
             </div>
+          
         </div>
         <div id="chart"></div>
         <div class="chart-btn--container">

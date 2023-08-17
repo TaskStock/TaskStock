@@ -73,7 +73,6 @@ main{
 .todo-plus--btn{
     cursor: pointer;
     background-color: var(--body-color);
-
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -349,21 +348,18 @@ main{
     gap: 7px;
     background-color: var(--bg-5);
 }
-.price > div > span:first-child,
+.price > div > h3,
 .dashboard > div > span:first-child{
     font-size: var(--body1);
     font-weight: var(--weight1);
 }
-.price > div > span:last-child,
+.price > div > span,
 .dashboard > div > span:last-child{
     color: var(--checked-border);
     font-weight: var(--weight2);
-    font-size: var(--subheading);
-}
-.price--taspi > span:last-child{
     font-size: var(--body2);
-    font-weight: var(--weight2);
 }
+
 .dashboard{
     display: flex;
     gap: var(--gutter);

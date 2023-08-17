@@ -121,14 +121,20 @@
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
                         {% if user.percentage > 0 %}
-                        <i class="fa-solid fa-chevron-up" style="color: red;"></i>
-                        <span>{{ user.percentage }} %</span>
+                        <span>
+                            <span>{{ user.percentage }} %</span>
+                            <i class="fa-solid fa-chevron-up" style="color: red;"></i>
+                        </span>
                         {% elif user.percentage < 0 %}
-                        <i class="fa-solid fa-chevron-down" style="color: blue;"></i>
-                        <span>{{ user.percentage }} %</span>
+                        <span>
+                            <span>{{ user.percentage }} %</span>
+                            <i class="fa-solid fa-chevron-down" style="color: blue;"></i>
+                        </span>
                         {% else %}
-                        <i class="fa-solid fa-minus"></i>
-                        <span style="color: none;">{{ user.percentage }} %</span>
+                        <span>
+                            <span style="color: none;">{{ user.percentage }} %</span>
+                            <i class="fa-solid fa-minus"></i>
+                        </span>
                         {% endif %}
 
                     </div>

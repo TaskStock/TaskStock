@@ -1,3 +1,12 @@
+// 그룹 생성 active toggle
+const createGroupBtn = document.querySelector('#create-group i');
+
+createGroupBtn.addEventListener('click', () => {
+  document.querySelector('.create-group').classList.toggle('active');
+})
+
+
+
 // 검색 창에 입력할 때마다 ajax로 유저 목록
 document.addEventListener("DOMContentLoaded", function () {
   const textInput = document.querySelector("#search-group_content");
@@ -93,6 +102,7 @@ const handleCreateButtonClick = async (event) => {
   });
   const { result: result } = await res.json();
   handleCreateResult(result);
+  document.querySelector('.create-group').classList.remove('active');
 };
 
 const handleCreateResult = async (result) => {

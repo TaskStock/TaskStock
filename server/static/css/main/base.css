@@ -154,15 +154,15 @@ section header img,
     flex-direction: column;
     align-items: center;
 }
-.my-info--sff span:first-child{
+.my-info--sff > span:first-child{
     font-size: var(--caption);
     display: block;
     margin-bottom: 10px;
 }
-.my-info--sff span:last-child{
+.my-info--sff > span:last-child{
     font-size: var(--body2);
 }
-.my-info--sff span{
+.my-info--sff > span{
     cursor: pointer;
 }
 

@@ -28,7 +28,7 @@ const handleButtonClick = async (event) => {
   });
   const { text: text } = await res.json();
 
-  console.log(text);
+  // console.log(text);
   handleButtonText(text);
 };
 const handleButtonText = async (Text) => {
@@ -52,19 +52,19 @@ const handleButtonText = async (Text) => {
 
 // yes,no 창을 띄움
 const confirmModal = async (event) => {
-  console.log(event);
+  // console.log(event);
   event.preventDefault();
   if (window.confirm("정말 이름을 변경하시겠습니까?")) {
     handleUpdateButtonClick(event);
   } else {
-    console.log("취소. 변화 없음");
+    // console.log("취소. 변화 없음");
     window.location.reload();
   }
 };
 
 const handleUpdateButtonClick = async (event) => {
   const input_content = document.querySelector("#update-input").value;
-  console.log(input_content);
+  // console.log(input_content);
   const url = "/main/group/update_group/";
   const group_name = document.querySelector(".group-content__name").textContent;
 
