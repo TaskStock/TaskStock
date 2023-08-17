@@ -50,10 +50,17 @@
                 <span>{{ market_cap }} KRW</span>
             </div>
             <div class="total-todos">
-                <!-- group name -->
-                <span>Group name: ({{user.my_group.name}})</span>
-                <!-- group value change -->
-                <span>Value change of the group: {{user.my_group.price}}</span>
+                {% if target_user.my_group == None %}
+                    <span>가입 그룹이 존재하지 않습니다.</span>
+                {% else %}
+                <!-- 그룹에 참여한 시점부터 
+                    개인별 (value.end - value.start)를 모두 합한 값
+                -->
+                <span>{{target_user.username}}'s Group({{target_user.my_group.name}}) Value</span>
+                <a href="/main/group/{{target_user.my_group.pk}}">
+                    <span>{{target_user.my_group.price}}</span>
+                </a>    
+                {% endif %}
             </div>
         </div>
         <div id="chart"></div>
