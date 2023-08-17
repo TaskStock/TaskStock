@@ -1008,7 +1008,7 @@ def group(request,pk):
     my_group = request.user.my_group
 
     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
-    if group.create_user == request.user.name:
+    if group.create_user_id == request.user.username:
         am_I_creator = True
     else:
         am_I_creator = False
@@ -1080,6 +1080,7 @@ def create_group(request):
                     name=name_content,
                     price=0,
                     create_user=user.name,
+                    create_user_id = user.username,
                 )
                 user.my_group = Group.objects.get(name=name_content)
                 user.save()
