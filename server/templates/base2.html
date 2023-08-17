@@ -111,16 +111,26 @@
                 <script>
                     const current_username = document.querySelector("#base-current-user-name");
                     if(current_username==null){
-                        global_chart_target_username="";
+                        global_current_username="";
                     }else{
-                        global_chart_target_username=current_username.textContent;
+                        global_current_username=current_username.textContent;
                     }
                 </script>
                 <div class="my-info--comment">{{user.textContent}}</div>
                 <div class="my-info--sff__container">
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
+                        {% if user.percentage > 0 %}
+                        <i class="fa-solid fa-chevron-up" style="color: red;"></i>
                         <span>{{ user.percentage }} %</span>
+                        {% elif user.percentage < 0 %}
+                        <i class="fa-solid fa-chevron-down" style="color: blue;"></i>
+                        <span>{{ user.percentage }} %</span>
+                        {% else %}
+                        <i class="fa-solid fa-minus"></i>
+                        <span style="color: none;">{{ user.percentage }} %</span>
+                        {% endif %}
+
                     </div>
                     <div class="my-info--sff sff-fg">
                         <span>Following</span>
@@ -241,7 +251,11 @@
         }
         const showFollowList = (users) => {
             const currentInput = document.querySelector('#friends-info--container');    
-            currentInput.innerHTML="";        
+            currentInput.innerHTML="";
+            let up_down_image = '<i class="fa-solid fa-minus"></i>';
+            let percent_color = "none"
+            
+            
 
             // users가 [] 인 경우 빈 배열이므로 null이 아님
             if(users.length > 0){
@@ -250,6 +264,14 @@
                         tmpintrodue="";
                     }else{
                         tmpintrodue=user.introduce;
+                    }
+
+                    if(user.percent<0) {
+                        up_down_image = '<img src="{% static "img/icon-stock-down.png" %}">';
+                        percent_color = 'blue'
+                    } else if (user.percent>0) {
+                        percent_color = 'red'
+                        up_down_image = '<img src="{% static "img/icon-stock-up.png" %}">'; 
                     }
 
                     atagInput = document.createElement('a');
@@ -270,9 +292,9 @@
                             <div class="search-result__right-container">
                                 <div class="search-result__info">
                                     <div class="search-result__right-upper-container">
-                                        
+                                        ${up_down_image}
                                     </div>
-                                    <p>${user.percent}%</p>
+                                    <p style="color: ${percent_color};">${user.percent}%</p>
                                 </div>
                             </div>
                         </div>

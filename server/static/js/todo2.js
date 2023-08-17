@@ -102,7 +102,7 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
             category_html+=`<option value='${c_name}'>${c_name}</option>`;
     }
 
-    if(global_chart_target_username == global_current_username){
+    if(global_chart_target_username != global_current_username){
         document.querySelector('.todo-paint').innerHTML += `
         <div class="todo-item todo-item-${todo_id}">
             <div class="todo-checkbox todo-checkbox-${todo_id}" onclick="check_todo(${todo_id})"></div>

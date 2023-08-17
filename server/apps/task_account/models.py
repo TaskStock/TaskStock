@@ -3,8 +3,9 @@ from django.contrib.auth.models import AbstractUser
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from datetime import datetime, timedelta
-import pytz
+# from datetime import datetime, timedelta
+# import pytz
+import arrow
 
 def user_directory_path(instance, filename):
     #파일을 user_<id>/<filename>에 저장
@@ -15,7 +16,6 @@ class Group(models.Model):
     name = models.CharField(max_length=30)
     create_user = models.CharField(max_length=30, default= "")
     price = models.IntegerField(null=True, default=0)
-    password = models.CharField(max_length=30, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -61,18 +61,17 @@ class User(AbstractUser):
 # User 모델 객체가 생성될 때 실행할 함수
 @receiver(post_save, sender=User)
 def user_created(sender, instance, created, **kwargs):
-    now_kst = datetime.utcnow().replace(tzinfo=pytz.utc).astimezone(pytz.timezone('Asia/Seoul'))
-
-    if now_kst.hour < 9:
-        final_time = (now_kst - timedelta(days=1)).replace(hour=14, minute=59, second=59).replace(tzinfo=pytz.utc)
-    else:
-        final_time = now_kst.replace(hour=14, minute=59, second=59).replace(tzinfo=pytz.utc)
-
+    # 현재 KST 시간 구하기
+    kst_arrow = arrow.now('Asia/Seoul')
+    
+    # 한국 timezone 정보를 가지고 있으므로 KST의 현재 날짜에 해당하는 23:59:59로 설정해야 저장할 때 UTC로 들어가면서 변환됨
+    utc_datetime = kst_arrow.ceil('day').datetime
+    
     if created:
         Value.objects.create(
             user=instance,
             #오늘이 한국시간 기준 8월 16일 이면 utc 8월 15일 15:00:00 부터 8월 16일 14:59:59 조회함 
-            date=final_time,
+            date=utc_datetime,
             percentage=0,
             start=50000,
             end=50000,

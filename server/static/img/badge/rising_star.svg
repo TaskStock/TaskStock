@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 85 91.27">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        fill: none;
+        stroke: #fff;
+        stroke-width: 2px;
+      }
+
+      .cls-1, .cls-3 {
+        stroke-linejoin: round;
+      }
+
+      .cls-5 {
+        fill: #f2e206;
+      }
+
+      .cls-5, .cls-6 {
+        stroke-width: 0px;
+      }
+
+      .cls-2, .cls-4 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-6, .cls-7 {
+        fill: #fff;
+      }
+
+      .cls-3, .cls-4 {
+        stroke-linecap: round;
+      }
+
+      .cls-7 {
+        font-family: Montserrat-ExtraBold, Montserrat;
+        font-size: 12.14px;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+  <g id="rising_star">
+    <path class="cls-2" d="m81.88,53.39c0,3.94-4.53,7.11-5.68,10.66s.56,8.9-1.67,11.97-7.77,3.03-10.87,5.28-4.7,7.51-8.38,8.71-7.96-2.13-11.9-2.13-8.35,3.28-11.9,2.13-5.31-6.48-8.38-8.71-8.62-2.19-10.87-5.28-.48-8.28-1.67-11.97-5.68-6.73-5.68-10.66,4.53-7.11,5.68-10.66-.56-8.9,1.67-11.97,7.77-3.03,10.87-5.28,4.7-7.51,8.38-8.71,7.96,2.13,11.9,2.13,8.35-3.28,11.9-2.13,5.31,6.48,8.38,8.71,8.62,2.19,10.87,5.28.48,8.28,1.67,11.97,5.68,6.73,5.68,10.66Z"/>
+    <circle class="cls-5" cx="42.5" cy="48.77" r="42.5"/>
+    <path class="cls-2" d="m81.07,49.14c0,3.94-4.53,7.11-5.68,10.66s.56,8.9-1.67,11.97-7.77,3.03-10.87,5.28-4.7,7.51-8.38,8.71-7.96-2.13-11.9-2.13-8.35,3.28-11.9,2.13-5.31-6.48-8.38-8.71-8.62-2.19-10.87-5.28-.48-8.28-1.67-11.97-5.68-6.73-5.68-10.66,4.53-7.11,5.68-10.66-.56-8.9,1.67-11.97,7.77-3.03,10.87-5.28,4.7-7.51,8.38-8.71,7.96,2.13,11.9,2.13,8.35-3.28,11.9-2.13,5.31,6.48,8.38,8.71,8.62,2.19,10.87,5.28.48,8.28,1.67,11.97,5.68,6.73,5.68,10.66Z"/>
+    <g>
+      <polygon class="cls-1" points="29.46 38.56 28.05 48.62 18.3 53.62 28.72 58.98 29.45 68.85 37.08 61.27 47.49 63.2 42.27 53.61 46.68 45.23 36.56 46.7 29.46 38.56"/>
+      <path class="cls-4" d="m31.17,40.52s5.74-3.07,15.31-.98c9.56,2.09,13.26,5.86,16.96,10.33s4.95,9.84,4.95,9.84"/>
+      <path class="cls-4" d="m67.85,59.71s-.5-2.76-2.57-5.24-4.19-4.6-10.05-6.29c-5.87-1.69-9.62-.54-9.62-.54"/>
+      <path class="cls-3" d="m43.17,53.29s4.7-1.71,13.53,0c8.83,1.71,10.9,6.99,10.9,6.99,0,0-5.98-2.31-11.7-2.18s-10.05,2.09-10.05,2.09"/>
+      <path class="cls-6" d="m66.92,61.1c.76.31,1.42.43,2.04-.14s.49-1.28.25-2.03"/>
+    </g>
+    <text class="cls-7" transform="translate(18.38 41.07) rotate(-57.28) scale(1.01 .99) skewX(-.79)"><tspan x="0" y="0">r</tspan></text>
+    <text class="cls-7" transform="translate(21.18 36.78) rotate(-48.63) scale(1.01 1) skewX(-.98)"><tspan x="0" y="0">i</tspan></text>
+    <text class="cls-7" transform="translate(23.42 34.02) rotate(-38.74) skewX(-1.09)"><tspan x="0" y="0">s</tspan></text>
+    <text class="cls-7" transform="translate(28.42 30.12) rotate(-28.97) skewX(-1.07)"><tspan x="0" y="0">i</tspan></text>
+    <text class="cls-7" transform="translate(31.32 28.2) rotate(-17.18) skewX(-.88)"><tspan x="0" y="0">n</tspan></text>
+    <text class="cls-7" transform="translate(38.98 25.76) rotate(-.53) skewX(-.38)"><tspan x="0" y="0">g</tspan></text>
+    <text class="cls-7" transform="translate(47.14 25.9) rotate(11.23) skewX(.06)"><tspan x="0" y="0"> </tspan></text>
+    <text class="cls-7" transform="translate(50.31 26.37) rotate(21.11) skewX(.43)"><tspan x="0" y="0">s</tspan></text>
+    <text class="cls-7" transform="translate(56.12 28.63) rotate(32.9) skewX(.8)"><tspan x="0" y="0">t</tspan></text>
+    <text class="cls-7" transform="translate(60.45 31.23) rotate(45.74) skewX(1.04)"><tspan x="0" y="0">a</tspan></text>
+    <text class="cls-7" transform="translate(65.42 36.45) rotate(58.16) skewX(1.09)"><tspan x="0" y="0">r</tspan></text>
+  </g>
+</svg>

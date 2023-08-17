@@ -18,8 +18,6 @@
                 {% csrf_token %}
                 <div>그룹 이름</div>
                 <input type="text" name="group-name-input"  id="name-input">
-                <div>비밀 번호</div>
-                <input type="text" name="group-password-input"  id="password-input">
                 <button type="submit" name="group-create-button" id="create-button">Create</button>
             </form>
             <div class="search-group-result">
@@ -58,14 +56,15 @@
                 </div>
                 {% endif %}
                 <div class="search-group-label">
-                    <h3>실시간 차트</h3>
+                    <h3>실시간 차트 top3</h3>
                 </div>
-                {% for group in groups %}
+                {% for group in groups|slice:":3" %}
                     <div class="search-group-result__container">
                         <div class="search-group-result__right--container">
                             <div class="friend-group-info--pic"></div>
                             <a href="/main/group/{{group.pk}}/">
                                 <div class="search-group-result__name-container">
+                                    <p>{{ forloop.counter }}위</p>
                                     <h2>{{group.name}}</h2>
                                     <p>{{group.price}}</p>
                                 </div>
@@ -76,10 +75,7 @@
                                 <div class="search-group-result__right-upper-container">
                                     <form onsubmit="handleFollowButtonClick(event)">
                                         {% csrf_token %}
-                                        <input type="hidden" name="group" value="{{ group.name }}">
-                                        {% if group != my_group %}
-                                            <input type="text" name="group-password-verify-input"  id="password-verify-input">
-                                        {% endif %}    
+                                        <input type="hidden" name="group" value="{{ group.name }}">   
                                         <button type="submit" name="group-button" class="add-button">
                                             {% if group == my_group %}
                                                 LEAVE GROUP
@@ -119,9 +115,6 @@
                                     <form onsubmit="handleFollowButtonClick(event)">
                                         {% csrf_token %}
                                         <input type="hidden" name="group" value="{{ filtered_group.name }}">
-                                        {% if filtered_group != my_group %}
-                                            <input type="text" name="group-password-verify-input"  id="password-verify-input">
-                                        {% endif %}    
                                         <button type="submit" name="group-button" class="add-button">
                                             {% if filtered_group == my_group %}
                                                 LEAVE GROUP

@@ -37,21 +37,30 @@
         </div>
         <div class="price">
             <div class="price--taspi">
-                <span>TASPI</span>
-                <!-- (오늘의 주가총액 / 배포 하루 후 주가총액) * 100 -->
-                <span>2,591.26</span>
+                <span>Stock Info</span>
+                <!-- 나의 오늘 value -->
+                <span>Opening Price: {{ value.start }} KRW</span>
+                <span>Closing Price: {{ value.end }} KRW</span>
+                <span>Maximum Upside: {{ value.high }} KRW</span>
+                <span>Maximum Downsie: {{ value.low }} KRW</span>
             </div>
             <div class="price--marketcap">
-                <span>{{target_user.username}}'s Value</span>
-                <!-- value개수 * value.end -->
-                <span>3,634.7조</span>
+                <span>Stock Market Cap</span>
+                <!-- value개market_cap수 * value.end -->
+                <span>{{ market_cap }} KRW</span>
             </div>
             <div class="total-todos">
-                <span>{{target_user.username}}'s Group({{target_user.my_group.name}}) Value</span>
+                {% if target_user.my_group == None %}
+                    <span>가입 그룹이 존재하지 않습니다.</span>
+                {% else %}
                 <!-- 그룹에 참여한 시점부터 
                     개인별 (value.end - value.start)를 모두 합한 값
                 -->
-                <span>{{target_user.my_group.price}}</span>
+                <span>{{target_user.username}}'s Group({{target_user.my_group.name}}) Value</span>
+                <a href="/main/group/{{target_user.my_group.pk}}">
+                    <span>{{target_user.my_group.price}}</span>
+                </a>    
+                {% endif %}
             </div>
         </div>
         <div id="chart"></div>
@@ -95,17 +104,55 @@
             </div>
             <div class="dashboard--completed">
                 <span>Completed Todos</span>
-                <span>✔︎ 56</span>
+                <span>✔︎ {{ target_user.todo_cnt }}</span>
             </div>
             <div class="dashboard--badge">
                 <span>Badge</span>
-                <span></span>
+                <span>
+                    {% for badge in target_user.badges.all %}
+                        {% if badge.name == "지금이라도 사야해" %}
+                            <img src="{% static 'img/badge/combo.svg' %}">
+                            {{ badge.name }}
+                            {{ badge.description }}
+                        {% endif %}
+                        {% if badge.name == "개미의 선택" %}
+                            <img src="{% static 'img/badge/ant_beginner.svg' %}">
+                            {{ badge.name }}
+                            {{ badge.description }}
+                        {% endif %}
+                        {% if badge.name == "슈퍼 개미의 선택" %}
+                            <img src="{% static 'img/badge/ant_intermediate.svg' %}">
+                            {{ badge.name }}
+                            {{ badge.description }}
+                        {% endif %}
+                        {% if badge.name == "우주 개미의 선택" %}
+                            <img src="{% static 'img/badge/and_master.svg' %}">
+                            {{ badge.name }}
+                            {{ badge.description }}
+                        {% endif %}
+                        {% if badge.name == "콩콩" %}
+                            <img src="{% static 'img/badge/22.svg' %}">
+                            {{ badge.name }}
+                            {{ badge.description }}
+                        {% endif %}
+                        {% if badge.name == "1+1" %}
+                            <img src="{% static 'img/badge/1+1.svg' %}">
+                            {{ badge.name }}
+                            {{ badge.description }}
+                        {% endif %}
+                        {% if badge.name == "화성 갈끄니까" %}
+                            <img src="{% static 'img/badge/mars.svg' %}">
+                            {{ badge.name }}
+                            {{ badge.description }}
+                        {% endif %}
+                    {% endfor %}
+                </span>
             </div>
         </div>
         
             
             
-     
+    
     </div>
     <div class="main-right">
         <div class="main-right--container">
@@ -153,26 +200,22 @@
                         <div class="todo-checkbox todo-checkbox-{{todo.pk}} {{todo.goal_check}}"></div>
                         
                         <input type="text" 
-                               class="todo-contents" 
-                               onclick="edit_todo({{todo.pk}})"
-                               value="{{todo.content}}"
-                               readonly>
+                            class="todo-contents" 
+                            onclick="edit_todo({{todo.pk}})"
+                            value="{{todo.content}}"
+                            readonly>
                         <div class="todo-level todo-level-{{todo.pk}}">
-                      
-                         
-          
+
                         {% with level=todos_levels_dict|get_item:todo.id %}
                             {% for i in level|to_range %}
                                 <div level="{{level}}" class="active"></div>
                             {% endfor %}
-                         
                         {% endwith %} 
 
                         {% with sub=todos_sub_dict|get_item:todo.id %}
                             {% for i in sub|to_range %}
                                 <div level="{{sub}}"></div>
                             {% endfor %}
-                         
                         {% endwith %} 
                             
                         </div>
