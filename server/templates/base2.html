@@ -121,10 +121,13 @@
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
                         {% if user.percentage > 0 %}
-                        <span style="color: red;">{{ user.percentage }} %</span>
+                        <i class="fa-solid fa-chevron-up" style="color: red;"></i>
+                        <span>{{ user.percentage }} %</span>
                         {% elif user.percentage < 0 %}
-                        <span style="color: blue;">{{ user.percentage }} %</span>
+                        <i class="fa-solid fa-chevron-down" style="color: blue;"></i>
+                        <span>{{ user.percentage }} %</span>
                         {% else %}
+                        <i class="fa-solid fa-minus"></i>
                         <span style="color: none;">{{ user.percentage }} %</span>
                         {% endif %}
 
@@ -249,7 +252,7 @@
         const showFollowList = (users) => {
             const currentInput = document.querySelector('#friends-info--container');    
             currentInput.innerHTML="";
-            let up_down_image = "{% static 'img/icon-stock-up.png' %}";
+            let up_down_image = '<i class="fa-solid fa-minus"></i>';
             let percent_color = "none"
             
             
@@ -264,10 +267,11 @@
                     }
 
                     if(user.percent<0) {
-                        up_down_image = "{% static 'img/icon-stock-down.png' %}";
+                        up_down_image = '<img src="{% static "img/icon-stock-down.png" %}">';
                         percent_color = 'blue'
                     } else if (user.percent>0) {
                         percent_color = 'red'
+                        up_down_image = '<img src="{% static "img/icon-stock-up.png" %}">'; 
                     }
 
                     atagInput = document.createElement('a');
@@ -288,7 +292,7 @@
                             <div class="search-result__right-container">
                                 <div class="search-result__info">
                                     <div class="search-result__right-upper-container">
-                                        <img src=${up_down_image}>
+                                        ${up_down_image}
                                     </div>
                                     <p style="color: ${percent_color};">${user.percent}%</p>
                                 </div>

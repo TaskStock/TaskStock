@@ -32,9 +32,11 @@
                         <div class="search-result__info">
                             <div class="search-result__right-upper-container">
                                 {% if user.percentage < 0 %}
+                                <img src="{% static 'img/icon-stock-up.png' %}" alt="up imgage">
+                                {% elif user.percentage > 0 %}
                                 <img src="{% static 'img/icon-stock-down.png' %}" alt="down imgage">
                                 {% else %}
-                                <img src="{% static 'img/icon-stock-up.png' %}" alt="up imgage">
+                                <i class="fa-solid fa-minus"></i>
                                 {% endif %}
                                 <!-- <img class="friend-info-pic" src="https://placekitten.com/15/15" alt=""> -->
                             </div>
@@ -102,7 +104,7 @@
         const currentInput = document.querySelector('#search-users__result-container');
         currentInput.innerHTML="";
 
-        let up_down_image = "{% static 'img/icon-stock-up.png' %}";
+        let up_down_image = '<i class="fa-solid fa-minus"></i>';
         let percent_color = "none"
 
         // users가 [] 인 경우 빈 배열이므로 null이 아님
@@ -115,10 +117,11 @@
                 }
 
                 if(user.percentage<0) {
-                        up_down_image = "{% static 'img/icon-stock-down.png' %}";
+                        up_down_image = '<img src="{% static "img/icon-stock-down.png" %}">';                        
                         percent_color = 'blue'
                     } else if (user.percentage>0) {
                         percent_color = 'red'
+                        up_down_image = '<img src="{% static "img/icon-stock-up.png" %}">';                      
                     }
                 
                 atagInput = document.createElement('a');
@@ -138,7 +141,7 @@
                         <div class="search-result__right-container searched-result__searched-user__right-container" >
                             <div class="search-result__info">
                                 <div class="search-result__right-upper-container">
-                                    <img src=${up_down_image}>
+                                    ${up_down_image}
                                 </div>
                                 <p style="color: ${percent_color};">${user.percentage}%</p>
                             </div>
