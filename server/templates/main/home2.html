@@ -17,19 +17,6 @@
                 <span id="ochl_high">{{ value.high }} ₩</span>
                 <span id="ochl_low">{{ value.low }} ₩</span>
             </div>
-            <div class="dashboard-top__value">
-                <span id="value_marketCapKey">Market Cap</span>
-                <span id="value_marketCap">{{market_cap}} ₩</span>
-
-                {% if user.my_group == None %}
-                <span id="value_groupValKey">Group Value</span>
-                <span id="value_groupVal">-</span>
-                {% else %}
-                <span id="value_groupValKey"><a href="/main/group/{{user.my_group.pk}}">{{user.my_group.name}} Value</a></span>
-                <span id="value_groupVal">{{user.my_group.delta}} ₩</span>
-                {% endif %}
-            </div>
-          
         </div>
         <div id="chart"></div>
         <div class="chart-btn--container">
@@ -56,7 +43,7 @@
                 </label>   
             </form>
         </div>
-        <div class="dashboard">
+        <div class="dashboard-bottom">
             <div id="username_save" style="display:none;">{{user.username}}</div>
             <script>
                 const username = document.querySelector("#username_save");
@@ -66,17 +53,36 @@
                     global_chart_target_username=username.textContent;
                 }
             </script>
-            <div class="dashboard--combo">
-                <span>Combo</span>
-                <span>🔥 {{ user.combo }}</span>
+            <div class="dashboard-top__value">
+                <span id="value_marketCapKey">Market Cap</span>
+                <span id="value_marketCap">{{market_cap}} ₩</span>
+
+                {% if user.my_group == None %}
+                <span id="value_groupValKey">Group Earnings</span>
+                <span id="value_groupVal">-</span>
+                {% else %}
+                <span id="value_groupValKey"><a href="/main/group/{{user.my_group.pk}}">{{user.my_group.name}} Earnings</a></span>
+                <span id="value_groupVal">{{user.my_group.delta}} ₩</span>
+                {% endif %}
             </div>
-            <div class="dashboard--completed">
+            <div class="dashboard-top__cc">
+                <span>Combo</span>
                 <span>Completed Todos</span>
+                <span>🔥 {{ user.combo }}</span>
                 <span>✔︎ {{ user.todo_cnt }}</span>
             </div>
-            <div class="dashboard--badge">
+            <div class="dashboard-bottom__badge">
                 <span>Badge</span>
-                <div class="dashboard--badge__container">
+                <div class="badge-modal">
+                    <div class="badge-modal--top"></div>
+                    <div class="badge-modal__delBtn"><i class="fa-solid fa-x"></i></div>
+                    <div class="badge-modal--bottom">
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="dashboard--badge__container" id="dashboard--badge__container">
+                   
                     {% for badge in user.badges.all %}
                         {% if badge.name == "지금이라도 사야해" %}
                         <div class="badge-container">
@@ -119,6 +125,7 @@
                             <img src="{% static 'img/badge/22.svg' %}">
                             <div class="badge-content__container">
                                 <h3>{{ badge.name }}</h3>
+                              
                                 <p>{{ badge.description }}</p> 
                             </div>
                         </div>
@@ -129,6 +136,7 @@
                             <div class="badge-content__container">
                                 <h3>{{ badge.name }}</h3>
                                 <p>{{ badge.description }}</p> 
+                                
                             </div>
                         </div>
                         {% endif %}
@@ -137,13 +145,16 @@
                             <img src="{% static 'img/badge/mars.svg' %}">
                             <div class="badge-content__container">
                                 <h3>{{ badge.name }}</h3>
+                                
                                 <p>{{ badge.description }}</p> 
                             </div>
                         </div>
                         {% endif %}
                     {% endfor %}
+            
                 </div>
             </div>
+           
         </div>
     </div>
     <div class="main-right">
@@ -323,8 +334,17 @@
         document.querySelector('#one_year + .chart-btn').innerHTML = '1년';
     }
 </script>
+<script>
+    const gridContainer = document.querySelector('#dashboard--badge__container');
+    const numberOfItems = gridContainer.children.length;
+    const gridColumnValue = `repeat(${numberOfItems}, 60px)`;
+    
+    gridContainer.style.gridTemplateColumns = gridColumnValue;
+</script>
 <script src="{% static 'js/candlestick.js' %}"></script>
 <script src="{% static 'js/time.js' %}"></script>
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
+<script src="{% static 'js/badge.js' %}"></script>
+
 {% endblock %}
