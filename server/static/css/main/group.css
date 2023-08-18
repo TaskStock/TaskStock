@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+    padding-bottom: var(--offset);
 }
 .search-group-header,
 .group-header{
@@ -11,6 +12,7 @@
 .search-group-header{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 .search-group-header > h1,
 .group-header > h1 {
@@ -23,7 +25,8 @@
     align-items: center;
     gap: var(--gutter);
 }
-.create-group{
+.create-group,
+#mb-search-btn{
     width: 40px;
     height: 40px;
     display: flex;
@@ -41,7 +44,8 @@
 .create-group.active > i{
     transform: rotate(45deg);
 }
-.create-group:hover{
+.create-group:hover,
+#mb-search-btn:hover{
     background-color: var(--box-color);
 }
 .search-group-header form input{
@@ -103,13 +107,13 @@
 }
 .my-group h3,
 .group-top10 h3,
-.group-content h3{
+.group-content > h3{
     font-size: var(--subheading);
     font-weight: var(--weight3);
     color: var(--checked-border);
     margin: var(--gutter) 0;
 }
-.group-content h3{
+.group-content > h3{
     padding: var(--gutter) 0;
 }
 .my-group__container{
@@ -229,20 +233,27 @@
     color: var(--checked-border);
 }
 .group-content{
-    /* background-color: red; */
     padding: var(--gutter) var(--offset);
 }
 .group-content__info{
-    display: flex;
-    justify-content: space-between;
-    font-size: var(--body2);
-    width: 80%;
-    margin: var(--offset) auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--gutter);
+
 }
-.bar{
-    width: 1px;
-    height: 16px;
-    background-color: var(--border-color);
+.group-content__text{
+    border-radius: var(--border-r);
+    background-color: var(--box-color);
+    padding: var(--gutter);
+}
+.group-content__text h3{
+    font-size: var(--body2);
+    padding: 5px 0;
+}
+.group-content__text span{
+    font-size: var(--subheading);
+    color: var(--checked-border);
+    
 }
 .group-user__username{
     font-size: var(--subheading);
@@ -289,4 +300,92 @@
     background-color: green;
     border: 1px solid green;
 
+}
+#mb-search-btn,
+#mb-searchCancel-btn{
+    display: none;
+}
+@media screen and (max-width: 1400px){
+    .my-group__container{
+        width: calc((100% - 3 * var(--gutter)) / 4);
+    }
+    .topGroup-wrap,
+    .group-content__ul{
+        grid-template-columns: repeat(4, calc((100% - 3 * var(--gutter)) / 4));
+    }
+}
+@media screen and (max-width: 1200px){
+    .my-group__container{
+        width: calc((100% - 2 * var(--gutter)) / 3);
+    }
+    .topGroup-wrap,
+    .group-content__ul{
+        grid-template-columns: repeat(3, calc((100% - 2 * var(--gutter)) / 3));
+    }
+}
+@media screen and (max-width: 720px){
+    .my-group__container{
+        width: calc((100% - var(--gutter)) / 2);
+    }
+    .topGroup-wrap,
+    .group-content__ul{
+        grid-template-columns: repeat(2, calc((100% - var(--gutter)) / 2));
+    }
+}
+@media screen and (max-width: 500px){
+    .my-group__container{
+        width: 100%
+    }
+    .topGroup-wrap,
+    .group-content__ul{
+        grid-template-columns: repeat(1, auto);
+    }
+    #mb-search-btn,
+    #mb-searchCancel-btn{
+        cursor: pointer;
+        display: block;
+    }
+    .group-header--right{
+        width: 100%;
+        justify-content: flex-end;
+    }
+    .search-group-header form{
+        position: relative;
+        width: 100%;
+        
+    }
+    .search-group-header form input{
+        display: none;
+        width: 100%;
+    }
+    .group-header--right{
+        gap: 10px;
+    }
+    .mb-searchCancel-btn{
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        transform: translateY(-50%);
+    }
+    #mb-search-btn{
+        position: relative;
+        margin-left: auto;
+    }
+    #mb-search-btn i{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .mb-searchCancel-btn i{
+        font-size: var(--body1);
+        display: none;
+    }
+    
+}
+@media screen and (max-width: 750px) {
+    .group-content__info{
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
 }

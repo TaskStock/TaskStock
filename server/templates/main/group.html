@@ -17,13 +17,22 @@
     </div>
     <div class="group-content">
         <div class="group-content__info">
-            <span class="group-content__text">Group Value: {{group.price}} ₩</span>
-            <div class="bar"></div>
-            <span class="group-content__text">Today's Earnings: {{group.delta}} ₩</span>
-            <div class="bar"></div>
-            <span class="group-content__text" id="group-member">Members: {{users_length}}</span>
-            <div class="bar"></div>
-            <span class="group-content__text">Group Head: {{group.create_user}}</span>
+            <div class="group-content__text">
+                <h3>Group Value</h3>
+                <span>{{group.price}} ₩</span>
+            </div>
+            <div class="group-content__text">
+                <h3>Today's Earnings</h3>
+                <span>{{group.delta}} ₩</span>
+            </div>
+            <div class="group-content__text">
+                <h3>Members</h3>
+                <span>{{users_length}}</span>
+            </div>
+            <div class="group-content__text">
+                <h3>Group Head</h3>
+                <span>{{group.create_user}}</span>
+            </div>
             
         </div>
        
@@ -76,7 +85,39 @@
 
 
 {% block extra %}
+<script>
+    const amICreator = "{{am_I_creator}}";
+// group name 수정: if 관리자일때만 show
+if(amICreator == 'True'){
+  const groupName_editBtn = document.querySelector('#groupName-editBtn');
+  const groupHeader = document.querySelector('.group-header');
+  groupName_editBtn.addEventListener('click', () => {
 
+    groupHeader.classList.add('editShow');
+    groupNameEditToggle();
+    
+  })
+
+  const groupName_confirmBtn = document.querySelector('#update-button');
+  groupName_confirmBtn.addEventListener('click', () => {
+    groupHeader.classList.remove('editShow');
+    groupNameEditToggle();
+  })
+  function groupNameEditToggle() {
+    const groupHeader = document.querySelector('.group-header');
+    if(groupHeader.classList.contains('editShow')){
+      groupHeader.querySelector('h1').style.display = 'none';
+      groupHeader.querySelector('#groupName-editBtn').style.display = 'none';
+      groupHeader.querySelector('form').style.display = 'flex';
+    }else{
+      groupHeader.querySelector('h1').style.display = 'block';
+      groupHeader.querySelector('#groupName-editBtn').style.display = 'block';
+      groupHeader.querySelector('form').style.display = 'none';
+
+    }
+  }
+}
+</script>
 <script src="{% static 'js/group.js' %}"></script>
 
 {% endblock %}
