@@ -177,6 +177,7 @@
     display: block;
     margin-left: auto;
     margin-top: var(--gutter);
+    color: white;
 }
 
 .category-item{
