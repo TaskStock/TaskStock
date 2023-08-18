@@ -53,6 +53,7 @@
                     global_chart_target_username=username.textContent;
                 }
             </script>
+
             <div class="dashboard-top__value">
                 <span id="value_marketCapKey">Market Cap</span>
                 <span id="value_marketCap">{{market_cap}} ₩</span>
@@ -64,12 +65,15 @@
                 <span id="value_groupValKey"><a href="/main/group/{{user.my_group.pk}}">{{user.my_group.name}} Earnings</a></span>
                 <span id="value_groupVal">{{user.my_group.delta}} ₩</span>
                 {% endif %}
+
             </div>
             <div class="dashboard-top__cc">
                 <span>Combo</span>
                 <span>Completed Todos</span>
-                <span>🔥 {{ user.combo }}</span>
-                <span>✔︎ {{ user.todo_cnt }}</span>
+
+                <span style="font-size: var(--subheading)">🔥 {{ user.combo }}</span>
+                <span style="font-size: var(--subheading)">✔︎ {{ user.todo_cnt }}</span>
+
             </div>
             <div class="dashboard-bottom__badge">
                 <span>Badge</span>
@@ -150,6 +154,11 @@
                             </div>
                         </div>
                         {% endif %}
+                        {% if badge.name == "Rising Star" %}
+                            <img src="{% static 'img/badge/rising_star.svg' %}">
+                            {{ badge.name }}
+                            {{ badge.description }}
+                        {% endif %}
                     {% endfor %}
             
                 </div>
@@ -177,9 +186,10 @@
                             <div class="todo-add--input">
                                 <span>할 일을 입력하세요</span>
                                 <input type="text"
-                                placeholder="헬스장 가기"
+                                placeholder="할 일"
                                 onkeypress="if(event.keyCode==13) {add_todo({{ date_id }})}"
                                 autofocus
+                                style="font-size: var(--body2)"
                                 >
                             </div>
                             <div class="todo-add--level">
@@ -195,7 +205,7 @@
                             <div id="todo-add--category">
                                 <span>카테고리를 설정하세요</span>
                                 <select id="todo-add--select">
-                                    <option value="" selected>None</option>
+                                    <option value="" selected>카테고리 없음</option>
                                     {% for category in categorys %}
                                     <option value="{{category.name}}">{{category.name}}</option>
                                     {% endfor %}
