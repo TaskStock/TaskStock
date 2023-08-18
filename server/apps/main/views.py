@@ -1135,6 +1135,8 @@ def group(request,pk):
 
     sorted_value_items = sorted(value_dic.items(), key=lambda x: x[1], reverse=True)
     value_dic = {user: value for user, value in sorted_value_items}
+
+    group_position = next((index for index, g in enumerate(ordered_groups) if g == group), None)
     
     context = {
         'group': group,
@@ -1143,7 +1145,7 @@ def group(request,pk):
         'button_text': button_text,
         'am_I_creator': am_I_creator,
         'users_length': len(users),
-        'ordered_groups': ordered_groups,
+        'group_position': group_position,
     }
     return render(request, 'main/group.html', context)
 
