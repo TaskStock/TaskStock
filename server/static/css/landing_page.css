@@ -181,7 +181,8 @@ main {
 .container-box__imgs__img > img {
   transition: 0.5s all ease-in-out;
   max-width: 100%;
-  height: auto;
+  width: 300px;
+  height: 500px
 }
 
 .container-box__text {
@@ -260,9 +261,10 @@ main {
 }
 
 .introduction-rules__image-container > img {
+  width: 300px;
+  height: 500px;
   max-width: 100%;
   min-width: 40%;
-  height: auto;
   border-radius: 20px;
 }
 
@@ -327,7 +329,7 @@ main {
   border-radius: 20px;
   max-width: 100%;
   width: 100px;
-  height: auto; 
+  height: 100px; 
   border-radius: 20px;
 }
 
@@ -474,7 +476,7 @@ main {
 }
 
 .introduction-rule__image > img {
-  width: 100%;
+  width: 50%;
   height: auto;
   border-radius: 20px;
 }
@@ -492,14 +494,23 @@ footer {
   background-color: var(--msk-bg);
   color: var(--msk-color);
   padding: var(--padding);
+  justify-content: space-between;
 }
 
 .footer-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 10rem;
 }
 
+.contact-container p{
+  font-size: var(--paragraph);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  padding: var(--padding);
+}
 /* test */
 #swiper {
   width: 100%;
@@ -532,15 +543,15 @@ footer {
 
 .swiper-container {
   width: 50%;
-  height: 100vh;
+  height: 50vh;
 }
 
 
 /* 아이패드 미니 기준 */
 @media screen and (max-width: 768px) {
-  /* .container-box__imgs {
+  .container-box__imgs {
     flex-direction: column;
-  } */
+  }
   .advertise-box__image {
     flex-direction: column;
   }
@@ -584,5 +595,9 @@ footer {
   .footer-container {
   gap: 2vh;
   flex-direction: column;
+  }
+
+  .swiper-container {
+    height: 50vh;
   }
 }
