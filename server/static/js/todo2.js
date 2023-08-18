@@ -69,12 +69,19 @@ const add_todo = async(date_id) => {
             },
             body: JSON.stringify(data),
         })
-        const {todo_id: todo_id, my_level: my_level, content: content, category_datas: category_datas} = await res.json();
+        const {
+            todo_id: todo_id,
+            my_level: my_level,
+            content: content, 
+            category_datas: category_datas,
+            value_high: valueHigh,
+            value_low: valueLow,
+        } = await res.json();
         document.querySelector(`.day${date_id}--todo input`).value = '';
         level = '0';
         paintStar('0');
         document.querySelector('.todo-plus').classList.remove('active');
-        handleTodoResponse(todo_id, my_level, content, category_datas, category_name);
+        handleTodoResponse(todo_id, my_level, content, category_datas, category_name, valueHigh, valueLow);
 
     }else if (inputVal === ''){
         document.querySelector(`.day${date_id}--todo .todo-add--input span`).style.color = '#ff0033';
@@ -83,7 +90,7 @@ const add_todo = async(date_id) => {
     } 
 }
 
-const handleTodoResponse = async(todo_id, level, content, category_datas, category_name) => {
+const handleTodoResponse = async(todo_id, level, content, category_datas, category_name, valueHigh, valueLow) => {
     let paintedLevel = '';
     let emptyLevel = '';
     level = Number(level);
@@ -172,6 +179,7 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
     
     update_chart();
     has_unchecked_todos();
+    updateValueElements(null, null, valueHigh, valueLow)
 }
 
 
@@ -327,10 +335,19 @@ const delete_todo = async(todo_id) => {
         },
         body: JSON.stringify({todo_id}),
     })
-    const {my_combo: my_combo, id: id, d_id: d_id, todo_cnt:todo_cnt} = await res.json();
-    handleDelTodoRes(my_combo, id, d_id, todo_cnt);
+    const {
+        my_combo: my_combo,
+        id: id, 
+        d_id: d_id, 
+        todo_cnt:todo_cnt,
+        value_end:valueEnd,
+        value_high:valueHigh,
+        value_low:valueLow,
+        percnet:percentage,
+    } = await res.json();
+    handleDelTodoRes(my_combo, id, d_id, todo_cnt, valueEnd, valueHigh, valueLow, percentage);
 }
-const handleDelTodoRes = async(my_combo, todo_id, date_id, todo_cnt) => {
+const handleDelTodoRes = async(my_combo, todo_id, date_id, todo_cnt, valueEnd, valueHigh, valueLow, percentage) => {
     // delete container
     const container = document.querySelector(`.todo-item-${todo_id}`);
     container.remove();
@@ -338,6 +355,7 @@ const handleDelTodoRes = async(my_combo, todo_id, date_id, todo_cnt) => {
     has_unchecked_todos();
     handleCombo(my_combo);
     handleCompletedTodos(todo_cnt)
+    updateValueElements(null, valueEnd, valueHigh, valueLow, percentage)
 }
 
 
@@ -370,24 +388,26 @@ const check_todo = async(todo_id) => {
         't_id': t_id, 
         'todo_cnt':todo_cnt,
         'value_end': valueEnd,
+        'user_percentage':percent
     } = await res.json();
     
-    handleCheckTodoRes(my_combo, color, todo_status, t_id, todo_cnt, valueEnd);
+    handleCheckTodoRes(my_combo, color, todo_status, t_id, todo_cnt, valueEnd, percent);
 }
 
-function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt, valueEnd){
+function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt, valueEnd, percent){
     const checkBox = document.querySelector(`.todo-checkbox-${todo_id}`);
     if (status == 'True'){
         checkBox.classList.add('True');
     } else{
         checkBox.classList.remove('True');
     }
+    console.log("Percentage from server:", percent);
     
     handleCombo(my_combo);
     update_chart();
     has_unchecked_todos();
     handleCompletedTodos(todo_cnt);
-    updateValueElements(valueEnd);
+    updateValueElements(null, valueEnd, null, null, percent);
 
 }
 
@@ -478,8 +498,8 @@ function handleCompletedTodos(todo_cnt){
 
 has_unchecked_todos();
 
-//price-taspi 업데이트
-function updateValueElements(valueStart = null, valueEnd = null, valueHigh = null, valueLow = null) {
+// price-taspi, my-info--sff 업데이트   
+function updateValueElements(valueStart = null, valueEnd = null, valueHigh = null, valueLow = null, percentage = null) {
     if (valueStart !== null) {
         document.querySelector(".ochl-container div span:nth-child(1)").innerText = `Open: ${valueStart} ₩`;
     }
@@ -491,5 +511,35 @@ function updateValueElements(valueStart = null, valueEnd = null, valueHigh = nul
     }
     if (valueLow !== null) {
         document.querySelector(".ochl-container div:nth-child(3) span:nth-child(2)").innerText = `Low: ${valueLow} ₩`;
+    }
+
+    if (percentage !== null) {
+        const displayElement = document.querySelector(".percentage-display");
+        const valueElement = displayElement.querySelector(".percentage-value");
+        const iconElement = document.getElementById("percentage-icon");
+
+        const percentValue = parseFloat(percentage);
+        valueElement.innerText = `${percentage} %`;
+
+    // iconElement가 이미 존재한다면 삭제합니다.
+    if (iconElement) {
+        iconElement.remove();
+
+    // 아이콘 요소를 새로 생성합니다.
+    iconElement = document.createElement("i");
+    iconElement.id = "percentage-icon";
+}
+        if (percentValue > 0) {
+            iconElement.className = "fa-solid fa-chevron-up";
+            iconElement.style.color = "red";
+        } else if (percentValue < 0) {
+            iconElement.className = "fa-solid fa-chevron-down";
+            iconElement.style.color = "blue";
+        } else {
+            iconElement.className = "fa-solid fa-minus";
+            iconElement.style.color = "none"; // 또는 다른 색상
+        }
+        // displayElement에 아이콘 요소를 추가합니다.
+        displayElement.appendChild(iconElement);
     }
 }
