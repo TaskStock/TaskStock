@@ -1069,7 +1069,8 @@ def follow_group(request):
         text="가입"
 
     current_user.save()
-
+    group.save()
+    
     return JsonResponse({'text': text})
 
 
