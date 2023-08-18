@@ -114,6 +114,7 @@ section header img,
     padding: var(--gutter);
     align-items: center;
     z-index: 2000;
+    color: white;
 }
 .my-info--container{
     width: 100%;
@@ -231,8 +232,9 @@ section header img,
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.hamburger-contents div i{
+} 
+.hamburger-contents > a > div > i,
+.tb-hamburger-contents div i{
     color: white;
 }
 .hamburger-contents span{
