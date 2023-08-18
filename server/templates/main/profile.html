@@ -251,12 +251,18 @@
             headers:{},
             body: formData,
         });
-        const {text} = await res.json();
-        updateBtn(text);
+        const {text, f_ajax_count} = await res.json();
+        updateBtn(text, f_ajax_count);
     }
-    const updateBtn = (text) => {
+    const updateBtn = (text, f_ajax_count) => {
         const follow_btn = document.querySelector('#followBtn');
         follow_btn.textContent=text;
+
+        if(base_follow_page_type=="following"){
+            follow("following", null);
+        }
+        const following_count = document.querySelector('#following_list');
+        following_count.textContent = f_ajax_count;
     }
 </script>
 
