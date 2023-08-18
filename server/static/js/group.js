@@ -11,6 +11,7 @@ const handleButtonClickMessage = async (event) => {
   }
 };
 
+
 // ADD,DELETE 버튼을 클릭 했을 때 ajax 통신을 통해 그룹원 추가, 삭제
 const handleButtonClick = async (event) => {
   event.preventDefault();
@@ -91,6 +92,13 @@ const handleUpdateResult = async (result, updatedGroupName) => {
 groupNameEditToggle();
 
 // delete 부분
-function confirmDelete() {
-  return confirm("정말로 삭제하시겠습니까?");
+function confirmDelete(event) {
+  event.preventDefault();
+
+  if (confirm("정말로 삭제하시겠습니까?")) {
+    const form = event.target.closest("form");
+    if (form) {
+      form.submit();
+    }
+  }
 }

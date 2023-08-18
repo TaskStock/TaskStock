@@ -652,8 +652,11 @@ def add_todo(request):
             'my_level': my_level,
             'content': content,
             'category_datas':category_datas,
+            'value_start':today_value.start,
+            'value_end':today_value.end,
             'value_high':today_value.high,
             'value_low': today_value.low,
+            'percentage': current_user.percentage,
             })  
 
 
@@ -713,6 +716,7 @@ def delete_todo(request, pk):
         'id':todo_id,
         'd_id': todo_value.id,
         'todo_cnt':todo_cnt,
+        'value_start':today_value.start,
         'value_end':today_value.end,
         'value_high':today_value.high,  
         'value_low':today_value.low,
@@ -761,8 +765,11 @@ def update_todo(request, pk):
         't_id': todo_id,
         'c_level': updated_level,
         'c_content': updated_content,
-        'value_high':todo.value.high,  
-        'value_low':todo.value.low,
+        'value_start':today_value.start,
+        'value_end':today_value.end,
+        'value_high':today_value.high,
+        'value_low': today_value.low,
+        'percentage': request.user.percentage,
     })
 
 
@@ -819,7 +826,10 @@ def check_todo(request, pk):
             't_id':todo.pk,
             'percent':value.percentage,
             'todo_cnt':todo_cnt,
-            'value_end': value.end,
+            'value_start':value.start,
+            'value_end':value.end,
+            'value_high':value.high,
+            'value_low': value.low,
             'user_percentage':current_user.percentage,
             })
         

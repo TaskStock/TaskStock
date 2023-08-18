@@ -104,6 +104,7 @@
     justify-content: center;
     align-items: flex-start;
     margin-left: 8px;
+    gap: 5px;
 }
 
 .friend-info-pic {

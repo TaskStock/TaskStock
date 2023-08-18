@@ -301,22 +301,45 @@ section header img,
     padding: var(--gutter);
     justify-content: space-between;
     margin-bottom: var(--gutter);
-
-
 }
-.search-result__right--container{
-    display: flex;
-}
-.search-result__name-container{
+.friend-info--info{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 5px;
+}
+.friend-info--info h2{
+    font-size: var(--body2);
+    font-weight: var(--weight3);
+}
+.friend-info--info p{
+    font-size: var(--body2);
+}
+/* .search-result__right--container{
+    display: flex;
+    align-items: center;
+} */
+/* .search-result__name-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+} */
+.item__left--container{
+    display: flex;
 }
 .friend-info--pic{
     width: 50px;
     height: 50px;
     background-color: grey;
     margin-right: var(--gutter);
+}
+.friend-info--pic img{
+    width: 100%;
+}
+.item__right--container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .search-result__name-container h2{
     font-size: var(--body1);

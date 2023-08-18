@@ -74,14 +74,17 @@ const add_todo = async(date_id) => {
             my_level: my_level,
             content: content, 
             category_datas: category_datas,
+            value_start: valueStart,
+            value_end: valueEnd,
             value_high: valueHigh,
             value_low: valueLow,
+            percentage: percentage,
         } = await res.json();
         document.querySelector(`.day${date_id}--todo input`).value = '';
         level = '0';
         paintStar('0');
         document.querySelector('.todo-plus').classList.remove('active');
-        handleTodoResponse(todo_id, my_level, content, category_datas, category_name, valueHigh, valueLow);
+        handleTodoResponse(todo_id, my_level, content, category_datas, category_name, valueStart, valueEnd, valueHigh, valueLow, percentage);
 
     }else if (inputVal === ''){
         document.querySelector(`.day${date_id}--todo .todo-add--input span`).style.color = '#ff0033';
@@ -90,7 +93,7 @@ const add_todo = async(date_id) => {
     } 
 }
 
-const handleTodoResponse = async(todo_id, level, content, category_datas, category_name, valueHigh, valueLow) => {
+const handleTodoResponse = async(todo_id, level, content, category_datas, category_name, valueStart, valueEnd, valueHigh, valueLow, percentage) => {
     let paintedLevel = '';
     let emptyLevel = '';
     level = Number(level);
@@ -179,7 +182,7 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
     
     update_chart();
     has_unchecked_todos();
-    updateValueElements(null, null, valueHigh, valueLow)
+    updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage)
 }
 
 
@@ -279,13 +282,22 @@ const update_todo = async(todo_id) => {
         body: JSON.stringify({todo_id, curr_level, curr_content, c_value}),
     })
     
-    const {t_id: t_id, c_level: c_level, c_content: c_content, value_high:valueHigh, value_low:valueLow} = await res.json();
-    handleUpdateTodoRes(t_id, c_level, c_content, valueHigh, valueLow);
+    const {
+        t_id: t_id,
+        c_level: c_level,
+        c_content: c_content,
+        value_start: valueStart,
+        value_end: valueEnd,
+        value_high: valueHigh,
+        value_low: valueLow,
+        percentage: percentage,
+    } = await res.json();
+    handleUpdateTodoRes(t_id, c_level, c_content, valueStart, valueEnd, valueHigh, valueLow, percentage);
     edit_container.classList.remove('active');
 
 }
 
-const handleUpdateTodoRes = async(todo_id, level, content, valueHigh, valueLow) => {
+const handleUpdateTodoRes = async(todo_id, level, content, valueStart, valueEnd, valueHigh, valueLow, percentage) => {
     document.querySelector(`.todo-item-${todo_id} input`).value = content;
     let paintedLevel = '';
     let emptyLevel = '';
@@ -311,7 +323,7 @@ const handleUpdateTodoRes = async(todo_id, level, content, valueHigh, valueLow) 
     `;
     update_chart();
     paintDate();
-    updateValueElements(null, null, valueHigh, valueLow)
+    updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage)
 }
 
 function epaintStar(todo_id, level){
@@ -341,14 +353,15 @@ const delete_todo = async(todo_id) => {
         id: id, 
         d_id: d_id, 
         todo_cnt:todo_cnt,
-        value_end:valueEnd,
-        value_high:valueHigh,
-        value_low:valueLow,
+        value_start: valueStart,
+        value_end: valueEnd,
+        value_high: valueHigh,
+        value_low: valueLow,
         percnet:percentage,
     } = await res.json();
-    handleDelTodoRes(my_combo, id, d_id, todo_cnt, valueEnd, valueHigh, valueLow, percentage);
+    handleDelTodoRes(my_combo, id, d_id, todo_cnt, valueStart, valueEnd, valueHigh, valueLow, percentage);
 }
-const handleDelTodoRes = async(my_combo, todo_id, date_id, todo_cnt, valueEnd, valueHigh, valueLow, percentage) => {
+const handleDelTodoRes = async(my_combo, todo_id, date_id, todo_cnt, valueStart, valueEnd, valueHigh, valueLow, percentage) => {
     // delete container
     const container = document.querySelector(`.todo-item-${todo_id}`);
     container.remove();
@@ -356,7 +369,7 @@ const handleDelTodoRes = async(my_combo, todo_id, date_id, todo_cnt, valueEnd, v
     has_unchecked_todos();
     handleCombo(my_combo);
     handleCompletedTodos(todo_cnt)
-    updateValueElements(null, valueEnd, valueHigh, valueLow, percentage)
+    updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage)
 }
 
 
@@ -388,14 +401,17 @@ const check_todo = async(todo_id) => {
         'todo_status': todo_status, 
         't_id': t_id, 
         'todo_cnt':todo_cnt,
+        'value_start': valueStart,
         'value_end': valueEnd,
+        'value_high': valueHigh,
+        'value_low': valueLow,
         'user_percentage':percent
     } = await res.json();
     
-    handleCheckTodoRes(my_combo, color, todo_status, t_id, todo_cnt, valueEnd, percent);
+    handleCheckTodoRes(my_combo, color, todo_status, t_id, todo_cnt, valueStart, valueEnd, valueHigh, valueLow, percent);
 }
 
-function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt, valueEnd, percent){
+function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt, valueStart, valueEnd, valueHigh, valueLow, percent){
     const checkBox = document.querySelector(`.todo-checkbox-${todo_id}`);
     if (status == 'True'){
         checkBox.classList.add('True');
@@ -408,7 +424,7 @@ function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt, valueEnd
     update_chart();
     has_unchecked_todos();
     handleCompletedTodos(todo_cnt);
-    updateValueElements(null, valueEnd, null, null, percent);
+    updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percent);
 
 }
 
@@ -502,16 +518,16 @@ has_unchecked_todos();
 // price-taspi, my-info--sff 업데이트   
 function updateValueElements(valueStart = null, valueEnd = null, valueHigh = null, valueLow = null, percentage = null) {
     if (valueStart !== null) {
-        document.querySelector(".ochl-container div span:nth-child(1)").innerText = `Open: ${valueStart} ₩`;
+        document.querySelector(".ochl-container div span:nth-child(1)").innerHTML = `Open: <span class="counter">${valueStart}</span> ₩`;
     }
     if (valueEnd !== null) {
-        document.querySelector(".ochl-container div span:nth-child(2)").innerText = `Close: ${valueEnd} ₩`;
+        document.querySelector(".ochl-container div span:nth-child(2)").innerHTML = `Close: <span class="counter">${valueEnd}</span> ₩`;
     }
     if (valueHigh !== null) {
-        document.querySelector(".ochl-container div:nth-child(3) span:nth-child(1)").innerText = `High: ${valueHigh} ₩`;
+        document.querySelector(".ochl-container div:nth-child(3) span:nth-child(1)").innerHTML = `High: <span class="counter">${valueHigh}</span> ₩`;
     }
     if (valueLow !== null) {
-        document.querySelector(".ochl-container div:nth-child(3) span:nth-child(2)").innerText = `Low: ${valueLow} ₩`;
+        document.querySelector(".ochl-container div:nth-child(3) span:nth-child(2)").innerHTML = `Low: <span class="counter">${valueLow}</span> ₩`;
     }
 
     console.log(percentage)
@@ -529,23 +545,25 @@ function updateValueElements(valueStart = null, valueEnd = null, valueHigh = nul
         }
 
         const misPercentageBox = document.querySelector("#mis-percentage");
+        misPercentageBox.innerHTML=`
+        <span class="percentage-value"><span class="counter">${percentValue}</span> %</span>
+        `;
         if (percentValue > 0) {
-            misPercentageBox.innerHTML=`
-            <span class="percentage-value">${percentValue} %</span>
+            misPercentageBox.innerHTML+=`
             <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
             `;
         } else if (percentValue < 0) {
             misPercentageBox.innerHTML=`
-            <span class="percentage-value">${percentValue} %</span>
             <i class="fa-solid fa-chevron-down" id="percentage-icon" style="color: blue;"></i>
             `;
-        } else {
-            misPercentageBox.innerHTML=`
-            <span class="percentage-value">${percentValue} %</span>
-            `;
         }
-        
     }
+
+    async function executeCounting() {
+        await counting(); // counting() 함수의 프로미스가 완료될 때까지 기다림
+    }
+
+    executeCounting(); // 비동기 작업이 모두 완료된 후에 counting() 함수 실행
 }
 
 
