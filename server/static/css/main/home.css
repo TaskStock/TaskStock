@@ -384,15 +384,81 @@ main{
 .dashboard{
     display: flex;
     gap: var(--gutter);
-
 }
+.dashboard--completed {
+    max-height: 70px;
+}
+
 .dashboard--combo{
     width: 150px;
-    /* height: 70px; */
+    max-height: 70px;
 }
 .dashboard--badge{
     flex-grow: 1;
-    /* height: 70px; */
+}
+
+.dashboard--badges__container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: var(--gutter);
+    justify-items: center;
+}
+
+.dashboard--badge__container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: var(--gutter);
+    justify-items: center;
+    align-items: center; /* Optional, to vertically center badge contents */
+}
+
+/* Style the badge container */
+.badge-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+}
+
+/* Style the badge image */
+.badge-container img {
+    max-width: 100%;
+    width: 60px;
+    height: auto;
+    display: block;
+}
+
+.badge-content__container {
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10; /* Adjust this value as needed */
+    background-color: white; /* Set a background color */
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+    text-align: center;
+    color: white;
+    width: 100px;
+}
+
+.badge-content__container h3 {
+    color: var(--checked-border);
+    font-weight: var(--weight2);
+    font-size: var(--body2);
+    white-space: pre-line;
+}
+
+.badge-content__container p {
+    color: var(--checked-border);
+    font-weight: var(--weight2);
+    font-size: var(--description);
+}
+
+.badge-container:hover .badge-content__container {
+    display: block;
 }
 
 @media screen and (max-width: 600px) {

@@ -74,7 +74,7 @@
             {% endif %}
         </form>
         {% if am_I_creator %}
-        <form action="/main/group/delete_group/{{ group.pk }}/" method="post" onsubmit="confirmDelete()">
+        <form action="/main/group/delete_group/{{ group.pk }}/" method="post" onsubmit="confirmDelete(event)">
             {% csrf_token %}
             <button type="submit" name="group-delete-button" id="delete-button">그룹 삭제</button>
         </form>

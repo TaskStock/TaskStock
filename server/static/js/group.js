@@ -91,6 +91,13 @@ const handleUpdateResult = async (result, updatedGroupName) => {
 groupNameEditToggle();
 
 // delete 부분
-function confirmDelete() {
-  return confirm("정말로 삭제하시겠습니까?");
+function confirmDelete(event) {
+  event.preventDefault();
+
+  if (confirm("정말로 삭제하시겠습니까?")) {
+    const form = event.target.closest("form");
+    if (form) {
+      form.submit();
+    }
+  }
 }
