@@ -65,6 +65,30 @@
         <div id="category-detail-container">
             <h2>카테고리를 선택하거나 추가해주세요.</h2>
         </div>
+        <div class="modal modal-center fade" id="category-delete-check" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-center modal-xl modal-dialog-centered">
+              <div class="modal-content">
+              
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h2 class="modal-title modal-h2">삭제 확인</h2>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <h2 class="modal-h2">정말로 프로젝트를 삭제하시겠습니까?</h2>
+                </div>
+                
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button type="button" id="c-modal-complete-btn" class="btn btn-secondary" data-dismiss="modal">프로젝트 삭제</button>
+                </div>
+                
+              </div>
+            </div>
+        </div>
+        
     </div>
     
     
@@ -74,6 +98,11 @@
 {% endblock %}
 
 {% block extra %}
+<!-- Bootstrap JS and Popper.js (required for dropdowns and other features) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <script>
     // info toggle
     if (window.matchMedia("(min-width: 601px)").matches){
@@ -331,6 +360,9 @@
 
         if(success){
             memoryBox.textContent=memory;
+
+            const cdcSuccessBox = document.querySelector('#cdc-memory-message');
+            cdcSuccessBox.classList.remove('displayNone');
         }
     }
 
@@ -376,6 +408,7 @@
                 
                 <textarea name="memory" id="category-memory" placeholder="나의 성장을 기록해보세요!" rows="30">${memoryText}</textarea>
                 <button onclick="update_memory(${pk});">수정완료</button>
+                <h2 id="cdc-memory-message" class="displayNone" style="color: green; text-align: right;">수정이 완료되었습니다.</h2>
             </div>
             <div id="cdc-finish-box">
                 <label class="control control--checkbox">
@@ -385,7 +418,7 @@
                 </label>
             </div>
             <div id="cdc-delete-box">
-                <button class="btn-delete" onclick="delete_category(${pk}, 'finish');">프로젝트 삭제</button>
+                <button class="btn-delete" data-toggle="modal" data-target="#category-delete-check">프로젝트 삭제</button>
             </div>
             `;
         }else if(type=="unfinish"){
@@ -398,6 +431,7 @@
                 <h2>나의 성장 기록하기</h2>
                 <textarea name="memory" id="category-memory" placeholder="나의 성장을 기록해보세요!" rows="30">${memoryText}</textarea>
                 <button onclick="update_memory(${pk});">수정완료</button>
+                <h2 id="cdc-memory-message" class="displayNone" style="color: green; text-align: right;">수정이 완료되었습니다.</h2>
             </div>
             <div id="cdc-finish-box">
                 <label class="control control--checkbox">
@@ -407,10 +441,15 @@
                 </label>
             </div>
             <div id="cdc-delete-box">
-                <button class="btn-delete" onclick="delete_category(${pk}, 'finish');">프로젝트 삭제</button>
+                <button class="btn-delete" data-toggle="modal" data-target="#category-delete-check">프로젝트 삭제</button>
             </div>
             `;
         }
+        const deleteCheckBtn = document.querySelector('#c-modal-complete-btn');
+        deleteCheckBtn.addEventListener('click', function() {
+            delete_category(pk, type);
+        });
+
         if (window.matchMedia("(max-width: 600px)").matches){
             document.querySelector('.mb-backToList').classList.add('showCat');
         }
@@ -427,3 +466,4 @@
 
 </script>
 {% endblock %}
+<!-- <button class="btn-delete" ">프로젝트 삭제</button> -->
