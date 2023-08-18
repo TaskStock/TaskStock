@@ -18,11 +18,11 @@
     <div class="group-content">
         <div class="group-content__info">
             <div class="group-content__text">
-                <h3>Group Value</h3>
+                <h3>Group Value <i class="fa-solid fa-coins"></i></h3>
                 <span>{{group.price}} ₩</span>
             </div>
             <div class="group-content__text">
-                <h3>Today's Earnings</h3>
+                <h3>Today's Earnings <i class="fa-solid fa-arrow-trend-up"></i></h3>
                 <span>{{group.delta}} ₩</span>
             </div>
             <div class="group-content__text">
@@ -57,7 +57,9 @@
                 {% endif %}
 
                 <div class="group-user__username">{{ key }}</div>
-                <div class="group-user__value"><i class="fa-solid fa-coins"></i> {{ value }}</div>
+                <div class="group-user__value"><i class="fa-solid fa-coins"></i> {{ value }} ₩</div>
+                <div class="group-user__earning"><i class="fa-solid fa-arrow-trend-up"></i> {{ value }} ₩</div>
+
             </li>
             {% endfor %}
         </ul>

@@ -547,3 +547,5 @@ function updateValueElements(valueStart = null, valueEnd = null, valueHigh = nul
         
     }
 }
+
+

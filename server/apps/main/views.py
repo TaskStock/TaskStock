@@ -984,7 +984,17 @@ def process_badges(value):
             content="축하합니다! '1+1' 배지를 획득하셨습니다!",
             alarm_type="badge",
         )
-        
+    
+    #Rising Star
+    if user.todo_cnt >= 1 and 'Rising Star' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='Rising Star')
+        user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! 'Rising Star' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )        
+
         
 
 
@@ -1171,10 +1181,12 @@ def group(request,pk):
     # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
     for user in users:
         value = get_value_for_date(user)
-        if value is None:
-            value_dic[user.name] = 0
+        if value == None:
+            utc_arrow_now = local_to_utc(get_current_arrow(user.tzinfo).ceil('day'))
+            value = Value.objects.filter(user=user, date__lte=utc_arrow_now.datetime).last()
+            value_dic[user.name] = [value.end, 0]   #가치는 오늘 이전 생긴 것 중 가장 최근의 것 가지고 오고 오늘 value가 None이라면 번 돈은 0이므로
         else:
-            value_dic[user.name] = value.end    #key: user.name / value: user value의 종가
+            value_dic[user.name] = [value.end, value.end - value.start]    #key: user.name / value: user value의 종가, 변화량
 
     sorted_value_items = sorted(value_dic.items(), key=lambda x: x[1], reverse=True)
     value_dic = {user: value for user, value in sorted_value_items}
