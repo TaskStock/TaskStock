@@ -42,7 +42,7 @@
                     </p>
                     <p>
                         <i class="fa-solid fa-user"></i> 
-                        <span>{{group.member_cnt}}</span>
+                        <span>{{my_group.member_cnt}}</span>
                     </p>
                     <p>
                         <i class="fa-solid fa-user-tie"></i>
@@ -79,13 +79,13 @@
                         <form onsubmit="handleFollowButtonClick(event)">
                             {% csrf_token %}
                             <input type="hidden" name="group" value="{{ group.name }}">
-                            <button type="submit" name="group-button" class="add-button">
-                                {% if group == my_group %}
-                                    탈퇴
-                                {% else %}
-                                    가입
-                                {% endif %}
-                            </button>
+                            
+                            {% if group != my_group %}
+                            <button type="submit" name="group-button" class="add-button">가입</button>
+                            {% else %}
+                            <button class="add-button">내 그룹</button>
+                            {% endif %}
+                            
                         </form>
                     </div>
                     <p>
