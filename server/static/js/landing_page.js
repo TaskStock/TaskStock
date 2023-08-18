@@ -15,19 +15,22 @@ const hoverImage = (newHeader, newDescription) => {
 
 // 이미지에 mouse on -> hover한 이미지에 해당되는 설명란으로 내용 변경
 landingImgs[0].addEventListener("mouseenter", () => {
-  hoverImage("Plan your day.", "Everything you need, all in one place.");
+  hoverImage(
+    "To-Do를 작성해 보세요.",
+    "To-Do 작성을 통해 당신의 목표를 계획해보세요."
+  );
 });
 
 landingImgs[1].addEventListener("mouseenter", () => {
   hoverImage(
-    "Stay on top of your week.",
-    "The timeline shows your week and beyond."
+    "주가의 상승을 통해 확인해보세요.",
+    "당신의 목표 달성이 주가를 상승시킵니다."
   );
 });
 
 landingImgs[2].addEventListener("mouseenter", () => {
   hoverImage(
-    "See your month at a glance.",
-    "The graph lights up your busy day."
+    "친구들과 공유해보세요.",
+    "당신의 목표와 주가를 팔로워들과 함께 공유해보세요."
   );
 });
