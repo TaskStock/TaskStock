@@ -1167,6 +1167,7 @@ def group(request,pk):
     my_group = request.user.my_group
     ordered_groups = Group.objects.all().order_by('-delta')
 
+
     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
     if group.create_user_id == request.user.username:
         am_I_creator = True
@@ -1178,7 +1179,11 @@ def group(request,pk):
         button_text ="탈퇴"
     else:
         button_text = "가입"    
+    
+    
     # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
+    #그룹 delta 구하기 전 초기화
+    group.delta = 0 
     for user in users:
         value = get_value_for_date(user)
         if value == None:
@@ -1189,7 +1194,10 @@ def group(request,pk):
             earning = value.end - value.start
             value_dic[user.name] = [value.end, earning]    #key: user.name / value: user value의 종가, 변화량
             group.delta += earning
+        
+        group.save()
     
+
     sorted_value_items = sorted(value_dic.items(), key=lambda x: x[1][1], reverse=True)
     value_dic = {user: value for user, value in sorted_value_items}
 
