@@ -248,7 +248,6 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   gap: var(--gutter);
 }
 
@@ -327,6 +326,7 @@ main {
 .advertise-box__image > img {
   border-radius: 20px;
   max-width: 100%;
+  width: 100px;
   height: auto; 
   border-radius: 20px;
 }
