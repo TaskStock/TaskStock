@@ -5,38 +5,28 @@
         let global_chart_target_username="";
     </script>
     <div class="main-left">
-        <div class="price">
-            <div class="price--taspi">
-                <h3>Today</h3>
-                <!-- 나의 오늘 value -->
-                <div class="ochl-container">
-                    <div>
-                        <span>Open: <span class="counter">{{ value.start }}</span> ₩</span>
-                        <span>Close: <span class="counter">{{ value.end }}</span> ₩</span>
-                    </div>
-                    <div id="ochl-bar"></div>
-                    <div>
-                        <span>High: <span class="counter">{{ value.high }}</span> ₩</span>
-                        <span>Low: <span class="counter">{{ value.low }}</span> ₩</span>
-                    </div>
-                </div>
-                
-            </div>
-            <div class="price--marketcap">
-                <h3>Stock Market Cap</h3>
-                <!-- value개수 * value.end -->
-                <span>{{market_cap}} ₩</span>
-                {% if user.my_group == None %}
-                <h3>Group Value</h3> 
-                <span>가입 그룹이 존재하지 않습니다.</span>
-                {% else %}
-                  <!-- 그룹에 참여한 시점부터 
-                      개인별 (value.end - value.start)를 모두 합한 값
-                  -->
-                <h3><a href="/main/group/{{user.my_group.pk}}">{{user.my_group.name}} Value</a></h3>          
-                <span>{{user.my_group.delta}} ₩</span>
-                  
 
+        <div class="dashboard-top">
+            <div class="dashboard-top__ochl">
+                <span>Open</span>
+                <span>Close</span>
+                <span>High</span>
+                <span>Low</span>
+                <span id="ochl_open">{{ value.start }} ₩</span>
+                <span id="ochl_close">{{ value.end }} ₩</span>
+                <span id="ochl_high">{{ value.high }} ₩</span>
+                <span id="ochl_low">{{ value.low }} ₩</span>
+            </div>
+            <div class="dashboard-top__value">
+                <span id="value_marketCapKey">Market Cap</span>
+                <span id="value_marketCap">{{market_cap}} ₩</span>
+
+                {% if user.my_group == None %}
+                <span id="value_groupValKey">Group Value</span>
+                <span id="value_groupVal">-</span>
+                {% else %}
+                <span id="value_groupValKey"><a href="/main/group/{{user.my_group.pk}}">{{user.my_group.name}} Value</a></span>
+                <span id="value_groupVal">{{user.my_group.delta}} ₩</span>
                 {% endif %}
             </div>
           

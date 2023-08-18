@@ -57,6 +57,7 @@
     box-shadow: var(--shadow);
     background-color: transparent;
     padding: var(--gutter);
+    font-size: var(--body2);
 }
 #name-input{
     color: white;
@@ -80,6 +81,7 @@
 .create-group--show input,
 .create-group--show button{
     color: white;
+    font-size: var(--body2);
 }
 .create-group.active .create-group--show{
     opacity: 1;
@@ -204,6 +206,7 @@
     padding: 7px 10px;
     border-radius: var(--border-r);
     color: var(--text-color);
+    font-size: var(--body2);
 }
 .group-top10__header form .add-button:hover,
 .search-group__header form .add-button:hover{
@@ -257,7 +260,7 @@
 }
 .group-content__info{
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: var(--gutter);
 
 }
@@ -331,7 +334,7 @@
     }
     .topGroup-wrap,
     .group-content__ul{
-        grid-template-columns: repeat(4, calc((100% - 3 * var(--gutter)) / 4));
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 @media screen and (max-width: 1200px){
@@ -340,7 +343,7 @@
     }
     .topGroup-wrap,
     .group-content__ul{
-        grid-template-columns: repeat(3, calc((100% - 2 * var(--gutter)) / 3));
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 @media screen and (max-width: 720px){
@@ -349,7 +352,7 @@
     }
     .topGroup-wrap,
     .group-content__ul{
-        grid-template-columns: repeat(2, calc((100% - var(--gutter)) / 2));
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 @media screen and (max-width: 500px){
@@ -377,7 +380,9 @@
     .search-group-header form input{
         display: none;
         width: 100%;
+        font-size: var(--body2);
     }
+
     .group-header--right{
         gap: 10px;
     }
