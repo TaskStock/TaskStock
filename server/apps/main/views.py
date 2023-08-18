@@ -994,7 +994,17 @@ def process_badges(value):
             content="축하합니다! '1+1' 배지를 획득하셨습니다!",
             alarm_type="badge",
         )
-        
+    
+    #Rising Star
+    if user.todo_cnt >= 1 and 'Rising Star' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='Rising Star')
+        user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! 'Rising Star' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )        
+
         
 
 
@@ -1165,7 +1175,8 @@ def group(request,pk):
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
     value_dic={}
     my_group = request.user.my_group
-    ordered_groups = Group.objects.all().order_by('-price')
+    ordered_groups = Group.objects.all().order_by('-delta')
+
 
     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
     if group.create_user_id == request.user.username:
@@ -1178,15 +1189,26 @@ def group(request,pk):
         button_text ="탈퇴"
     else:
         button_text = "가입"    
+    
+    
     # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
+    #그룹 delta 구하기 전 초기화
+    group.delta = 0 
     for user in users:
         value = get_value_for_date(user)
-        if value is None:
-            value_dic[user.name] = 0
+        if value == None:
+            utc_arrow_now = local_to_utc(get_current_arrow(user.tzinfo).ceil('day'))
+            value = Value.objects.filter(user=user, date__lte=utc_arrow_now.datetime).last()
+            value_dic[user.name] = [value.end, 0]   #가치는 오늘 이전 생긴 것 중 가장 최근의 것 가지고 오고 오늘 value가 None이라면 번 돈은 0이므로
         else:
-            value_dic[user.name] = value.end    #key: user.name / value: user value의 종가
+            earning = value.end - value.start
+            value_dic[user.name] = [value.end, earning]    #key: user.name / value: user value의 종가, 변화량
+            group.delta += earning
+        
+        group.save()
+    
 
-    sorted_value_items = sorted(value_dic.items(), key=lambda x: x[1], reverse=True)
+    sorted_value_items = sorted(value_dic.items(), key=lambda x: x[1][1], reverse=True)
     value_dic = {user: value for user, value in sorted_value_items}
 
     group_position = next((index for index, g in enumerate(ordered_groups) if g == group), None)

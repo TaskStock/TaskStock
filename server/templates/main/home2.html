@@ -66,13 +66,13 @@
                     global_chart_target_username=username.textContent;
                 }
             </script>
-            <div class="dashboard--combo">
+            <div class="dashboard--combo" >
                 <span>Combo</span>
-                <span>🔥 {{ user.combo }}</span>
+                <span style="font-size: var(--subheading)">🔥 {{ user.combo }}</span>
             </div>
             <div class="dashboard--completed">
                 <span>Completed Todos</span>
-                <span>✔︎ {{ user.todo_cnt }}</span>
+                <span style="font-size: var(--subheading)">✔︎ {{ user.todo_cnt }}</span>
             </div>
             <div class="dashboard--badge">
                 <span>Badge</span>
@@ -141,6 +141,11 @@
                             </div>
                         </div>
                         {% endif %}
+                        {% if badge.name == "Rising Star" %}
+                            <img src="{% static 'img/badge/rising_star.svg' %}">
+                            {{ badge.name }}
+                            {{ badge.description }}
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -166,9 +171,10 @@
                             <div class="todo-add--input">
                                 <span>할 일을 입력하세요</span>
                                 <input type="text"
-                                placeholder="헬스장 가기"
+                                placeholder="할 일"
                                 onkeypress="if(event.keyCode==13) {add_todo({{ date_id }})}"
                                 autofocus
+                                style="font-size: var(--body2)"
                                 >
                             </div>
                             <div class="todo-add--level">
@@ -184,7 +190,7 @@
                             <div id="todo-add--category">
                                 <span>카테고리를 설정하세요</span>
                                 <select id="todo-add--select">
-                                    <option value="" selected>None</option>
+                                    <option value="" selected>카테고리 없음</option>
                                     {% for category in categorys %}
                                     <option value="{{category.name}}">{{category.name}}</option>
                                     {% endfor %}

@@ -565,3 +565,5 @@ function updateValueElements(valueStart = null, valueEnd = null, valueHigh = nul
 
     executeCounting(); // 비동기 작업이 모두 완료된 후에 counting() 함수 실행
 }
+
+
