@@ -308,17 +308,17 @@ def follow_list(request):
     users=[]
 
     for user in follow_list:
-        try:
-            value = Value.objects.get(user=user, date=arrow.now())
-            percent = value.percentage
-        except:
-            percent = 0
+        # try:
+        #     value = Value.objects.get(user=user, date=arrow.now())
+        #     percent = value.percentage
+        # except:
+        #     percent = 0
         
         user_data={
             "username":user.username,
             "name":user.name,
             "introduce":user.introduce,
-            "percent": percent,
+            "percent": user.percentage,
             "img": user.img.url if user.img else '/static/img/blank-profile-picture.png',
             # 추후 필요한 필드 추가
         }
