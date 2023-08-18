@@ -649,8 +649,8 @@ def delete_todo(request, pk):
         'd_id': todo_value.id,
         'todo_cnt':todo_cnt,
         'value_end':today_value.end,
-        'value_high':todo_value.high,  
-        'value_low':todo_value.low,
+        'value_high':today_value.high,  
+        'value_low':today_value.low,
         'percnet':current_user.percentage,
     })
 """
