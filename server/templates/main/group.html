@@ -39,7 +39,7 @@
             </div>
             
         </div>
-       
+
         <h3><i class="fa-solid fa-crown"></i> Members Ranking</h3>
         <ul class="group-content__ul">
             {% for key, value in value.items %}
@@ -57,8 +57,8 @@
                 {% endif %}
 
                 <div class="group-user__username">{{ key }}</div>
-                <div class="group-user__value"><i class="fa-solid fa-coins"></i> {{ value }} ₩</div>
-                <div class="group-user__earning"><i class="fa-solid fa-arrow-trend-up"></i> {{ value }} ₩</div>
+                <div class="group-user__value"><i class="fa-solid fa-coins"></i> {{ value.0 }} ₩</div>
+                <div class="group-user__earning"><i class="fa-solid fa-arrow-trend-up"></i> {{ value.1 }} ₩</div>
 
             </li>
             {% endfor %}

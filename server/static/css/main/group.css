@@ -283,6 +283,8 @@
     font-weight: var(--weight3);
     padding: 5px 0;
 }
+
+.group-user__earning,
 .group-user__value{
     font-size: var(--body1);
 }
