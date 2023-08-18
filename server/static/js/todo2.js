@@ -514,6 +514,8 @@ function updateValueElements(valueStart = null, valueEnd = null, valueHigh = nul
         document.querySelector(".ochl-container div:nth-child(3) span:nth-child(2)").innerText = `Low: ${valueLow} ₩`;
     }
 
+    console.log(percentage)
+
     if (percentage !== null) {
         const displayElement = document.querySelector(".percentage-display");
         const valueElement = displayElement.querySelector(".percentage-value");
@@ -522,25 +524,26 @@ function updateValueElements(valueStart = null, valueEnd = null, valueHigh = nul
         const percentValue = parseFloat(percentage);
         valueElement.innerText = `${percentage} %`;
 
-    // iconElement가 이미 존재한다면 삭제합니다.
-    if (iconElement) {
-        iconElement.remove();
-
-    // 아이콘 요소를 새로 생성합니다.
-    iconElement = document.createElement("i");
-    iconElement.id = "percentage-icon";
-}
-        if (percentValue > 0) {
-            iconElement.className = "fa-solid fa-chevron-up";
-            iconElement.style.color = "red";
-        } else if (percentValue < 0) {
-            iconElement.className = "fa-solid fa-chevron-down";
-            iconElement.style.color = "blue";
-        } else {
-            iconElement.className = "fa-solid fa-minus";
-            iconElement.style.color = "none"; // 또는 다른 색상
+        if (iconElement) {
+            iconElement.remove();
         }
-        // displayElement에 아이콘 요소를 추가합니다.
-        displayElement.appendChild(iconElement);
+
+        const misPercentageBox = document.querySelector("#mis-percentage");
+        if (percentValue > 0) {
+            misPercentageBox.innerHTML=`
+            <span class="percentage-value">${percentValue} %</span>
+            <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
+            `;
+        } else if (percentValue < 0) {
+            misPercentageBox.innerHTML=`
+            <span class="percentage-value">${percentValue} %</span>
+            <i class="fa-solid fa-chevron-down" id="percentage-icon" style="color: blue;"></i>
+            `;
+        } else {
+            misPercentageBox.innerHTML=`
+            <span class="percentage-value">${percentValue} %</span>
+            `;
+        }
+        
     }
 }
