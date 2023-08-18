@@ -1,5 +1,5 @@
 {% extends '../base2.html' %}{% load custom_filters %} {% load static %} {% block page %}
-<main>
+<main style="display: flex;">
     <!-- 가정 먼저 실행되는 스크립트, 전역 변수 설정 -->
     <script>
         let global_chart_target_username="";
@@ -35,29 +35,18 @@
                 <button id="followBtn" onclick="followClick();">{{follow_text}}</button>
             </div>
         </div>
-        <div class="price">
-            <div class="price--taspi">
-                <span>Stock Info</span>
-                <!-- 나의 오늘 value -->
-                <span>Opening Price: {{ value.start }} KRW</span>
-                <span>Closing Price: {{ value.end }} KRW</span>
-                <span>Maximum Upside: {{ value.high }} KRW</span>
-                <span>Maximum Downsie: {{ value.low }} KRW</span>
+        <!--  -->
+        <div class="dashboard-top">
+            <div class="dashboard-top__ochl">
+                <span>Open</span>
+                <span>Close</span>
+                <span>High</span>
+                <span>Low</span>
+                <span id="ochl_open">{{ value.start }} ₩</span>
+                <span id="ochl_close">{{ value.end }} ₩</span>
+                <span id="ochl_high">{{ value.high }} ₩</span>
+                <span id="ochl_low">{{ value.low }} ₩</span>
             </div>
-            <div class="price--marketcap">
-                <span>Stock Market Cap</span>
-                <!-- value개market_cap수 * value.end -->
-                <span>{{ market_cap }} KRW</span>
-            </div>
-            {% if user.my_group == None %}
-            <h3>Group Value</h3> 
-            <span>가입 그룹이 존재하지 않습니다.</span>
-            {% else %}
-                <a href="/main/group/{{user.my_group.pk}}">
-                    <h3>Group name: {{target_user.my_group.name}}</h3>          
-                    <span>Value change of the group: {{target_user.my_group.delta}}</span>
-                </a>
-            {% endif %}
         </div>
         <div id="chart"></div>
         <div class="chart-btn--container">
@@ -84,7 +73,8 @@
                 </label>   
             </form>
         </div> 
-        <div class="dashboard">
+  
+        <div class="dashboard-bottom">
             <div id="username_save" style="display:none;">{{target_user.username}}</div>
             <script>
                 const username = document.querySelector("#username_save");
@@ -94,55 +84,121 @@
                     global_chart_target_username=username.textContent;
                 }
             </script>
-            <div class="dashboard--combo">
+            <div class="dashboard-top__value">
+                <span id="value_marketCapKey">Market Cap</span>
+                <span id="value_marketCap">{{market_cap}} ₩</span>
+
+                {% if target_user.my_group == None %}
+                <span id="value_groupValKey">Group Earnings</span>
+                <span id="value_groupVal">-</span>
+                {% else %}
+                <span id="value_groupValKey"><a href="/main/group/{{target_user.my_group.pk}}">{{target_user.my_group.name}} Earnings</a></span>
+                <span id="value_groupVal">{{target_user.my_group.delta}} ₩</span>
+                {% endif %}
+
+            </div>
+            <div class="dashboard-top__cc">
                 <span>Combo</span>
-                <span>🔥 {{ target_user.combo }}</span>
-            </div>
-            <div class="dashboard--completed">
                 <span>Completed Todos</span>
-                <span>✔︎ {{ target_user.todo_cnt }}</span>
+
+                <span style="font-size: var(--subheading)">🔥 {{ target_user.combo }}</span>
+                <span style="font-size: var(--subheading)">✔︎ {{ target_user.todo_cnt }}</span>
+
             </div>
-            <div class="dashboard--badge">
+
+            <div class="dashboard-bottom__badge">
                 <span>Badge</span>
-                <span>
+                <div class="badge-modal">
+                    <div class="badge-modal--top"></div>
+                    <div class="badge-modal__delBtn"><i class="fa-solid fa-x"></i></div>
+                    <div class="badge-modal--bottom">
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="dashboard--badge__container" id="dashboard--badge__container">
+                   
                     {% for badge in target_user.badges.all %}
                         {% if badge.name == "지금이라도 사야해" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/combo.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p>                             
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "개미의 선택" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/ant_beginner.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "슈퍼 개미의 선택" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/ant_intermediate.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "우주 개미의 선택" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/and_master.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "콩콩" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/22.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                              
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "1+1" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/1+1.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                                
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "화성 갈끄니까" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/mars.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if badge.name == "Rising Star" %}
+                        <div class="badge-container">
+                            <img src="{% static 'img/badge/rising_star.svg' %}">
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
+                            
                         {% endif %}
                     {% endfor %}
-                </span>
+            
+                </div>
             </div>
         </div>
         
@@ -180,9 +236,7 @@
 
                 </div>
             </div>
-            <!-- <div class="heatmap-container">
-                <div id="heatmap"></div>
-            </div> -->
+  
             
             <div class="todo-container">
                 <!-- paint todo -->
@@ -264,6 +318,13 @@
         const following_count = document.querySelector('#following_list');
         following_count.textContent = f_ajax_count;
     }
+</script>
+<script>
+    const gridContainer = document.querySelector('#dashboard--badge__container');
+    const numberOfItems = gridContainer.children.length;
+    const gridColumnValue = `repeat(${numberOfItems}, 60px)`;
+    
+    gridContainer.style.gridTemplateColumns = gridColumnValue;
 </script>
 
 {% endblock %}

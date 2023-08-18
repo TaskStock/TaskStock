@@ -2,7 +2,7 @@
     width: calc(100% - 350px);
     color: var(--text-color);
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
 }
 @media screen and (max-width: 1080px) {
     .alarm-main{
@@ -51,8 +51,18 @@
     flex-direction: column;
     width: 100%;
     border-radius: var(--border-r);
-    padding: var(--gutter);
+    padding: var(--gutter) 0;
     gap: var(--gutter);
+}
+@media screen and (max-width: 820px) {
+    .alarm-content{
+        padding: var(--gutter) 0;
+    }
+}
+@media screen and (max-width: 500px) {
+    .alarm-container{
+        padding: var(--offset) var(--gutter);
+    }
 }
 .alarm-list {
     width: 100%;
