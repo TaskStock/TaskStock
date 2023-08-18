@@ -11,30 +11,6 @@ const handleButtonClickMessage = async (event) => {
   }
 };
 
-// group name 수정
-const groupName_editBtn = document.querySelector("#groupName-editBtn");
-const groupHeader = document.querySelector(".group-header");
-groupName_editBtn.addEventListener("click", () => {
-  groupHeader.classList.add("editShow");
-  groupNameEditToggle();
-});
-const groupName_confirmBtn = document.querySelector("#update-button");
-groupName_confirmBtn.addEventListener("click", () => {
-  groupHeader.classList.remove("editShow");
-  groupNameEditToggle();
-});
-function groupNameEditToggle() {
-  const groupHeader = document.querySelector(".group-header");
-  if (groupHeader.classList.contains("editShow")) {
-    groupHeader.querySelector("h1").style.display = "none";
-    groupHeader.querySelector("#groupName-editBtn").style.display = "none";
-    groupHeader.querySelector("form").style.display = "flex";
-  } else {
-    groupHeader.querySelector("h1").style.display = "block";
-    groupHeader.querySelector("#groupName-editBtn").style.display = "block";
-    groupHeader.querySelector("form").style.display = "none";
-  }
-}
 // ADD,DELETE 버튼을 클릭 했을 때 ajax 통신을 통해 그룹원 추가, 삭제
 const handleButtonClick = async (event) => {
   event.preventDefault();

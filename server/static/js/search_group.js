@@ -5,6 +5,39 @@ createGroupBtn.addEventListener("click", () => {
   document.querySelector(".create-group").classList.toggle("active");
 });
 
+// mobile 화면 search icon toggle
+if (window.matchMedia("(max-width: 500px)").matches) {
+  const mb_searchToggleBtn = document.querySelector("#mb-search-btn");
+  const mb_searchCancelBtn = document.querySelector("#mb-searchCancel-btn");
+  const mb_searchForm = document.querySelector(".search-group-form");
+  mb_searchToggleBtn.addEventListener("click", () => {
+    // console.log('clicked');
+    mb_searchForm.classList.add("active");
+    handleSearchToggle();
+  });
+  mb_searchCancelBtn.addEventListener("click", () => {
+    mb_searchForm.classList.remove("active");
+    handleSearchToggle();
+  });
+}
+function handleSearchToggle() {
+  const searchLogo = document.querySelector(".search-group-header h1");
+  const mb_searchForm = document.querySelector(".search-group-form");
+  const mb_searchToggleBtn = document.querySelector("#mb-search-btn");
+  const mb_searchCancelBtn = document.querySelector("#mb-searchCancel-btn");
+  if (mb_searchForm.classList.contains("active")) {
+    document.querySelector("#search-group_content").style.display = "block";
+    mb_searchCancelBtn.querySelector("i").style.display = "block";
+    mb_searchToggleBtn.style.display = "none";
+    searchLogo.style.display = "none";
+  } else {
+    document.querySelector("#search-group_content").style.display = "none";
+    mb_searchCancelBtn.querySelector("i").style.display = "none";
+    mb_searchToggleBtn.style.display = "block";
+    searchLogo.style.display = "block";
+  }
+}
+
 // 검색 창에 입력할 때마다 ajax로 유저 목록
 document.addEventListener("DOMContentLoaded", function () {
   const textInput = document.querySelector("#search-group_content");
@@ -124,13 +157,15 @@ const handleCreateResult = async (result) => {
 
 const handleFollowButtonClick = async (event) => {
   event.preventDefault();
-  console.log(event.target.querySelector("[name=group-button]").textContent);
-  if (event.target.querySelector("[name=group-button]").textContent == "탈퇴") {
+  const buttonText = event.target.querySelector(
+    "[name=group-button]"
+  ).textContent;
+  if (buttonText.trim() == "가입") {
+    handleButtonClickSend(event);
+  } else {
     if (window.confirm("정말 탈퇴하시겠습니까?")) {
       handleButtonClickSend(event);
     }
-  } else {
-    handleButtonClickSend(event);
   }
 };
 
@@ -171,3 +206,7 @@ const handleFollowButtonText = async (text, event) => {
     alert("이미 가입된 그룹이 존재합니다.");
   }
 };
+
+if (window.matchMedia("(max-width: 500px)").matches) {
+  handleSearchToggle();
+}
