@@ -338,7 +338,7 @@ main{
 .price{
     display: grid;
     /* grid-template-columns: repeat(3, calc((100% - 2 * var(--gutter)) / 3)); */
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(2, auto);
     gap: var(--gutter);
     margin: 0 var(--gutter);
     

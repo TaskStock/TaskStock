@@ -123,23 +123,15 @@
                 <div class="my-info--sff__container">
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
-                        {% if user.percentage > 0 %}
-                        <span>
-                            <span>{{ user.percentage }} %</span>
-                            <i class="fa-solid fa-chevron-up" style="color: red;"></i>
+                        <span id="mis-percentage" class="percentage-display">
+                            <span class="percentage-value">{{ user.percentage }} %</span>
+                            
+                            {% if user.percentage > 0 %}
+                                <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
+                            {% elif user.percentage < 0 %}
+                                <i class="fa-solid fa-chevron-down" id="percentage-icon" style="color: blue;"></i>
+                            {% endif %}
                         </span>
-                        {% elif user.percentage < 0 %}
-                        <span>
-                            <span>{{ user.percentage }} %</span>
-                            <i class="fa-solid fa-chevron-down" style="color: blue;"></i>
-                        </span>
-                        {% else %}
-                        <span>
-                            <span style="color: none;">{{ user.percentage }} %</span>
-                            <i class="fa-solid fa-minus"></i>
-                        </span>
-                        {% endif %}
-
                     </div>
                     <div class="my-info--sff sff-fg">
                         <span>Following</span>

@@ -644,9 +644,17 @@ def add_todo(request):
         target_value.low -= my_level * 1000
         target_value.save()
         
-        
+        today_value = get_value_for_date(current_user)
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
-        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content, 'category_datas':category_datas})
+        return JsonResponse({
+            'date_id':value.id,
+            'todo_id':todo_id,
+            'my_level': my_level,
+            'content': content,
+            'category_datas':category_datas,
+            'value_high':today_value.high,
+            'value_low': today_value.low,
+            })  
 
 
 """
@@ -663,22 +671,35 @@ def delete_todo(request, pk):
         
         todo = Todo.objects.get(pk=todo_id)     
         
-        value = todo.value
+        todo_value = todo.value
         
         #todo 삭제하기 전 연결된 value의 high값 업데이트
-        value.high -= 1000*todo.level
+        todo_value.high -= 1000*todo.level
         #todo 삭제하기 전 연결된 value의 low값 업데이트
-        value.low += 1000*todo.level
+        todo_value.low += 1000*todo.level
+        todo_value.save()
         
+        today_value = get_value_for_date(current_user)
+
         #체크되어 있다면
         if todo.goal_check:
-            today_value = get_value_for_date(current_user)
-            today_value.end -= 1000*todo.level
+            print('delete_todo today_Value들어옴')
+            #todo_cnt 업데이트
             current_user.todo_cnt -= 1  # 완료된 할 일의 숫자 감소
+            #close 업데이트
+            today_value.end -= 1000*todo.level
+            #퍼센트 업데이트
+            if today_value.start == 0:
+                today_value.percentage = round((today_value.end - 50000)/50000 * 100, 2)
+            else:
+                today_value.percentage = round((today_value.end - today_value.start)/today_value.start *100, 2) 
+
+            current_user.percentage=today_value.percentage
             current_user.save()
-        
-        #저장
-        value.save()
+            today_value.save()
+            print(today_value.end)
+            
+
         #todo삭제
         todo.delete()
         
@@ -686,7 +707,17 @@ def delete_todo(request, pk):
         my_combo = process_combo(current_user)
         #completed_toodos
         todo_cnt = current_user.todo_cnt
-    return JsonResponse({'my_combo': my_combo, 'id':todo_id, 'd_id': value.id, 'todo_cnt':todo_cnt})
+        
+    return JsonResponse({
+        'my_combo': my_combo,
+        'id':todo_id,
+        'd_id': todo_value.id,
+        'todo_cnt':todo_cnt,
+        'value_end':today_value.end,
+        'value_high':today_value.high,  
+        'value_low':today_value.low,
+        'percnet':current_user.percentage,
+    })
 """
 Todo 업데이트 하는 함수
 content, level 업데이트 -> value high, low 업데이트
@@ -708,7 +739,6 @@ def update_todo(request, pk):
             todo.value.high -= todo.level * 1000
             todo.value.low += todo.level *1000
             
-            
             #todo 내용 update
             todo.level = updated_level
             todo.content = updated_content
@@ -727,7 +757,13 @@ def update_todo(request, pk):
             todo.save()
             todo.value.save()
 
-    return JsonResponse({'t_id': todo_id, 'c_level': updated_level, 'c_content': updated_content})
+    return JsonResponse({
+        't_id': todo_id,
+        'c_level': updated_level,
+        'c_content': updated_content,
+        'value_high':todo.value.high,  
+        'value_low':todo.value.low,
+    })
 
 
 """
@@ -765,7 +801,6 @@ def check_todo(request, pk):
         else:
             value.percentage = round((value.end - value.start)/value.start *100, 2) 
 
-
         current_user.percentage=value.percentage
         current_user.save()
             
@@ -778,7 +813,15 @@ def check_todo(request, pk):
         #completed_todo 변화 처리
         todo_cnt = current_user.todo_cnt
         
-        return JsonResponse({'my_combo': my_combo, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage, 'todo_cnt':todo_cnt})
+        return JsonResponse({
+            'my_combo': my_combo,
+            'todo_status': todo_status,
+            't_id':todo.pk,
+            'percent':value.percentage,
+            'todo_cnt':todo_cnt,
+            'value_end': value.end,
+            'user_percentage':current_user.percentage,
+            })
         
 
 
