@@ -5,6 +5,7 @@
         let global_chart_target_username="";
     </script>
     <div class="main-left">
+
         <div class="dashboard-top">
             <div class="dashboard-top__ochl">
                 <span>Open</span>
@@ -75,45 +76,73 @@
             </div>
             <div class="dashboard--badge">
                 <span>Badge</span>
-                <span>
+                <div class="dashboard--badge__container">
                     {% for badge in user.badges.all %}
                         {% if badge.name == "지금이라도 사야해" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/combo.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>지금이라도 사야해</h3>
+                                <p>{{ badge.description }}</p>                             
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "개미의 선택" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/ant_beginner.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "슈퍼 개미의 선택" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/ant_intermediate.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>슈퍼 개미의 \n선택</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "우주 개미의 선택" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/and_master.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>우주 개미의 \n선택</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "콩콩" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/22.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "1+1" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/1+1.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
                         {% endif %}
                         {% if badge.name == "화성 갈끄니까" %}
+                        <div class="badge-container">
                             <img src="{% static 'img/badge/mars.svg' %}">
-                            {{ badge.name }}
-                            {{ badge.description }}
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
                         {% endif %}
                     {% endfor %}
-                </span>
+                </div>
             </div>
         </div>
     </div>

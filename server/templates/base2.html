@@ -123,7 +123,7 @@
                     <div class="my-info--sff sff-s">
                         <span>Today</span>
                         <span id="mis-percentage" class="percentage-display">
-                            <span class="percentage-value">{{ user.percentage }} %</span>
+                            <span class="percentage-value"><span class="counter">{{ user.percentage }}</span> %</span>
                             
                             {% if user.percentage > 0 %}
                                 <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
@@ -311,6 +311,19 @@
     <script src="{% static 'js/hamburger.js' %}"></script>
     <script src="https://kit.fontawesome.com/6fbcf91afd.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="../static/js/jquery.counterup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <script>
+        function counting(){
+            $('.counter').counterUp({
+                delay: 10,
+                time: 456
+            });
+        }
+        counting();
+    </script>
 
     
     {% block extra %}
