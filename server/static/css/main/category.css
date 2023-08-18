@@ -415,3 +415,40 @@
     }
     
 }
+
+.modal-h2{
+    font-size: var(--body2);
+    font-weight: var(--weight1);
+    text-align: center;
+}
+
+.modal.modal-center {
+  text-align: center;
+}
+  
+@media screen and (min-width: 768px) { 
+    .modal.modal-center:before {
+        display: inline-block;
+        vertical-align: middle;
+        content: " ";
+        height: 100%;
+    }
+}
+  
+.modal-dialog.modal-center {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle; 
+
+  width: 20%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  padding-top: 10%;
+}
+
+.modal-content.modal-center {
+  height: auto;
+  min-height: 100%;
+  border-radius: 0; 
+}

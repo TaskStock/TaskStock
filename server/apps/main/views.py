@@ -1008,7 +1008,7 @@ def create_category(request):
         error_text="이름을 입력해주세요."
     else:
         try:
-            category=Category.objects.get(name=input_name)
+            category=Category.objects.get(name=input_name, user=request.user)
             success=False
             error_text="이미 존재하는 이름입니다."
         except ObjectDoesNotExist:
