@@ -609,6 +609,8 @@ def delete_todo(request, pk):
         if todo.goal_check:
             today_value = get_value_for_date(current_user)
             today_value.end -= 1000*todo.level
+            current_user.todo_cnt -= 1  # 완료된 할 일의 숫자 감소
+            current_user.save()
         
         #저장
         value.save()
@@ -617,8 +619,9 @@ def delete_todo(request, pk):
         
         #combo 변화 처리    
         my_combo = process_combo(current_user)
-    
-    return JsonResponse({'my_combo': my_combo, 'id':todo_id, 'd_id': value.id})
+        #completed_toodos
+        todo_cnt = current_user.todo_cnt
+    return JsonResponse({'my_combo': my_combo, 'id':todo_id, 'd_id': value.id, 'todo_cnt':todo_cnt})
 """
 Todo 업데이트 하는 함수
 content, level 업데이트 -> value high, low 업데이트
@@ -707,8 +710,10 @@ def check_todo(request, pk):
         #combo변화 처리
         my_combo = process_combo(current_user)
         todo_status = str(todo_status)
-        #badge 처리
-        return JsonResponse({'my_combo': my_combo, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
+        #completed_todo 변화 처리
+        todo_cnt = current_user.todo_cnt
+        
+        return JsonResponse({'my_combo': my_combo, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage, 'todo_cnt':todo_cnt})
         
 
 
@@ -1054,11 +1059,13 @@ def follow_group(request):
         else:
             current_user.my_group = target_group
             add_group_price(current_user)
+            group.member_cnt += 1
             text="탈퇴"
                 
     elif buttonText =="탈퇴":
         current_user.my_group = None
         delete_group_price(current_user)
+        group.member_cnt -= 1
         text="가입"
 
     current_user.save()
@@ -1084,6 +1091,7 @@ def create_group(request):
                     price=0,
                     create_user=user.name,
                     create_user_id = user.username,
+                    member_cnt = 1
                 )
                 user.my_group = Group.objects.get(name=name_content)
                 user.save()
