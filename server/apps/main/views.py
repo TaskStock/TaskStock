@@ -700,7 +700,6 @@ def check_todo(request, pk):
         else:
             value.percentage = round((value.end - value.start)/value.start *100, 2) 
 
-
         current_user.percentage=value.percentage
         current_user.save()
             
@@ -713,7 +712,14 @@ def check_todo(request, pk):
         #completed_todo 변화 처리
         todo_cnt = current_user.todo_cnt
         
-        return JsonResponse({'my_combo': my_combo, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage, 'todo_cnt':todo_cnt})
+        return JsonResponse({
+            'my_combo': my_combo,
+            'todo_status': todo_status,
+            't_id':todo.pk,
+            'percent':value.percentage,
+            'todo_cnt':todo_cnt,
+            'value_end': value.end,
+            })
         
 
 

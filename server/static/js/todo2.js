@@ -363,12 +363,19 @@ const check_todo = async(todo_id) => {
         },
         body: JSON.stringify({todo_id, status}),
     })
-    const {'my_combo': my_combo, 'color': color, 'todo_status': todo_status, 't_id': t_id, 'todo_cnt':todo_cnt} = await res.json();
+    const {
+        'my_combo': my_combo,
+        'color': color, 
+        'todo_status': todo_status, 
+        't_id': t_id, 
+        'todo_cnt':todo_cnt,
+        'value_end': valueEnd,
+    } = await res.json();
     
-    handleCheckTodoRes(my_combo, color, todo_status, t_id, todo_cnt);
+    handleCheckTodoRes(my_combo, color, todo_status, t_id, todo_cnt, valueEnd);
 }
 
-function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt){
+function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt, valueEnd){
     const checkBox = document.querySelector(`.todo-checkbox-${todo_id}`);
     if (status == 'True'){
         checkBox.classList.add('True');
@@ -380,6 +387,8 @@ function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt){
     update_chart();
     has_unchecked_todos();
     handleCompletedTodos(todo_cnt);
+    updateValueElements(valueEnd);
+
 }
 
 function has_unchecked_todos(){
@@ -468,3 +477,19 @@ function handleCompletedTodos(todo_cnt){
 }
 
 has_unchecked_todos();
+
+//price-taspi 업데이트
+function updateValueElements(valueStart = null, valueEnd = null, valueHigh = null, valueLow = null) {
+    if (valueStart !== null) {
+        document.querySelector(".ochl-container div span:nth-child(1)").innerText = `Open: ${valueStart} ₩`;
+    }
+    if (valueEnd !== null) {
+        document.querySelector(".ochl-container div span:nth-child(2)").innerText = `Close: ${valueEnd} ₩`;
+    }
+    if (valueHigh !== null) {
+        document.querySelector(".ochl-container div:nth-child(3) span:nth-child(1)").innerText = `High: ${valueHigh} ₩`;
+    }
+    if (valueLow !== null) {
+        document.querySelector(".ochl-container div:nth-child(3) span:nth-child(2)").innerText = `Low: ${valueLow} ₩`;
+    }
+}
