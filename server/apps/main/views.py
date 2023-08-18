@@ -1059,17 +1059,17 @@ def follow_group(request):
         else:
             current_user.my_group = target_group
             add_group_price(current_user)
-            group.member_cnt += 1
+            target_group.member_cnt += 1
             text="탈퇴"
                 
     elif buttonText =="탈퇴":
         current_user.my_group = None
         delete_group_price(current_user)
-        group.member_cnt -= 1
+        target_group.member_cnt -= 1
         text="가입"
 
     current_user.save()
-    group.save()
+    target_group.save()
     
     return JsonResponse({'text': text})
 

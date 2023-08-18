@@ -8,7 +8,6 @@ createGroupBtn.addEventListener("click", () => {
 // 검색 창에 입력할 때마다 ajax로 유저 목록
 document.addEventListener("DOMContentLoaded", function () {
   const textInput = document.querySelector("#search-group_content");
-  console.log(textInput);
   textInput.addEventListener("input", function () {
     const liveGroupChartInput = document.querySelector(
       ".search-group--contents"
@@ -125,9 +124,8 @@ const handleCreateResult = async (result) => {
 
 const handleFollowButtonClick = async (event) => {
   event.preventDefault();
-  if (
-    event.target.querySelector("[name=group-button]").textContent === "탈퇴"
-  ) {
+  console.log(event.target.querySelector("[name=group-button]").textContent);
+  if (event.target.querySelector("[name=group-button]").textContent == "탈퇴") {
     if (window.confirm("정말 탈퇴하시겠습니까?")) {
       handleButtonClickSend(event);
     }
@@ -144,8 +142,6 @@ const handleButtonClickSend = async (event) => {
   const group = groupInput.value; // Get the value of the input element
   event.preventDefault();
 
-  console.log(group);
-  console.log(addButton_text.trim());
   const url = "/main/group/follow_group/";
 
   const formData = new FormData(event.target);
@@ -160,7 +156,6 @@ const handleButtonClickSend = async (event) => {
   handleFollowButtonText(text, event);
 };
 const handleFollowButtonText = async (text, event) => {
-  console.log(text);
   const addButton = event.target.querySelector("[name=group-button]");
   if (text === "탈퇴") {
     alert("그룹에 가입되었습니다.");
