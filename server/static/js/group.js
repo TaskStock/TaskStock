@@ -11,6 +11,7 @@ const handleButtonClickMessage = async (event) => {
   }
 };
 
+
 // group name 수정
 const groupName_editBtn = document.querySelector('#groupName-editBtn');
 const groupHeader = document.querySelector('.group-header');
@@ -127,4 +128,5 @@ groupNameEditToggle();
 function confirmDelete() {
   return confirm("정말로 삭제하시겠습니까?");
 }
+
 
