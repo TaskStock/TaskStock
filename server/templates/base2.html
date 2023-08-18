@@ -282,6 +282,9 @@
                     } else if (user.percent>0) {
                         percent_color = 'var(--red-1)';
                         up_down_image = '<img src="{% static "img/icon-stock-up.png" %}">'; 
+                    }else{
+                        up_down_image = '<i class="fa-solid fa-minus"></i>';
+                        percent_color = "none"
                     }
 
                     atagInput = document.createElement('a');
