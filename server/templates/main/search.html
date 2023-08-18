@@ -32,9 +32,9 @@
                         <div class="search-result__info">
                             <div class="search-result__right-upper-container">
                                 {% if user.percentage < 0 %}
-                                <img src="{% static 'img/icon-stock-up.png' %}" alt="up imgage">
-                                {% elif user.percentage > 0 %}
                                 <img src="{% static 'img/icon-stock-down.png' %}" alt="down imgage">
+                                {% elif user.percentage > 0 %}
+                                <img src="{% static 'img/icon-stock-up.png' %}" alt="up imgage">
                                 {% else %}
                                 <i class="fa-solid fa-minus"></i>
                                 {% endif %}
