@@ -94,26 +94,29 @@ const showGroupsList = (groups) => {
 
       // 검색 결과를 보여주는 부분
       divtagInput.innerHTML = `
-        <div class="search-group-result__right--container">
-            <div class="friend-group-info--pic"></div>
-            <a href="${href}">
-              <div class="search-group-result__name-container">
-                  <h2>${group.name}</h2>
-                  <p>${group.price}</p>
-              </div>
-            </a>
-        </div>
-        <div class="search-group-result__right-container">
-            <div class="search-group-result__info">
-                <div class="search-group-result__right-upper-container">
-                    <form onsubmit="handleFollowButtonClick(event)">
-                        <input type="hidden" name="group" value="${group.name}">
-                        <button type="submit" name="group-button" class="add-button">${addButtonContent}</button>
-                    </form>
-                </div>
-                <p>${group.create_user}</p>
-            </div>                           
-        </div>    
+      
+            <div class="search-group__header">
+                <a href="${href}">
+                    <h2>${group.name}</h2>
+                </a>
+                <form onsubmit="handleFollowButtonClick(event)">
+                    <input type="hidden" name="group" value="${group.name}">
+                    <button type="submit" name="group-button" class="add-button">${addButtonContent}</button>
+                </form>
+            </div>
+            <p>
+                <i class="fa-solid fa-won-sign"></i>
+                <span>${group.price}</span>
+            </p>
+            <p>
+                <i class="fa-solid fa-user"></i>
+                <span>${group.member_cnt}</span>
+            </p>
+            <p>
+                <i class="fa-solid fa-user-tie"></i>
+                <span>${group.create_user}</span>
+            </p>
+        
                 `;
       currentInput.appendChild(divtagInput);
     }

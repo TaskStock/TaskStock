@@ -11,11 +11,25 @@
     <div class="search-container">
         <!-- 실시간 순위 -->
         <div id="live-chart" class="live-chart">
-            <h3 class="search-label">실시간 차트</h3>
+            <h3 class="search-label">실시간 차트 TOP 5</h3>
             {% for user in users %}
             <a href="/main/profile/?username={{user.username}}">
                 <div class="search-result__container">
                     <div class="search-result__left-container">
+                        <div class="search-top3-trophy">
+                            {% if forloop.counter < 4 %}
+                                {% if forloop.counter == 1 %} 
+                                <i class="fa-solid fa-trophy" style="color: var(--gold)"></i>
+                                {% elif forloop.counter == 2 %} 
+                                <i class="fa-solid fa-trophy" style="color: var(--silver)"></i>
+                                {% elif forloop.counter == 3 %} 
+                                <i class="fa-solid fa-trophy" style="color: var(--bronze)"></i>
+                                {% endif %}
+                            {% else %} 
+                            <i class="fa-solid fa-medal" style="color: var(--medal);"></i>
+                            {% endif %}
+    
+                        </div>
                         <div class="friend-info-pic">
                             {% if user.img %}
                                 <img class="friend-info-pic" src="{{ user.img.url }}" alt="Profile Image">
@@ -27,6 +41,7 @@
                             <h2>{{user.name}}</h2>
                             <p>{% if user.introduce %}{{ user.introduce }}{% endif %}</p>
                         </div>
+                        
                     </div>
                     <div class="search-result__right-container">
                         <div class="search-result__info">

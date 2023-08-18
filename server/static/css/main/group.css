@@ -58,6 +58,9 @@
     background-color: transparent;
     padding: var(--gutter);
 }
+#name-input{
+    color: white;
+}
 .create-group--show{
     position: absolute;
     top: 60px;
@@ -72,6 +75,11 @@
     opacity: 0;
     visibility: hidden;
     z-index: 2000;
+}
+.create-group--show div,
+.create-group--show input,
+.create-group--show button{
+    color: white;
 }
 .create-group.active .create-group--show{
     opacity: 1;
@@ -99,7 +107,8 @@
 	margin-left: -20px;
 }
 /* header 끝 */
-.search-group--contents{
+.search-group--contents,
+.search-group-container{
     padding: 0 var(--offset);
 }
 .my-group{
@@ -107,7 +116,8 @@
 }
 .my-group h3,
 .group-top10 h3,
-.group-content > h3{
+.group-content > h3,
+.search-group-users > h3{
     font-size: var(--subheading);
     font-weight: var(--weight3);
     color: var(--checked-border);
@@ -121,13 +131,15 @@
 }
 .my-group__container,
 .group-top10__container,
-.group-user{
+.group-user,
+.search-group-result__container{
     padding: var(--gutter);
     border-radius: var(--border-r);
-    background-color: var(--box-color);
+    background-color: var(--bg-5);
 }
 .my-group__container a,
-.group-top10__container{
+.group-top10__container,
+.search-group-result__container{
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -136,7 +148,8 @@
     position: relative;
 }
 .my-group__container a h2,
-.group-top10__container a h2{
+.group-top10__container a h2,
+.search-group__header a h2{
     width: 100%;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -145,17 +158,20 @@
     color: var(--checked-border);
     padding-bottom: var(--gutter);
 }
-.group-top10__container a h2{
+.group-top10__container a h2,
+.search-group__header a h2{
     width: 100px;
 }
 .my-group__container p,
-.group-top10__container p{
+.group-top10__container p,
+.search-group-result__container p{
     font-size: var(--body2);
     display: flex;
     gap: 5px;
 }
 .my-group__container p i,
-.group-top10__container p i{
+.group-top10__container p i,
+.search-group-result__container p{
     width: 15px;
 }
 .my-group__none{
@@ -163,30 +179,34 @@
     text-align: center;
 }
 .topGroup-wrap,
-.group-content__ul{
+.group-content__ul,
+.search-group-result{
     display: grid;
-    /* grid-template-columns: repeat(5, auto); */
-    grid-template-columns: repeat(5, calc((100% - 4 * var(--gutter)) / 5));
+    grid-template-columns: repeat(5, 1fr);
     gap: var(--gutter);
 }
 .group-content__ul{
     padding-bottom: var(--offset);
 }
-.group-top10__header{
+.group-top10__header,
+.search-group__header{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.group-top10__header form{
+.group-top10__header form,
+.search-group__header form{
     padding-bottom: var(--gutter);
 }
-.group-top10__header form .add-button{
+.group-top10__header form .add-button,
+.search-group__header form .add-button{
     background-color: var(--body-color);
     padding: 7px 10px;
     border-radius: var(--border-r);
     color: var(--text-color);
 }
-.group-top10__header form .add-button:hover{
+.group-top10__header form .add-button:hover,
+.search-group__header form .add-button:hover{
     position: relative;
     top: -2px;
 }
@@ -212,7 +232,7 @@
     justify-content: space-between;
 }
 #update-input{
-    width: 300px;
+    width: min(300px, 100%);
     padding: 7px 10px;
     color: var(--text-color);
     font-size: var(--heading3);
@@ -248,7 +268,7 @@
 }
 .group-content__text h3{
     font-size: var(--body2);
-    padding: 5px 0;
+    padding-bottom: 5px;
 }
 .group-content__text span{
     font-size: var(--subheading);
@@ -387,5 +407,9 @@
     .group-content__info{
         grid-template-columns: repeat(2, 1fr);
     }
-    
+}
+@media screen and (max-width: 400px) {
+    .group-content__info{
+        grid-template-columns: repeat(1, 1fr);
+    }
 }

@@ -21,6 +21,10 @@
     --red_error: #ff0033;
     --blue-1: #124392;
     --yellow_star: #FFBC12;
+    --gold: #FFD700;
+    --silver: #C0C0C0;
+    --bronze: #CD7F32;
+    --medal: #ea9999;
 
 
 
@@ -314,7 +318,7 @@ section header img,
 }
 .search-result__name-container h2{
     font-size: var(--body1);
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
 }
 .search-result__name-container p{
     font-size: var(--caption);

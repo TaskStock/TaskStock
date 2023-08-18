@@ -61,14 +61,14 @@
                     <div class="top3-trophy">
                         {% if forloop.counter < 4 %}
                             {% if forloop.counter == 1 %} 
-                            <i class="fa-solid fa-trophy" style="color: yellow;"></i>
+                            <i class="fa-solid fa-trophy" style="color: var(--gold);"></i>
                             {% elif forloop.counter == 2 %} 
-                            <i class="fa-solid fa-trophy" style="color: silver;"></i>
+                            <i class="fa-solid fa-trophy" style="color: var(--silver);"></i>
                             {% elif forloop.counter == 3 %} 
-                            <i class="fa-solid fa-trophy" style="color: #CD7F32;"></i>
+                            <i class="fa-solid fa-trophy" style="color: var(--bronze);"></i>
                             {% endif %}
                         {% else %} 
-                        <i class="fa-solid fa-medal" style="color: #fff;"></i>
+                        <i class="fa-solid fa-medal" style="color: var(--medal);"></i>
                         {% endif %}
 
                     </div>
@@ -105,47 +105,43 @@
             </div>
         </div>
     </div>
-
-
-
-
-
+    <!-- 그룹 검색 -->
     <div class="search-group-container">
        
         <div class="search-group-users displayNone">
-            <div class="search-group-label">
-                <h3>검색 결과</h3>
-            </div>
+     
+            <h3>검색 결과</h3>
             <div class="search-group-result Scroll" id="search-groups__result-container">
                 {% for filtered_group in filtered_groups %}
                     <div class="search-group-result__container">
-                        <div class="search-group-result__right--container">
-                            <div class="friend-group-info--pic"></div>
+                        <div class="search-group__header">
                             <a href="/main/group/{{filtered_group.pk}}/">
-                                <div class="search-group-result__name-container">
-                                    <h2>{{filtered_group.name}}</h2>
-                                    <p>{{filtered_group.price}}</p>
-                                </div>
+                                <h2>{{filtered_group.name}}</h2>
                             </a>
+                            <form onsubmit="handleFollowButtonClick(event)">
+                                {% csrf_token %}
+                                <input type="hidden" name="group" value="{{ filtered_group.name }}">
+                                <button type="submit" name="group-button" class="add-button">
+                                    {% if filtered_group == my_group %}
+                                        탈퇴
+                                    {% else %}
+                                        가입
+                                    {% endif %}
+                                </button>
+                            </form>
                         </div>
-                        <div class="search-group-result__right-container">
-                            <div class="search-group-result__info">
-                                <div class="search-group-result__right-upper-container">
-                                    <form onsubmit="handleFollowButtonClick(event)">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="group" value="{{ filtered_group.name }}">
-                                        <button type="submit" name="group-button" class="add-button">
-                                            {% if filtered_group == my_group %}
-                                                탈퇴
-                                            {% else %}
-                                                가입
-                                            {% endif %}
-                                        </button>
-                                    </form>
-                                </div>
-                                <p>{{filtered_group.create_user}}</p>
-                            </div>                           
-                        </div>    
+                        <p>
+                            <i class="fa-solid fa-won-sign"></i>
+                            <span>{{filtered_group.price}}</span>
+                        </p>
+                        <p>
+                            <i class="fa-solid fa-user"></i>
+                            <span>{{filtered_group.member_cnt}}</span>
+                        </p>
+                        <p>
+                            <i class="fa-solid fa-user-tie"></i>
+                            <span>{{filtered_group.create_user}}</span>
+                        </p>
                     </div>
                 {% endfor %}
             </div>
