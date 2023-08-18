@@ -64,11 +64,13 @@
         <form onsubmit="handleButtonClickMessage(event)">
             {% csrf_token %}
             <input type="hidden" name="group" id="group-content__name" value="{{ group.name }}">
-            {% if button_text == '탈퇴' %}
-            <!-- <button type="submit" name="group-button" id="add-button">{{button_text}}</button> -->
-            <button type="submit" name="group-button" id="add-button" class="leaveGroupBtn">탈퇴</button>
-            {% else %}
-            <button type="submit" name="group-button" id="add-button" class="joinGroupBtn">가입</button>
+            {% if not am_I_creator %}
+                {% if button_text == '탈퇴' %}
+                <!-- <button type="submit" name="group-button" id="add-button">{{button_text}}</button> -->
+                <button type="submit" name="group-button" id="add-button" class="leaveGroupBtn">탈퇴</button>
+                {% else %}
+                <button type="submit" name="group-button" id="add-button" class="joinGroupBtn">가입</button>
+                {% endif %}
             {% endif %}
         </form>
         {% if am_I_creator %}
