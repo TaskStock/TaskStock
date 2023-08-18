@@ -17,7 +17,13 @@
     width: 100%;
     text-align: center;
 }
-
+.search-top3-trophy{
+    display: grid;
+    place-content: center;
+}
+.search-top3-trophy i{
+    font-size: var(--subheading);
+}
 
 
 
@@ -112,7 +118,7 @@
 .search-result__name-container h2 {
     font-size: var(--body1);
     font-weight: var(--weight3);
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
 }
 .search-result__name-container p {
     font-size: var(--caption);

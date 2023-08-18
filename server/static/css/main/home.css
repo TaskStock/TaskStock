@@ -173,8 +173,10 @@ main{
 }
 .todo-add--input span,
 .todo-add--level span,
+#todo-add--category span,
 .todo-item--input span,
-.todo-item--level span{
+.todo-item--level span,
+.todo-edit--category span{
     font-size: var(--caption);
 }
 .sel-todo-level,
@@ -213,6 +215,24 @@ main{
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    font-size: var(--body2);
+}
+#todo-add--select,
+.todo-edit--select{
+    padding: 5px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-r);
+    background-color: transparent;
+    color: white;
+    font-size: var(--body2);
+    outline: none;
+    margin-top: 10px;
+}
+#todo-add--category,
+.todo-edit--category{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 .edit-btn--container{
     display: flex;
