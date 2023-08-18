@@ -220,7 +220,7 @@ main{
 #todo-add--select,
 .todo-edit--select{
     padding: 5px 10px;
-    border: 1px solid var(--border-color);
+    border: 1px solid white;
     border-radius: var(--border-r);
     background-color: transparent;
     color: white;
@@ -359,7 +359,7 @@ main{
 }
 .dashboard-top__value{
     grid-area: value;
-    grid-template-columns: repeat(2, auto);
+    /* grid-template-columns: repeat(2, auto); */
     grid-template-areas:
         "key1 key2"
         "value1 value2";
@@ -414,6 +414,49 @@ main{
 .dashboard-top__cc > span:nth-child(4){
     color: var(--checked-border);
 }
+@media screen and (max-width: 1200px) {
+    .dashboard-bottom{
+        grid-template-areas:
+            "value"
+            "cc"
+            "badge";
+    }
+}
+@media screen and (max-width: 1080px) {
+    .dashboard-bottom{
+        grid-template-areas:
+            "value cc"
+            "badge badge";
+    }
+
+}
+@media screen and (max-width: 930px) {
+    .dashboard-bottom{
+        grid-template-areas:
+            "value"
+            "cc"
+            "badge";
+    }
+    
+}
+@media screen and (max-width: 820px) {
+    .dashboard-bottom{
+        grid-template-areas:
+            "value cc"
+            "badge badge";
+    }
+
+}
+@media screen and (max-width: 500px) {
+    .dashboard-bottom{
+        grid-template-areas:
+            "value"
+            "cc"
+            "badge";
+    }
+}
+
+
 
 /* badge */
 #dashboard--badge__container {
@@ -459,6 +502,7 @@ main{
     display: flex;
     justify-content: center;
     align-items: center;
+    color: white;
 }
 .badge-modal--top{
     width: 100%;
@@ -498,6 +542,7 @@ main{
     right: 20px;
     font-size: var(--heading3);
     cursor: pointer;
+    color: white;
 }
 /* Style the badge image */
 .badge-container img ,
@@ -512,37 +557,6 @@ main{
 .badge-content__container{
     display: none;
 }
-/* .badge-content__container {
-    position: absolute;
-    width: 200px;
-    top: -50%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: white; 
-    padding: 10px;
-    border-radius: 5px;
-    display: none;
-    text-align: center;
-    color: white;
-    width: 100px;
-} */
-/* 
-.badge-content__container h3 {
-    color: var(--checked-border);
-    font-weight: var(--weight2);
-    font-size: var(--body2);
-    white-space: pre-line;
-}
-
-.badge-content__container p {
-    color: var(--checked-border);
-    font-weight: var(--weight2);
-    font-size: var(--description);
-}
-} */
-/* .badge-container:hover .badge-content__container {
-    display: block;
-} */
 .badge-container img{
     transition: var(--transition);
     top: 0;
@@ -577,10 +591,7 @@ main{
     .main-right{
         height: 100%;
     }
-    .main-left{
-        border-bottom: none;
-        padding: var(--gutter) 0;
-    }
+    
     #mb-main--nav > input{
         display: none;
     }

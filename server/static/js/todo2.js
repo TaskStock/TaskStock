@@ -38,6 +38,11 @@ function paintStar(level){
 if(plus != null){
     plus.addEventListener('click', () => {
         document.querySelector('.todo-plus').classList.toggle('active');
+
+        // // 오류메세지 초기화
+        document.querySelector(`.todo-add--container .todo-add--input span`).style.color = '#fff';
+        document.querySelector(`.todo-add--container .todo-add--level span`).style.color = '#fff';
+
     });
 }
 
@@ -163,10 +168,10 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
                         <div level="5"></div>
                     </div>
                 </div>
-                <div class="todo-add--category">
+                <div class="todo-edit--category">
                     <span>카테고리를 수정하세요</span>
                     <select class="todo-edit--select">
-                        <option value="">None</option>
+                        <option value="">카테고리 없음</option>
                         ${category_html}
                     </select>
                 </div>
@@ -499,7 +504,7 @@ function update_chart(){
 }
 // combo
 function handleCombo(combo){
-    const comboHTML = document.querySelector('.dashboard--combo span:last-child');
+    const comboHTML = document.querySelector('.dashboard-top__cc span:nth-child(3)');
     comboHTML.innerHTML = `🔥 ${combo}`;
     comboHTML.style.animation = `combo 1.5s ease-in-out`;
     comboHTML.addEventListener('animationend', () => {
@@ -509,26 +514,22 @@ function handleCombo(combo){
 
 // completed_todos
 function handleCompletedTodos(todo_cnt){
-    const completedTodosElement = document.querySelector('.dashboard--completed span:last-child');
+    const completedTodosElement = document.querySelector('.dashboard-top__cc span:nth-child(4)');
     completedTodosElement.innerText = `✔︎ ${todo_cnt}`;
 }
 
 has_unchecked_todos();
 
 // price-taspi, my-info--sff 업데이트   
-function updateValueElements(valueStart = null, valueEnd = null, valueHigh = null, valueLow = null, percentage = null) {
-    if (valueStart !== null) {
-        document.querySelector(".ochl-container div span:nth-child(1)").innerHTML = `Open: <span class="counter">${valueStart}</span> ₩`;
-    }
-    if (valueEnd !== null) {
-        document.querySelector(".ochl-container div span:nth-child(2)").innerHTML = `Close: <span class="counter">${valueEnd}</span> ₩`;
-    }
-    if (valueHigh !== null) {
-        document.querySelector(".ochl-container div:nth-child(3) span:nth-child(1)").innerHTML = `High: <span class="counter">${valueHigh}</span> ₩`;
-    }
-    if (valueLow !== null) {
-        document.querySelector(".ochl-container div:nth-child(3) span:nth-child(2)").innerHTML = `Low: <span class="counter">${valueLow}</span> ₩`;
-    }
+function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage) {
+    document.querySelector("#ochl_open").innerHTML = `${valueStart} ₩`;
+    document.querySelector("#ochl_open").classList.add('counter');
+    document.querySelector("#ochl_close").innerHTML = `${valueEnd} ₩`;
+    document.querySelector("#ochl_close").classList.add('counter');
+    document.querySelector("#ochl_high").innerHTML = `${valueHigh} ₩`;
+    document.querySelector("#ochl_high").classList.add('counter');
+    document.querySelector("#ochl_low").innerHTML = `${valueLow} ₩`;
+    document.querySelector("#ochl_low").classList.add('counter');
 
     console.log(percentage)
 
