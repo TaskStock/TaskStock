@@ -1112,6 +1112,7 @@ def group(request,pk):
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
     value_dic={}
     my_group = request.user.my_group
+    ordered_groups = Group.objects.all().order_by('-price')
 
     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
     if group.create_user_id == request.user.username:
@@ -1132,7 +1133,11 @@ def group(request,pk):
         else:
             value_dic[user.name] = value.end    #key: user.name / value: user value의 종가
 
+    sorted_value_items = sorted(value_dic.items(), key=lambda x: x[1], reverse=True)
+    value_dic = {user: value for user, value in sorted_value_items}
 
+    group_position = next((index for index, g in enumerate(ordered_groups) if g == group), None)
+    
     context = {
         'group': group,
         'users': users,
@@ -1140,6 +1145,7 @@ def group(request,pk):
         'button_text': button_text,
         'am_I_creator': am_I_creator,
         'users_length': len(users),
+        'group_position': group_position,
     }
     return render(request, 'main/group.html', context)
 
@@ -1159,17 +1165,17 @@ def follow_group(request):
         else:
             current_user.my_group = target_group
             add_group_price(current_user)
-            group.member_cnt += 1
+            target_group.member_cnt += 1
             text="탈퇴"
                 
     elif buttonText =="탈퇴":
         current_user.my_group = None
         delete_group_price(current_user)
-        group.member_cnt -= 1
+        target_group.member_cnt -= 1
         text="가입"
 
     current_user.save()
-    group.save()
+    target_group.save()
     
     return JsonResponse({'text': text})
 

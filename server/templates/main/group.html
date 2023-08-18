@@ -33,6 +33,10 @@
                 <h3>Group Head</h3>
                 <span>{{group.create_user}}</span>
             </div>
+            <div class="group-content__text">
+                <h3>Group rank</h3>
+                <p> {{ group_position|add:1 }}위 </p>
+            </div>
             
         </div>
        
@@ -59,7 +63,7 @@
         </ul>
         <form onsubmit="handleButtonClickMessage(event)">
             {% csrf_token %}
-            <input type="hidden" name="group" value="{{ group.name }}">
+            <input type="hidden" name="group" id="group-content__name" value="{{ group.name }}">
             {% if button_text == '탈퇴' %}
             <!-- <button type="submit" name="group-button" id="add-button">{{button_text}}</button> -->
             <button type="submit" name="group-button" id="add-button" class="leaveGroupBtn">탈퇴</button>
@@ -68,7 +72,7 @@
             {% endif %}
         </form>
         {% if am_I_creator %}
-        <form action="/main/group/delete_group/{{ group.pk }}/" method="post">
+        <form action="/main/group/delete_group/{{ group.pk }}/" method="post" onsubmit="confirmDelete()">
             {% csrf_token %}
             <button type="submit" name="group-delete-button" id="delete-button">그룹 삭제</button>
         </form>

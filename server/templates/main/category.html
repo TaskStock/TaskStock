@@ -232,8 +232,15 @@
 
     }
 
+    const delete_category = async (pk, type) => {
+        if(window.confirm('정말 삭제하시겠습니까?')) {
+            delete_category_action (pk,type)
+            window.location.reload()
+        }
+    }
+
     // 카테고리 삭제 버튼을 눌렀을 때
-    const delete_category = async (pk, type) =>{
+    const delete_category_action = async (pk, type) =>{
 
         const formData = new FormData();
         formData.append('pk', pk);

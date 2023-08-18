@@ -15,7 +15,7 @@ const handleButtonClickMessage = async (event) => {
 const handleButtonClick = async (event) => {
   event.preventDefault();
   const addButton = document.querySelector("#add-button");
-  const group = document.querySelector(".group-content__name").textContent;
+  const group = document.querySelector("#group-content__name").value;
 
   const url = "/main/group/follow_group/";
 
@@ -29,7 +29,6 @@ const handleButtonClick = async (event) => {
   });
   const { text: text } = await res.json();
 
-  // console.log(text);
   handleButtonText(text);
 };
 const handleButtonText = async (Text) => {
@@ -53,19 +52,16 @@ const handleButtonText = async (Text) => {
 
 // yes,no 창을 띄움
 const confirmModal = async (event) => {
-  // console.log(event);
   event.preventDefault();
   if (window.confirm("정말 이름을 변경하시겠습니까?")) {
     handleUpdateButtonClick(event);
   } else {
-    // console.log("취소. 변화 없음");
     window.location.reload();
   }
 };
 
 const handleUpdateButtonClick = async (event) => {
   const input_content = document.querySelector("#update-input").value;
-  // console.log(input_content);
   const url = "/main/group/update_group/";
   const group_name = document.querySelector(".group-content__name").textContent;
 
@@ -92,13 +88,9 @@ const handleUpdateResult = async (result, updatedGroupName) => {
   }
 };
 
-
-
 groupNameEditToggle();
 
 // delete 부분
 function confirmDelete() {
   return confirm("정말로 삭제하시겠습니까?");
 }
-
-
