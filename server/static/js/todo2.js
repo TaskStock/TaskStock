@@ -279,13 +279,13 @@ const update_todo = async(todo_id) => {
         body: JSON.stringify({todo_id, curr_level, curr_content, c_value}),
     })
     
-    const {t_id: t_id, c_level: c_level, c_content: c_content} = await res.json();
-    handleUpdateTodoRes(t_id, c_level, c_content);
+    const {t_id: t_id, c_level: c_level, c_content: c_content, value_high:valueHigh, value_low:valueLow} = await res.json();
+    handleUpdateTodoRes(t_id, c_level, c_content, valueHigh, valueLow);
     edit_container.classList.remove('active');
 
 }
 
-const handleUpdateTodoRes = async(todo_id, level, content) => {
+const handleUpdateTodoRes = async(todo_id, level, content, valueHigh, valueLow) => {
     document.querySelector(`.todo-item-${todo_id} input`).value = content;
     let paintedLevel = '';
     let emptyLevel = '';
@@ -311,6 +311,7 @@ const handleUpdateTodoRes = async(todo_id, level, content) => {
     `;
     update_chart();
     paintDate();
+    updateValueElements(null, null, valueHigh, valueLow)
 }
 
 function epaintStar(todo_id, level){

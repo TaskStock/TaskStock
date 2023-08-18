@@ -674,7 +674,6 @@ def update_todo(request, pk):
             todo.value.high -= todo.level * 1000
             todo.value.low += todo.level *1000
             
-            
             #todo 내용 update
             todo.level = updated_level
             todo.content = updated_content
@@ -693,7 +692,13 @@ def update_todo(request, pk):
             todo.save()
             todo.value.save()
 
-    return JsonResponse({'t_id': todo_id, 'c_level': updated_level, 'c_content': updated_content})
+    return JsonResponse({
+        't_id': todo_id,
+        'c_level': updated_level,
+        'c_content': updated_content,
+        'value_high':todo.value.high,  
+        'value_low':todo.value.low,
+    })
 
 
 """
