@@ -335,9 +335,8 @@ main{
         font-size: 24px;
     }
 }
-.price{
+/* .price{
     display: grid;
-    /* grid-template-columns: repeat(3, calc((100% - 2 * var(--gutter)) / 3)); */
     grid-template-columns: repeat(2, auto);
     gap: var(--gutter);
     margin: 0 var(--gutter);
@@ -379,20 +378,76 @@ main{
     color: var(--checked-border);
     font-weight: var(--weight2);
     font-size: var(--body2);
-}
+} */
 
-.dashboard{
+/* .dashboard{
     display: flex;
     gap: var(--gutter);
 
 }
 .dashboard--combo{
     width: 150px;
-    /* height: 70px; */
+    
 }
 .dashboard--badge{
     flex-grow: 1;
-    /* height: 70px; */
+    
+} */
+.dashboard-top{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: var(--gutter);
+}
+.dashboard-top > div{
+    background-color: var(--bg-5);
+    padding: var(--gutter);
+    border-radius: var(--border-r);
+    display: grid;
+    grid-gap: var(--gutter);
+
+}
+.dashboard-top__ochl{
+    grid-template-columns: repeat(4, 1fr);
+}
+.dashboard-top__value{
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+        "key1 key2"
+        "value1 value2";
+}
+#value_marketCapKey{
+    grid-area: key1;
+}
+#value_marketCap{
+    grid-area: value1;
+}
+#value_groupValKey{
+    grid-area: key2;
+}
+#value_groupVal{
+    grid-area: value2;
+}
+.dashboard-top > div > span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--body2);
+}
+.dashboard-top__ochl > span:nth-child(1),
+.dashboard-top__ochl > span:nth-child(2),
+.dashboard-top__ochl > span:nth-child(3),
+.dashboard-top__ochl > span:nth-child(4),
+.dashboard-top__value > span:nth-child(1),
+.dashboard-top__value > span:nth-child(3){
+    font-weight: var(--weight3);
+}
+.dashboard-top__ochl > span:nth-child(5),
+.dashboard-top__ochl > span:nth-child(6),
+.dashboard-top__ochl > span:nth-child(7),
+.dashboard-top__ochl > span:nth-child(8),
+.dashboard-top__value > span:nth-child(2),
+.dashboard-top__value > span:nth-child(4){
+    color: var(--checked-border);
 }
 
 @media screen and (max-width: 600px) {
