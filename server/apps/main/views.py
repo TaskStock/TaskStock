@@ -18,6 +18,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.core import serializers
 
+import random
+
 
 #스케줄링 관련 함수
 def decrease_value(user, target_arrow):
@@ -72,6 +74,57 @@ def local_to_utc(local_arrow):
 
 # Create your views here.
 # ---정근 작업---#
+
+# 정산 결과 알림
+def alarm_calculate_result(user, target_arrow):
+    #사용자의 전날 value객체 가져오기
+    value_object = get_value_for_date(user, target_arrow)  #get_value_for_date함수는 local arrow 받아야 함
+    
+    if not value_object:
+        print('전날 접속 안해서 value 없는 사용자')
+        return
+
+    result = value_object.end-value_object.start
+    ment_random=random.randrange(1,101)
+    if result > 0:  # 가치 증가되었을 때
+        if result > 20000:
+            if ment_random<=20:
+                ment="[가치 대상승] 정말 열심히 하셨군요! 앞으로도 오늘처럼만 달려봅시다!"
+            elif ment_random<=40:
+                ment="[가치 대상승] 이대로만 한다면 랭킹 1등은 문제 없겠어요!"
+            else:
+                ment="[가치 대상승] 정말 고생한 당신에게 맛있는 음식을 먹을 수 있는 권리를 드리겠습니다!"
+
+        else:
+            if ment_random<=20:
+                ment="[가치 상승] 고생하셨어요! 오늘처럼 포기하지 말고 꾸준하게!"
+            elif ment_random<=40:
+                ment="[가치 상승] 대충 가치 상승 멘트"
+            else:
+                ment="[가치 상승] 대충 가치 상승 멘트 2"
+    
+    elif result < 0:
+        if result < -20000:
+            if ment_random<=20:
+                ment="[가치 대하락] 계획은 거창했지만..."
+            elif ment_random<=40:
+                ment="[가치 대하락] 대충 가치 대하락 멘트"
+            else:
+                ment="[가치 대하락] 대충 가치 대하락 멘트 2"
+
+        else:
+            if ment_random<=20:
+                ment="[가치 하락] 대충 가치 하락 멘트"
+            elif ment_random<=40:
+                ment="[가치 하락] 대충 가치 하락 멘트 2"
+            else:
+                ment="[가치 하락] 대충 가치 상승 멘트 3"
+
+    Alarm.objects.create(
+        user=user,
+        content=ment,
+        alarm_type="account",
+    )
 
 def settings(request):
     user=request.user
@@ -325,11 +378,23 @@ def follow(request):
     if buttonText == "FOLLOW":
         current_user.followings.add(target_user)
         text="UNFOLLOW"
+        Alarm.objects.create(
+            user=target_user,
+            content=current_user.name+" 님이 팔로우했습니다.",
+            alarm_type="follow",
+        )
     elif buttonText == "UNFOLLOW":
         current_user.followings.remove(target_user)
         text="FOLLOW"
+        try:
+            alarm = Alarm.objects.get(user=target_user, content=current_user.name+" 님이 팔로우했습니다.", is_read=False)
+            alarm.delete()
+        except ObjectDoesNotExist:
+            pass
+    
+    following_count=current_user.followings.all().count()
 
-    return JsonResponse({"text": text})
+    return JsonResponse({"text": text, "f_ajax_count":following_count,})
 
 # ---환희 작업---#
 def home(request):
@@ -811,36 +876,71 @@ def process_badges(value):
     if user.combo == 10 and "지금이라도 사야해" not in acquired_badges:
         badge_to_add = Badge.objects.get(name="지금이라도 사야해")
         user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '지금이라도 사야해' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
 
     #개미의 선택
     if value.end >= 100000 and '개미의 선택' not in acquired_badges:
         badge_to_add = Badge.objects.get(name='개미의 선택')
         user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '개미의 선택' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
     
     #슈퍼 개미의 선택
     if value.end >= 200000 and '슈퍼 개미의 선택' not in acquired_badges:
         badge_to_add = Badge.objects.get(name='슈퍼 개미의 선택')
         user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '슈퍼 개미의 선택' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
     
     #우주 개미의 선택
     if value.end >= 500000 and '우주 개미의 선택' not in acquired_badges:
         badge_to_add = Badge.objects.get(name='우주 개미의 선택')
         user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '우주 개미의 선택' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
     
     #화성 갈끄니까
     if value.end >= 2000000 and '화성 갈끄니까' not in acquired_badges:
         badge_to_add = Badge.objects.get(name='화성 갈끄니까')
         user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '화성 갈끄니까' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
     
     #콩콩
     if value.percentage == 22 and '콩콩' not in acquired_badges:
         badge_to_add = Badge.objects.get(name='콩콩')
         user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '콩콩' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
     
-    #콩콩
+    #1+1
     if value.percentage == 100 and '1+1' not in acquired_badges:
         badge_to_add = Badge.objects.get(name='1+1')
         user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '1+1' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
         
         
 
@@ -868,8 +968,8 @@ def landing_page(request):
 
 # alarm
 def alarm(request):
-    non_read_alarm=Alarm.objects.filter(user=request.user, is_read=False)
-    read_alarm=Alarm.objects.filter(user=request.user, is_read=True).exclude(pk__in=[alarm.pk for alarm in non_read_alarm])
+    non_read_alarm=Alarm.objects.filter(user=request.user, is_read=False).order_by('-created_at')
+    read_alarm=Alarm.objects.filter(user=request.user, is_read=True).order_by('-created_at').exclude(pk__in=[alarm.pk for alarm in non_read_alarm])
 
     for alarm in non_read_alarm:
         alarm.is_read=True

@@ -32,6 +32,7 @@
 <body>
     <script>
         let global_current_username="";
+        let base_follow_page_type="";
     </script>
     <div id="mb--header">
         <i class="gg-menu-left-alt"></i>
@@ -219,12 +220,14 @@
                 followsearchInput.classList.remove('displayNone');
                 followsearchInput.value='';
                 follow("following", null);
+                base_follow_page_type="following";
             });
             followerSpan.addEventListener("click", function(){
                 localStorage.setItem('follow_type', "follower");
                 followsearchInput.classList.remove('displayNone');
                 followsearchInput.value='';
                 follow("follower", null);
+                base_follow_page_type="follower";
             });
 
             // 팔로우 목록 검색 input 이벤트
