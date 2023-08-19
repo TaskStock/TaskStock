@@ -1316,12 +1316,13 @@ def search_group(request):
     if user_group:
         users = user_group.user_set.all()
         user_group.delta = 0  # 초기화
+        user_group.price = 0 # 초기화
         for user in users:
             value = get_value_for_date(user)
             if value != None:
                 earning = value.end - value.start
                 user_group.delta += earning
-                user_group.price = value.end
+                user_group.price += value.end
         user_group.save()
 
     ctx = {
