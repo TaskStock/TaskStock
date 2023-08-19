@@ -413,6 +413,8 @@
     color: white;
     position: relative;
     margin-bottom: var(--gutter);
+    top: 0;
+    transition: var(--transition);
 }
 .leaveGroupBtn:hover,
 .joinGroupBtn:hover,

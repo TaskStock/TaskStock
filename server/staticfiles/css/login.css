@@ -43,20 +43,6 @@
     --box-shadow: rgba(233, 233, 231) 1.95px 1.95px 2.6px;
 }
 
-/* Tablet */
-@media screen and (max-width: 767px) {
-    :root {
-        --offset: 32px;
-        --columns: 8;
-    }
-}
-/* Mobile */
-@media screen and (max-width: 479px) {
-    :root {
-        --offset: 16px;
-        --columns: 4;
-    }
-}
 .Flex_cc{
     display: flex;
     justify-content: center;
@@ -70,11 +56,22 @@ header{
     padding-left: var(--offset);
     position: fixed;
 }
+
 header h1{
     font-size: 0;
 }
 header h1 img{
     height: 35px;
+}
+@media screen and (max-width: 700px) {
+    header{
+        height: 60px;
+        padding-left: var(--gutter);
+    }
+    header h1 img{
+        height: 25px;
+    }
+    
 }
 main{
     height: calc(80vh);
@@ -87,10 +84,12 @@ main{
     font-size: var(--hero);
     font-weight: 700;
     margin-bottom: 24px; 
+    margin-top: 70px;
 }
 .login__header--signup{
     font-size: var(--hero);
     font-weight: 700;
+    margin-top: 70px;
 }
 .login__header--signup + span{
     font-size: var(--heading3);
@@ -109,6 +108,7 @@ main{
     display: flex;
     align-items: center;
     justify-content: center;
+    color: black;
 }
 .login__google:hover{
     background-color: var(--grey_bg);
@@ -120,6 +120,10 @@ main{
     width: 320px;
     height: 1px;
     border: 1px solid var(--grey_border);
+}
+.login__forgot-pw{
+    text-align: end;
+    margin: 8px 0 var(--gutter) 0;
 }
 .login__forgot-pw a,
 .login__signup a{
@@ -172,9 +176,11 @@ main{
     font-size: var(--body2);
     text-align: center;
 }
+
 .signup1-btn,
 .signup2-btn,
-.login-btn-td button{
+.login-btn-td button,
+.signup-btn-td a{
     transition: all 0.25s ease;
     width: 320px;
     height: 36px;
@@ -187,12 +193,12 @@ main{
     font-size: var(--body2);
 
 }
-.signup1-btn:hover,
-.signup2-btn:hover,
-.login-btn-td button:hover{
-    background-color: black;
+.signup-btn-td a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
     color: white;
-
 }
 .login-form table tr{
     display: flex;
