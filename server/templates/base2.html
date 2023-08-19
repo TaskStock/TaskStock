@@ -110,22 +110,20 @@
                 {% endif %}
             </div>
             <div class="my-info--about">
-                <div id="base-current-user-name" class="my-info--name">{{user}}</div>
-                <script>
-                    const current_username = document.querySelector("#base-current-user-name");
-                    if(current_username==null){
-                        global_current_username="";
-                    }else{
-                        global_current_username=current_username.textContent;
-                    }
-                </script>
-                <div class="my-info--comment">{{user.textContent}}</div>
-                <div class="my-info--sff__container">
+                <div class="my-info--np">
+                    <div id="base-current-user-name" class="my-info--name">{{user}}</div>
+                    <script>
+                        const current_username = document.querySelector("#base-current-user-name");
+                        if(current_username==null){
+                            global_current_username="";
+                        }else{
+                            global_current_username=current_username.textContent;
+                        }
+                    </script>
                     <div class="my-info--sff sff-s">
-                        <span>Today</span>
                         <span id="mis-percentage" class="percentage-display">
                             <span class="percentage-value"><span class="counter">{{ user.percentage }}</span> %</span>
-                            
+                    
                             {% if user.percentage > 0 %}
                                 <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
                             {% elif user.percentage < 0 %}
@@ -133,15 +131,19 @@
                             {% endif %}
                         </span>
                     </div>
-                    <div class="my-info--sff sff-fg">
-                        <span>Following</span>
-                        <span id="following_list">{{user.followings.all.count}}</span>
-                    </div>
-                    <div class="my-info--sff sff-fr">
-                        <span>Follower</span>
-                        <span id="follower_list">{{user.followers.all.count}}</span>
-                    </div>
                 </div>
+                
+                <div class="my-info--comment">{{user.introduce}}</div>
+            </div>
+        </div>
+        <div class="ff-tab">
+            <div class="my-info--sff sff-fg" id="sff-fg">
+                <span>Following</span>
+                <span id="following_list">{{user.followings.all.count}}</span>
+            </div>
+            <div class="my-info--sff sff-fr" id="sff-fr">
+                <span>Follower</span>
+                <span id="follower_list">{{user.followers.all.count}}</span>
             </div>
         </div>
         <div class="follow-container">
@@ -205,8 +207,8 @@
 
         document.addEventListener("DOMContentLoaded", function(){
             // 팔로우 목록 click 이벤트
-            const followingSpan = document.querySelector("#following_list");
-            const followerSpan = document.querySelector("#follower_list");
+            const followingSpan = document.querySelector("#sff-fg");
+            const followerSpan = document.querySelector("#sff-fr");
             const followsearchInput = document.querySelector("#follow_search_content");
             
             followingSpan.addEventListener("click", function(){
@@ -215,6 +217,8 @@
                 followsearchInput.value='';
                 follow("following", null);
                 base_follow_page_type="following";
+                followerSpan.style.color = '#A4A4A4';
+                followingSpan.style.color = '#fff';
             });
             followerSpan.addEventListener("click", function(){
                 localStorage.setItem('follow_type', "follower");
@@ -222,6 +226,8 @@
                 followsearchInput.value='';
                 follow("follower", null);
                 base_follow_page_type="follower";
+                followerSpan.style.color = '#fff';
+                followingSpan.style.color = '#A4A4A4';
             });
 
             // 팔로우 목록 검색 input 이벤트
