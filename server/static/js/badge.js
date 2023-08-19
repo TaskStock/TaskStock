@@ -30,3 +30,22 @@ document.querySelector('.badge-modal__delBtn').addEventListener('click', () => {
     // 모달 닫기
     badge_modal.classList.remove('modalShow');
 })
+
+document.addEventListener('click', (event) => {
+        // 클릭된 요소가 modal 내부에 속하는지 확인
+        let clickedInsideEditContainer = false;
+        if(badge_modal.contains(event.target) || event.target.classList.contains('modalShow')){
+            clickedInsideEditContainer = true;    
+        }
+        badges.forEach(badge => {
+            if(badge.contains(event.target)){
+                clickedInsideEditContainer = true;    
+            }
+        })
+        
+        // 클릭된 요소가 editContainer 내부에 속하지 않는 경우 모든 editContainer의 'active' 클래스 제거
+        if (!clickedInsideEditContainer) {
+            badge_modal.classList.remove('modalShow');
+        }
+    
+});

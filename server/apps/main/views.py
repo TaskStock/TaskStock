@@ -767,8 +767,8 @@ def update_todo(request, pk):
         'c_content': updated_content,
         'value_start':todo.value.start,
         'value_end':todo.value.end,
-        'value_high':todo.value.high,  
-        'value_low':todo.value.low,
+        'value_high':todo.value.high,
+        'value_low': todo.value.low,
         'percentage': request.user.percentage,
     })
 

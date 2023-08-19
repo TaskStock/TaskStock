@@ -1,3 +1,4 @@
+
 from django.db import migrations
 
 def add_initial_badges(apps, schema_editor):
@@ -11,8 +12,8 @@ def add_initial_badges(apps, schema_editor):
         ('콩콩', '주가 22% 상승'),
         ('1+1', '주가 100% 상승'),
         ('화성 갈끄니까', '가치 100만원 돌파'),
-        ('Rising Star', '첫 가치 상승'),
-
+		('Rising Star', '첫 가치 상승'),
+    ]
 
     for name, description in badge_data:
         Badge.objects.create(name=name, description=description)

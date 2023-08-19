@@ -65,30 +65,17 @@
         <div id="category-detail-container">
             <h2>카테고리를 선택하거나 추가해주세요.</h2>
         </div>
-        <div class="modal modal-center fade" id="category-delete-check" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-center modal-xl modal-dialog-centered">
-              <div class="modal-content">
-              
-                <!-- Modal Header -->
-                <div class="modal-header">
-                  <h2 class="modal-title modal-h2">삭제 확인</h2>
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <h2 class="modal-h2">정말로 프로젝트를 삭제하시겠습니까?</h2>
-                </div>
-                
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                  <button type="button" id="c-modal-complete-btn" class="btn btn-secondary" data-dismiss="modal">프로젝트 삭제</button>
-                </div>
-                
-              </div>
-            </div>
-        </div>
         
+        <div class="category-modal">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h2>정말로 프로젝트를 삭제하시겠습니까?</h2>
+            <p>삭제된 프로젝트는 영구 삭제되며 복구할 수 없습니다.</p>
+            <div class="cat-modal--btns">
+                <button type="button" class="close">취소</button>
+                <button type="button" id="c-modal-complete-btn">영구 삭제</button>
+            </div>
+
+        </div>
     </div>
     
     
@@ -261,14 +248,26 @@
 
     }
 
-    const delete_category = async (pk, type) => {
-        if(window.confirm('정말 삭제하시겠습니까?')) {
-            delete_category_action (pk,type)
-            window.location.reload()
-        }
-    }
+
+    // const delete_category = async (pk, type) => {
+    //     if(window.confirm('정말 삭제하시겠습니까?')) {
+    //         delete_category_action (pk,type)
+    //         window.location.reload()
+    //     }
+    // }
 
     // 카테고리 삭제 버튼을 눌렀을 때
+    // 모달창
+    document.querySelector('#category-detail-container').addEventListener('click', (event) => {
+        if(event.target.classList.contains('btn-delete')){
+            document.querySelector('.category-modal').classList.add('modalShow');
+        }
+    })
+    // 모달창에서 취소버튼누르면 모달창 닫기
+    document.querySelector('.category-modal .cat-modal--btns .close').addEventListener('click', () => {
+        document.querySelector('.category-modal').classList.remove('modalShow');
+    })
+
     const delete_category_action = async (pk, type) =>{
 
         const formData = new FormData();
@@ -296,7 +295,7 @@
         }
         const listItem = document.querySelector(select_str+pk);
         listItem.remove();
-
+        document.querySelector('.category-modal').classList.remove('modalShow');
         update_noneAlarm();
     }
 
@@ -425,7 +424,7 @@
                 </label>
             </div>
             <div id="cdc-delete-box">
-                <button class="btn-delete" data-toggle="modal" data-target="#category-delete-check">프로젝트 삭제</button>
+                <button class="btn-delete" data-target="#category-delete-check">프로젝트 삭제</button>
             </div>
             `;
         }else if(type=="unfinish"){
@@ -448,13 +447,14 @@
                 </label>
             </div>
             <div id="cdc-delete-box">
-                <button class="btn-delete" data-toggle="modal" data-target="#category-delete-check">프로젝트 삭제</button>
+                <button class="btn-delete" data-target="#category-delete-check">프로젝트 삭제</button>
             </div>
             `;
         }
+        // 영구 삭제 
         const deleteCheckBtn = document.querySelector('#c-modal-complete-btn');
         deleteCheckBtn.addEventListener('click', function() {
-            delete_category(pk, type);
+            delete_category_action(pk, type);
         });
 
         if (window.matchMedia("(max-width: 600px)").matches){
