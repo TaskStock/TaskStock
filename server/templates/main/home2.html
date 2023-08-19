@@ -13,7 +13,7 @@
                 <span>High</span>
                 <span>Low</span>
                 <span id="ochl_open"><span class="counter">{{ value.start }}</span> ₩</span>
-                <span id="ochl_close"><span class="counter">{{ value.end }}</span> ₩</span>
+                <span id="ochl_close"><span class="counter" id="counter_close">{{ value.end }}</span> ₩</span>
                 <span id="ochl_high"><span class="counter">{{ value.high }}</span> ₩</span>
                 <span id="ochl_low"><span class="counter">{{ value.low }}</span> ₩</span>
             </div>
@@ -362,5 +362,6 @@
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
 <script src="{% static 'js/badge.js' %}"></script>
+<script src="{% static 'js/counterUp.js' %}"></script>
 
 {% endblock %}

@@ -521,17 +521,87 @@ function handleCompletedTodos(todo_cnt){
 has_unchecked_todos();
 
 // price-taspi, my-info--sff 업데이트   
-function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage) {
-    document.querySelector("#ochl_open").innerHTML = `<span class="counter">${valueStart}</span> ₩`;
-    document.querySelector("#ochl_close").innerHTML = `<span class="counter">${valueEnd}</span> ₩`;` ₩`;
-    document.querySelector("#ochl_high").innerHTML = `<span class="counter">${valueHigh}</span> ₩`;
-    document.querySelector("#ochl_low").innerHTML = `<span class="counter">${valueLow}</span> ₩`;
+// function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage) {
+//     document.querySelector("#ochl_open").innerHTML = `<span class="counter">${valueStart}</span> ₩`;
+//     document.querySelector("#ochl_close").innerHTML = `<span class="counter">${valueEnd}</span> ₩`;` ₩`;
+//     document.querySelector("#ochl_high").innerHTML = `<span class="counter">${valueHigh}</span> ₩`;
+//     document.querySelector("#ochl_low").innerHTML = `<span class="counter">${valueLow}</span> ₩`;
+
+//     if (percentage !== null) {
+//         const displayElement = document.querySelector(".percentage-display");
+//         const valueElement = displayElement.querySelector(".percentage-value");
+//         const iconElement = document.getElementById("percentage-icon");
+
+//         const percentValue = parseFloat(percentage);
+//         valueElement.innerText = `${percentage} %`;
+
+//         if (iconElement) {
+//             iconElement.remove();
+//         }
+
+//         const misPercentageBox = document.querySelector("#mis-percentage");
+//         misPercentageBox.innerHTML=`
+//         <span class="percentage-value"><span class="counter">${percentValue}</span> %</span>
+//         `;
+//         if (percentValue > 0) {
+//             misPercentageBox.innerHTML+=`
+//             <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
+//             `;
+//         } else if (percentValue < 0) {
+//             misPercentageBox.innerHTML=`
+//             <i class="fa-solid fa-chevron-down" id="percentage-icon" style="color: blue;"></i>
+//             `;
+//         }
+//     }
+    
+//     // async function executeCounting() {
+//     //     await counting(); // counting() 함수의 프로미스가 완료될 때까지 기다림
+//     // }
+
+//     // executeCounting(); // 비동기 작업이 모두 완료된 후에 counting() 함수 실행
+// }
+
+
+// 
+
+async function animateCounter(element, startValue, endValue, duration = 400, delay = 10) {
+    const totalSteps = duration / delay;
+    const stepValue = (endValue - startValue) / totalSteps;
+    let currentValue = startValue;
+
+    for (let i = 0; i <= totalSteps; i++) {
+        element.textContent = Math.round(currentValue).toString();
+        await new Promise(resolve => setTimeout(resolve, delay));
+        currentValue += stepValue;
+    }
+}
+
+async function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage) {
+    const percentElement = document.querySelector('.percentage-value .counter');
+    const startElement = document.querySelector("#ochl_open .counter");
+    const endElement = document.querySelector("#ochl_close .counter");
+    const highElement = document.querySelector("#ochl_high .counter");
+    const lowElement = document.querySelector("#ochl_low .counter");
+    
+    const percentValueFromHTML = parseFloat(percentElement.textContent);
+    const startValueFromHTML = parseFloat(startElement.textContent);
+    const endValueFromHTML = parseFloat(endElement.textContent);
+    const highValueFromHTML = parseFloat(highElement.textContent);
+    const lowValueFromHTML = parseFloat(lowElement.textContent);
+
+    // Animate the values
+    await Promise.all([
+        animateCounter(percentElement, percentValueFromHTML, percentage),
+        animateCounter(startElement, startValueFromHTML, valueStart),
+        animateCounter(endElement, endValueFromHTML, valueEnd),
+        animateCounter(highElement, highValueFromHTML, valueHigh),
+        animateCounter(lowElement, lowValueFromHTML, valueLow)
+    ]);
 
     if (percentage !== null) {
         const displayElement = document.querySelector(".percentage-display");
         const valueElement = displayElement.querySelector(".percentage-value");
         const iconElement = document.getElementById("percentage-icon");
-
         const percentValue = parseFloat(percentage);
         valueElement.innerText = `${percentage} %`;
 
@@ -543,22 +613,17 @@ function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percenta
         misPercentageBox.innerHTML=`
         <span class="percentage-value"><span class="counter">${percentValue}</span> %</span>
         `;
+        
         if (percentValue > 0) {
             misPercentageBox.innerHTML+=`
             <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
             `;
         } else if (percentValue < 0) {
-            misPercentageBox.innerHTML=`
+            misPercentageBox.innerHTML+=`
             <i class="fa-solid fa-chevron-down" id="percentage-icon" style="color: blue;"></i>
             `;
         }
     }
-
-    async function executeCounting() {
-        await counting(); // counting() 함수의 프로미스가 완료될 때까지 기다림
-    }
-
-    executeCounting(); // 비동기 작업이 모두 완료된 후에 counting() 함수 실행
 }
-
+// updateValueElements(1000, 2000, 2500, 900, "5.25");
 
