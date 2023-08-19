@@ -1,9 +1,16 @@
+/* 다른사람 page profile */
 .user-info--container{
     display: flex;
     padding: 0 var(--gutter) var(--gutter);
     align-items: center;
-    
 }
+.user-info--left{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: var(--gutter);
+}
+
 .follow-btn{
     margin-left: auto;
 }
@@ -24,41 +31,85 @@
 .follow-btn #followBtn:hover{
     transform: translateY(-2px);
 }
-.user-info--sff__container{
-    display: flex;
-    gap: var(--gutter);
-    padding-left: 45px;
-}
+
 .user-info--about{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 5px var(--gutter);
+    align-items: center;
+    
     gap: var(--gutter);
 }
-.user-info--sff{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+.user-info--sff__container{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-gap: 5px;
 }
-.user-info--sff span:first-child{
+.user-info--sff__container span:nth-child(1),
+.user-info--sff__container span:nth-child(2),
+.user-info--sff__container span:nth-child(3){
     font-size: var(--body2);
-    font-weight: var(--weight3);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.user-info--sff span:last-child{
+.user-info--sff__container span:nth-child(4),
+.user-info--sff__container span:nth-child(5),
+.user-info--sff__container span:nth-child(6){
+    font-size: var(--body2);
     color: var(--checked-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .user-info--name{
     font-size: var(--heading3);
     font-weight: var(--weight3);
     color: var(--checked-border);
 }
+.user-info--comment{
+    font-size: var(--body2);
+    color: var(--checked-border);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 200px;
+}
 .user-info--pic{
     width: 90px;
     height: 90px;
     overflow: hidden;
+    flex-shrink: 0;
+    object-fit: cover;
 }
 .user-info--pic img{
-    height: 100%;
+    width: 100%;
+}
+#user-info--sff__container-mb{
+    display: none;
+}
+@media screen and (max-width: 820px){
+    #mb-main-left{
+        order: 1;
+    }
+    #mb-main-right{
+        order: 3;
+    }
+}
+@media screen and (max-width: 500px) {
+    #user-info--sff__container-des{
+        display: none;
+    }
+    #user-info--sff__container-mb{
+        display: grid;
+        margin-bottom: var(--gutter);
+
+    }
+    .user-info--about{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .user-info--comment{
+        width: 100px;
+    }
+
 }

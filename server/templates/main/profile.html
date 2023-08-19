@@ -4,7 +4,7 @@
     <script>
         let global_chart_target_username="";
     </script>
-    <div class="main-left">
+    <div class="main-left" id="mb-main-left">
         <div class="user-info--container">
             <div class="user-info--pic">
                 {% if target_user.img %}
@@ -13,34 +13,31 @@
                     <img src="{% static 'img/blank-profile-picture.png' %}" alt="Default Profile Image">
                 {% endif %}
             </div>
-            <div class="user-info--about">
-                <div class="user-info--name">{{target_user.username}}</div>
-                <div class="user-info--comment">{{target_user.introduce}}</div>
-            </div>
-            <div class="user-info--sff__container">
-                <div class="user-info--sff sff-s">
+            <div class="user-info--left">
+                <div class="user-info--about">
+                    <div class="user-info--name">{{target_user.username}}</div>
+                    <div class="user-info--comment">{{target_user.introduce}}</div>
+                </div>
+                <div class="user-info--sff__container" id="user-info--sff__container-des">
                     <span>Today</span>
-                    <span id="mis-percentage" class="percentage-display">
-                        <span>{{percentage}}</span>
-                        {% if user.percentage > 0 %}
-                        <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
-                        {% elif user.percentage < 0 %}
-                        <i class="fa-solid fa-chevron-down" id="percentage-icon" style="color: blue;"></i>
-                        {% endif %}
-                    </span>
-                </div>
-                <div class="user-info--sff sff-fg">
                     <span>Following</span>
-                    <span id="following_list">{{target_user.followings.all.count}}</span>
-                </div>
-                <div class="user-info--sff sff-fr">
                     <span>Follower</span>
+                    <span>{{percentage}}</span>
+                    <span id="following_list">{{target_user.followings.all.count}}</span>
                     <span id="follower_list">{{target_user.followers.all.count}}</span>
                 </div>
             </div>
             <div class="follow-btn">
                 <button id="followBtn" onclick="followClick();">{{follow_text}}</button>
             </div>
+        </div>
+        <div class="user-info--sff__container" id="user-info--sff__container-mb">
+            <span>Today</span>
+            <span>Following</span>
+            <span>Follower</span>
+            <span>{{percentage}}</span>
+            <span id="following_list">{{target_user.followings.all.count}}</span>
+            <span id="follower_list">{{target_user.followers.all.count}}</span>
         </div>
         <!--  -->
         <div class="dashboard-top">
@@ -213,7 +210,7 @@
             
     
     </div>
-    <div class="main-right">
+    <div class="main-right" id="mb-main-right">
         <div class="main-right--container">
             <div class="calendar-container">
                 <div class="cal--header">
@@ -286,15 +283,37 @@
             
         </div>
     </div>
+    <div id="mb-main--nav">
+        <i class="fa-regular fa-calendar-check"></i>
+        <!-- <i class="fa-solid fa-chart-line"></i> -->
+    </div>
     
 </main>
 
 {% endblock %}
 
 {% block extra %}
+<script>
+    // mobile에서 chart, calendar 탭
+    if (window.matchMedia("(max-width: 600px)").matches){
+        const mb_ccBtn = document.querySelector('#mb-main--nav');
+        mb_ccBtn.addEventListener('click', () => {
+            mb_tab();
+        })
+        mb_tab();
+
+        // 차트 버튼 1 Week -> 1w
+        document.querySelector('#one_week + .chart-btn').innerHTML = '1주';
+        document.querySelector('#one_month + .chart-btn').innerHTML = '1달';
+        document.querySelector('#three_month + .chart-btn').innerHTML = '3달';
+        document.querySelector('#six_month + .chart-btn').innerHTML = '6달';
+        document.querySelector('#one_year + .chart-btn').innerHTML = '1년';
+    }
+</script>
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/candlestick.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
+
 <script>
     const followClick = async () =>{
         const followButton = document.querySelector("#followBtn");

@@ -77,9 +77,11 @@
     visibility: hidden;
     z-index: 2000;
 }
+
 .create-group--show div,
 .create-group--show input,
 .create-group--show button{
+
     color: white;
     font-size: var(--body2);
 }
@@ -87,10 +89,29 @@
     opacity: 1;
     visibility: visible;
 }
+
 .create-group--show form{
     display: flex;
     flex-direction: column;
     gap: var(--gutter);
+}
+@media screen and (max-width: 500px) {
+    .create-group--show{
+        width: 400px;
+    } 
+    .search-group-header form input{
+        width: 100%;
+    }
+}
+@media screen and (max-width: 450px) {
+    .create-group--show{
+        width: 350px;
+    } 
+}
+@media screen and (max-width: 400px) {
+    .create-group--show{
+        width: 300px;
+    } 
 }
 #create-button{
     margin-left: auto;
@@ -116,6 +137,7 @@
 .my-group{
     margin-bottom: var(--offset);
 }
+
 .my-group h3,
 .group-top10 h3,
 .group-content > h3,
@@ -129,8 +151,14 @@
     padding: var(--gutter) 0;
 }
 .my-group__container{
+    position: relative;
+    top: 0;
+    transition: var(--transition);
     width: calc((100% - 4 * var(--gutter)) / 5);
 }
+.my-group__container:hover{
+    top: -2px;
+}   
 .my-group__container,
 .group-top10__container,
 .group-user,
@@ -207,14 +235,19 @@
     border-radius: var(--border-r);
     color: var(--text-color);
     font-size: var(--body2);
+    transition: var(--transition);
+    position: relative;
+    top: 0;
 }
 .group-top10__header form .add-button:hover,
 .search-group__header form .add-button:hover{
-    position: relative;
     top: -2px;
 }
 .group-user{
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 .top3-trophy,
 .members-top3-trophy{
@@ -260,24 +293,98 @@
 }
 .group-content__info{
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: var(--gutter);
-
+    grid-template-columns: repeat(5, auto);
+    grid-gap: 10px;
+    margin-top: var(--gutter);
 }
-.group-content__text{
-    border-radius: var(--border-r);
-    background-color: var(--box-color);
-    padding: var(--gutter);
-}
-.group-content__text h3{
+.group-content__info h3{
     font-size: var(--body2);
     padding-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.group-content__text span{
+.group-content__info span{
     font-size: var(--subheading);
     color: var(--checked-border);
-    
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+.group-content__info h3{
+    display: flex;
+    gap: 10px;
+}
+
+@media screen and (max-width: 800px){
+    .group-content__info{
+        grid-template-columns: repeat(3, auto);
+        grid-template-areas: 
+            "value earnings earnings"
+            "valueKey earningsKey earningsKey"
+            "rank members head"
+            "rankKey membersKey headKey";
+        padding-bottom: var(--offset);
+        border-bottom: 1px solid var(--border-color);
+    }
+    .group-content__info h3:nth-of-type(1){
+        grid-area: value;
+    }
+    .group-content__info span:nth-of-type(1){
+        grid-area: valueKey;
+        margin-bottom: var(--gutter);
+    }
+    .group-content__info h3:nth-of-type(2){
+        grid-area: earnings;
+    }
+    .group-content__info span:nth-of-type(2){
+        grid-area: earningsKey;
+        margin-bottom: var(--gutter);
+    }
+    .group-content__info h3:nth-of-type(3){
+        grid-area: rank;
+    }
+    .group-content__info span:nth-of-type(3){
+        grid-area: rankKey;
+    }
+    .group-content__info h3:nth-of-type(4){
+        grid-area: members;
+    }
+    .group-content__info span:nth-of-type(4){
+        grid-area: membersKey;
+    }
+    .group-content__info h3:nth-of-type(5){
+        grid-area: head;
+    }
+    .group-content__info span:nth-of-type(5){
+        grid-area: headKey;
+    }
+    .group-content__info h3,
+    .group-content__info span{
+        justify-content: flex-start;
+        
+    }
+}
+
+@media screen and (max-width: 500px){
+    .group-content__info{
+        grid-template-columns: repeat(2, auto);
+        grid-template-areas: 
+            "value earnings"
+            "valueKey earningsKey"
+            "rank members"
+            "rankKey membersKey"
+            "head head"
+            "headKey headKey";
+    }
+    .group-content__info h3:nth-of-type(5){
+        margin-top: var(--gutter);
+    }
+   
+}
+
+
+
 .group-user__username{
     font-size: var(--subheading);
     font-weight: var(--weight3);
@@ -295,15 +402,6 @@
     display: none;
 }
 
-
-/* delete, leave btns */
-/* #cdc-delete-box{
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    font-size: var(--body2);
-    margin-top: var(--offset);
-} */
 .leaveGroupBtn,
 .joinGroupBtn,
 #delete-button{
@@ -379,7 +477,7 @@
         width: 100%;
         
     }
-    .search-group-header form input{
+    .search-group-header form.search-group-form input{
         display: none;
         width: 100%;
         font-size: var(--body2);
