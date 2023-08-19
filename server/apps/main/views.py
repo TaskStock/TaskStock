@@ -1191,9 +1191,6 @@ def group(request,pk):
         button_text = "가입"    
     
     
-    # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
-    #그룹 delta 구하기 전 초기화
-    group.delta = 0 
     for user in users:
         value = get_value_for_date(user)
         if value == None:
@@ -1203,11 +1200,8 @@ def group(request,pk):
         else:
             earning = value.end - value.start
             value_dic[user.name] = [value.end, earning]    #key: user.name / value: user value의 종가, 변화량
-            group.delta += earning
-        
-        group.save()
-    
 
+        
     sorted_value_items = sorted(value_dic.items(), key=lambda x: x[1][1], reverse=True)
     value_dic = {user: value for user, value in sorted_value_items}
 
@@ -1314,15 +1308,25 @@ def add_delta_to_group(user, target_arrow):
 
 # group search에 관한 함수
 def search_group(request):
-    groups = Group.objects.all().order_by('-price')
+    groups = Group.objects.all().order_by('-delta')
     current_user = request.user
-    filtered_groups = groups
-    
 
+    # current_user가 속한 그룹의 delta 값을 업데이트
+    user_group = current_user.my_group
+    if user_group:
+        users = user_group.user_set.all()
+        user_group.delta = 0  # 초기화
+        for user in users:
+            value = get_value_for_date(user)
+            if value != None:
+                earning = value.end - value.start
+                user_group.delta += earning
+                user_group.price = value.end
+        user_group.save()
 
     ctx = {
         'groups': groups,
-        'filtered_groups': filtered_groups,
+        'filtered_groups': groups,
         'my_group': current_user.my_group,
     }
 
