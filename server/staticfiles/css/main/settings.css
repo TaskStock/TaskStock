@@ -1,0 +1,301 @@
+.main--settings{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    height: 100vh;
+    overflow: hidden;
+
+}
+.settigs-header{
+    padding: var(--offset) var(--offset) 0;
+}
+.settigs-header > h1 {
+    font-size: var(--heading3);
+    font-weight: var(--weight3);
+    color: var(--checked-border);
+}
+.settings-content {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--border-r);
+    padding: var(--gutter);
+    gap: var(--gutter);
+}
+.settings-menu {
+    width: 200px;
+    border-radius: var(--border-r);
+    /* background-color: var(--grey_bg); */
+    box-shadow: var(--shadow);
+    padding: var(--gutter);
+    border: 1px solid var(--none-border);
+    padding-top: var(--offset);
+}
+.settings-detail {
+    flex-grow: 1;
+    border-radius: var(--border-r);
+    box-shadow: var(--shadow);
+    padding: var(--offset);
+    overflow-y: scroll;
+    scroll-padding-top: var(--offset);
+    border: 1px solid var(--none-border);
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-detail > div:last-child {
+    margin-bottom: 370px;
+}
+
+.settings-menu__container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+} 
+
+.settings-menu__h3 {
+    font-size: var(--body1);
+    font-weight: var(--weight3);
+    margin: 5px;
+    transition: 0.3s;
+}
+ 
+.settings-menu__h3:hover {
+    font-size: var(--subheading); 
+} 
+.settings-detail-element{
+    font-size: var(--body2);
+}
+.settings-detail-element > h1 {
+    font-size: var(--body1);
+    font-weight: var(--weight3);
+    padding: 0 0 7px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+
+/* bar-icon */
+.bar-icon {
+    width: 3px;
+    height: 20px;
+    margin-right: 5px;
+    /* position: relative; */
+    transform: translateX(-15px);
+    background-color: var(--checked-border);
+}
+.hidden {
+    display: none;
+}
+
+.bar-icon__container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+} 
+
+/* edit-profile */
+.settings-detail__profile-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    object-fit: cover;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: var(--gutter);
+    overflow: hidden;
+}
+
+.settings-detail__profile-container  > img {
+    width: 100%;
+}
+
+.settings-detail__description-container > h3 {
+    font-size: var(--body1);
+    font-weight: var(--weight2);
+    margin: 5px;
+}
+
+.profile-update__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+    padding-left: var(--gutter);
+}
+.profile-description__textarea > textarea {
+    flex-grow: 1;
+    border-radius: var(--border-r);
+    border: 1px solid var(--border-color);
+    background-color: transparent;
+    padding: 7px 10px;
+    resize: none;
+    color: var(--text-color);
+    outline: none;
+}
+.profile-description__textarea > textarea + p{
+    margin-left: var(--gutter);
+    font-size: var(--body2);
+}
+.profile-name__input,
+.profile-image__input,
+.profile-description__textarea,
+.reset-password__container{
+    display: flex;
+    align-items: center;
+}
+
+.profile-name__input label,
+.profile-image__input label,
+.profile-description__textarea label,
+.reset-password__container label{
+    font-size: var(--body2);
+    width: 120px;
+}
+.reset-password__container{
+    margin-bottom: var(--gutter);
+}
+.reset-password__container input{
+    color: var(--text-color);
+}
+.profile-name__input input{
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-r);
+    padding: 7px 10px;
+    color: var(--text-color);
+    font-size: var(--caption);
+}
+
+.profile-image__input>input[type=file]::file-selector-button {
+    width: 100px;
+    height: 30px;
+    background: var(--box-color);
+    /* border: 1px solid rgb(77,77,77); */
+    border: none;
+    border-radius: var(--border-r);
+    cursor: pointer;
+    color: var(--text-color);
+    margin-right: var(--gutter);
+}
+
+
+/* .profile-name__input input, */
+.reset-password__container input{
+    width: 300px;
+    height: 34px;
+    border-radius: var(--border-r);
+    border: 1px solid var(--text-color);
+    background-color: transparent;
+    padding: var(--gutter);
+    resize: none;
+}
+.reset-password__form{
+    margin-top: var(--gutter);
+}
+.profile-update__form button,
+.reset-password__form button{
+    margin-left: auto;
+    width: 120px;
+    height: 36px;
+    white-space: nowrap;
+    border: none;
+    border-radius: var(--border-r);
+    margin-top: 10px;
+    font-size: var(--body2);
+    transition: var(--transition);
+    color: var(--text-color);
+    background-color: var(--box-color);
+}
+.profile-update__form button:hover,
+.reset-password__form button:hover{
+    border: 1px solid var(--border-color);
+} 
+.settings-detail > div:not(:first-child){
+    margin-top: 50px;
+}
+
+/* set-alarm */
+/* 라디오 체크 부분 css로 활용함 */
+.settings-detail__set-alarm {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="radio"] {
+    vertical-align: middle;
+    appearance: none;
+    border: max(2px, 0.1em) solid var(--text-color);
+    border-radius: 50%;
+    width: 1.25em;
+    height: 1.25em;
+  }
+
+input[type="radio"]:checked {
+    border: 0.4em solid var(--text-color);
+  }
+
+.radio__set  {
+    margin-top: var(--gutter);
+}
+.settings-detail__container{
+    margin-left: var(--gutter);
+}
+
+
+/* 비밀번호 변경 시 결과 css */
+.error{
+    border: 1px solid var(--red_error) !important;
+}
+
+.success{
+    border: 1px solid green !important;
+}
+
+@media screen and (max-width: 950px){
+    .settings-menu{
+        display: none;
+    }
+}
+@media screen and (max-width: 600px){
+    .main--settings{
+        width: 100%;;
+    }
+    .profile-description__textarea{
+        /* flex-wrap: wrap; */
+    }
+    .profile-description__textarea > p{
+        /* justify-self: flex-end; */
+    }
+    .profile-name__input,
+    .profile-image__input,
+    .profile-description__textarea,
+    .reset-password__container{
+        flex-direction: column;
+        align-items: flex-start;
+
+    }
+    .profile-name__input label,
+    .profile-image__input label,
+    .profile-description__textarea label,
+    .reset-password__container label{
+        padding-bottom: var(--gutter);
+        font-weight: var(--weight3);
+
+    }
+    .profile-name__input input,
+    .profile-description__textarea textarea{
+        width: 100%;
+    }
+    .profile-description__textarea > textarea + p{
+        display: block;
+        margin-left: auto;
+        padding-top: var(--gutter);
+    }
+    .reset-password__container input{
+        width: 100%;
+    }
+    .settings-detail{
+        padding: var(--gutter);
+    }
+
+}

@@ -1,0 +1,213 @@
+/* 기본값 설정 */
+:root {
+    --offset: 40px; /*양쪽마진*/
+    --max_width: 1440px; /*컨테이너폭*/
+    --columns: 12; /*컬럼갯수*/
+    --gutter: 16px; /*거터폭*/
+    /* color */
+    --black: #37352F;
+
+    /* main : green */
+    --green_50: #E8F5E9;
+    --green_100: #C8E6C9;
+    --green_200: #A5D6A7;
+    --green_300: #81C784;
+    --green_400: #66BB6A;
+    --green_500: #4CAf50;
+    --green_600: #43A047;
+    --green_700: #388E3C;
+    --green_800: #2E7D32;
+    --green_900: #1B5E20;
+
+    /* 회원가입 실패 css */
+    --red: #d30808;
+    
+    /* grey */
+    --grey_bg: #FBFBFA;
+    --grey_border: rgba(233, 233, 231);
+    --grey_400: rgba(55, 53, 47, 0.65);
+
+    /* font */
+    --hero: 50px;
+    --heading1: 38px;
+    --heading2: 28px;
+    --heading3: 22px;
+    --subheading: 18px;
+    --body1: 16px;
+    --body2: 14px;
+    --caption: 12px;
+
+    /* border-radius */
+    --border-r: 8px;
+    /* shadow */
+    --box-shadow: rgba(233, 233, 231) 1.95px 1.95px 2.6px;
+}
+
+/* Tablet */
+@media screen and (max-width: 767px) {
+    :root {
+        --offset: 32px;
+        --columns: 8;
+    }
+}
+/* Mobile */
+@media screen and (max-width: 479px) {
+    :root {
+        --offset: 16px;
+        --columns: 4;
+    }
+}
+.Flex_cc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+header{
+    height: 70px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: var(--offset);
+    position: fixed;
+}
+header h1{
+    font-size: 0;
+}
+header h1 img{
+    height: 35px;
+}
+main{
+    height: calc(80vh);
+    gap: var(--gutter);
+    flex-direction: column;
+    width: 320px;
+    margin: auto;
+}
+.login__header{
+    font-size: var(--hero);
+    font-weight: 700;
+    margin-bottom: 24px; 
+}
+.login__header--signup{
+    font-size: var(--hero);
+    font-weight: 700;
+}
+.login__header--signup + span{
+    font-size: var(--heading3);
+    width: 400px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login__google{
+    width: 320px;
+    height: 34px;
+    border-radius: var(--border-r);
+    border: 1px solid var(--grey_border);
+    gap: var(--gutter);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login__google:hover{
+    background-color: var(--grey_bg);
+}
+.login__google i{
+    --ggs: 0.7;
+}
+.bar{
+    width: 320px;
+    height: 1px;
+    border: 1px solid var(--grey_border);
+}
+.login__forgot-pw a,
+.login__signup a{
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: var(--body2);
+}
+.login__signup{
+    font-size: var(--body2);
+}
+.auth-email,
+.signup-code,
+.signup1,
+.check_id,
+.find-password-code{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.auth-email label,
+.signup-code label,
+.signup1 label,
+.check_id label,
+.find-password-code label,
+.login-form td label,
+.password-for-change label{
+    font-size: var(--caption);
+    color: var(--grey_400);
+}
+.auth-email input,
+.signup-code input,
+.check_id input,
+.find-password-code input,
+.signup1 input:not(.signup1-btn),
+.login-form td input,
+.password-for-change input{
+    width: 320px;
+    height: 34px;
+    border-radius: var(--border-r);
+    border: 1px solid var(--grey_border);
+    background-color: var(--grey_bg);
+    padding: 0 var(--gutter);
+    margin-top: 5px;
+}
+#password, #password-check{
+    margin-bottom: var(--gutter);
+}
+.signup-code span{
+    color: var(--grey_400);
+    font-size: var(--body2);
+    text-align: center;
+}
+.signup1-btn,
+.signup2-btn,
+.login-btn-td button{
+    transition: all 0.25s ease;
+    width: 320px;
+    height: 36px;
+    white-space: nowrap;
+    border-radius: var(--border-r);
+    border: 1px solid black;
+    color: black;
+    background-color: white;
+    margin-top: 10px;
+    font-size: var(--body2);
+
+}
+.signup1-btn:hover,
+.signup2-btn:hover,
+.login-btn-td button:hover{
+    background-color: black;
+    color: white;
+
+}
+.login-form table tr{
+    display: flex;
+    flex-direction: column;
+}
+.login-form td input{
+    margin-bottom: var(--gutter);
+}
+
+/* 회원가입 실패 css */
+.error{
+    border: 1px solid var(--red) !important;
+    font-size: var(--body2);
+}
+
+.displayNone{
+    display: none !important;
+}
