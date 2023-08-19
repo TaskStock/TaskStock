@@ -1313,22 +1313,24 @@ def search_group(request):
 
     # current_user가 속한 그룹의 delta 값을 업데이트
     user_group = current_user.my_group
+
     if user_group:
-        users = user_group.user_set.all()
-        user_group.delta = 0  # 초기화
-        user_group.price = 0 # 초기화
-        for user in users:
-            value = get_value_for_date(user)
-            if value != None:
-                earning = value.end - value.start
-                user_group.delta += earning
-                user_group.price += value.end
-        user_group.save()
+        with transaction.atomic():
+            user_group = Group.objects.select_for_update().get(id=user_group.id)
+            users = user_group.user_set.all()
+            user_group.delta = 0  # 초기화
+            user_group.price = 0 # 초기화
+            for user in users:
+                value = get_value_for_date(user)
+                if value != None:
+                    earning = value.end - value.start
+                    user_group.delta += earning
+                    user_group.price += value.end
+            user_group.save()
 
     ctx = {
         'groups': groups,
-        'filtered_groups': groups,
-        'my_group': current_user.my_group,
+        'my_group': user_group,
     }
 
     return render(request, 'main/search_group.html',context=ctx)
