@@ -17,27 +17,16 @@
     </div>
     <div class="group-content">
         <div class="group-content__info">
-            <div class="group-content__text">
-                <h3>Group Value <i class="fa-solid fa-coins"></i></h3>
-                <span>{{group.price}} ₩</span>
-            </div>
-            <div class="group-content__text">
-                <h3>Today's Earnings <i class="fa-solid fa-arrow-trend-up"></i></h3>
-                <span>{{group.delta}} ₩</span>
-            </div>
-            <div class="group-content__text">
-                <h3>Members</h3>
-                <span>{{users_length}}</span>
-            </div>
-            <div class="group-content__text">
-                <h3>Group Head</h3>
-                <span>{{group.create_user}}</span>
-            </div>
-            <div class="group-content__text">
-                <h3>Group rank</h3>
-                <p> {{ group_position|add:1 }}위 </p>
-            </div>
-            
+            <h3>Group Value <i class="fa-solid fa-coins"></i></h3>
+            <h3>Today's Earnings <i class="fa-solid fa-arrow-trend-up"></i></h3>
+            <h3>Group rank <i class="fa-solid fa-crown"></i></h3>
+            <h3>Members <i class="fa-solid fa-user"></i></h3>
+            <h3>Group Head <i class="fa-solid fa-user-tie"></i></h3>
+            <span>{{group.price}} ₩</span>
+            <span>{{group.delta}} ₩</span>
+            <span> {{ group_position|add:1 }}위 </span>
+            <span>{{users_length}}</span>
+            <span>{{group.create_user}}</span>
         </div>
 
         <h3><i class="fa-solid fa-crown"></i> Members Ranking</h3>

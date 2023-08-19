@@ -123,7 +123,6 @@
                     <div class="my-info--sff sff-s">
                         <span id="mis-percentage" class="percentage-display">
                             <span class="percentage-value"><span class="counter">{{ user.percentage }}</span> %</span>
-                    
                             {% if user.percentage > 0 %}
                                 <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
                             {% elif user.percentage < 0 %}
@@ -323,9 +322,9 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    {% comment %} <script src="../static/js/jquery.counterup.min.js"></script> {% endcomment %}
+    <script src="../static/js/jquery.counterup.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
-    {% comment %} <script>
+    <script>
         function counting(){
             $('.counter').counterUp({
                 delay: 10,
@@ -333,7 +332,7 @@
             });
         }
         counting();
-    </script> {% endcomment %}
+    </script>
 
     
     {% block extra %}

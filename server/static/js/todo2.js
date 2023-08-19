@@ -522,16 +522,10 @@ has_unchecked_todos();
 
 // price-taspi, my-info--sff 업데이트   
 function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage) {
-    document.querySelector("#ochl_open").innerHTML = `${valueStart} ₩`;
-    document.querySelector("#ochl_open").classList.add('counter');
-    document.querySelector("#ochl_close").innerHTML = `${valueEnd} ₩`;
-    document.querySelector("#ochl_close").classList.add('counter');
-    document.querySelector("#ochl_high").innerHTML = `${valueHigh} ₩`;
-    document.querySelector("#ochl_high").classList.add('counter');
-    document.querySelector("#ochl_low").innerHTML = `${valueLow} ₩`;
-    document.querySelector("#ochl_low").classList.add('counter');
-
-    console.log(percentage)
+    document.querySelector("#ochl_open").innerHTML = `<span class="counter">${valueStart}</span> ₩`;
+    document.querySelector("#ochl_close").innerHTML = `<span class="counter">${valueEnd}</span> ₩`;` ₩`;
+    document.querySelector("#ochl_high").innerHTML = `<span class="counter">${valueHigh}</span> ₩`;
+    document.querySelector("#ochl_low").innerHTML = `<span class="counter">${valueLow}</span> ₩`;
 
     if (percentage !== null) {
         const displayElement = document.querySelector(".percentage-display");
