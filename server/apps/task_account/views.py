@@ -140,7 +140,7 @@ from django.core.mail import EmailMessage
 import smtplib
 from django.http import Http404
 
-# @csrf_exempt
+@csrf_exempt
 def email_validation(request):
     email = request.POST.get("email")
     type = request.POST.get("type")
