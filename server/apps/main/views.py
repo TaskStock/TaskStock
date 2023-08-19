@@ -765,10 +765,10 @@ def update_todo(request, pk):
         't_id': todo_id,
         'c_level': updated_level,
         'c_content': updated_content,
-        'value_start':today_value.start,
-        'value_end':today_value.end,
-        'value_high':today_value.high,
-        'value_low': today_value.low,
+        'value_start':todo.value.start,
+        'value_end':todo.value.end,
+        'value_high':todo.value.high,  
+        'value_low':todo.value.low,
         'percentage': request.user.percentage,
     })
 
@@ -1317,6 +1317,8 @@ def search_group(request):
     groups = Group.objects.all().order_by('-price')
     current_user = request.user
     filtered_groups = groups
+    
+
 
     ctx = {
         'groups': groups,
