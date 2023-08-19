@@ -483,10 +483,10 @@ section header img,
 .alarm_red_dot{
     position: absolute;
     background-color: var(--red_error) !important;
-    width: 8px !important;
-    height: 8px !important;
+    width: 6px !important;
+    height: 6px !important;
     top: 2px;
-    right: -1px;
+    right: -2px;
     border-radius: 50%;
 }
 .search-result__right-upper-container{
