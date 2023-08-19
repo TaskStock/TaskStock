@@ -3,135 +3,153 @@
 
 <!-- search.html, search.js의 기능을 대부분 그대로 가져옴. search view함수역시 거의 동일하게 가져옴 -->
 <!-- search.css를 그대로 연결 사용 -->
-<main class="search-group-main">
-    <div class="search-group-form-container">
-        <form action="" class="search-group-form">
-            <input type="text" placeholder="Search" name="search-group_content" id="search-group_content" autofocus>
-            <button type="submit"><i class="gg-search"></i></button>
-        </form>
-    </div>
-    <div class="search-group-container">
-        <div id="live-group-chart" class="live-group-chart">
-            <form onsubmit="handleCreateButtonClick(event)" class="create-form">
-                {% csrf_token %}
-                <div>그룹 이름</div>
-                <input type="text" name="group-name-input"  id="name-input">
-                <div>비밀 번호</div>
-                <input type="text" name="group-password-input"  id="password-input">
-                <button type="submit" name="group-create-button" id="create-button">Create</button>
+<main id="search-group-main">
+    <div class="search-group-header">
+        <h1>Group</h1>
+        <div class="group-header--right">
+            <form action="" class="search-group-form">
+                <div class="mb-search-btn" id="mb-search-btn"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <input type="text" placeholder="Search" name="search-group_content" id="search-group_content">
+                <div class="mb-searchCancel-btn" id="mb-searchCancel-btn"><i class="fa-solid fa-x"></i></div>
             </form>
-            <div class="search-group-result">
-                {% if my_group == None %}
-                <h3>내 그룹</h3>
-                <div class="my-group__container">
-                    <span>가입 그룹이 없습니다.</span>
+            <div class="create-group" id="create-group">
+                <i class="fa-solid fa-plus"></i>
+                <div class="create-group--show">
+                    <form onsubmit="handleCreateButtonClick(event)" class="create-form">
+                        {% csrf_token %}
+                        <div>생성할 그룹의 이름을 입력하세요</div>
+                        <input type="text" name="group-name-input"  id="name-input" placeholder="스터디">
+                        <button type="submit" name="group-create-button" id="create-button">그룹 생성</button>
+                    </form>
                 </div>
-                {% else %}
-                <h3>내 그룹</h3>
-                <div class="my-group__container">
+            </div>
+        </div>
+    </div>
+    <div class="search-group--contents">
+        <div class="my-group">
+            <h3>내 그룹</h3>
+            {% if my_group == None %}
+            <div class="my-group__none">
+                <span>가입한 그룹이 없습니다. 그룹에 가입하거나 새 그룹을 생성하세요.</span>
+            </div>
+            {% else %}
+            <div class="my-group__container">
                 <a href="/main/group/{{my_group.pk}}/">
-                    <div class="search-group-result__container">
-                        <div class="search-group-result__right--container">
-                            <div class="friend-group-info--pic"></div>
-                            <div class="search-group-result__name-container">
-                                <h2 id="my_group_name">{{my_group.name}}</h2>
-                                <p>{{my_group.price}}</p>
-                            </div>
-                        </div>
-                        <div class="search-group-result__right-container">
-                            <div class="search-group-result__info">
-                                <div class="search-group-result__right-upper-container">
-                                    <form onsubmit="handleFollowButtonClick(event)">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="group" value="{{ my_group.name }}">
-                                        <button type="submit" name="group-button" class="add-button">LEAVE GROUP</button>
-                                    </form>
-                                </div>
-                                <p>{{my_group.create_user}}</p>
-                            </div>
-                            
-                        </div>    
-                    </div>
+                    <h2 id="my_group_name">{{my_group.name}}</h2>
+                    <p>
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                        <span>{{my_group.delta}}</span>
+                    </p>
+                    <p>
+                        <i class="fa-solid fa-coins"></i>
+                        <span>{{my_group.price}}</span>
+                    </p>
+                    <p>
+                        <i class="fa-solid fa-user"></i> 
+                        <span>{{my_group.member_cnt}}</span>
+                    </p>
+                    <p>
+                        <i class="fa-solid fa-user-tie"></i>
+                        <span>{{my_group.create_user}}</span>
+                    </p>
                 </a>
-                </div>
-                {% endif %}
-                <div class="search-group-label">
-                    <h3>실시간 차트</h3>
-                </div>
-                {% for group in groups %}
-                    <div class="search-group-result__container">
-                        <div class="search-group-result__right--container">
-                            <div class="friend-group-info--pic"></div>
-                            <a href="/main/group/{{group.pk}}/">
-                                <div class="search-group-result__name-container">
-                                    <h2>{{group.name}}</h2>
-                                    <p>{{group.price}}</p>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="search-group-result__right-container">
-                            <div class="search-group-result__info">
-                                <div class="search-group-result__right-upper-container">
-                                    <form onsubmit="handleFollowButtonClick(event)">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="group" value="{{ group.name }}">
-                                        {% if group != my_group %}
-                                            <input type="text" name="group-password-verify-input"  id="password-verify-input">
-                                        {% endif %}    
-                                        <button type="submit" name="group-button" class="add-button">
-                                            {% if group == my_group %}
-                                                LEAVE GROUP
-                                            {% else %}
-                                                JOIN GROUP
-                                            {% endif %}
-                                        </button>
-                                    </form>
-                                </div>
-                                <p>{{group.create_user}}</p>
-                            </div>
-                            
-                        </div>    
+            </div>
+            
+            {% endif %}
+        </div>
+        <div class="group-top10">
+            <h3><i class="fa-solid fa-crown"></i> Top 10</h3>
+            <div class="topGroup-wrap">
+                {% for group in groups|slice:":10" %}
+                <div class="group-top10__container">
+                    <div class="top3-trophy">
+                        {% if forloop.counter < 4 %}
+                            {% if forloop.counter == 1 %} 
+                            <i class="fa-solid fa-trophy" style="color: var(--gold);"></i>
+                            {% elif forloop.counter == 2 %} 
+                            <i class="fa-solid fa-trophy" style="color: var(--silver);"></i>
+                            {% elif forloop.counter == 3 %} 
+                            <i class="fa-solid fa-trophy" style="color: var(--bronze);"></i>
+                            {% endif %}
+                        {% else %} 
+                        <i class="fa-solid fa-medal" style="color: var(--medal);"></i>
+                        {% endif %}
+
                     </div>
+                    <div class="group-top10__header">
+                        <a href="/main/group/{{group.pk}}/">
+                            <h2 id="my_group_name">{{group.name}}</h2>
+                        </a>
+                        <form onsubmit="handleFollowButtonClick(event)">
+                            {% csrf_token %}
+                            <input type="hidden" name="group" value="{{ group.name }}">
+                            
+                            {% if group != my_group %}
+                            <button type="submit" name="group-button" class="add-button">가입</button>
+                            {% else %}
+                            <button class="add-button" style="opacity: 0; visibility: hidden; ">탈퇴</button>
+                            {% endif %}
+                            
+                        </form>
+                    </div>
+                    <p>
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                        <span>{{my_group.delta}}</span>
+                    </p>
+                    <p>
+                        <i class="fa-solid fa-coins"></i>
+                        <span>{{group.price}}</span>
+                    </p>
+                    <p>
+                        <i class="fa-solid fa-user"></i>
+                        <span>{{group.member_cnt}}</span>
+                    </p>
+                    <p>
+                        <i class="fa-solid fa-user-tie"></i>
+                        <span>{{group.create_user}}</span>
+                    </p>
+                </div>
                 {% endfor %}
             </div>
         </div>
-        <div class="search-group-users">
-            <div class="search-group-label">
-                <h3>검색 결과</h3>
-            </div>
+    </div>
+    <!-- 그룹 검색 -->
+    <div class="search-group-container">
+       
+        <div class="search-group-users displayNone">
+     
+            <h3>검색 결과</h3>
             <div class="search-group-result Scroll" id="search-groups__result-container">
                 {% for filtered_group in filtered_groups %}
                     <div class="search-group-result__container">
-                        <div class="search-group-result__right--container">
-                            <div class="friend-group-info--pic"></div>
+                        <div class="search-group__header">
                             <a href="/main/group/{{filtered_group.pk}}/">
-                                <div class="search-group-result__name-container">
-                                    <h2>{{filtered_group.name}}</h2>
-                                    <p>{{filtered_group.price}}</p>
-                                </div>
+                                <h2>{{filtered_group.name}}</h2>
                             </a>
+                            <form onsubmit="handleFollowButtonClick(event)">
+                                {% csrf_token %}
+                                <input type="hidden" name="group" value="{{ filtered_group.name }}">
+                                <button type="submit" name="group-button" class="add-button">
+                                    {% if filtered_group == my_group %}
+                                        탈퇴
+                                    {% else %}
+                                        가입
+                                    {% endif %}
+                                </button>
+                            </form>
                         </div>
-                        <div class="search-group-result__right-container">
-                            <div class="search-group-result__info">
-                                <div class="search-group-result__right-upper-container">
-                                    <form onsubmit="handleFollowButtonClick(event)">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="group" value="{{ filtered_group.name }}">
-                                        {% if filtered_group != my_group %}
-                                            <input type="text" name="group-password-verify-input"  id="password-verify-input">
-                                        {% endif %}    
-                                        <button type="submit" name="group-button" class="add-button">
-                                            {% if filtered_group == my_group %}
-                                                LEAVE GROUP
-                                            {% else %}
-                                                JOIN GROUP
-                                            {% endif %}
-                                        </button>
-                                    </form>
-                                </div>
-                                <p>{{filtered_group.create_user}}</p>
-                            </div>                           
-                        </div>    
+                        <p>
+                            <i class="fa-solid fa-won-sign"></i>
+                            <span>{{filtered_group.price}}</span>
+                        </p>
+                        <p>
+                            <i class="fa-solid fa-user"></i>
+                            <span>{{filtered_group.member_cnt}}</span>
+                        </p>
+                        <p>
+                            <i class="fa-solid fa-user-tie"></i>
+                            <span>{{filtered_group.create_user}}</span>
+                        </p>
                     </div>
                 {% endfor %}
             </div>

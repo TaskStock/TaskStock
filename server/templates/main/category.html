@@ -4,12 +4,21 @@
     <div class="category-header">
         <h1>Project</h1>
         <i class="gg-info"></i>
-        <!-- <div class="info-container">
+        <div class="info-container">
             <p>
-                현재 진행중인 프로젝트가 있으신가요?
-                성장일기, 회고록, 간단한 메모, 느낀점 등등 자유로운 형태로 내가 성장하는 과정을 이곳에 기록해보세요!
+                "프로젝트" 페이지는 당신이 얼마나 멋지게 발전하고 있는지 느낄 수 있게 도와줄 거예요. 
+                이곳에 당신이 무엇을 경험했는지, 무엇을 느꼈는지 기록해보며 얼마나 성장했는지 회고해 보세요! 
             </p>
-        </div> -->
+        </div>
+        <div class="mb-backToList">
+            <i class="fa-solid fa-list"></i>
+        </div>
+    </div>
+    <div class="mb-info-container">
+        <p>
+            "프로젝트" 페이지는 당신이 얼마나 멋지게 발전하고 있는지 느낄 수 있게 도와줄 거예요. 
+            이곳에 당신이 무엇을 경험했는지, 무엇을 느꼈는지 기록해보며 얼마나 성장했는지 회고해 보세요! 
+        </p>
     </div>
     <div id="category-content">
         <div id="category-container">
@@ -56,6 +65,17 @@
         <div id="category-detail-container">
             <h2>카테고리를 선택하거나 추가해주세요.</h2>
         </div>
+        
+        <div class="category-modal">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h2>정말로 프로젝트를 삭제하시겠습니까?</h2>
+            <p>삭제된 프로젝트는 영구 삭제되며 복구할 수 없습니다.</p>
+            <div class="cat-modal--btns">
+                <button type="button" class="close">취소</button>
+                <button type="button" id="c-modal-complete-btn">영구 삭제</button>
+            </div>
+
+        </div>
     </div>
     
     
@@ -65,13 +85,27 @@
 {% endblock %}
 
 {% block extra %}
+<!-- Bootstrap JS and Popper.js (required for dropdowns and other features) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <script>
     // info toggle
-    const info = document.querySelector('.info-container');
-    const info_btn = document.querySelector('.gg-info');
-    info_btn.addEventListener('click', () => {
-        info.classList.toggle('show');
-    })
+    if (window.matchMedia("(min-width: 601px)").matches){
+        const info = document.querySelector('.info-container');
+        const info_btn = document.querySelector('.gg-info');
+        info_btn.addEventListener('click', () => {
+            info.classList.toggle('show');
+        })
+    }
+    if (window.matchMedia("(max-width: 600px)").matches){
+        const info = document.querySelector('.mb-info-container');
+        const info_btn = document.querySelector('.gg-info');
+        info_btn.addEventListener('click', () => {
+            info.classList.toggle('show');
+        })
+    }
 
 
 
@@ -214,8 +248,27 @@
 
     }
 
+
+    // const delete_category = async (pk, type) => {
+    //     if(window.confirm('정말 삭제하시겠습니까?')) {
+    //         delete_category_action (pk,type)
+    //         window.location.reload()
+    //     }
+    // }
+
     // 카테고리 삭제 버튼을 눌렀을 때
-    const delete_category = async (pk, type) =>{
+    // 모달창
+    document.querySelector('#category-detail-container').addEventListener('click', (event) => {
+        if(event.target.classList.contains('btn-delete')){
+            document.querySelector('.category-modal').classList.add('modalShow');
+        }
+    })
+    // 모달창에서 취소버튼누르면 모달창 닫기
+    document.querySelector('.category-modal .cat-modal--btns .close').addEventListener('click', () => {
+        document.querySelector('.category-modal').classList.remove('modalShow');
+    })
+
+    const delete_category_action = async (pk, type) =>{
 
         const formData = new FormData();
         formData.append('pk', pk);
@@ -242,7 +295,7 @@
         }
         const listItem = document.querySelector(select_str+pk);
         listItem.remove();
-
+        document.querySelector('.category-modal').classList.remove('modalShow');
         update_noneAlarm();
     }
 
@@ -313,11 +366,19 @@
 
         if(success){
             memoryBox.textContent=memory;
+
+            const cdcSuccessBox = document.querySelector('#cdc-memory-message');
+            cdcSuccessBox.classList.remove('displayNone');
         }
     }
 
     // 카테고리 리스트에서 카테고리를 클릭했을 때
     const click_category = async (pk, type) =>{
+        // media screen 600px 이하일 때 
+        if (window.matchMedia("(max-width: 600px)").matches){
+            document.querySelector('#category-detail-container').style.display = 'block';
+            document.querySelector(' #category-container').style.display = 'none';
+        }
 
         const formData = new FormData();
         formData.append('pk', pk);
@@ -353,6 +414,7 @@
                 
                 <textarea name="memory" id="category-memory" placeholder="나의 성장을 기록해보세요!" rows="30">${memoryText}</textarea>
                 <button onclick="update_memory(${pk});">수정완료</button>
+                <h2 id="cdc-memory-message" class="displayNone" style="color: green; text-align: right;">수정이 완료되었습니다.</h2>
             </div>
             <div id="cdc-finish-box">
                 <label class="control control--checkbox">
@@ -362,7 +424,7 @@
                 </label>
             </div>
             <div id="cdc-delete-box">
-                <button class="btn-delete" onclick="delete_category(${pk}, 'finish');">프로젝트 삭제</button>
+                <button class="btn-delete" data-target="#category-delete-check">프로젝트 삭제</button>
             </div>
             `;
         }else if(type=="unfinish"){
@@ -375,20 +437,40 @@
                 <h2>나의 성장 기록하기</h2>
                 <textarea name="memory" id="category-memory" placeholder="나의 성장을 기록해보세요!" rows="30">${memoryText}</textarea>
                 <button onclick="update_memory(${pk});">수정완료</button>
+                <h2 id="cdc-memory-message" class="displayNone" style="color: green; text-align: right;">수정이 완료되었습니다.</h2>
             </div>
             <div id="cdc-finish-box">
                 <label class="control control--checkbox">
                     프로젝트 마무리하기
-                    <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})" checked/>
+                    <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})"/>
                     <div class="control__indicator"></div>
                 </label>
             </div>
             <div id="cdc-delete-box">
-                <button class="btn-delete" onclick="delete_category(${pk}, 'finish');">프로젝트 삭제</button>
+                <button class="btn-delete" data-target="#category-delete-check">프로젝트 삭제</button>
             </div>
             `;
         }
+        // 영구 삭제 
+        const deleteCheckBtn = document.querySelector('#c-modal-complete-btn');
+        deleteCheckBtn.addEventListener('click', function() {
+            delete_category_action(pk, type);
+        });
+
+        if (window.matchMedia("(max-width: 600px)").matches){
+            document.querySelector('.mb-backToList').classList.add('showCat');
+        }
+    }
+    if (window.matchMedia("(max-width: 600px)").matches){
+        const backToList = document.querySelector('.mb-backToList');
+        backToList.addEventListener('click', () => {
+            backToList.classList.remove('showCat');
+            document.querySelector('#category-detail-container').style.display = 'none';
+            document.querySelector(' #category-container').style.display = 'block';
+
+        })
     }
 
 </script>
 {% endblock %}
+<!-- <button class="btn-delete" ">프로젝트 삭제</button> -->

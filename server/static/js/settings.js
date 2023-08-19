@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", setupTextarea);
 
 // 글자수세기 기능
 function setupTextarea() {
-  const textarea = document.getElementById("proflie-description");
+  const textarea = document.getElementById("profile-description");
   const label = document.querySelector(".profile-description__textarea p");
 
   textarea.addEventListener("input", function () {
@@ -130,4 +130,10 @@ function onNavigationClick(elementClassName) {
       barIcon.classList.add("hidden");
     }
   });
+}
+
+
+// mobile 화면에서 소개란 row 3으로
+if (window.matchMedia("(max-width: 600px)").matches){
+  document.querySelector('.profile-description__textarea > textarea').setAttribute('rows', '3');
 }

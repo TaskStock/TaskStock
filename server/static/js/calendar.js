@@ -108,47 +108,73 @@ function handleDateResponse(todos, category_datas){
             for(e = todo.level + 1; e < 6; e++){
                 emptyLevel += `<div level="${e}"></div>`;
             }
-            currentInput.innerHTML += `
-            <div class="todo-item todo-item-${todo.id} ">
-                        
-                <div class="todo-checkbox todo-checkbox-${todo.id} ${todo.goal_check}" onclick="check_todo(${todo.id})"></div>
-                
-                <input type="text" class="todo-contents" onclick="edit_todo(${todo.id})" value="${todo.content}" readonly>
-                <div class="todo-level todo-level-${todo.id}">
-                    ${paintedLevel}
-                    ${emptyLevel}
-                </div>
-                <!-- edit page -->
-                <div class="todo-item--edit todo-item--edit-${todo.id}">
-                    <div class="todo-item--date">${todo.month}월 ${todo.date}일</div>
-                    <div class="todo-item--input">
-                        <span>할 일을 수정하세요</span>
-                        <input type="text" placeholder="${todo.content}" value="${todo.content}">
+
+            if(global_chart_target_username != global_current_username){
+                currentInput.innerHTML += `
+                <div class="todo-item todo-item-${todo.id}">
+                    <div class="todo-checkbox todo-checkbox-${todo.id} ${todo.goal_check}"></div>
+                    
+                    <input type="text" 
+                        class="todo-contents" 
+                        onclick="edit_todo(${todo.id})"
+                        value="${todo.content}"
+                        readonly>
+                    <div class="todo-level todo-level-${todo.id}">
+                        ${paintedLevel}
+                        ${emptyLevel}
                     </div>
-                    <div class="todo-item--level">
-                        <span>난이도를 수정하세요</span>
-                        <div class="edit-todo-level" curr-level="${todo.level}">
-                            <div level="1"></div>
-                            <div level="2"></div>
-                            <div level="3"></div>
-                            <div level="4"></div>
-                            <div level="5"></div>
+                    
+                </div>
+                `;
+            }else{
+                currentInput.innerHTML += `
+                <div class="todo-item todo-item-${todo.id}">
+                    <div class="todo-checkbox todo-checkbox-${todo.id} ${todo.goal_check}" onclick="check_todo(${todo.id})"></div>
+                    
+                    <input type="text" 
+                        class="todo-contents" 
+                        onclick="edit_todo(${todo.id})"
+                        value="${todo.content}"
+                        readonly>
+                    <div class="todo-level todo-level-${todo.id}">
+                        ${paintedLevel}
+                        ${emptyLevel}
+                    </div>
+                    
+                    <div class="todo-item--edit todo-item--edit-${todo.id}">
+                        <div class="todo-item--date"></div>
+                        <div class="todo-item--input">
+                            <span>할 일을 수정하세요</span>
+                            <input type="text"
+                            placeholder="${todo.content}"
+                            value="${todo.content}"
+                            >
+                        </div>
+                        <div class="todo-item--level">
+                            <span>난이도를 수정하세요</span>
+                            <div class="edit-todo-level" curr-level="${todo.level}">
+                                <div level="1"></div>
+                                <div level="2"></div>
+                                <div level="3"></div>
+                                <div level="4"></div>
+                                <div level="5"></div>
+                            </div>
+                        </div>
+                        <div class="todo-add--category">
+                            <span>카테고리를 수정하세요</span>
+                            <select class="todo-edit--select">
+                                <option value="">None</option>
+                                ${category_html}
+                            </select>
+                        </div>
+                        <div class="edit-btn--container">
+                            <div class="todo-edit--delete-btn" onclick="delete_todo(${todo.id})">삭제</div>
+                            <div class="todo-edit--submit-btn" onclick="update_todo(${todo.id})">완료</div>
                         </div>
                     </div>
-                    <div class="todo-add--category">
-                        <span>카테고리를 수정하세요</span>
-                        <select class="todo-edit--select">
-                            <option value="">None</option>
-                            ${category_html}
-                        </select>
-                    </div>
-                    <div class="edit-btn--container">
-                        <div class="todo-edit--delete-btn" onclick="delete_todo(${todo.id})">삭제</div>
-                        <div class="todo-edit--submit-btn" onclick="update_todo(${todo.id})">완료</div>
-                    </div>
                 </div>
-            </div>`;
-
+                `;
+            }
 
         }
     }
@@ -194,9 +220,12 @@ function paintDate(){
     let clicked_month = dayString.split('/')[0];
     let clicked_date = dayString.split('/')[1];
     
-    document.querySelector('.todo-add--date').innerHTML = `
-        ${clicked_month}월 ${clicked_date}일
-    `;
+    add_date=document.querySelector('.todo-add--date')
+    if(add_date != null){
+        add_date.innerHTML = `
+            ${clicked_month}월 ${clicked_date}일
+        `;
+    }
     const items = document.querySelectorAll('.todo-item--date');
 
     if (items.length !== 0){

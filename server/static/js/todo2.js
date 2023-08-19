@@ -6,8 +6,10 @@ const edit_containers = document.querySelectorAll('.todo-item--edit');
 let Add_width = container.clientWidth * 0.8; 
 let Edit_width = container.clientWidth * 0.9; 
 let Add_right = Add_width + 30;
-add_container.style.width = `${Add_width}px`;
-add_container.style.left = `80px`;
+if(add_container != null){
+    add_container.style.width = `${Add_width}px`;
+    add_container.style.left = `80px`;
+}
 edit_containers.forEach(box => {
     box.style.width = `${Edit_width}px`;
 })
@@ -33,9 +35,17 @@ function paintStar(level){
     })
 }
 
-plus.addEventListener('click', () => {
-    document.querySelector('.todo-plus').classList.toggle('active');
-})
+if(plus != null){
+    plus.addEventListener('click', () => {
+        document.querySelector('.todo-plus').classList.toggle('active');
+
+        // // 오류메세지 초기화
+        document.querySelector(`.todo-add--container .todo-add--input span`).style.color = '#fff';
+        document.querySelector(`.todo-add--container .todo-add--level span`).style.color = '#fff';
+
+    });
+}
+
 
 const add_todo = async(date_id) => {
     const url = '/main/add_todo/';
@@ -64,12 +74,22 @@ const add_todo = async(date_id) => {
             },
             body: JSON.stringify(data),
         })
-        const {todo_id: todo_id, my_level: my_level, content: content, category_datas: category_datas} = await res.json();
+        const {
+            todo_id: todo_id,
+            my_level: my_level,
+            content: content, 
+            category_datas: category_datas,
+            value_start: valueStart,
+            value_end: valueEnd,
+            value_high: valueHigh,
+            value_low: valueLow,
+            percentage: percentage,
+        } = await res.json();
         document.querySelector(`.day${date_id}--todo input`).value = '';
         level = '0';
         paintStar('0');
         document.querySelector('.todo-plus').classList.remove('active');
-        handleTodoResponse(todo_id, my_level, content, category_datas, category_name);
+        handleTodoResponse(todo_id, my_level, content, category_datas, category_name, valueStart, valueEnd, valueHigh, valueLow, percentage);
 
     }else if (inputVal === ''){
         document.querySelector(`.day${date_id}--todo .todo-add--input span`).style.color = '#ff0033';
@@ -78,7 +98,7 @@ const add_todo = async(date_id) => {
     } 
 }
 
-const handleTodoResponse = async(todo_id, level, content, category_datas, category_name) => {
+const handleTodoResponse = async(todo_id, level, content, category_datas, category_name, valueStart, valueEnd, valueHigh, valueLow, percentage) => {
     let paintedLevel = '';
     let emptyLevel = '';
     level = Number(level);
@@ -97,56 +117,77 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
             category_html+=`<option value='${c_name}'>${c_name}</option>`;
     }
 
-    
-    document.querySelector('.todo-paint').innerHTML += `
-    <div class="todo-item todo-item-${todo_id}">
-        <div class="todo-checkbox todo-checkbox-${todo_id}" onclick="check_todo(${todo_id})"></div>
-        
-        <input type="text" 
-            class="todo-contents" 
-            onclick="edit_todo(${todo_id})"
-            value="${content}"
-            readonly>
-        <div class="todo-level todo-level-${todo_id}">
-            ${paintedLevel}
-            ${emptyLevel}
-        </div>
-        
-        <div class="todo-item--edit todo-item--edit-${todo_id}">
-            <div class="todo-item--date"></div>
-            <div class="todo-item--input">
-                <span>할 일을 수정하세요</span>
-                <input type="text"
-                placeholder="${content}"
+    if(global_chart_target_username != global_current_username){
+        document.querySelector('.todo-paint').innerHTML += `
+        <div class="todo-item todo-item-${todo_id}">
+            <div class="todo-checkbox todo-checkbox-${todo_id}" onclick="check_todo(${todo_id})"></div>
+            
+            <input type="text" 
+                class="todo-contents" 
+                onclick="edit_todo(${todo_id})"
                 value="${content}"
-                >
+                readonly>
+            <div class="todo-level todo-level-${todo_id}">
+                ${paintedLevel}
+                ${emptyLevel}
             </div>
-            <div class="todo-item--level">
-                <span>난이도를 수정하세요</span>
-                <div class="edit-todo-level" curr-level="${level}">
-                    <div level="1"></div>
-                    <div level="2"></div>
-                    <div level="3"></div>
-                    <div level="4"></div>
-                    <div level="5"></div>
+            
+        </div>
+        `;
+    }else{
+        document.querySelector('.todo-paint').innerHTML += `
+        <div class="todo-item todo-item-${todo_id}">
+            <div class="todo-checkbox todo-checkbox-${todo_id}" onclick="check_todo(${todo_id})"></div>
+            
+            <input type="text" 
+                class="todo-contents" 
+                onclick="edit_todo(${todo_id})"
+                value="${content}"
+                readonly>
+            <div class="todo-level todo-level-${todo_id}">
+                ${paintedLevel}
+                ${emptyLevel}
+            </div>
+            
+            <div class="todo-item--edit todo-item--edit-${todo_id}">
+                <div class="todo-item--date"></div>
+                <div class="todo-item--input">
+                    <span>할 일을 수정하세요</span>
+                    <input type="text"
+                    placeholder="${content}"
+                    value="${content}"
+                    >
+                </div>
+                <div class="todo-item--level">
+                    <span>난이도를 수정하세요</span>
+                    <div class="edit-todo-level" curr-level="${level}">
+                        <div level="1"></div>
+                        <div level="2"></div>
+                        <div level="3"></div>
+                        <div level="4"></div>
+                        <div level="5"></div>
+                    </div>
+                </div>
+                <div class="todo-edit--category">
+                    <span>카테고리를 수정하세요</span>
+                    <select class="todo-edit--select">
+                        <option value="">카테고리 없음</option>
+                        ${category_html}
+                    </select>
+                </div>
+                <div class="edit-btn--container">
+                    <div class="todo-edit--delete-btn" onclick="delete_todo(${todo_id})">삭제</div>
+                    <div class="todo-edit--submit-btn" onclick="update_todo(${todo_id})">완료</div>
                 </div>
             </div>
-            <div class="todo-add--category">
-                <span>카테고리를 수정하세요</span>
-                <select class="todo-edit--select">
-                    <option value="">None</option>
-                    ${category_html}
-                </select>
-            </div>
-            <div class="edit-btn--container">
-                <div class="todo-edit--delete-btn" onclick="delete_todo(${todo_id})">삭제</div>
-                <div class="todo-edit--submit-btn" onclick="update_todo(${todo_id})">완료</div>
-            </div>
         </div>
-    </div>
-    `;
+        `;
+    }
+    
+    
     update_chart();
     has_unchecked_todos();
+    updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage)
 }
 
 
@@ -164,28 +205,29 @@ const edit_todo = (todo_id) => {
 
     // 열고 닫기
     const edit_container = document.querySelector(`.todo-item--edit-${todo_id}`);
-    edit_container.classList.toggle('active');
-    edit_container.style.width = `${Edit_width}px`;
-   
-    let curr_level = edit_container.querySelector(`.edit-todo-level`).getAttribute('curr-level');
-    epaintStar(todo_id, curr_level);
+    if(edit_container!=null){
+        edit_container.classList.toggle('active');
+        edit_container.style.width = `${Edit_width}px`;
 
-    if(edit_container.classList.contains('active')){
-        const content = edit_container.querySelector('input');
-        content.focus();
-     
-        edit_container.querySelectorAll(`.edit-todo-level > div`).forEach(star => {
-            star.addEventListener('click', () => {
-                
-                updated_level = star.getAttribute('level');
-                epaintStar(todo_id, updated_level);
-                edited_star = true;
-                
-            }
-        )})
+        let curr_level = edit_container.querySelector(`.edit-todo-level`).getAttribute('curr-level');
+        epaintStar(todo_id, curr_level);
+
+        if(edit_container.classList.contains('active')){
+            const content = edit_container.querySelector('input');
+            content.focus();
+         
+            edit_container.querySelectorAll(`.edit-todo-level > div`).forEach(star => {
+                star.addEventListener('click', () => {
+                    
+                    updated_level = star.getAttribute('level');
+                    epaintStar(todo_id, updated_level);
+                    edited_star = true;
+                    
+                }
+            )})
+        }
+        paintDate();
     }
-    paintDate();
-   
 }
 
 // 문서 전체에 클릭 이벤트 리스너 추가
@@ -200,9 +242,12 @@ document.addEventListener('click', (event) => {
         const editContainer = container.querySelector(`.todo-item--edit`);
         const editInput = container.querySelector('input');
         
-        if (editContainer.contains(event.target) || event.target.classList.contains('todo-contents')) {
-            clickedInsideEditContainer = true;
+        if(editContainer!=null){
+            if (editContainer.contains(event.target) || event.target.classList.contains('todo-contents')) {
+                clickedInsideEditContainer = true;
+            }
         }
+        
     });
 
     // 클릭된 요소가 editContainer 내부에 속하지 않는 경우 모든 editContainer의 'active' 클래스 제거
@@ -242,13 +287,22 @@ const update_todo = async(todo_id) => {
         body: JSON.stringify({todo_id, curr_level, curr_content, c_value}),
     })
     
-    const {t_id: t_id, c_level: c_level, c_content: c_content} = await res.json();
-    handleUpdateTodoRes(t_id, c_level, c_content);
+    const {
+        t_id: t_id,
+        c_level: c_level,
+        c_content: c_content,
+        value_start: valueStart,
+        value_end: valueEnd,
+        value_high: valueHigh,
+        value_low: valueLow,
+        percentage: percentage,
+    } = await res.json();
+    handleUpdateTodoRes(t_id, c_level, c_content, valueStart, valueEnd, valueHigh, valueLow, percentage);
     edit_container.classList.remove('active');
 
 }
 
-const handleUpdateTodoRes = async(todo_id, level, content) => {
+const handleUpdateTodoRes = async(todo_id, level, content, valueStart, valueEnd, valueHigh, valueLow, percentage) => {
     document.querySelector(`.todo-item-${todo_id} input`).value = content;
     let paintedLevel = '';
     let emptyLevel = '';
@@ -274,6 +328,7 @@ const handleUpdateTodoRes = async(todo_id, level, content) => {
     `;
     update_chart();
     paintDate();
+    updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage)
 }
 
 function epaintStar(todo_id, level){
@@ -298,16 +353,28 @@ const delete_todo = async(todo_id) => {
         },
         body: JSON.stringify({todo_id}),
     })
-    const {my_combo: my_combo, id: id, d_id: d_id} = await res.json();
-    handleDelTodoRes(my_combo, id, d_id);
+    const {
+        my_combo: my_combo,
+        id: id, 
+        d_id: d_id, 
+        todo_cnt:todo_cnt,
+        value_start: valueStart,
+        value_end: valueEnd,
+        value_high: valueHigh,
+        value_low: valueLow,
+        percnet:percentage,
+    } = await res.json();
+    handleDelTodoRes(my_combo, id, d_id, todo_cnt, valueStart, valueEnd, valueHigh, valueLow, percentage);
 }
-const handleDelTodoRes = async(my_combo, todo_id, date_id) => {
+const handleDelTodoRes = async(my_combo, todo_id, date_id, todo_cnt, valueStart, valueEnd, valueHigh, valueLow, percentage) => {
     // delete container
     const container = document.querySelector(`.todo-item-${todo_id}`);
     container.remove();
     update_chart();
     has_unchecked_todos();
     handleCombo(my_combo);
+    handleCompletedTodos(todo_cnt)
+    updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage)
 }
 
 
@@ -333,22 +400,37 @@ const check_todo = async(todo_id) => {
         },
         body: JSON.stringify({todo_id, status}),
     })
+    const {
+        'my_combo': my_combo,
+        'color': color, 
+        'todo_status': todo_status, 
+        't_id': t_id, 
+        'todo_cnt':todo_cnt,
+        'value_start': valueStart,
+        'value_end': valueEnd,
+        'value_high': valueHigh,
+        'value_low': valueLow,
+        'user_percentage':percent
+    } = await res.json();
     
-    const {'my_combo': my_combo, 'color': color, 'todo_status': todo_status, 't_id': t_id} = await res.json();
-    handleCheckTodoRes(my_combo, color, todo_status, t_id);
+    handleCheckTodoRes(my_combo, color, todo_status, t_id, todo_cnt, valueStart, valueEnd, valueHigh, valueLow, percent);
 }
 
-function handleCheckTodoRes(my_combo, color, status, todo_id){
+function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt, valueStart, valueEnd, valueHigh, valueLow, percent){
     const checkBox = document.querySelector(`.todo-checkbox-${todo_id}`);
     if (status == 'True'){
         checkBox.classList.add('True');
     } else{
         checkBox.classList.remove('True');
     }
+    console.log("Percentage from server:", percent);
     
     handleCombo(my_combo);
     update_chart();
     has_unchecked_todos();
+    handleCompletedTodos(todo_cnt);
+    updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percent);
+
 }
 
 function has_unchecked_todos(){
@@ -422,7 +504,7 @@ function update_chart(){
 }
 // combo
 function handleCombo(combo){
-    const comboHTML = document.querySelector('.dashboard--combo span:last-child');
+    const comboHTML = document.querySelector('.dashboard-top__cc span:nth-child(3)');
     comboHTML.innerHTML = `🔥 ${combo}`;
     comboHTML.style.animation = `combo 1.5s ease-in-out`;
     comboHTML.addEventListener('animationend', () => {
@@ -430,6 +512,53 @@ function handleCombo(combo){
     }, { once: true });
 }
 
-
+// completed_todos
+function handleCompletedTodos(todo_cnt){
+    const completedTodosElement = document.querySelector('.dashboard-top__cc span:nth-child(4)');
+    completedTodosElement.innerText = `✔︎ ${todo_cnt}`;
+}
 
 has_unchecked_todos();
+
+// price-taspi, my-info--sff 업데이트   
+function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage) {
+    document.querySelector("#ochl_open").innerHTML = `<span class="counter">${valueStart}</span> ₩`;
+    document.querySelector("#ochl_close").innerHTML = `<span class="counter">${valueEnd}</span> ₩`;` ₩`;
+    document.querySelector("#ochl_high").innerHTML = `<span class="counter">${valueHigh}</span> ₩`;
+    document.querySelector("#ochl_low").innerHTML = `<span class="counter">${valueLow}</span> ₩`;
+
+    if (percentage !== null) {
+        const displayElement = document.querySelector(".percentage-display");
+        const valueElement = displayElement.querySelector(".percentage-value");
+        const iconElement = document.getElementById("percentage-icon");
+
+        const percentValue = parseFloat(percentage);
+        valueElement.innerText = `${percentage} %`;
+
+        if (iconElement) {
+            iconElement.remove();
+        }
+
+        const misPercentageBox = document.querySelector("#mis-percentage");
+        misPercentageBox.innerHTML=`
+        <span class="percentage-value"><span class="counter">${percentValue}</span> %</span>
+        `;
+        if (percentValue > 0) {
+            misPercentageBox.innerHTML+=`
+            <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
+            `;
+        } else if (percentValue < 0) {
+            misPercentageBox.innerHTML=`
+            <i class="fa-solid fa-chevron-down" id="percentage-icon" style="color: blue;"></i>
+            `;
+        }
+    }
+
+    async function executeCounting() {
+        await counting(); // counting() 함수의 프로미스가 완료될 때까지 기다림
+    }
+
+    executeCounting(); // 비동기 작업이 모두 완료된 후에 counting() 함수 실행
+}
+
+

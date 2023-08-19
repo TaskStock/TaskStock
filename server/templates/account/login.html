@@ -3,10 +3,10 @@
 <div class="login__header">Log in</div>
 {% load socialaccount %}		
 {% providers_media_js %}
-<form action="{% provider_login_url 'google' %}" method="post" class="login__google Flex_cc">
+<form action="{% provider_login_url 'google' %}" method="post" class="login-google-form Flex_cc">
     {% csrf_token %}
-    <i class="gg-google"></i>  
-    <button type="submit">Login via Google</button>
+    
+    <button type="submit" class="login__google"><i class="gg-google"></i>  Login via Google</button>
 </form>
 <div class="bar">
     
@@ -32,7 +32,7 @@
             <td>
                 <input type="password" class="form-control" name="password" id="password" required>
                 {% if error_message %}
-                <div style="color: red;">{{ error_message }}</div>
+                <div style="color: red; font-size: var(--body2);">{{ error_message }}</div>
                 {% endif %}
             </td>
             </tr>

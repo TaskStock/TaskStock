@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Favicons -->
-    <link href="./images/favicon.png" rel="icon" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.svg' %}">
     <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
@@ -72,19 +72,19 @@
           <div class="container-box__container">
             <div class="container-box__imgs">
               <div class="container-box__imgs__img" data-aos="fade-left">
-                <img src="https://url.kr/dulgac" alt="containers first image">
+                <img src="{% static 'img/landing-page-1-1.png' %}" alt="containers first image">
               </div>
               <div class="container-box__imgs__img" data-aos="zoom-in">
-                <img src="https://url.kr/dulgac" alt="containers second image">
+                <img src="{% static 'img/landing-page-1-2.png' %}" alt="containers second image">
               </div>
               <div class="container-box__imgs__img" data-aos="fade-right">
-                <img src="https://url.kr/dulgac" alt="containers second image">
+                <img src="{% static 'img/landing-page-1-3.png' %}" alt="containers second image">
               </div>
             </div>
           <!-- 두번째 섹션; 설명 -->
             <div class="container-box__text" data-aos="fade-up">
-              <h3>Stay on top of your week.</h3>
-              <p>The timeline shows your week and beyond.</p>
+              <h3>주가의 상승을 통해 확인해보세요.</h3>
+              <p>당신의 목표 달성이 주가를 상승시킵니다.</p>
             </div>
           </div>
         </div>
@@ -93,34 +93,34 @@
       <section id="faq">
         <div class="container">
           <div class="faq-container">
-            <h2 data-aos="fade-up">How TaskStock works</h2>
+            <h2 data-aos="fade-up">어떻게 주가가 상승하나요?</h2>
             <div class="introduction-rules__faq-container" data-aos="fade-up">
               <div class="introduction-rules__image-container">
-                <img src="https://url.kr/dulgac" alt="containers first image">
+                <img src="{% static 'img/landing-page-2-1.png' %}" alt="containers first image">
               </div>  
               <ul class="introduction-rules__faq-container__faq-list">
                 <li class="introduction-rules__faq-container__faq-list__question">
                   <h3>01</h3>
                   <p>
-                    See your graph as your check your task and see it changing
+                    당신의 할 일과 난이도를 To-Do 리스트에 계획해보세요.
                   </p>
                 </li>
                 <li class="introduction-rules__faq-container__faq-list__question">
                   <h3>02</h3>
                   <p>
-                    See your graph as your check your task and see it changing
+                    당신의 목표를 완료하고 To-Do 리스트를 체크하세요.
                   </p>
                 </li>
                 <li class="introduction-rules__faq-container__faq-list__question">
                   <h3>03</h3>
                   <p>
-                    See your graph as your check your task and see it changing
+                    설정 난이도에 따른 주가 상승을 확인해보세요.
                   </p>
                 </li>
                 <li class="introduction-rules__faq-container__faq-list__question">
                   <h3>04</h3>
                   <p>
-                    See your graph as your check your task and see it changing
+                    주가 상승에 따른 그래프의 상승을 확인해보세요.
                   </p>
                 </li>
               </ul>
@@ -132,17 +132,17 @@
         <div class="container">   
           <div class="advertise-box__container">
             <div class="advertise-box__heading" data-aos="fade-up">
-              <h2>Why TaskStock?</h2>
-              <h3>join us for your value up!</h3>
+              <h2>TaskStock의 특별한 기능들</h2>
+              <h3>여러분에게 동기 부여해줍니다.</h3>
             </div>
             <div class="advertise-box__image">
-              <img src="https://placekitten.com/200/200" alt="" id="image-one"  data-aos="fade-left">
-              <img src="https://placekitten.com/200/200" alt="" id="image-two"  data-aos="zoom-in">
-              <img src="https://placekitten.com/200/200" alt="" id="image-three"  data-aos="fade-right">
+              <img src="{% static 'img/landing-page-3-1.png' %}" alt="" id="image-one"  data-aos="fade-left">
+              <img src="{% static 'img/landing-page-3-2.png' %}" alt="" id="image-two"  data-aos="zoom-in">
+              <img src="{% static 'img/badge/1+1.svg' %}" alt="" id="image-three"  data-aos="fade-right">
             </div>
             <div class="advertise-box__description" data-aos="fade-up">
-              <h3>You can improve your value with taskStock.</h3>
-              <h3>You can also see your friends value.</h3>
+              <h3>프로젝트, 그룹, 뱃지 기능을 이용해보세요.</h3>
+              <h3>당신이 목표 달성에 쉽게 다가갈 수 있을 것 입니다.</h3>
             </div>
           </div>
         </div>
@@ -152,95 +152,44 @@
           <div class="page-vision__container">
             <div class="page-vision__left-container">
               <div class="page-vision__header" data-aos="fade-right">
-                <h1>Stock System?</h1>
+                <h1>친구들과 공유하기.</h1>
               </div>
               <div class="page-vision__content" data-aos="fade-right">
-                <h2>Add your task todo.</h2>
-                <p>Stock price will be risen, if you finish your task</p>
+                <h2>친구를 팔로잉 해보세요.</h2>
+                <p>유저 검색을 통해 다양한 유저들의 주가와 목표 달성을 확인해보세요.</p>
               </div>
               <div class="page-vision__content" data-aos="fade-right">
-                <h2>Meet your friend.</h2>
-                <p>You can meet your friend's todo list & stock price.</p>
+                <h2>그룹에 참여해보세요.</h2>
+                <p>그룹에 참여하여 내 그룹의 주가 상승에 기여해보세요.</p>
               </div>
               <div class="page-vision__description" data-aos="fade-right">
                 <p>→ more information.</p>
               </div>
             </div>
             <div class="introduction-vision__image" data-aos="fade-up"> 
-              <img src="https://placekitten.com/300/500" alt="rule image">
+              <img src="{% static 'img/landing-page-4-1.png' %}" alt="rule image">
             </div>
           </div>
         </div>
       </section>
-      <section class="introduction-rule">
+      <section class="introduction-developer" style="background-color: black;">
         <div class="container">
           <div class="introduction-rule__container">
             <div class="introduction-rule__description" data-aos="zoom-in-right">
-              <h2>Level 1: You can do it easy</h2>
-              <h3>example: wash dishes, cleaning, eat vitamin</h3>
+              <h2>다양한 기기에서 이용</h2>
+              <h3>컴퓨터, 태블릿, 모바일 기기에서 모두 이용가능</h3>
             </div>
             <div class="introduction-rule__image" data-aos="flip-right">
-            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+              <img src="{% static 'img/landing-6-1.png' %}" alt="">
             </div>
           </div>
         </div>
       </section>
-      <section class="introduction-rule">
-        <div class="container">
-          <div class="introduction-rule__container">
-            <div class="introduction-rule__description" data-aos="zoom-in-right">
-              <h2>Level 2: You can do it easy</h2>
-              <h3>example: wash dishes, cleaning, eat vitamin</h3>
-            </div>
-            <div class="introduction-rule__image" data-aos="flip-right">
-            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="introduction-rule">
-        <div class="container">
-          <div class="introduction-rule__container">
-            <div class="introduction-rule__description" data-aos="zoom-in-right">
-              <h2>Level 3: You can do it easy</h2>
-              <h3>example: wash dishes, cleaning, eat vitamin</h3>
-            </div>
-            <div class="introduction-rule__image" data-aos="flip-right">
-            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="introduction-rule">
-        <div class="container">
-          <div class="introduction-rule__container">
-            <div class="introduction-rule__description" data-aos="zoom-in-right">
-              <h2>Level 4: You can do it easy</h2>
-              <h3>example: wash dishes, cleaning, eat vitamin</h3>
-            </div>
-            <div class="introduction-rule__image" data-aos="flip-right">
-            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="introduction-rule">
-        <div class="container">
-          <div class="introduction-rule__container">
-            <div class="introduction-rule__description" data-aos="zoom-in-right">
-              <h2>Level 5: You can do it easy</h2>
-              <h3>example: wash dishes, cleaning, eat vitamin</h3>
-            </div>
-            <div class="introduction-rule__image" data-aos="flip-right">
-            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
-            </div>
-          </div>
-        </div>
-      </section>
+
       <!-- 스와이퍼로 갤러리 구현 코드 -->
       <!-- 개발자 정보 -->
       <section id="swiper">
-        <div class="swiper-container" id="contact">
+        <div class="swiper-container">
           <div class="swiper-wrapper">
             <!-- 각 이미지 슬라이드를 추가합니다. -->
             <div class="swiper-slide">
@@ -248,11 +197,11 @@
                 <div class="container">
                   <div class="introduction-rule__container">
                     <div class="introduction-rule__description" data-aos="zoom-in-right">
-                      <h2>민세원</h2>
-                      <h3>Captin</h3>
+                      <h2>level 1</h2>
+                      <h3>매우 쉽게 달성 가능</h3>
                     </div>
                     <div class="introduction-rule__image" data-aos="flip-right">
-                    <img src="https://placekitten.com/300/300" alt="">
+                    <img src="{% static 'img/landing-page-5-1.png' %}" alt="">
                     </div>
                   </div>
                 </div>
@@ -263,11 +212,11 @@
                 <div class="container">
                   <div class="introduction-rule__container">
                     <div class="introduction-rule__description" data-aos="zoom-in-right">
-                      <h2>안정근</h2>
-                      <h3>Back-end</h3>
+                      <h2>level 2</h2>
+                      <h3>쉽게 달성 가능</h3>
                     </div>
                     <div class="introduction-rule__image" data-aos="flip-right">
-                    <img src="https://placekitten.com/290/290" alt="">
+                    <img src="{% static 'img/landing-page-5-1.png' %}" alt="">
                     </div>
                   </div>
                 </div>
@@ -278,11 +227,11 @@
                 <div class="container">
                   <div class="introduction-rule__container">
                     <div class="introduction-rule__description" data-aos="zoom-in-right">
-                      <h2>정환희</h2>
-                      <h3>Front-end</h3>
+                      <h2>level 3</h2>
+                      <h3>무난하게 달성 가능</h3>
                     </div>
                     <div class="introduction-rule__image" data-aos="flip-right">
-                    <img src="https://placekitten.com/200/200" alt="">
+                    <img src="{% static 'img/landing-page-5-1.png' %}" alt="">
                     </div>
                   </div>
                 </div>
@@ -293,11 +242,11 @@
                 <div class="container">
                   <div class="introduction-rule__container">
                     <div class="introduction-rule__description" data-aos="zoom-in-right">
-                      <h2>오지수</h2>
-                      <h3>Front-end</h3>
+                      <h2>level 4</h2>
+                      <h3>비교적 어렵게 달성 가능</h3>
                     </div>
                     <div class="introduction-rule__image" data-aos="flip-right">
-                    <img src="https://placekitten.com/200/300" alt="">
+                    <img src="{% static 'img/landing-page-5-1.png' %}" alt="">
                     </div>
                   </div>
                 </div>
@@ -308,11 +257,11 @@
                 <div class="container">
                   <div class="introduction-rule__container">
                     <div class="introduction-rule__description" data-aos="zoom-in-right">
-                      <h2>김선우</h2>
-                      <h3>Front-end</h3>
+                      <h2>level 5</h2>
+                      <h3>매우 어렵게 달성 가능</h3>
                     </div>
                     <div class="introduction-rule__image" data-aos="flip-right">
-                    <img src="https://placekitten.com/300/200" alt="">
+                    <img src="{% static 'img/landing-page-5-1.png' %}" alt="">
                     </div>
                   </div>
                 </div>
@@ -320,7 +269,19 @@
             </div>
             <!-- 나머지 이미지 슬라이드도 동일한 방식으로 추가합니다. -->
           </div>
-          <div class="swiper-pagination"></div>
+        </div>
+      </section>
+      <section class="introduction-rule"  id="contact">
+        <div class="container">
+          <div class="introduction-rule__container">
+            <div class="introduction-rule__description" data-aos="zoom-in-right">
+              <h2>TaskStock 개발팀</h2>
+              <h3>member: 민세원, 안정근, 오지수, 정환희, 김선우</h3>
+            </div>
+            <div class="introduction-rule__image" data-aos="flip-right">
+            <img src="https://cdn-icons-png.flaticon.com/512/3954/3954758.png" alt="">
+            </div>
+          </div>
         </div>
       </section>
     </main>
@@ -332,7 +293,9 @@
           </a>
         </div>
         <div class="contact-container">
-          <p>contact us: instagram @011110kim</p>
+          <a href="https://instagram.com/taskstock.official?igshid=MzRlODBiNWFlZA==">
+            <p>contact us: instagram @taskstock.official</p>
+          </a>
         </div>
       </div>
     </footer>

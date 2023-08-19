@@ -18,6 +18,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.core import serializers
 
+import random
+
 
 #스케줄링 관련 함수
 def decrease_value(user, target_arrow):
@@ -73,6 +75,106 @@ def local_to_utc(local_arrow):
 # Create your views here.
 # ---정근 작업---#
 
+# 정산 결과 알림
+def alarm_calculate_account(user, target_arrow):
+    #사용자의 전날 value객체 가져오기
+    value_object = get_value_for_date(user, target_arrow)  #get_value_for_date함수는 local arrow 받아야 함
+    
+    if not value_object:
+        print('전날 접속 안해서 value 없는 사용자')
+        return
+
+    result = value_object.end-value_object.start
+    ment_random=random.randrange(1,101)
+    if result > 0:  # 가치 증가되었을 때
+        if result > 20000:
+            if ment_random<=20:
+                ment="[가치 대상승] 정말 열심히 하셨군요! 앞으로도 오늘처럼만 달려봅시다!"
+            elif ment_random<=40:
+                ment="[가치 대상승] 이대로만 한다면 랭킹 1등은 문제 없겠어요!"
+            else:
+                ment="[가치 대상승] 정말 고생한 당신에게 맛있는 음식을 먹을 수 있는 권리를 드리겠습니다!"
+
+        else:
+            if ment_random<=20:
+                ment="[가치 상승] 고생하셨어요! 오늘처럼 포기하지 말고 꾸준하게!"
+            elif ment_random<=40:
+                ment="[가치 상승] 대충 가치 상승 멘트"
+            else:
+                ment="[가치 상승] 대충 가치 상승 멘트 2"
+    
+    elif result < 0:
+        if result < -20000:
+            if ment_random<=20:
+                ment="[가치 대하락] 계획은 거창했지만..."
+            elif ment_random<=40:
+                ment="[가치 대하락] 대충 가치 대하락 멘트"
+            else:
+                ment="[가치 대하락] 대충 가치 대하락 멘트 2"
+
+        else:
+            if ment_random<=20:
+                ment="[가치 하락] 대충 가치 하락 멘트"
+            elif ment_random<=40:
+                ment="[가치 하락] 대충 가치 하락 멘트 2"
+            else:
+                ment="[가치 하락] 대충 가치 상승 멘트 3"
+
+    Alarm.objects.create(
+        user=user,
+        content=ment,
+        alarm_type="account",
+    )
+
+def alarm_calculate_follow(user):
+    highest_user=user.followings.order_by('-percentage').first()
+    if highest_user:
+        ment = user.name+"님이 팔로우 중인 "+highest_user.name+" 님이 등락률 "+str(highest_user.percentage)+"를 달성했습니다!"
+        Alarm.objects.create(
+            user=user,
+            content=ment,
+            alarm_type="follow",
+        )
+
+def alarm_calculate_group():
+    pass
+
+def alarm_calculate_ranking():
+    users = User.objects.all()
+
+    # 모든 유저들의 value pk
+    top_10_values=[]
+
+    for user in users:
+        latest_value = user.value_user.order_by('-date').first()  # 최근 Value 객체 가져오기
+        if latest_value:
+            top_10_values.append(latest_value)
+
+    # 가져온 Value 객체들을 end 필드를 기준으로 내림차순 정렬
+    sorted_values = sorted(top_10_values, key=lambda value: value.end, reverse=True)
+    
+    # 상위 10개 Value 객체만 선택
+    top_10_values = sorted_values[:10]
+
+    for index, value in enumerate(top_10_values):
+        user = value.user
+        if index==0:
+            ment='전체 유저 중에서 1등을 달성하셨습니다! 축하합니다!!'
+        elif index==1:
+            ment='전체 유저 중에서 2등을 달성하셨습니다! 축하합니다!!'
+        elif index==2:
+            ment='전체 유저 중에서 3등을 달성하셨습니다! 축하합니다!!'
+        else:
+            ment='전체 유저 중에서 '+str(index+1)+' 등을 달성하셨습니다! 축하합니다!!'
+        Alarm.objects.create(
+            user=user,
+            content=ment,
+            alarm_type="ranking",
+        )
+
+
+    
+
 def settings(request):
     user=request.user
     # 한 유저가 다른 유저의 프로필을 방문했을 때의 경우도 설계해야함
@@ -86,13 +188,13 @@ def settings(request):
 def profile(request):
     username=request.GET.get('username')
     try:
-        target_user = User.objects.get(username=username)
+        target_user = User.objects.get(username=username)   #해당 페이지의 주인 user
     except User.DoesNotExist:
         return redirect('/main/')
     if target_user.is_superuser:
         return redirect('/main/')
 
-    current_user=request.user
+    current_user=request.user   #현재 로그인한 유저(다른 사람의 페이지를 볼려고 시도하는 유저)
     if target_user == current_user:
         return redirect('/main/settings/')
     
@@ -102,13 +204,35 @@ def profile(request):
         follow_text='FOLLOW'
 
     # home 로직 가져옴
-    process_combo(target_user)
     value = get_value_for_date(target_user)
     
-    if value is None:
-        # 로그인 했을 때 value가 없는 경우
+    if value == None:
+        #로그인 했을 때 value가 없는 경우 create
         value = createValue(target_user)
+        print('home로딩하면서 createValue')
         
+    elif value.is_dummy and not value.is_updated:
+        #오늘의 데이터가 미리 만들어진 더미데이터면(add_todo, values_for_chart) 업데이트로 접근
+        loacl_today_arrow = get_current_arrow(target_user.tzinfo)
+        utc_today_arrow  = local_to_utc(loacl_today_arrow)
+        
+        #자기 이전 value까지만 정렬해서 가져와야 하기 때문에 date_lt 사용
+        last_value = Value.objects.filter(user=target_user, date__lt=utc_today_arrow.datetime).order_by('-date').first()
+
+        value.start = value.end = last_value.end
+        value.low = last_value.end + value.low
+        value.high = last_value.end + value.high
+        value.is_updated = True
+        value.save()    
+
+    #combo 처리
+    process_combo(target_user)
+    #badge 처리
+    process_badges(value)
+    #시가 총액 처리(my value)
+    cap = target_user.todo_cnt * value.end
+    market_cap = max(cap, 0)
+    
     todos = Todo.objects.filter(value=value)
     date_id = value.pk
     todos_levels_dict = {}
@@ -127,6 +251,9 @@ def profile(request):
         'date_id':date_id, 
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
+        'percentage': value.percentage,
+        'market_cap':market_cap,
+        'value':value,
     }
     return render(request, 'main/profile.html', context=ctx)
 
@@ -194,10 +321,20 @@ def search_ajax(request):
     users=[]
 
     for user in find_users:
+        if user.img:
+            img_src=user.img.url
+            img_alt="Profile Image"
+        else:
+            img_src="/static/img/blank-profile-picture.png"
+            img_alt="Default Profile Image"
         user_data={
             "name":user.name,
             "username":user.username,
             "introduce":user.introduce,
+            "percentage":user.percentage,
+            "img_src":img_src,
+            "img_alt":img_alt,
+
             # 추후 필요한 필드 추가
         }
         users.append(user_data)
@@ -220,17 +357,17 @@ def follow_list(request):
     users=[]
 
     for user in follow_list:
-        try:
-            value = Value.objects.get(user=user, date=arrow.now())
-            percent = value.percentage
-        except:
-            percent = 0
+        # try:
+        #     value = Value.objects.get(user=user, date=arrow.now())
+        #     percent = value.percentage
+        # except:
+        #     percent = 0
         
         user_data={
             "username":user.username,
             "name":user.name,
             "introduce":user.introduce,
-            "percent": percent,
+            "percent": user.percentage,
             "img": user.img.url if user.img else '/static/img/blank-profile-picture.png',
             # 추후 필요한 필드 추가
         }
@@ -245,7 +382,7 @@ def createValue(user, target_arrow=None):
         target_arrow = local_to_utc(current_local_aroow)
     
     # 최초 회원가입 시 value가 자동 생성되므로 last_value값이 없는 경우는 없음
-    last_value = Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
+    last_value = Value.objects.filter(user=user, date__lt=target_arrow.datetime).order_by('-date').first()
 
     percentage = 0
     start = end = low = high = last_value.end
@@ -257,7 +394,7 @@ def createValue(user, target_arrow=None):
         start=start,
         end=end,
         low=low,
-        high=high,
+        high=high,  
     )
     # add_price(user)
     return value
@@ -290,11 +427,23 @@ def follow(request):
     if buttonText == "FOLLOW":
         current_user.followings.add(target_user)
         text="UNFOLLOW"
+        Alarm.objects.create(
+            user=target_user,
+            content=current_user.name+" 님이 팔로우했습니다.",
+            alarm_type="follow",
+        )
     elif buttonText == "UNFOLLOW":
         current_user.followings.remove(target_user)
         text="FOLLOW"
+        try:
+            alarm = Alarm.objects.get(user=target_user, content=current_user.name+" 님이 팔로우했습니다.", is_read=False)
+            alarm.delete()
+        except ObjectDoesNotExist:
+            pass
+    
+    following_count=current_user.followings.all().count()
 
-    return JsonResponse({"text": text})
+    return JsonResponse({"text": text, "f_ajax_count":following_count,})
 
 # ---환희 작업---#
 def home(request):
@@ -302,19 +451,22 @@ def home(request):
     value = get_value_for_date(current_user)
     
     if value == None:
-        # 로그인 했을 때 value가 없는 경우는 create
+        #로그인 했을 때 value가 없는 경우 create
         value = createValue(current_user)
         print('home로딩하면서 createValue')
         
-    elif value.is_dummy:
-        #오늘의 데이터가 미리 만들어진 더미데이터면 업데이트로 접근
+    elif value.is_dummy and not value.is_updated:
+        #오늘의 데이터가 미리 만들어진 더미데이터면(add_todo, values_for_chart) 업데이트로 접근
         loacl_today_arrow = get_current_arrow(current_user.tzinfo)
         utc_today_arrow  = local_to_utc(loacl_today_arrow)
         
-        #더미데이터 빼고 정렬해서 가져와야 하기 때문에 date_lt 사용
+        #자기 이전 value까지만 정렬해서 가져와야 하기 때문에 date_lt 사용
         last_value = Value.objects.filter(user=current_user, date__lt=utc_today_arrow.datetime).order_by('-date').first()
 
-        value.start = value.end = value.low = value.high = last_value.end
+        value.start = value.end = last_value.end
+        value.low = last_value.end + value.low
+        value.high = last_value.end + value.high
+        value.is_updated = True
         value.save()
         
     
@@ -322,7 +474,7 @@ def home(request):
     date_id = value.pk
     todos_levels_dict = {}
     for todo in todos:
-        todos_levels_dict[todo.id] = todo.level
+        todos_levels_dict[todo.pk] = todo.level
 
     todos_sub_dict = {}
     for todo in todos:
@@ -331,6 +483,19 @@ def home(request):
     followings_len = current_user.followings.count()
 
     categorys = Category.objects.all()
+
+    check_non_read_alarms = Alarm.objects.filter(user=current_user, is_read=False)
+    if not check_non_read_alarms:
+        alarm=False
+    else:
+        alarm=True
+    
+    #badge 처리
+    process_badges(value)
+    
+    #시가 총액 처리(my value)
+    cap = current_user.todo_cnt * value.end
+    market_cap = max(cap, 0)
     
     context = {
         'user': current_user,
@@ -339,9 +504,12 @@ def home(request):
         'date_id':date_id, 
         'todos':todos,
         'todos_sub_dict': todos_sub_dict,
-        'percent': value.percentage,
         'categorys': categorys,
+        'market_cap': market_cap,
+        'value':value,
+        'alarm': alarm,
     }
+    
     return render(request, 'main/home2.html', context)
 
 
@@ -353,12 +521,6 @@ def update_userinfo(request):
         image = request.FILES.get('img')
         name = request.POST.get('name')
         introduce = request.POST.get('profile-description')
-
-        #새 이미지가 제출되었을 경우, 이전 이미지를 삭제
-        if image and user.img:
-            old_image_path = user.img.path
-            if os.path.isfile(old_image_path):
-                os.remove(old_image_path)
 
         if image:
             user.img = image
@@ -394,6 +556,7 @@ def get_value_for_date(user, target_arrow=None):
     except Value.DoesNotExist:
         value_object = None
         print('get_value_for_date Value가 검색 범위 내 없음, Value=None 반환')
+        print('get_value_for_date except 실행:, 검색범위', start_utc_arrow,'부터',end_utc_arrow )
 
     return value_object
 
@@ -402,7 +565,6 @@ def get_value_for_date(user, target_arrow=None):
 def click_date(request):
     # 자바스크립트에서 날짜를 전달한다
     date_str = request.POST.get('str')  # '8/21/2023' 브라우저의로컬 시간대 들어온다
-    print('click_date date_str:',date_str)
     username = request.POST.get("username")
     
     if username == "":
@@ -413,9 +575,8 @@ def click_date(request):
     #date_str을 arrow 자료형으로 변환
     local_arrow_object = arrow.get(date_str, 'M/D/YYYY', tzinfo=target_user.tzinfo)
     # target_user의 타임존을 기반으로 local_datetime_object를 UTC로 변환
-    local_arrow_start = local_arrow_object.floor('day') #자정
+    local_arrow_start = local_arrow_object.floor('day') #00:00:00 
     local_arrow_end = local_arrow_object.ceil('day')    #23:59:59
-    print('click_date local:', local_arrow_start, '부터',local_arrow_end)
 
     utc_arrow_start = local_to_utc(local_arrow_start)
     utc_arrow_end = local_to_utc(local_arrow_end)
@@ -424,7 +585,6 @@ def click_date(request):
     todos = []
     try:
         value = Value.objects.get(user=target_user, date__gte=utc_arrow_start.datetime, date__lte=utc_arrow_end.datetime)
-        print('click_date try 실행:, 검색범위', utc_arrow_start,'부터',utc_arrow_end )
         todo_objects = Todo.objects.filter(value=value)
         
         for todo in todo_objects:
@@ -469,6 +629,7 @@ Todo 추가 하는 함수
 @csrf_exempt
 def add_todo(request):
     if request.method == 'POST':
+        print('add_todo실행')
         req = json.loads(request.body)
         content = req['content']
         my_level = req['level']
@@ -500,11 +661,6 @@ def add_todo(request):
             print('add_todo에서 완료 눌렀을 때 value 없는 날이라 일단 0으로 다 박음, create된 datetime =', target_arrow )
             value = get_value_for_date(current_user, target_arrow)
         
-
-        # value 있긴 한데 더미데이터인 날
-        elif value.is_dummy:
-            print('add_todo에서 완료 눌렀을 때 더미데이터임. local target arrow =', target_arrow)
-
         # 현재 user의 caregory 객체 가져오기
         try:
             category = Category.objects.get(user=current_user, name=category_name)
@@ -529,17 +685,30 @@ def add_todo(request):
         todo = Todo.objects.filter(value=value).last()
         todo_id = todo.pk
         
+        target_value = todo.value   #todo에 연결된 value
+        # tododp 연결된 value.high값 업데이트
+        target_value.high += my_level * 1000
+        
+        # todo에 연결된 value.low값 업데이트
+        target_value.low -= my_level * 1000
+        target_value.save()
+        
         today_value = get_value_for_date(current_user)
-        
-        # todo의 high값 업데이트
-        today_value.high += my_level * 1000
-        
-        # todo의 low값 업데이트
-        today_value.low -= my_level * 1000
-        today_value.save()
-        
         #방금 만들어진 todo 가져오기/수정하거나 삭제해야할 것 같아서 걍 id로 보냄
-        return JsonResponse({'date_id':value.id, 'todo_id':todo_id, 'my_level': my_level, 'content': content, 'category_datas':category_datas})
+        return JsonResponse({
+            'date_id':value.id,
+            'todo_id':todo_id,
+            'my_level': my_level,
+            'content': content,
+            'category_datas':category_datas,
+            'value_start':today_value.start,
+            'value_end':today_value.end,
+            'value_high':today_value.high,
+            'value_low': today_value.low,
+            'percentage': current_user.percentage,
+            })  
+
+
 """
 Todo 삭제 하는 함수 
 할 일 삭제 버튼 누름 -> todo 객체 삭제(ajax) -> high, low 업데이트
@@ -554,22 +723,54 @@ def delete_todo(request, pk):
         
         todo = Todo.objects.get(pk=todo_id)     
         
-        value = todo.value
+        todo_value = todo.value
         
         #todo 삭제하기 전 연결된 value의 high값 업데이트
-        value.high -= 1000*todo.level
+        todo_value.high -= 1000*todo.level
         #todo 삭제하기 전 연결된 value의 low값 업데이트
-        value.low += 1000*todo.level
+        todo_value.low += 1000*todo.level
+        todo_value.save()
         
-        #저장
-        value.save()
+        today_value = get_value_for_date(current_user)
+
+        #체크되어 있다면
+        if todo.goal_check:
+            print('delete_todo today_Value들어옴')
+            #todo_cnt 업데이트
+            current_user.todo_cnt -= 1  # 완료된 할 일의 숫자 감소
+            #close 업데이트
+            today_value.end -= 1000*todo.level
+            #퍼센트 업데이트
+            if today_value.start == 0:
+                today_value.percentage = round((today_value.end - 50000)/50000 * 100, 2)
+            else:
+                today_value.percentage = round((today_value.end - today_value.start)/today_value.start *100, 2) 
+
+            current_user.percentage=today_value.percentage
+            current_user.save()
+            today_value.save()
+            print(today_value.end)
+            
+
         #todo삭제
         todo.delete()
         
         #combo 변화 처리    
         my_combo = process_combo(current_user)
-    
-    return JsonResponse({'my_combo': my_combo, 'id':todo_id, 'd_id': value.id})
+        #completed_toodos
+        todo_cnt = current_user.todo_cnt
+        
+    return JsonResponse({
+        'my_combo': my_combo,
+        'id':todo_id,
+        'd_id': todo_value.id,
+        'todo_cnt':todo_cnt,
+        'value_start':today_value.start,
+        'value_end':today_value.end,
+        'value_high':today_value.high,  
+        'value_low':today_value.low,
+        'percnet':current_user.percentage,
+    })
 """
 Todo 업데이트 하는 함수
 content, level 업데이트 -> value high, low 업데이트
@@ -591,7 +792,6 @@ def update_todo(request, pk):
             todo.value.high -= todo.level * 1000
             todo.value.low += todo.level *1000
             
-            
             #todo 내용 update
             todo.level = updated_level
             todo.content = updated_content
@@ -610,7 +810,16 @@ def update_todo(request, pk):
             todo.save()
             todo.value.save()
 
-    return JsonResponse({'t_id': todo_id, 'c_level': updated_level, 'c_content': updated_content})
+    return JsonResponse({
+        't_id': todo_id,
+        'c_level': updated_level,
+        'c_content': updated_content,
+        'value_start':todo.value.start,
+        'value_end':todo.value.end,
+        'value_high':todo.value.high,
+        'value_low': todo.value.low,
+        'percentage': request.user.percentage,
+    })
 
 
 """
@@ -627,6 +836,7 @@ def check_todo(request, pk):
         current_user = request.user
         #오늘의 value 가져오기
         value = get_value_for_date(current_user)
+        print('check_todo에서 가져온 value 날짜:', value.date)
         
         #해당되는 todo 가져오기
         todo = Todo.objects.get(pk=todo_id)
@@ -635,15 +845,20 @@ def check_todo(request, pk):
         if todo_status == 'True':
             todo.goal_check = True
             value.end += 1000*todo.level
+            current_user.todo_cnt += 1
         else:
             todo.goal_check = False
             value.end -= 1000*todo.level
+            current_user.todo_cnt -= 1
         
         #value의 percentage값 업데이트 -> 소수점 둘째자리까지
         if value.start == 0:
             value.percentage = round((value.end - 50000)/50000 * 100, 2)
         else:
             value.percentage = round((value.end - value.start)/value.start *100, 2) 
+
+        current_user.percentage=value.percentage
+        current_user.save()
             
         todo.save()
         value.save()
@@ -651,7 +866,21 @@ def check_todo(request, pk):
         #combo변화 처리
         my_combo = process_combo(current_user)
         todo_status = str(todo_status)
-        return JsonResponse({'my_combo': my_combo, 'todo_status': todo_status, 't_id':todo.pk, 'percent':value.percentage})
+        #completed_todo 변화 처리
+        todo_cnt = current_user.todo_cnt
+        
+        return JsonResponse({
+            'my_combo': my_combo,
+            'todo_status': todo_status,
+            't_id':todo.pk,
+            'percent':value.percentage,
+            'todo_cnt':todo_cnt,
+            'value_start':value.start,
+            'value_end':value.end,
+            'value_high':value.high,
+            'value_low': value.low,
+            'user_percentage':current_user.percentage,
+            })
         
 
 
@@ -713,7 +942,7 @@ combo처리하는 함수
 """
 def process_combo(user):
     # 사용자의 시간대를 기반으로 현재 arrow을 가져옴
-    current_local_arrow = get_current_arrow(user.tzinfo)
+    current_local_arrow = get_current_arrow(user.tzinfo).ceil('day')
     # UTC로 변환
     current_utc_arrow = local_to_utc(current_local_arrow)
     
@@ -737,22 +966,104 @@ def process_combo(user):
         
     user.combo = combo
     user.save()
+    
         
     return combo
+
+def process_badges(value):
+    user = value.user
+    acquired_badges = user.badges.values_list('name', flat=True)
+    
+    #지금이라도 사야해
+    if user.combo == 10 and "지금이라도 사야해" not in acquired_badges:
+        badge_to_add = Badge.objects.get(name="지금이라도 사야해")
+        user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '지금이라도 사야해' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
+
+    #개미의 선택
+    if value.end >= 100000 and '개미의 선택' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='개미의 선택')
+        user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '개미의 선택' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
+    
+    #슈퍼 개미의 선택
+    if value.end >= 200000 and '슈퍼 개미의 선택' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='슈퍼 개미의 선택')
+        user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '슈퍼 개미의 선택' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
+    
+    #우주 개미의 선택
+    if value.end >= 500000 and '우주 개미의 선택' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='우주 개미의 선택')
+        user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '우주 개미의 선택' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
+    
+    #화성 갈끄니까
+    if value.end >= 2000000 and '화성 갈끄니까' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='화성 갈끄니까')
+        user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '화성 갈끄니까' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
+    
+    #콩콩
+    if value.percentage == 22 and '콩콩' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='콩콩')
+        user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '콩콩' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
+    
+    #1+1
+    if value.percentage == 100 and '1+1' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='1+1')
+        user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! '1+1' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )
+    
+    #Rising Star
+    if user.todo_cnt >= 1 and 'Rising Star' not in acquired_badges:
+        badge_to_add = Badge.objects.get(name='Rising Star')
+        user.badges.add(badge_to_add)
+        Alarm.objects.create(
+            user=user,
+            content="축하합니다! 'Rising Star' 배지를 획득하셨습니다!",
+            alarm_type="badge",
+        )        
+
+        
 
 
 #---선우 작업---#
 
 def search(request):
-    search_content = request.GET.get('search_content','')
-    users = User.objects.all()
-    filtered_users = users
-    if search_content:
-        filtered_users = User.objects.all().filter(name__contains=search_content)
+    top_users = User.objects.annotate(max_end=models.Max('value_user__end')).order_by('-max_end')[:5]
 
     ctx = {
-        'users': users,
-        'filtered_users': filtered_users,
+        'users': top_users,
     }
 
     return render(request, 'main/search.html',context=ctx)
@@ -769,7 +1080,19 @@ def landing_page(request):
 
 # alarm
 def alarm(request):
-    return render(request, 'main/alarm.html')
+    non_read_alarm=Alarm.objects.filter(user=request.user, is_read=False).order_by('-created_at')
+    read_alarm=Alarm.objects.filter(user=request.user, is_read=True).order_by('-created_at').exclude(pk__in=[alarm.pk for alarm in non_read_alarm])
+
+    for alarm in non_read_alarm:
+        alarm.is_read=True
+        alarm.save()
+
+    ctx = {
+        'non_read_alarm': non_read_alarm,
+        'read_alarm': read_alarm,
+    }
+
+    return render(request, 'main/alarm.html',context=ctx)
 
 
 # category
@@ -797,7 +1120,7 @@ def create_category(request):
         error_text="이름을 입력해주세요."
     else:
         try:
-            category=Category.objects.get(name=input_name)
+            category=Category.objects.get(name=input_name, user=request.user)
             success=False
             error_text="이미 존재하는 이름입니다."
         except ObjectDoesNotExist:
@@ -901,27 +1224,44 @@ def group(request,pk):
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
     value_dic={}
     my_group = request.user.my_group
+    ordered_groups = Group.objects.all().order_by('-delta')
+
 
     # 내가 방장일 때만 수정, 삭제 버튼이 보이도록 함.
-    if group.create_user == request.user.name:
+    if group.create_user_id == request.user.username:
         am_I_creator = True
     else:
         am_I_creator = False
 
     # 팔로잉 버튼을 내 그룹 유무에 따라 다르게 표시.
     if my_group == group:
-        button_text ="LEAVE GROUP"
+        button_text ="탈퇴"
     else:
-        button_text = "JOIN GROUP"    
+        button_text = "가입"    
+    
+    
     # value_dic에 사용자 이름과 해당 사용자의 value를 넣음.
+    #그룹 delta 구하기 전 초기화
+    group.delta = 0 
     for user in users:
         value = get_value_for_date(user)
-        if value is None:
-            value_dic[user.name] = 0
+        if value == None:
+            utc_arrow_now = local_to_utc(get_current_arrow(user.tzinfo).ceil('day'))
+            value = Value.objects.filter(user=user, date__lte=utc_arrow_now.datetime).last()
+            value_dic[user.name] = [value.end, 0]   #가치는 오늘 이전 생긴 것 중 가장 최근의 것 가지고 오고 오늘 value가 None이라면 번 돈은 0이므로
         else:
-            value_dic[user.name] = value.end
+            earning = value.end - value.start
+            value_dic[user.name] = [value.end, earning]    #key: user.name / value: user value의 종가, 변화량
+            group.delta += earning
+        
+        group.save()
+    
 
+    sorted_value_items = sorted(value_dic.items(), key=lambda x: x[1][1], reverse=True)
+    value_dic = {user: value for user, value in sorted_value_items}
 
+    group_position = next((index for index, g in enumerate(ordered_groups) if g == group), None)
+    
     context = {
         'group': group,
         'users': users,
@@ -929,6 +1269,7 @@ def group(request,pk):
         'button_text': button_text,
         'am_I_creator': am_I_creator,
         'users_length': len(users),
+        'group_position': group_position,
     }
     return render(request, 'main/group.html', context)
 
@@ -938,28 +1279,28 @@ def group(request,pk):
 def follow_group(request):
     buttonText = request.POST.get("group-button")
     group = request.POST.get("group")
-    password_input = request.POST.get("password")
     target_group = Group.objects.get(name=group)
     current_user = request.user
     text="오류"
 
-    if buttonText == "JOIN GROUP":
-        # 그룹이 존재하는 경우
+    if buttonText == "가입":
         if current_user.my_group is not None:
             text = "ALREADY JOINED"
         else:
-            if password_input == target_group.password:
-                current_user.my_group = target_group
-                text="LEAVE GROUP"
-            else: 
-                text="WRONG PASSWORD"   
+            current_user.my_group = target_group
+            add_group_price(current_user)
+            target_group.member_cnt += 1
+            text="탈퇴"
                 
-    elif buttonText =="LEAVE GROUP":
+    elif buttonText =="탈퇴":
         current_user.my_group = None
-        text="JOIN GROUP"
+        delete_group_price(current_user)
+        target_group.member_cnt -= 1
+        text="가입"
 
     current_user.save()
-
+    target_group.save()
+    
     return JsonResponse({'text': text})
 
 
@@ -967,7 +1308,6 @@ def create_group(request):
     user = request.user
     if request.method == 'POST':
         name_content = request.POST.get("name")
-        password_content = request.POST.get("password")
 
         if user.my_group is not None:
             #그룹이 있는 경우에 그룹 생성 막음
@@ -981,13 +1321,14 @@ def create_group(request):
                     name=name_content,
                     price=0,
                     create_user=user.name,
-                    password = password_content,
+                    create_user_id = user.username,
+                    member_cnt = 1
                 )
                 user.my_group = Group.objects.get(name=name_content)
                 user.save()
+                add_group_price(user)
                 return JsonResponse({'result': 'Success'})
 
-            
 
 def update_group(request):
     if request.method == 'POST':
@@ -1009,30 +1350,27 @@ def delete_group(request,pk):
         
         return redirect('/main/search_group/')
     
-# def add_price(user):
-#     last_value=Value.objects.filter(user=user, is_dummy=False).order_by('-date').first()
-#     my_group = user.my_group
-#     if my_group is not None:
-#         my_group.price += last_value.start - last_value.end
-#         my_group.save()
 
-#     return my_group.price
+def add_delta_to_group(user, target_arrow):
+    last_value = get_value_for_date(user, target_arrow) #local arrow 
+    
+    my_group = user.my_group
+    if my_group and last_value:
+            my_group.delta += (last_value.end - last_value.start)
+            my_group.save()
 
-# search에 그룹 검색 기능 추가
-# 그룹에 멤버가 0명이라면 삭제하기
+    return
 
 # group search에 관한 함수
 def search_group(request):
     groups = Group.objects.all().order_by('-price')
-    currentu_user = request.user
+    current_user = request.user
     filtered_groups = groups
-    my_group = currentu_user.my_group
-
 
     ctx = {
         'groups': groups,
         'filtered_groups': filtered_groups,
-        'my_group': currentu_user.my_group,
+        'my_group': current_user.my_group,
     }
 
     return render(request, 'main/search_group.html',context=ctx)
@@ -1060,3 +1398,27 @@ def search_group_ajax(request):
         groups.append(group_data)
 
     return JsonResponse({"groups": groups})
+
+# group_price 관련 함수
+
+def add_group_price(current_user):
+    my_group = current_user.my_group
+
+    if my_group is not None:
+        value = get_value_for_date(current_user).end
+        my_group.price += value
+    
+        current_user.my_group.save()
+    else:
+        pass
+
+def delete_group_price(current_user):
+    my_group = current_user.my_group
+
+    if my_group is not None:
+        value = get_value_for_date(current_user).end
+        my_group.price -= value
+    
+        current_user.my_group.save()
+    else:
+        pass

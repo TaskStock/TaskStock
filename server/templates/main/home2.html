@@ -5,23 +5,17 @@
         let global_chart_target_username="";
     </script>
     <div class="main-left">
-        <div class="price">
-            <div class="price--taspi">
-                <span>TASPI</span>
-                <!-- (오늘의 주가총액 / 배포 하루 후 주가총액) * 100 -->
-                <span>2,591.26</span>
-            </div>
-            <div class="price--marketcap">
-                <span>My Value</span>
-                <!-- value개수 * value.end -->
-                <span>3,634.7조</span>
-            </div>
-            <div class="total-todos">
-                <span>Group Value</span>
-                <!-- 그룹에 참여한 시점부터 
-                    개인별 (value.end - value.start)를 모두 합한 값
-                -->
-                <span>3,634.7조</span>
+
+        <div class="dashboard-top">
+            <div class="dashboard-top__ochl">
+                <span>Open</span>
+                <span>Close</span>
+                <span>High</span>
+                <span>Low</span>
+                <span id="ochl_open"><span class="counter">{{ value.start }}</span> ₩</span>
+                <span id="ochl_close"><span class="counter">{{ value.end }}</span> ₩</span>
+                <span id="ochl_high"><span class="counter">{{ value.high }}</span> ₩</span>
+                <span id="ochl_low"><span class="counter">{{ value.low }}</span> ₩</span>
             </div>
         </div>
         <div id="chart"></div>
@@ -49,7 +43,7 @@
                 </label>   
             </form>
         </div>
-        <div class="dashboard">
+        <div class="dashboard-bottom">
             <div id="username_save" style="display:none;">{{user.username}}</div>
             <script>
                 const username = document.querySelector("#username_save");
@@ -59,18 +53,123 @@
                     global_chart_target_username=username.textContent;
                 }
             </script>
-            <div class="dashboard--combo">
+
+            <div class="dashboard-top__value">
+                <span id="value_marketCapKey">Market Cap</span>
+                <span id="value_marketCap">{{market_cap}} ₩</span>
+
+                {% if user.my_group == None %}
+                <span id="value_groupValKey">Group Earnings</span>
+                <span id="value_groupVal">-</span>
+                {% else %}
+                <span id="value_groupValKey"><a href="/main/group/{{user.my_group.pk}}">{{user.my_group.name}} Earnings</a></span>
+                <span id="value_groupVal">{{user.my_group.delta}} ₩</span>
+                {% endif %}
+
+            </div>
+            <div class="dashboard-top__cc">
                 <span>Combo</span>
-                <span>🔥 {{ user.combo }}</span>
-            </div>
-            <div class="dashboard--completed">
                 <span>Completed Todos</span>
-                <span>✔︎ 56</span>
+
+                <span style="font-size: var(--subheading)">🔥 {{ user.combo }}</span>
+                <span style="font-size: var(--subheading)">✔︎ {{ user.todo_cnt }}</span>
+
             </div>
-            <div class="dashboard--badge">
+            <div class="dashboard-bottom__badge">
                 <span>Badge</span>
-                <span></span>
+                <div class="badge-modal">
+                    <div class="badge-modal--top"></div>
+                    <div class="badge-modal__delBtn"><i class="fa-solid fa-x"></i></div>
+                    <div class="badge-modal--bottom">
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="dashboard--badge__container" id="dashboard--badge__container">
+                   
+                    {% for badge in user.badges.all %}
+                        {% if badge.name == "지금이라도 사야해" %}
+                        <div class="badge-container">
+                            <img src="{% static 'img/badge/combo.svg' %}">
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p>                             
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if badge.name == "개미의 선택" %}
+                        <div class="badge-container">
+                            <img src="{% static 'img/badge/ant_beginner.svg' %}">
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if badge.name == "슈퍼 개미의 선택" %}
+                        <div class="badge-container">
+                            <img src="{% static 'img/badge/ant_intermediate.svg' %}">
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if badge.name == "우주 개미의 선택" %}
+                        <div class="badge-container">
+                            <img src="{% static 'img/badge/and_master.svg' %}">
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if badge.name == "콩콩" %}
+                        <div class="badge-container">
+                            <img src="{% static 'img/badge/22.svg' %}">
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                              
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if badge.name == "1+1" %}
+                        <div class="badge-container">
+                            <img src="{% static 'img/badge/1+1.svg' %}">
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                <p>{{ badge.description }}</p> 
+                                
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if badge.name == "화성 갈끄니까" %}
+                        <div class="badge-container">
+                            <img src="{% static 'img/badge/mars.svg' %}">
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if badge.name == "Rising Star" %}
+                        <div class="badge-container">
+                            <img src="{% static 'img/badge/rising_star.svg' %}">
+                            <div class="badge-content__container">
+                                <h3>{{ badge.name }}</h3>
+                                
+                                <p>{{ badge.description }}</p> 
+                            </div>
+                        </div>
+                            
+                        {% endif %}
+                    {% endfor %}
+            
+                </div>
             </div>
+           
         </div>
     </div>
     <div class="main-right">
@@ -93,9 +192,10 @@
                             <div class="todo-add--input">
                                 <span>할 일을 입력하세요</span>
                                 <input type="text"
-                                placeholder="헬스장 가기"
+                                placeholder="할 일"
                                 onkeypress="if(event.keyCode==13) {add_todo({{ date_id }})}"
                                 autofocus
+                                style="font-size: var(--body2)"
                                 >
                             </div>
                             <div class="todo-add--level">
@@ -111,7 +211,7 @@
                             <div id="todo-add--category">
                                 <span>카테고리를 설정하세요</span>
                                 <select id="todo-add--select">
-                                    <option value="" selected>None</option>
+                                    <option value="" selected>카테고리 없음</option>
                                     {% for category in categorys %}
                                     <option value="{{category.name}}">{{category.name}}</option>
                                     {% endfor %}
@@ -200,7 +300,7 @@
                             <div class="todo-edit--category">
                                 <span>카테고리를 수정하세요</span>
                                 <select class="todo-edit--select">
-                                    <option value="">None</option>
+                                    <option value="">카테고리 없음</option>
                                     {% for category in categorys %}
                                     <option value="{{category.name}}" {% if todo.category.name == category.name %} selected {% endif %}>
                                         {{category.name}}
@@ -234,13 +334,33 @@
 
 {% block extra %}
 <script>
-    // home2를 랜더링했을 때 가장 먼제 실행하는 스크립트
-    document.addEventListener("DOMContentLoaded", function(){
-        
-    });
+    // mobile에서 chart, calendar 탭
+    if (window.matchMedia("(max-width: 600px)").matches){
+        const mb_ccBtn = document.querySelector('#mb-main--nav');
+        mb_ccBtn.addEventListener('click', () => {
+            mb_tab();
+        })
+        mb_tab();
+
+        // 차트 버튼 1 Week -> 1w
+        document.querySelector('#one_week + .chart-btn').innerHTML = '1주';
+        document.querySelector('#one_month + .chart-btn').innerHTML = '1달';
+        document.querySelector('#three_month + .chart-btn').innerHTML = '3달';
+        document.querySelector('#six_month + .chart-btn').innerHTML = '6달';
+        document.querySelector('#one_year + .chart-btn').innerHTML = '1년';
+    }
+</script>
+<script>
+    const gridContainer = document.querySelector('#dashboard--badge__container');
+    const numberOfItems = gridContainer.children.length;
+    const gridColumnValue = `repeat(${numberOfItems}, 60px)`;
+    
+    gridContainer.style.gridTemplateColumns = gridColumnValue;
 </script>
 <script src="{% static 'js/candlestick.js' %}"></script>
 <script src="{% static 'js/time.js' %}"></script>
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
+<script src="{% static 'js/badge.js' %}"></script>
+
 {% endblock %}

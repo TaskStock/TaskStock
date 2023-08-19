@@ -13,33 +13,21 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-import environ
-
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
-
-# reading .env file
-environ.Env.read_env(BASE_DIR / '../.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-import my_settings
-
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = env('SECRET_KEY')
-SECRET_KEY = my_settings.SECRET_KEY
-
+SECRET_KEY = 'django-insecure-5sp39*kq37f7m6=xce#a1p293xy1^sa1fd_fe@g6t_)js(&&(_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['172.30.1.38',
+'127.0.0.1']
 
 
 # Application definition
@@ -104,14 +92,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-DATABASES = my_settings.DATABASES
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # Password validation
@@ -176,6 +162,16 @@ SITE_ID = 1
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/main/'	# 로그인 후 리다이렉트 되는 곳
 
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# reading .env file
+environ.Env.read_env(BASE_DIR / '../.env')
+
 SOCIAL_AUTH_GOOGLE_CLIENT_ID=env('SOCIAL_AUTH_GOOGLE_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_SECRET=env('SOCIAL_AUTH_GOOGLE_SECRET')
 API_KEY=env('API_KEY')
@@ -215,10 +211,11 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_USE_SSL = False
 
 MEDIA_URL = '/media/'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-#장고 앱스케줄러 관련 설정
-APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
+#장고 앱스케줄러 관련 설정	
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default	
 
 SCHEDULER_DEFAULT = True
 

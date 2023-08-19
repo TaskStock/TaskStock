@@ -2,47 +2,78 @@
 {%block page%}
 <main class="group-main">
     <div class="group-header">
-        <span>Group Page</span>
+        <h1>{{group.name}}</h1>
+        {% if am_I_creator %}
+        <form onsubmit="confirmModal(event)">
+            {% csrf_token %}
+            <input type="text" name="group-create-inpput"  id="update-input" value="{{group.name}}">
+            <button type="submit" name="group-update-button" id="update-button"><i class="fa-solid fa-check"></i></button>
+        </form>
+        <button id="groupName-editBtn"><i class="fa-solid fa-pen"></i></button>
+        {% endif %}
+
+
+        
     </div>
     <div class="group-content">
         <div class="group-content__info">
-            <div class="group-content__name">{{group.name}}</div>
-            <span class="group-content__text">그룹장: {{group.create_user}}</span>
-            <span class="group-content__text">가격: {{group.price}}</span>
-            <span class="group-content__text" id="group-member">그룹원 인원 수 : {{users_length}}</span>
-            <div class="add-button__container">
-                <form onsubmit="handleButtonClick(event)">
-                    {% csrf_token %}
-                    <input type="hidden" name="group" value="{{ group.name }}">
-                    {% if button_text == "JOIN GROUP" %}
-                    <input type="text" name="group-password-verify-input"  id="password-verify-input">
-                    {% endif %}
-                    <button type="submit" name="group-button" id="add-button">{{button_text}}</button>
-                </form>
-            </div>
+            <h3>Group Value <i class="fa-solid fa-coins"></i></h3>
+            <h3>Today's Earnings <i class="fa-solid fa-arrow-trend-up"></i></h3>
+            <h3>Group rank <i class="fa-solid fa-crown"></i></h3>
+            <h3>Members <i class="fa-solid fa-user"></i></h3>
+            <h3>Group Head <i class="fa-solid fa-user-tie"></i></h3>
+            <span>{{group.price}} ₩</span>
+            <span>{{group.delta}} ₩</span>
+            <span> {{ group_position|add:1 }}위 </span>
+            <span>{{users_length}}</span>
+            <span>{{group.create_user}}</span>
         </div>
-        <div class="group-content__form">
-            {% if am_I_creator %}
-                <form onsubmit="confirmModal(event)">
-                    {% csrf_token %}
-                    <input type="text" name="group-create-inpput"  id="update-input">
-                    <button type="submit" name="group-update-button" id="update-button">Update</button>
-                </form>
-                <form action="/main/group/delete_group/{{ group.pk }}/" method="post">
-                    {% csrf_token %}
-                    <button type="submit" name="group-delete-button" id="delete-button">Delete</button>
-                </form>
-            {% endif %}
-        </div>
+
+        <h3><i class="fa-solid fa-crown"></i> Members Ranking</h3>
         <ul class="group-content__ul">
             {% for key, value in value.items %}
-            <li id="group-content__li-{{key}}">
-                <div>그룹원 명: {{ key }}</div>
-                <div>그룹원 가격: {{ value }}</div>
+            <li id="group-content__li-{{key}}" class="group-user">
+                {% if forloop.counter < 4 %}
+                <div class="members-top3-trophy">
+                    {% if forloop.counter == 1 %} 
+                    <i class="fa-solid fa-trophy" style="color: var(--gold);"></i>
+                    {% elif forloop.counter == 2 %} 
+                    <i class="fa-solid fa-trophy" style="color: var(--silver);"></i>
+                    {% elif forloop.counter == 3 %} 
+                    <i class="fa-solid fa-trophy" style="color: var(--bronze);"></i>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="group-user__username">{{ key }}</div>
+                <div class="group-user__value"><i class="fa-solid fa-coins"></i> {{ value.0 }} ₩</div>
+                <div class="group-user__earning"><i class="fa-solid fa-arrow-trend-up"></i> {{ value.1 }} ₩</div>
+
             </li>
-                {% endfor %}
+            {% endfor %}
         </ul>
+        <form onsubmit="handleButtonClickMessage(event)">
+            {% csrf_token %}
+            <input type="hidden" name="group" id="group-content__name" value="{{ group.name }}">
+            {% if not am_I_creator %}
+                {% if button_text == '탈퇴' %}
+                <!-- <button type="submit" name="group-button" id="add-button">{{button_text}}</button> -->
+                <button type="submit" name="group-button" id="add-button" class="leaveGroupBtn">탈퇴</button>
+                {% else %}
+                <button type="submit" name="group-button" id="add-button" class="joinGroupBtn">가입</button>
+                {% endif %}
+            {% endif %}
+        </form>
+        {% if am_I_creator %}
+        <form action="/main/group/delete_group/{{ group.pk }}/" method="post" onsubmit="confirmDelete(event)">
+            {% csrf_token %}
+            <button type="submit" name="group-delete-button" id="delete-button">그룹 삭제</button>
+        </form>
+        {% endif %}
     </div>
+
+
+   
 </main>
 
 
@@ -51,7 +82,39 @@
 
 
 {% block extra %}
+<script>
+    const amICreator = "{{am_I_creator}}";
+// group name 수정: if 관리자일때만 show
+if(amICreator == 'True'){
+  const groupName_editBtn = document.querySelector('#groupName-editBtn');
+  const groupHeader = document.querySelector('.group-header');
+  groupName_editBtn.addEventListener('click', () => {
 
+    groupHeader.classList.add('editShow');
+    groupNameEditToggle();
+    
+  })
+
+  const groupName_confirmBtn = document.querySelector('#update-button');
+  groupName_confirmBtn.addEventListener('click', () => {
+    groupHeader.classList.remove('editShow');
+    groupNameEditToggle();
+  })
+  function groupNameEditToggle() {
+    const groupHeader = document.querySelector('.group-header');
+    if(groupHeader.classList.contains('editShow')){
+      groupHeader.querySelector('h1').style.display = 'none';
+      groupHeader.querySelector('#groupName-editBtn').style.display = 'none';
+      groupHeader.querySelector('form').style.display = 'flex';
+    }else{
+      groupHeader.querySelector('h1').style.display = 'block';
+      groupHeader.querySelector('#groupName-editBtn').style.display = 'block';
+      groupHeader.querySelector('form').style.display = 'none';
+
+    }
+  }
+}
+</script>
 <script src="{% static 'js/group.js' %}"></script>
 
 {% endblock %}
