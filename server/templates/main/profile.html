@@ -20,7 +20,14 @@
             <div class="user-info--sff__container">
                 <div class="user-info--sff sff-s">
                     <span>Today</span>
-                    <span>{{percentage}}</span>
+                    <span id="mis-percentage" class="percentage-display">
+                        <span>{{percentage}}</span>
+                        {% if user.percentage > 0 %}
+                        <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
+                        {% elif user.percentage < 0 %}
+                        <i class="fa-solid fa-chevron-down" id="percentage-icon" style="color: blue;"></i>
+                        {% endif %}
+                    </span>
                 </div>
                 <div class="user-info--sff sff-fg">
                     <span>Following</span>
