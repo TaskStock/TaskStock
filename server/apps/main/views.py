@@ -76,7 +76,7 @@ def local_to_utc(local_arrow):
 # ---정근 작업---#
 
 # 정산 결과 알림
-def alarm_calculate_result(user, target_arrow):
+def alarm_calculate_account(user, target_arrow):
     #사용자의 전날 value객체 가져오기
     value_object = get_value_for_date(user, target_arrow)  #get_value_for_date함수는 local arrow 받아야 함
     
@@ -125,6 +125,55 @@ def alarm_calculate_result(user, target_arrow):
         content=ment,
         alarm_type="account",
     )
+
+def alarm_calculate_follow(user):
+    highest_user=user.followings.order_by('-percentage').first()
+    if highest_user:
+        ment = user.name+"님이 팔로우 중인 "+highest_user.name+" 님이 등락률 "+str(highest_user.percentage)+"를 달성했습니다!"
+        Alarm.objects.create(
+            user=user,
+            content=ment,
+            alarm_type="follow",
+        )
+
+def alarm_calculate_group():
+    pass
+
+def alarm_calculate_ranking():
+    users = User.objects.all()
+
+    # 모든 유저들의 value pk
+    top_10_values=[]
+
+    for user in users:
+        latest_value = user.value_user.order_by('-date').first()  # 최근 Value 객체 가져오기
+        if latest_value:
+            top_10_values.append(latest_value)
+
+    # 가져온 Value 객체들을 end 필드를 기준으로 내림차순 정렬
+    sorted_values = sorted(top_10_values, key=lambda value: value.end, reverse=True)
+    
+    # 상위 10개 Value 객체만 선택
+    top_10_values = sorted_values[:10]
+
+    for index, value in enumerate(top_10_values):
+        user = value.user
+        if index==0:
+            ment='전체 유저 중에서 1등을 달성하셨습니다! 축하합니다!!'
+        elif index==1:
+            ment='전체 유저 중에서 2등을 달성하셨습니다! 축하합니다!!'
+        elif index==2:
+            ment='전체 유저 중에서 3등을 달성하셨습니다! 축하합니다!!'
+        else:
+            ment='전체 유저 중에서 '+str(index+1)+' 등을 달성하셨습니다! 축하합니다!!'
+        Alarm.objects.create(
+            user=user,
+            content=ment,
+            alarm_type="ranking",
+        )
+
+
+    
 
 def settings(request):
     user=request.user
