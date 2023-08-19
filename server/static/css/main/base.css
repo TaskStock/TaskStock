@@ -9,6 +9,7 @@
     --checked-border: #000;
     --box-color: rgb(222, 222, 222);
     --level-blank: rgb(222, 222, 222);
+    --mb-nav: rgb(222, 222, 222);
     --bg-1: #000;
     --bg-2: #363636;
     --bg-3: rgb(222, 222, 222);
@@ -67,6 +68,7 @@
     --item-color: #323232;
     --bg-5: #323232;
     --text-color-rev: #1f1f1f;
+    --mb-nav: #000;
     --shadow: 0;
 }
 body{
@@ -160,6 +162,7 @@ section header img,
     width: 196px;
     font-size: var(--body2);
     color: white;
+    line-height: 2rem;
     
 }
 

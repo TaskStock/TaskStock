@@ -415,8 +415,8 @@
 #cdc-delete-box button{
     font-size: var(--body2);
     padding: 10px 16px;
-    background-color: var(--red_error);
-    border: 1px solid var(--red_error);
+    background-color: var(--red-1);
+    border: 1px solid var(--red-1);
     border-radius: var(--border-r);
     color: white;
     position: relative;

@@ -575,7 +575,7 @@ main{
         position: absolute;
         right: 30px;
         bottom: 30px;
-        background-color: var(--box-color);
+        background-color: var(--mb-nav);
         border-radius: 50%;
         padding: 16px;
         cursor: pointer;
@@ -595,41 +595,7 @@ main{
     #mb-main--nav > input{
         display: none;
     }
-    .price{
-        order: 2;
-        display: grid;
-        grid-template-columns: auto;
-        gap: 0;
-        margin: 0;
-        padding: 0;
-    }
-    .price > div,
-    .dashboard > div{
-        flex-direction: row;
-        justify-content: space-between;
-        border-radius: 0;
-        width: 100%;
-        padding: var(--gutter) calc(2 * var(--gutter));
-    }
-    .price > div > span:last-child,
-    .dashboard > div > span:last-child{
-        font-size: var(--body1);
-    }
-    .dashboard{
-        order: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        margin: 0;
-        padding: 0;
-        margin-top: var(--gutter);
-    }
-    .dashboard .dashboard--completed,
-    .price .price--taspi,
-    .price .total-todos{
-        background-color: var(--body-color);
-    }
+    
+    
    
-    
-    
 }
