@@ -233,3 +233,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default	
 
 SCHEDULER_DEFAULT = True
+
+
+# LOGGING
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/django/debug.log',  # 로그 파일 경로
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'DEBUG',
+    },
+}
