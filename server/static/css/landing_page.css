@@ -241,7 +241,7 @@ main {
   width: 100%;
   justify-content: center;
   align-items: center;
-  gap: var(--gutter);
+  gap: 50px;
 }
 
 .introduction-rules__faq-container__faq-list {
@@ -249,7 +249,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: var(--gutter);
+  gap: 36px;
 }
 
 .introduction-rules__image-container {
@@ -261,8 +261,8 @@ main {
 }
 
 .introduction-rules__image-container > img {
-  width: 300px;
-  height: 500px;
+  width: 600px;
+  height: auto;
   max-width: 100%;
   min-width: 40%;
   border-radius: 20px;
@@ -476,8 +476,8 @@ main {
 }
 
 .introduction-rule__image > img {
-  width: 50%;
-  height: auto;
+  width: 350px;
+  height: 500px;
   border-radius: 20px;
 }
 
@@ -599,5 +599,13 @@ footer {
 
   .swiper-container {
     height: 50vh;
+  }
+
+  .introduction-rules__faq-container {
+    flex-direction: column;
+  }
+
+  .introduction-rules__image-container img {
+    min-width: 300px;
   }
 }
