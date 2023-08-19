@@ -34,6 +34,7 @@
                 {% if error_message %}
                 <div style="color: red; font-size: var(--body2);">{{ error_message }}</div>
                 {% endif %}
+                <div class="login__forgot-pw"><a href="/find_password/">비밀번호 찾기</a></div> 
             </td>
             </tr>
             <tr>
@@ -41,11 +42,17 @@
                 <button type="submit" class="login-btn hover-black">로그인</button>
             </td>
             </tr>
+            <tr>
+            <td colspan="2" class="signup-btn-td">
+                <a href="/signup/step1/">회원가입</a>
+            </td>
+            </tr>
+        
         </table>
     </form>
 </div>
-<div class="login__forgot-pw"><a href="/find_password/">Forgot password?</a></div>        
-<div class="login__signup">Not a member? <a href="/signup/step1/">Create an account</a></div>
+       
+
       
 
 {% endblock %}
