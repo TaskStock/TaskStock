@@ -98,13 +98,16 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-}
-
-.settings-detail__profile-container  > img {
+    object-fit: cover;
     width: 80px;
     height: 80px;
     border-radius: 50%;
     margin: var(--gutter);
+    overflow: hidden;
+}
+
+.settings-detail__profile-container  > img {
+    width: 100%;
 }
 
 .settings-detail__description-container > h3 {
