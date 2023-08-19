@@ -94,7 +94,7 @@
                     </div>
                     <p>
                         <i class="fa-solid fa-arrow-trend-up"></i>
-                        <span>{{my_group.delta}}</span>
+                        <span>{{group.delta}}</span>
                     </p>
                     <p>
                         <i class="fa-solid fa-coins"></i>
@@ -120,17 +120,17 @@
      
             <h3>검색 결과</h3>
             <div class="search-group-result Scroll" id="search-groups__result-container">
-                {% for filtered_group in filtered_groups %}
+                {% for group in groups %}
                     <div class="search-group-result__container">
                         <div class="search-group__header">
-                            <a href="/main/group/{{filtered_group.pk}}/">
-                                <h2>{{filtered_group.name}}</h2>
+                            <a href="/main/group/{{group.pk}}/">
+                                <h2>{{group.name}}</h2>
                             </a>
                             <form onsubmit="handleFollowButtonClick(event)">
                                 {% csrf_token %}
-                                <input type="hidden" name="group" value="{{ filtered_group.name }}">
+                                <input type="hidden" name="group" value="{{ group.name }}">
                                 <button type="submit" name="group-button" class="add-button">
-                                    {% if filtered_group == my_group %}
+                                    {% if group == my_group %}
                                         탈퇴
                                     {% else %}
                                         가입
@@ -140,15 +140,15 @@
                         </div>
                         <p>
                             <i class="fa-solid fa-won-sign"></i>
-                            <span>{{filtered_group.price}}</span>
+                            <span>{{group.price}}</span>
                         </p>
                         <p>
                             <i class="fa-solid fa-user"></i>
-                            <span>{{filtered_group.member_cnt}}</span>
+                            <span>{{group.member_cnt}}</span>
                         </p>
                         <p>
                             <i class="fa-solid fa-user-tie"></i>
-                            <span>{{filtered_group.create_user}}</span>
+                            <span>{{group.create_user}}</span>
                         </p>
                     </div>
                 {% endfor %}

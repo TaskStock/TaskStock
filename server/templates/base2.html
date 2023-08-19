@@ -131,8 +131,11 @@
                         </span>
                     </div>
                 </div>
-                
-                <div class="my-info--comment">{{user.introduce}}</div>
+                <div class="my-info--comment">
+                    {% if user.introduce %}
+                        {{ user.introduce }}
+                    {% endif %}
+                </div>
             </div>
         </div>
         <div class="ff-tab">

@@ -30,6 +30,7 @@ def porcess_midnight():
         
         previous_day = current_time.shift(days=-1)
         decrease_value(user, previous_day)
+
         #add_delta_to_group(user, previous_day)
 
         # 정산 결과 알림
