@@ -90,14 +90,14 @@
             </script>
             <div class="dashboard-top__value">
                 <span id="value_marketCapKey">Market Cap</span>
-                <span id="value_marketCap">{{market_cap}} ₩</span>
+                <span id="value_marketCap" style="font-size: var(--subheading)">{{market_cap}} ₩</span>
 
                 {% if target_user.my_group == None %}
                 <span id="value_groupValKey">Group Earnings</span>
-                <span id="value_groupVal">-</span>
+                <span id="value_groupVal" style="font-size: var(--subheading)">-</span>
                 {% else %}
-                <span id="value_groupValKey"><a href="/main/group/{{target_user.my_group.pk}}">{{target_user.my_group.name}} Earnings</a></span>
-                <span id="value_groupVal">{{target_user.my_group.delta}} ₩</span>
+                <span id="value_groupValKey">My Group</span>
+                <span id="value_groupVal" style="font-size: var(--subheading)"><a href="/main/search_group/">{{target_user.my_group.name}}</a></span>
                 {% endif %}
 
             </div>
@@ -313,6 +313,7 @@
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/candlestick.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
+<script src="{% static 'js/badge.js' %}"></script>
 
 <script>
     const followClick = async () =>{
