@@ -977,7 +977,7 @@ def process_badges(value):
     acquired_badges = user.badges.values_list('name', flat=True)
     
     #지금이라도 사야해
-    if user.combo == 10 and "지금이라도 사야해" not in acquired_badges:
+    if user.combo >= 10 and "지금이라도 사야해" not in acquired_badges:
         badge_to_add = Badge.objects.get(name="지금이라도 사야해")
         user.badges.add(badge_to_add)
         Alarm.objects.create(

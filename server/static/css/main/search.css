@@ -107,18 +107,18 @@
     gap: 5px;
     
 }
-
 .friend-info-pic {
     width: 50px;
     height: 50px;
     background-color: grey;
     border-radius: 50%;
     overflow: hidden;
-    object-fit: cover;
     flex-shrink: 0;
 }
 .friend-info-pic img{
     width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 .search-result__name-container h2 {
     font-size: var(--body1);

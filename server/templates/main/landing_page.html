@@ -19,8 +19,8 @@
     href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"
   />
     <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'css/landing_page.css' %}">
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/landing_page.css' %}">
     <title>TaskStock</title>
   </head>
   <body>
@@ -56,7 +56,7 @@
           <div class="page-banner__container" data-aos="fade-up"
           data-aos-duration="3000">
             <div class="page-banner__heading">
-              <span>할일을 완료해 보세요</span>
+              <span>할 일을 완료해보세요</span>
               <span>당신의 주식창에서.</span>
             </div>
             <a href="/login/" id="page-banner__start-btn">
@@ -295,34 +295,36 @@
         </div>
       </div>
     </footer>
+
+
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
       // swiper 함수
-document.addEventListener("DOMContentLoaded", function () {
-  var mySwiper = new Swiper(".swiper-container", {
-    grabCursor: true,
-    centeredSlides: true,
-    slidesPerView: "auto",
-    effect: "coverflow",
-    loop: true,
-    coverflowEffect: {
-      rotate: 50,
-      stretch: 0,
-      depth: 100,
-      modifier: 1,
-      slideShadows: true,
-    },
-    pagination: {
-      el: ".swiper-pagination",
-    },
-    autoplay: {
-      delay: 2500, // 슬라이드 간격을 밀리초(ms) 단위로 지정합니다.
-      disableOnInteraction: false, // 사용자 인터랙션 후에도 자동 전환을 유지합니다.
-    },
-  });
-});
+      document.addEventListener("DOMContentLoaded", function () {
+        var mySwiper = new Swiper(".swiper-container", {
+          grabCursor: true,
+          centeredSlides: true,
+          slidesPerView: "auto",
+          effect: "coverflow",
+          loop: true,
+          coverflowEffect: {
+            rotate: 50,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows: true,
+          },
+          pagination: {
+            el: ".swiper-pagination",
+          },
+          autoplay: {
+            delay: 2500, // 슬라이드 간격을 밀리초(ms) 단위로 지정합니다.
+            disableOnInteraction: false, // 사용자 인터랙션 후에도 자동 전환을 유지합니다.
+          },
+        });
+      });
     </script>
     <script>
       AOS.init();

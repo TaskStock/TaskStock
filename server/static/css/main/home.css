@@ -456,7 +456,13 @@ main{
     }
 }
 
-
+#ochl_open,
+#ochl_close,
+#ochl_high,
+#ochl_low{
+    display: flex;
+    gap: 5px;
+}
 
 /* badge */
 #dashboard--badge__container {
@@ -492,6 +498,17 @@ main{
     opacity: 0;
     visibility: hidden;
     transition: var(--transition);
+}
+@media screen and (max-width: 1080px) {
+    .badge-modal{
+        transform: translate(calc(50px - 50%), -50%);
+    }   
+}
+@media screen and (max-width: 600px) {
+    .badge-modal{
+        width: 80%;
+        transform: translate(-50%, -50%);
+    }   
 }
 .badge-modal.modalShow{
     opacity: 1;

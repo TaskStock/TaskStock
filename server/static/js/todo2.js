@@ -625,5 +625,5 @@ async function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, pe
         }
     }
 }
-// updateValueElements(1000, 2000, 2500, 900, "5.25");
+
 
