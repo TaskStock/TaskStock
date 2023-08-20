@@ -138,6 +138,9 @@
         const createInput = document.querySelector('#create_category');
         createInput.classList.toggle('inactive');
         document.querySelector('#category-container button').classList.toggle('active');
+        setTimeout(() => {
+            document.querySelector('#name').focus();
+        }, 500);
     };
 
     // 새로운 카테고리를 추가했을 때
@@ -247,14 +250,6 @@
         categoryBox.insertBefore(h2Element, categoryBox.firstChild);
 
     }
-
-
-    // const delete_category = async (pk, type) => {
-    //     if(window.confirm('정말 삭제하시겠습니까?')) {
-    //         delete_category_action (pk,type)
-    //         window.location.reload()
-    //     }
-    // }
 
     // 카테고리 삭제 버튼을 눌렀을 때
     // 모달창
@@ -426,6 +421,7 @@
             <div id="cdc-delete-box">
                 <button class="btn-delete" data-target="#category-delete-check">프로젝트 삭제</button>
             </div>
+            
             `;
         }else if(type=="unfinish"){
             categoryBox.innerHTML=`
@@ -449,6 +445,7 @@
             <div id="cdc-delete-box">
                 <button class="btn-delete" data-target="#category-delete-check">프로젝트 삭제</button>
             </div>
+            
             `;
         }
         // 영구 삭제 

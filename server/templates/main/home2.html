@@ -56,14 +56,17 @@
 
             <div class="dashboard-top__value">
                 <span id="value_marketCapKey">Market Cap</span>
-                <span id="value_marketCap" style="font-size: var(--subheading)">{{market_cap}} ₩</span>
+                <span id="value_marketCap" style="font-size: var(--subheading)">
+                    <span>{{market_cap}}</span>
+                    <span>₩</span>
+                </span>
 
-                {% if user.my_group == None %}
-                <span id="value_groupValKey">My Group</span>
-                <span id="value_groupVal" style="font-size: var(--subheading)">-</span>
-                {% else %}
+                {% if user.my_group %}
                 <span id="value_groupValKey">My Group</span>
                 <span id="value_groupVal" style="font-size: var(--subheading)"><a href="/main/search_group/">{{user.my_group.name}}</a></span>
+                {% else %}
+                <span id="value_groupValKey">My Group</span>
+                <span id="value_groupVal" style="font-size: var(--subheading)">-</span>
                 {% endif %}
 
             </div>
@@ -362,6 +365,5 @@
 <script src="{% static 'js/calendar.js' %}"></script>
 <script src="{% static 'js/todo2.js' %}"></script>
 <script src="{% static 'js/badge.js' %}"></script>
-<script src="{% static 'js/counterUp.js' %}"></script>
 
 {% endblock %}

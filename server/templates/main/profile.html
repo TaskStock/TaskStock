@@ -92,12 +92,12 @@
                 <span id="value_marketCapKey">Market Cap</span>
                 <span id="value_marketCap" style="font-size: var(--subheading)">{{market_cap}} ₩</span>
 
-                {% if target_user.my_group == None %}
-                <span id="value_groupValKey">Group Earnings</span>
-                <span id="value_groupVal" style="font-size: var(--subheading)">-</span>
-                {% else %}
+                {% if target_user.my_group %}
                 <span id="value_groupValKey">My Group</span>
                 <span id="value_groupVal" style="font-size: var(--subheading)"><a href="/main/search_group/">{{target_user.my_group.name}}</a></span>
+                {% else %}
+                <span id="value_groupValKey">My Group</span>
+                <span id="value_groupVal" style="font-size: var(--subheading)">-</span>
                 {% endif %}
 
             </div>

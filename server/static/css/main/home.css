@@ -228,6 +228,12 @@ main{
     outline: none;
     margin-top: 10px;
 }
+#todo-add--select option,
+.todo-edit--select option{
+    background: rgba(0,0,0,0.3);
+    /* background-color: red; */
+    color: red;
+}
 #todo-add--category,
 .todo-edit--category{
     width: 100%;
@@ -376,6 +382,8 @@ main{
 }
 #value_marketCap{
     grid-area: value1;
+    display: flex;
+    gap: 5px;
 }
 #value_groupValKey{
     grid-area: key2;
@@ -582,6 +590,12 @@ main{
 .badge-container:hover img{
     top: -2px;
 }
+/* select option 커스텀 */
+
+
+
+
+
 
 @media screen and (max-width: 600px) {
     body{
@@ -612,7 +626,4 @@ main{
     #mb-main--nav > input{
         display: none;
     }
-    
-    
-   
 }
