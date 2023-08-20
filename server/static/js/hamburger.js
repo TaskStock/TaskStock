@@ -40,7 +40,7 @@ if (window.matchMedia("(min-width: 900px) and (max-width: 1080px)").matches){
     document.addEventListener('click', (event) => {
         // 클릭된 요소가 tb_hamburger contents 내부에 속하는지 확인
         let clickedInsideEditContainer = false;
-        console.log(event.target);
+        // console.log(event.target);
         if (tb_section.contains(event.target) || tb_small_section.contains(event.target)) {
             clickedInsideEditContainer = true;
         }
@@ -72,7 +72,7 @@ if(activeTheme){
 darkBtn.forEach(btn => {
     btn.addEventListener('click', () => {
         bodyEl.classList.toggle('dark');
-        console.log('clicked');
+        // console.log('clicked');
     
         if(bodyEl.classList.contains('dark')){
             localStorage.setItem('theme', 'dark');

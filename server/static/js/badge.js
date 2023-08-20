@@ -16,7 +16,7 @@ badges.forEach(badge => {
 
         const badgeName = badge.querySelector('h3').innerHTML;
         const badgeExplain = badge.querySelector('p').innerHTML;
-        console.log(badgeImg, badgeName, badgeExplain);
+        // console.log(badgeImg, badgeName, badgeExplain);
 
         badge_modal.querySelector('.badge-modal--bottom h3').innerHTML = badgeName;
         badge_modal.querySelector('.badge-modal--bottom p').innerHTML = badgeExplain;

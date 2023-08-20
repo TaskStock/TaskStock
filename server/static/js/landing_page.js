@@ -4,9 +4,9 @@ const landingText = document.querySelector(".container-box__text");
 const header = landingText.querySelector("h3");
 const description = landingText.querySelector("p");
 
-console.log(landingImgs);
-console.log(header);
-console.log(description);
+// console.log(landingImgs);
+// console.log(header);
+// console.log(description);
 
 const hoverImage = (newHeader, newDescription) => {
   header.innerText = newHeader;

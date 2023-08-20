@@ -13,7 +13,7 @@ window.onload = async function() {
         });
 
         const data = await response.json();
-        console.log(data.status);
+        // console.log(data.status);
     } catch (error) {
         console.error("Error sending timezone:", error);
     }

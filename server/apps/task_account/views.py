@@ -103,6 +103,9 @@ def signup1(request):
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth.login(request, user)
 
+            user.custom_active=False
+            user.save()
+
             return redirect('/signup/step2/')
         else:
             
@@ -156,6 +159,8 @@ from django.core.mail import EmailMessage
 import smtplib
 from django.http import Http404
 
+from decouple import config
+
 @csrf_exempt
 def email_validation(request):
     email = request.POST.get("email")
@@ -180,8 +185,8 @@ def email_validation(request):
         smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
         smtp_server.starttls()
 
-        EMAIL_HOST_USER = request.META.get('EMAIL_HOST_USER')
-        EMAIL_HOST_PASSWORD = request.META.get('EMAIL_HOST_PASSWORD')
+        EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+        EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
         smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
 
         if type=="email_validation":
@@ -190,7 +195,7 @@ def email_validation(request):
             user.save()
 
             subject = 'Activate Your Account'
-            message = f'Click the link to activate your account: http://127.0.0.1:8000/activate/{user.username}/'
+            message = f'Click the link to activate your account: https://task-stock.com/activate/{user.username}/'
         elif type=="find_password":
             username = request.POST.get("username")
             user=User.objects.get(username=username)

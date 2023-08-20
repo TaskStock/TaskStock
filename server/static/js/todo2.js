@@ -72,7 +72,7 @@ const add_todo = async(date_id) => {
 
     // 달력에서 클릭한 날짜. 클릭 안했으면 오늘날짜 
     let click_date = clickedDayString(dayString);
-    console.log(click_date);
+    // console.log(click_date);
 
     const selectElement = document.querySelector('#todo-add--select');
     category_name=selectElement.value;
@@ -451,7 +451,7 @@ function handleCheckTodoRes(my_combo, color, status, todo_id, todo_cnt, valueSta
     } else{
         checkBox.classList.remove('True');
     }
-    console.log("Percentage from server:", percent);
+    // console.log("Percentage from server:", percent);
     
     handleCombo(my_combo);
     update_chart();
