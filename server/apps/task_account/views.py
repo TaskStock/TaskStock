@@ -140,6 +140,8 @@ from django.core.mail import EmailMessage
 import smtplib
 from django.http import Http404
 
+from decouple import config
+
 @csrf_exempt
 def email_validation(request):
     email = request.POST.get("email")
@@ -164,8 +166,8 @@ def email_validation(request):
         smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
         smtp_server.starttls()
 
-        EMAIL_HOST_USER = request.META.get('EMAIL_HOST_USER')
-        EMAIL_HOST_PASSWORD = request.META.get('EMAIL_HOST_PASSWORD')
+        EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+        EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
         smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
 
         if type=="email_validation":
