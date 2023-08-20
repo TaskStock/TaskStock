@@ -390,10 +390,10 @@
             headers:{},
             body: formData,
         });
-        const {category_data}=await res.json();
-        show_category(category_data, pk, type);
+        const {category_data, todo_datas, todo_count}=await res.json();
+        show_category(category_data, todo_datas, todo_count, pk, type);
     }
-    const show_category = (category_data, pk, type) => {
+    const show_category = (category_data, todo_datas, todo_count, pk, type) => {
         const categoryBox = document.querySelector('#category-detail-container');
 
         let memoryText;
@@ -402,9 +402,22 @@
         else
             memoryText = category_data.memory;
 
-        // innerHTML 안의 내용 수정 시 바로 밑에 다른 조건문의 innerHTML도 수정해야함에 주의
+        let boxCheck="";
+        let todo_content="";
         if(type=="finish"){
-            categoryBox.innerHTML=`
+            boxCheck="checked";
+        }
+        
+        for (const t_data of todo_datas) {
+            todo_content+=`
+            <div>
+                <h2>${t_data.content}</h2>
+                <h2>${t_data.level}</h2>
+            </div>
+            `;
+        }
+
+        categoryBox.innerHTML=`
             <div id="cdc-name-box">
                 <h2 id="cdc-name-${pk}">${category_data.name}</h2>
                 <button onclick="update_btn(${pk});"><i class="fa-solid fa-pen"></i></button>
@@ -416,41 +429,22 @@
                 <button onclick="update_memory(${pk});">수정완료</button>
                 <h2 id="cdc-memory-message" class="displayNone" style="color: green; text-align: right;">수정이 완료되었습니다.</h2>
             </div>
+            <div id="cdc-todos-box">
+                <h2>${category_data.name} 프로젝트에서 ${todo_count}개의 할 일을 완료했습니다.</h2>
+                ${todo_content}
+            </div>
             <div id="cdc-finish-box">
                 <label class="control control--checkbox">
                     프로젝트 마무리하기
-                    <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})" checked/>
+                    <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})" ${boxCheck}/>
                     <div class="control__indicator"></div>
                 </label>
             </div>
             <div id="cdc-delete-box">
                 <button class="btn-delete" data-target="#category-delete-check">프로젝트 삭제</button>
             </div>
-            `;
-        }else if(type=="unfinish"){
-            categoryBox.innerHTML=`
-            <div id="cdc-name-box">
-                <h2 id="cdc-name-${pk}">${category_data.name}</h2>
-                <button onclick="update_btn(${pk});"><i class="fa-solid fa-pen"></i></button>
-            </div>
-            <div id="cdc-memory-box">        
-                <h2>나의 성장 기록하기</h2>
-                <textarea name="memory" id="category-memory" placeholder="나의 성장을 기록해보세요!" rows="30">${memoryText}</textarea>
-                <button onclick="update_memory(${pk});">수정완료</button>
-                <h2 id="cdc-memory-message" class="displayNone" style="color: green; text-align: right;">수정이 완료되었습니다.</h2>
-            </div>
-            <div id="cdc-finish-box">
-                <label class="control control--checkbox">
-                    프로젝트 마무리하기
-                    <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})"/>
-                    <div class="control__indicator"></div>
-                </label>
-            </div>
-            <div id="cdc-delete-box">
-                <button class="btn-delete" data-target="#category-delete-check">프로젝트 삭제</button>
-            </div>
-            `;
-        }
+        `;
+        
         // 영구 삭제 
         const deleteCheckBtn = document.querySelector('#c-modal-complete-btn');
         deleteCheckBtn.addEventListener('click', function() {
