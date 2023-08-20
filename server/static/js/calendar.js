@@ -160,7 +160,7 @@ function handleDateResponse(todos, category_datas){
                                 <div level="5"></div>
                             </div>
                         </div>
-                        <div class="todo-add--category">
+                        <div class="todo-edit--category">
                             <span>카테고리를 수정하세요</span>
                             <select class="todo-edit--select">
                                 <option value="">None</option>
