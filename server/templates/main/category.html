@@ -138,6 +138,9 @@
         const createInput = document.querySelector('#create_category');
         createInput.classList.toggle('inactive');
         document.querySelector('#category-container button').classList.toggle('active');
+        setTimeout(() => {
+            document.querySelector('#name').focus();
+        }, 500);
     };
 
     // 새로운 카테고리를 추가했을 때
@@ -247,14 +250,6 @@
         categoryBox.insertBefore(h2Element, categoryBox.firstChild);
 
     }
-
-
-    // const delete_category = async (pk, type) => {
-    //     if(window.confirm('정말 삭제하시겠습니까?')) {
-    //         delete_category_action (pk,type)
-    //         window.location.reload()
-    //     }
-    // }
 
     // 카테고리 삭제 버튼을 눌렀을 때
     // 모달창
@@ -429,6 +424,7 @@
                 <button onclick="update_memory(${pk});">수정완료</button>
                 <h2 id="cdc-memory-message" class="displayNone" style="color: green; text-align: right;">수정이 완료되었습니다.</h2>
             </div>
+
             <div id="cdc-todos-box">
                 <h2>${category_data.name} 프로젝트에서 ${todo_count}개의 할 일을 완료했습니다.</h2>
                 ${todo_content}
@@ -443,6 +439,7 @@
             <div id="cdc-delete-box">
                 <button class="btn-delete" data-target="#category-delete-check">프로젝트 삭제</button>
             </div>
+
         `;
         
         // 영구 삭제 

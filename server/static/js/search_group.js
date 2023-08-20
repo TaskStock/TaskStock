@@ -213,3 +213,25 @@ const handleFollowButtonText = async (text, event) => {
 if (window.matchMedia("(max-width: 500px)").matches) {
   handleSearchToggle();
 }
+
+// comma 찍기
+// const test = addCommasToNumber(1000);
+// console.log(test);
+
+const myGroup = document.querySelector('.my-group__container');
+const top10 = document.querySelector('.group-top10__container');
+const myGroup_delta = myGroup.querySelector('a p:nth-of-type(1) span');
+const myGroup_price = myGroup.querySelector('a p:nth-of-type(2) span');
+const top10_delta = top10.querySelector('p:nth-of-type(1) span');
+const top10_price = top10.querySelector('p:nth-of-type(2) span');
+
+const display_myGroup_delta = addCommasToNumber(myGroup_delta.innerText);
+const display_myGroup_price = addCommasToNumber(myGroup_price.innerText);
+const display_top10_delta = addCommasToNumber(top10_delta.innerText);
+const display_top10_price = addCommasToNumber(top10_price.innerText);
+
+myGroup_delta.innerHTML = `${display_myGroup_delta} ₩`;
+myGroup_price.innerHTML = `${display_myGroup_price} ₩`;
+top10_delta.innerHTML = `${display_top10_delta} ₩`;
+top10_price.innerHTML = `${display_top10_price} ₩`;
+

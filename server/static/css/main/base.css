@@ -50,7 +50,7 @@
     --border-r: 8px;
     --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
-    --transition: 0.3s;
+    --transition: 0.15s;
 
     color-scheme: light dark;
 }
@@ -127,11 +127,12 @@ section header img,
     align-items: center;
 }
 .my-info--pic{
-    width: 90px;
-    height: 90px;
+    width: 70px;
+    height: 70px;
     background-color: grey;
     overflow: hidden;
     border-radius: 50%;
+    flex-shrink: 0;
 }
 .friend-info--pic{
     overflow: hidden;
@@ -521,4 +522,5 @@ section header img,
 }
 .percentage-display{
     font-size: var(--body2);
+    width: 70px;
 }

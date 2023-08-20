@@ -22,8 +22,8 @@
             <h3>Group rank <i class="fa-solid fa-crown"></i></h3>
             <h3>Members <i class="fa-solid fa-user"></i></h3>
             <h3>Group Head <i class="fa-solid fa-user-tie"></i></h3>
-            <span>{{group.price}} ₩</span>
-            <span>{{group.delta}} ₩</span>
+            <span>{{group.price}}</span>
+            <span>{{group.delta}}</span>
             <span> {{ group_position|add:1 }}위 </span>
             <span>{{users_length}}</span>
             <span>{{group.create_user}}</span>
@@ -46,8 +46,8 @@
                 {% endif %}
 
                 <div class="group-user__username">{{ key }}</div>
-                <div class="group-user__value"><i class="fa-solid fa-coins"></i> {{ value.0 }} ₩</div>
-                <div class="group-user__earning"><i class="fa-solid fa-arrow-trend-up"></i> {{ value.1 }} ₩</div>
+                <div class="group-user__value"><i class="fa-solid fa-coins"></i> <span>{{ value.0 }}</span></div>
+                <div class="group-user__earning"><i class="fa-solid fa-arrow-trend-up"></i> <span>{{ value.1 }}</span></div>
 
             </li>
             {% endfor %}

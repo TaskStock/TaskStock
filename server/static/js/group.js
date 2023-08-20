@@ -102,3 +102,22 @@ function confirmDelete(event) {
     }
   }
 }
+
+// comma 찍기
+const groupInfo = document.querySelector('.group-content__info');
+
+const groupInfo_delta = groupInfo.querySelector('span:nth-of-type(1)');
+const groupInfo_price = groupInfo.querySelector('span:nth-of-type(2)');
+const member_value = document.querySelector('.group-user__value span');
+const member_earning = document.querySelector('.group-user__earning span');
+
+const display_groupInfo_delta = addCommasToNumber(groupInfo_delta.innerText);
+const display_groupInfo_price = addCommasToNumber(groupInfo_price.innerText);
+const display_member_value = addCommasToNumber(member_value.innerText);
+const display_member_earning = addCommasToNumber(member_earning.innerText);
+
+groupInfo_delta.innerHTML = `${display_groupInfo_delta} ₩`;
+groupInfo_price.innerHTML = `${display_groupInfo_price} ₩`;
+member_value.innerHTML = `${display_member_value} ₩`;
+member_earning.innerHTML = `${display_member_earning} ₩`;
+
