@@ -13,11 +13,25 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Value, Category
 
+from django.utils import timezone
+from datetime import timedelta
+
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
             user = form.get_user()
+
+            today = timezone.now().date()
+            ten_days_ago = today - timedelta(days=10)
+
+            if user.last_login.date()<ten_days_ago:
+                Alarm.objects.create(
+                    user=user,
+                    content="오랜만에 돌아오신 것을 환영합니다!",
+                    alarm_type="account",
+                )
+
             auth.login(request, user)
             
             if not request.user.custom_active:

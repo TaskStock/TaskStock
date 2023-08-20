@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 
 import random
-
+from django.db.models import F
 
 #스케줄링 관련 함수
 def decrease_value(user, target_arrow):
@@ -138,7 +138,33 @@ def alarm_calculate_follow(user):
         )
 
 def alarm_calculate_group():
-    pass
+    top_3_groups = Group.objects.order_by('-price')[:3]
+    for index, group in enumerate(top_3_groups):
+        users = group.user_set.all()
+        # 그룹 랭킹 1등
+        if index==0:
+            for user in users:
+                Alarm.objects.create(
+                    user=user,
+                    content="당신의 그룹 "+group.name+" 이 랭킹 "+str(index+1)+"등을 달성했습니다!",
+                    alarm_type="group",
+                )
+        # 그룹 랭킹 2등
+        elif index==1:
+            for user in users:
+                Alarm.objects.create(
+                    user=user,
+                    content="당신의 그룹 "+group.name+" 이 랭킹 "+str(index+1)+"등을 달성했습니다!",
+                    alarm_type="group",
+                )
+        # 그룹 랭킹 3등
+        else:
+            for user in users:
+                Alarm.objects.create(
+                    user=user,
+                    content="당신의 그룹 "+group.name+" 이 랭킹 "+str(index+1)+"등을 달성했습니다!",
+                    alarm_type="group",
+                )
 
 def alarm_calculate_ranking():
     users = User.objects.all()
