@@ -192,7 +192,7 @@ def email_validation(request):
             user.save()
 
             subject = 'Activate Your Account'
-            message = f'Click the link to activate your account: https://hello.taskstock.p-e.kr/activate/{user.username}/'
+            message = f'Click the link to activate your account: https://task-stock.com/activate/{user.username}/'
         elif type=="find_password":
             username = request.POST.get("username")
             user=User.objects.get(username=username)
