@@ -27,6 +27,10 @@ env = environ.Env(
 # reading .env file
 environ.Env.read_env(BASE_DIR / '../.env')
 
+# sentry
+import raven
+DSN_URL=env('DSN_URL')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -60,6 +64,9 @@ INSTALLED_APPS = [
 
     # provider
     'allauth.socialaccount.providers.google',
+
+    # logging 위한 sentry
+    'raven.contrib.django.raven_compat',
 ]
 
 # user 모델이 사용자 인증 모델이라고 알림
@@ -223,8 +230,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-EMAIL_USE_SSL = False
-
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -234,3 +239,8 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
 
 SCHEDULER_DEFAULT = True
 
+# sentry
+RAVEN_CONFIG={
+    'dsn':'{}'.format(DSN_URL),
+    'release': raven.fetch_git_sha(os.path.join(os.path.dirname(__file__), '../..')),
+}
