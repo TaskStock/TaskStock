@@ -3,25 +3,30 @@
   --msk-bg-base: #000;
   --msk-color: #000;
   --msk-bg: rgb(245, 247, 249);
-  --gutter: 1rem;
-  --padding: 1rem 2.4rem;
-
-  --heading1: min(11vh, min(15vw, 116px));
-  --heading2: min(7vh, min(10.5vw, 72px));
-  --heading3: min(5vh, min(7vw, 48px));
-  --body1: min(4vh, min(5vw, 28px));
-  --paragraph: min(2.8vh, min(3.8vw, 16px));
 
 
-   /* font */
-   --hero: 50px;
-   /* --heading1: 38px; */
-   /* --heading2: 28px; */
-   /* --heading3: 22px; */
-   --subheading: 18px;
-   /* --body1: 16px; */
-   --body2: 14px;
-   --caption: 12px;
+  /* font size */
+  --hero: 8.0rem;
+  --heading1: 3.8rem;
+  --heading2: 2.8rem;
+  --heading3: 2.2rem;
+  --subheading: 1.8rem;
+  --body1: 1.6rem;
+  --body2: 1.4rem;
+  --caption: 1.2rem;
+
+  /* font weight */
+  --weight1: 400;
+  --weight2: 500;
+  --weight3: 700;
+
+  --offset: 40px;
+  --gutter: 16px;
+  --border-r: 8px;
+
+  --transition: 0.3s;
+
+
 }
 
 /* layout */
@@ -32,36 +37,42 @@ body {
 }
 
 body {
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  /* font-family: Helvetica Neue, Helvetica, Arial, sans-serif; */
   font-size: var(--body2);
   color: var(--msk-color);
   background-color: var(--msk-bg);
   overflow-x: hidden;
+  position: relative;
 }
 
 .container {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  padding: var(--padding);
+  padding: var(--gutter) var(--offset);
 }
 
 /* header */
 header {
   background-color: var(--msk-bg);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 5;
 }
 
 nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 12vh;
-  padding: var(--padding);
+  height: 70px;
+  padding: var(--gutter) var(--offset);
 }
 
 #logo-image {
-  height: 30px;
-  filter: opacity(0.4) drop-shadow(0 0 0 rgb(0, 0, 0));
+  height: 35px;
+  
 }
 
 .page-nav__button-container {
@@ -69,14 +80,9 @@ nav {
   align-items: center;
   justify-content: center;
   gap: var(--gutter);
+  font-size: var(--body1);
 }
-.page-nav__button-container span{
-  font-size: var(--paragraph);
 
-}
-.page-nav__button-container--content > a:hover {
-  opacity: 0.8;
-}
 
 /* main */
 main {
@@ -86,21 +92,22 @@ main {
 /* page-banner */
 #page-banner {
   display: flex;
-    position: relative;
-    flex-direction: column;
-    height: 100vh;
-    min-height: 100vh;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--msk-bg);
-    transition: background-color 0.3s ease-in-out 0s;
+  position: relative;
+  flex-direction: column;
+  height: 80vh;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: var(--msk-bg);
+  padding-bottom: 50px;
+  transition: background-color 0.3s ease-in-out 0s;
 }
 
 .page-banner__container {
   display: flex;
   flex: 0 0 auto;
   height: 100%;
+  gap: 50px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -110,22 +117,22 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font-size: var(--heading1);
-  font-weight: 700;
+  font-size: var(--hero);
+  font-weight: var(--weight3);
   line-height: 1.2;
   text-align: center;
-  padding: var(--padding);
+  /* padding: var(--padding); */
 }
 
 #page-banner__start-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;
   width: 30%;
-  height: 50px;
   background-color: #000;
   color: #fff;
-  border-radius: 20px;
+  border-radius: var(--border-r);
   margin: var(--gutter);
   transition: opacity 0.1s ease-in-out 0s;
 }
@@ -145,7 +152,7 @@ main {
   background-color: var(--msk-bg);
 }
 #page-banner__btn-text{
-  font-size: var(--paragraph);
+  font-size: var(--heading3);
 }
 .container-box__container {
   display: flex;
@@ -156,13 +163,12 @@ main {
 }
 
 .container-box__imgs__img:hover > img {
-  transform: scale(1.2);
+  transform: scale(1.03);
 }
 
 .container-box__imgs__img:hover {
   cursor: pointer;
 }
-
 .container-box__imgs {
   display: flex;
   align-items: center;
@@ -179,7 +185,7 @@ main {
 }
 
 .container-box__imgs__img > img {
-  transition: 0.5s all ease-in-out;
+  transition: 0.1s all ease-in-out;
   max-width: 100%;
   width: 300px;
   height: 500px
