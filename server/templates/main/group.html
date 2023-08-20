@@ -32,7 +32,7 @@
         <h3><i class="fa-solid fa-crown"></i> Members Ranking</h3>
         <ul class="group-content__ul">
             {% for key, value in value.items %}
-            <li id="group-content__li-{{key}}" class="group-user">
+            <a href="/main/profile/?username={{key}}" id="group-content__li-{{key}}" class="group-user">
                 {% if forloop.counter < 4 %}
                 <div class="members-top3-trophy">
                     {% if forloop.counter == 1 %} 
@@ -49,7 +49,7 @@
                 <div class="group-user__value"><i class="fa-solid fa-coins"></i> <span>{{ value.0 }}</span></div>
                 <div class="group-user__earning"><i class="fa-solid fa-arrow-trend-up"></i> <span>{{ value.1 }}</span></div>
 
-            </li>
+            </a>
             {% endfor %}
         </ul>
         <form onsubmit="handleButtonClickMessage(event)">

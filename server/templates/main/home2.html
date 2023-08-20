@@ -212,9 +212,9 @@
                                 </div>
                             </div>
                             <div id="todo-add--category">
-                                <span>카테고리를 설정하세요</span>
+                                <span>프로젝트를 설정하세요</span>
                                 <select id="todo-add--select">
-                                    <option value="" selected>카테고리 없음</option>
+                                    <option value="" selected>프로젝트 없음</option>
                                     {% for category in categorys %}
                                     <option value="{{category.name}}">{{category.name}}</option>
                                     {% endfor %}
@@ -240,10 +240,6 @@
 
                 </div>
             </div>
-            <!-- <div class="heatmap-container">
-                <div id="heatmap"></div>
-            </div> -->
-            
             <div class="todo-container">
                 <!-- paint todo -->
 
@@ -255,11 +251,13 @@
                         
                         <div class="todo-checkbox todo-checkbox-{{todo.pk}} {{todo.goal_check}}" onclick="check_todo({{todo.pk}})"></div>
                         
-                        <input type="text" 
+                        <!-- <input type="text" 
                                class="todo-contents" 
                                onclick="edit_todo({{todo.pk}})"
                                value="{{todo.content}}"
-                               readonly>
+                               readonly> -->
+                        <div class="todo-contents" onclick="edit_todo({{todo.pk}})">
+                        {{todo.content}}</div>
                         <div class="todo-level todo-level-{{todo.pk}}">
                       
                          

@@ -145,8 +145,12 @@ main{
     background-color: var(--item-color);
     /* #fff, #323232 */
 }
-.todo-item > input{
+.todo-item > .todo-contents{
+    font-size: var(--body2);
+    flex-grow: 1;
     color: var(--checked-border);
+    line-height: 2rem;
+    padding: 5px 7px;
     /* #000,  #fff*/
 }
 .todo-add--input input,
@@ -159,6 +163,7 @@ main{
     background-color: transparent;
     padding: var(--gutter);
     margin-top: 10px;
+    white-space: pre-wrap;
     
 }
 .todo-add--date,
