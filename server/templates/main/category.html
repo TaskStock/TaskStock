@@ -404,10 +404,25 @@
         }
         
         for (const t_data of todo_datas) {
+            let paintedLevel = '';
+            let emptyLevel = '';
+            level = Number(t_data.level);
+            for(p = 1; p < level + 1; p++){
+                paintedLevel += `<div level="${p}" class="active"></div>`;
+            }
+            for(e = level + 1; e < 6; e++){
+                emptyLevel += `<div level="${e}"></div>`;
+            }
             todo_content+=`
-            <div>
-                <h2>${t_data.content}</h2>
-                <h2>${t_data.level}</h2>
+            <div class="todo-item">
+                <input type="text" 
+                    class="todo-contents" 
+                    value="${t_data.content}"
+                    readonly>
+                <div class="todo-level">
+                    ${paintedLevel}
+                    ${emptyLevel}
+                </div>
             </div>
             `;
         }
@@ -424,17 +439,16 @@
                 <button onclick="update_memory(${pk});">수정완료</button>
                 <h2 id="cdc-memory-message" class="displayNone" style="color: green; text-align: right;">수정이 완료되었습니다.</h2>
             </div>
-
-            <div id="cdc-todos-box">
-                <h2>${category_data.name} 프로젝트에서 ${todo_count}개의 할 일을 완료했습니다.</h2>
-                ${todo_content}
-            </div>
             <div id="cdc-finish-box">
                 <label class="control control--checkbox">
                     프로젝트 마무리하기
                     <input type="checkbox" name="finish_check" value="finish_check" onchange="update_finish(this, ${pk})" ${boxCheck}/>
                     <div class="control__indicator"></div>
                 </label>
+            </div>
+            <div id="cdc-todos-box">
+                <h2>${category_data.name} 프로젝트에서 ${todo_count}개의 할 일을 등록했습니다.</h2>
+                ${todo_content}
             </div>
             <div id="cdc-delete-box">
                 <button class="btn-delete" data-target="#category-delete-check">프로젝트 삭제</button>

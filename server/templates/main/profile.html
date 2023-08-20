@@ -255,7 +255,6 @@
                         
                         <input type="text" 
                             class="todo-contents" 
-                            onclick="edit_todo({{todo.pk}})"
                             value="{{todo.content}}"
                             readonly>
                         <div class="todo-level todo-level-{{todo.pk}}">
@@ -273,7 +272,6 @@
                         {% endwith %} 
                             
                         </div>
-                        <!-- edit page -->
                     </div>
 
                     {% endfor %}

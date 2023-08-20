@@ -321,7 +321,18 @@
 .displayNone{
     display: none !important;
 }
-
+#cdc-todos-box{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: var(--offset);
+    border-top: 1px solid var(--border-color);
+}
+#cdc-todos-box h2{
+    padding-bottom: var(--gutter);
+    text-align: start;
+    line-height: 2rem;
+}
 #category-content{
     display: flex;
 }
@@ -338,6 +349,9 @@
 #category-memory:focus,
 .edit-name--input:focus{
     outline: none;
+}
+#cdc-finish-box{
+    padding-bottom: var(--gutter);
 }
 #cdc-name-box button i,
 #category-memory + button,

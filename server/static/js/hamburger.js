@@ -34,7 +34,7 @@ document.querySelector('#tb-hamburger').addEventListener('click', () => {
     left_section.style.left = '0';    
     tb_section.style.left = '-70px';
 })
-if (window.matchMedia("(max-width: 1080px)").matches){
+if (window.matchMedia("(min-width: 900px) and (max-width: 1080px)").matches){
     const tb_section = document.querySelector('section');
     const tb_small_section = document.querySelector('#tb-section');
     document.addEventListener('click', (event) => {
@@ -114,6 +114,7 @@ if (window.matchMedia("(max-width: 600px)").matches){
             right_section.style.right = '-100%';
         }
     })
+
 }
 function mb_tab(){
     if (window.matchMedia("(max-width: 600px)").matches) {
