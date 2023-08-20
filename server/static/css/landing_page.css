@@ -181,14 +181,16 @@ main {
   align-items: center;
   border-radius: 20px;
   justify-content: center;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .container-box__imgs__img > img {
   transition: 0.1s all ease-in-out;
   max-width: 100%;
   width: 300px;
-  height: 500px
+  height: 500px;
+  object-fit: cover;
+  border-radius: 20px;
 }
 
 .container-box__text {
@@ -231,15 +233,17 @@ main {
 }
 
 .introduction-rules__faq-container__faq-list__question > h3 {
-  font-size: var(--heading3);
+  font-size: var(--heading2);
   font-weight: 700;
   line-height: 1.2;
+  text-align: center;
 }
 
 .introduction-rules__faq-container__faq-list__question > p {
-  font-size: var(--body1);
+  font-size: var(--heading3);
   font-weight: 400;
   line-height: 1.5;
+  text-align: center;
 }
 
 .introduction-rules__faq-container {
@@ -260,18 +264,19 @@ main {
 
 .introduction-rules__image-container {
   width: 40%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--gutter);
+  height: 500px;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* gap: var(--gutter); */
+  overflow: hidden;
 }
 
 .introduction-rules__image-container > img {
-  width: 600px;
-  height: auto;
-  max-width: 100%;
-  min-width: 40%;
+  width: 100%;
+  height: 100%;
   border-radius: 20px;
+  object-fit: contain;
 }
 
 /* advertis-box */
@@ -493,7 +498,7 @@ main {
 }
 
 .introduction-rule__image > img {
-  width: 350px;
+  width: 100%;
   height: auto;
   border-radius: 20px;
 }
@@ -519,6 +524,7 @@ footer {
   align-items: center;
   justify-content: space-between;
   height: 10rem;
+  padding: 0 var(--offset);
 }
 
 .contact-container p{
@@ -544,7 +550,6 @@ footer {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   gap: var(--gutter);
 }
 
@@ -582,7 +587,7 @@ footer {
 }
 
 .introductin-developer__body {
-  width: 70%;
+  width: 75%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -713,11 +718,14 @@ footer {
   }
 
   .introduction-rule__image {
-    min-height: 40vh;
+    width: 80%;
+    height: 400px;
+    /* min-height: 40vh; */
   }
 }
 
 #changing-image {
+  height: 100%;
   position: relative;
   transition: opacity 1s ease-in-out; /* 투명도 변화에 대한 애니메이션 설정 */
   opacity: 0.8; /* 처음에는 이미지가 표시되지 않도록 설정 */

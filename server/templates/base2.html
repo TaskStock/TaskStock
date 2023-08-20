@@ -40,7 +40,7 @@
         <i class="gg-menu-left-alt"></i>
         <a href="/main/">
             <h1>TASKSTOCK
-                <img src="{% static 'img/logo-3.png' %}" alt="logo">
+                <img src="{% static 'img/logo-3.PNG' %}" alt="logo">
             </h1>
         </a>
         <i class="gg-menu-right-alt"></i>
@@ -49,7 +49,7 @@
         <header>
             <a href="/main/">
                 <h1>TASKSTOCK
-                    <img src="{% static 'img/logo-3.png' %}" alt="">
+                    <img src="{% static 'img/logo-3.PNG' %}" alt="">
                 </h1>
             </a>
             <div class="hamburger">
@@ -106,7 +106,7 @@
                 {% if user.img %}
                     <img src="{{ user.img.url }}" alt="Profile Image">
                 {% else %}
-                    <img src="{% static 'img/blank-profile-picture.png' %}" alt="Default Profile Image">
+                    <img src="{% static 'img/blank-profile-picture.PNG' %}" alt="Default Profile Image">
                 {% endif %}
             </div>
             <div class="my-info--about">
@@ -206,11 +206,7 @@
     </div>
     {% block page %}
     {% endblock %}
-    <script>
-        axios.defaults.xsrfCookieName = 'csrftoken'
-        axios.defaults.xsrfHeaderName = "X-CSRFToken"
-        axios.defaults.headers.common['X-CSRFToken'] = getCookie("csrftoken");
-    </script>
+    
     <script>
 
         document.addEventListener("DOMContentLoaded", function(){
@@ -283,11 +279,11 @@
                         tmpintrodue=user.introduce;
                     }
                     if(user.percent<0) {
-                        up_down_image = '<img src="{% static "img/icon-stock-down.png" %}">';
+                        up_down_image = '<img src="{% static "img/icon-stock-down.PNG" %}">';
                         percent_color = 'blue';
                     } else if (user.percent>0) {
                         percent_color = 'var(--red-1)';
-                        up_down_image = '<img src="{% static "img/icon-stock-up.png" %}">'; 
+                        up_down_image = '<img src="{% static "img/icon-stock-up.PNG" %}">'; 
                     }else{
                         up_down_image = '<i class="fa-solid fa-minus"></i>';
                         percent_color = "none"
