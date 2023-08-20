@@ -128,12 +128,12 @@ section header img,
     height: 90px;
     background-color: grey;
     overflow: hidden;
-    object-fit: cover;
+   
 }
 
 .friend-info--pic img,
 .my-info--pic img {
-    width: 100%;
+    object-fit: cover;
 }
 
 .friend-info--pic {

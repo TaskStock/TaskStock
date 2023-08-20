@@ -1195,12 +1195,15 @@ def finish_category(request):
 @csrf_exempt
 def click_category(request):
     pk = request.POST.get('pk')
+    #current_user = request.user
     
     category = Category.objects.get(pk=pk)
+    #category_todos = Todo.objects.filter(user=current_user, category=category)
 
     category_data={
         'name':category.name,
         'memory':category.memory,
+        #'category_todos':category_todos,
     }
 
     return JsonResponse({'category_data':category_data})

@@ -190,7 +190,6 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
     updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage)
 }
 
-
 // edit todo
 let updated_level = 0;
 let edited_star = false;
