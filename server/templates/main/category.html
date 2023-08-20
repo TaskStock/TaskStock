@@ -142,7 +142,21 @@
             document.querySelector('#name').focus();
         }, 500);
     };
+    // 다른곳 클릭했을 때 inactive 추가 
+    document.addEventListener('click', (event) => {
+        const createProjShow = document.querySelector('#create_category');
+        const createProjBtn = document.querySelector('#category-container button');
+        let clickedInsideEditContainer = false;
 
+        if (createProjShow.contains(event.target) || createProjBtn.contains(event.target)) {
+            clickedInsideEditContainer = true;
+        }
+
+        if (!clickedInsideEditContainer) {
+            createProjBtn.classList.remove("active");
+            createProjShow.classList.add('inactive');
+    }
+    });
     // 새로운 카테고리를 추가했을 때
     const add_category = async (event) =>{
         event.preventDefault();
@@ -415,10 +429,7 @@
             }
             todo_content+=`
             <div class="todo-item">
-                <input type="text" 
-                    class="todo-contents" 
-                    value="${t_data.content}"
-                    readonly>
+                <div class="todo-contents">${t_data.content}</div>
                 <div class="todo-level">
                     ${paintedLevel}
                     ${emptyLevel}

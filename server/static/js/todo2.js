@@ -140,11 +140,7 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
         <div class="todo-item todo-item-${todo_id}">
             <div class="todo-checkbox todo-checkbox-${todo_id}" onclick="check_todo(${todo_id})"></div>
             
-            <input type="text" 
-                class="todo-contents" 
-                onclick="edit_todo(${todo_id})"
-                value="${content}"
-                readonly>
+            <div class="todo-contents" onclick="edit_todo(${todo_id})">${content}</div>
             <div class="todo-level todo-level-${todo_id}">
                 ${paintedLevel}
                 ${emptyLevel}
@@ -157,11 +153,7 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
         <div class="todo-item todo-item-${todo_id}">
             <div class="todo-checkbox todo-checkbox-${todo_id}" onclick="check_todo(${todo_id})"></div>
             
-            <input type="text" 
-                class="todo-contents" 
-                onclick="edit_todo(${todo_id})"
-                value="${content}"
-                readonly>
+            <div class="todo-contents" onclick="edit_todo(${todo_id})">${content}</div>
             <div class="todo-level todo-level-${todo_id}">
                 ${paintedLevel}
                 ${emptyLevel}
@@ -220,9 +212,9 @@ const edit_todo = (todo_id) => {
         c.classList.remove('active');
     })
 
-
     // 열고 닫기
     const edit_container = document.querySelector(`.todo-item--edit-${todo_id}`);
+
     if(edit_container!=null){
         edit_container.classList.toggle('active');
         edit_container.style.width = `${Edit_width}px`;
@@ -264,7 +256,6 @@ document.addEventListener('click', (event) => {
     
     containers.forEach((container) => {
         const editContainer = container.querySelector(`.todo-item--edit`);
-        const editInput = container.querySelector('input');
         
         if(editContainer!=null){
             if (editContainer.contains(event.target) || event.target.classList.contains('todo-contents')) {
@@ -327,7 +318,7 @@ const update_todo = async(todo_id) => {
 }
 
 const handleUpdateTodoRes = async(todo_id, level, content, valueStart, valueEnd, valueHigh, valueLow, percentage) => {
-    document.querySelector(`.todo-item-${todo_id} input`).value = content;
+    document.querySelector(`.todo-item-${todo_id} .todo-contents`).innerText = content;
     let paintedLevel = '';
     let emptyLevel = '';
     level = Number(level);
