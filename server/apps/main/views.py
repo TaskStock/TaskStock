@@ -811,15 +811,16 @@ def update_todo(request, pk):
             
             todo.save()
             todo.value.save()
-
+    current_user = request.user
+    today_value = get_value_for_date(current_user)
     return JsonResponse({
         't_id': todo_id,
         'c_level': updated_level,
         'c_content': updated_content,
-        'value_start':todo.value.start,
-        'value_end':todo.value.end,
-        'value_high':todo.value.high,
-        'value_low': todo.value.low,
+        'value_start':today_value.start,
+        'value_end':today_value.end,
+        'value_high':today_value.high,
+        'value_low': today_value.low,
         'percentage': request.user.percentage,
     })
 
