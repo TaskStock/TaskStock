@@ -10,12 +10,12 @@
                 {% if target_user.img %}
                     <img src="{{ target_user.img.url }}" alt="Profile Image">
                 {% else %}
-                    <img src="{% static 'img/blank-profile-picture.png' %}" alt="Default Profile Image">
+                    <img src="{% static 'img/blank-profile-picture.PNG' %}" alt="Default Profile Image">
                 {% endif %}
             </div>
             <div class="user-info--left">
                 <div class="user-info--about">
-                    <div class="user-info--name">{{target_user.username}}</div>
+                    <div class="user-info--name">{{target_user.name}}</div>
                     <div class="user-info--comment">{{target_user.introduce}}</div>
                 </div>
                 <div class="user-info--sff__container" id="user-info--sff__container-des">
@@ -92,12 +92,12 @@
                 <span id="value_marketCapKey">Market Cap</span>
                 <span id="value_marketCap" style="font-size: var(--subheading)">{{market_cap}} ₩</span>
 
-                {% if target_user.my_group == None %}
-                <span id="value_groupValKey">Group Earnings</span>
-                <span id="value_groupVal" style="font-size: var(--subheading)">-</span>
-                {% else %}
+                {% if target_user.my_group %}
                 <span id="value_groupValKey">My Group</span>
                 <span id="value_groupVal" style="font-size: var(--subheading)"><a href="/main/search_group/">{{target_user.my_group.name}}</a></span>
+                {% else %}
+                <span id="value_groupValKey">My Group</span>
+                <span id="value_groupVal" style="font-size: var(--subheading)">-</span>
                 {% endif %}
 
             </div>
@@ -255,7 +255,6 @@
                         
                         <input type="text" 
                             class="todo-contents" 
-                            onclick="edit_todo({{todo.pk}})"
                             value="{{todo.content}}"
                             readonly>
                         <div class="todo-level todo-level-{{todo.pk}}">
@@ -273,7 +272,6 @@
                         {% endwith %} 
                             
                         </div>
-                        <!-- edit page -->
                     </div>
 
                     {% endfor %}

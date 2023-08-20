@@ -27,8 +27,8 @@ class User(AbstractUser):
     combo = models.IntegerField(null=True, default=0)
     first_name=None
     last_name=None
-    name = models.CharField(max_length=30, default="관리자")
-    introduce = models.CharField(max_length=50, null=True, blank=True)
+    name = models.CharField(max_length=14, default="닉네임을 설정해주세요.")
+    introduce = models.CharField(max_length=20, null=True, blank=True)
     email_alarm = models.BooleanField(null=True, default=False)
     img = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     tzinfo = models.CharField(max_length=50, default='Asia/Seoul')
@@ -102,7 +102,7 @@ class Value(models.Model):
 
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='category_user')
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=15)
     finish = models.BooleanField(default=False)
     memory = models.TextField(null=True)
 
@@ -134,7 +134,7 @@ class Alarm(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='alarm_user')
     content = models.TextField()
     img = models.TextField(null=True, default="base_img")
-    alarm_type = models.CharField(max_length=30)
+    alarm_type = models.CharField(max_length=10)
     is_read = models.BooleanField(null=True, default=False)
     
     created_at = models.DateTimeField(auto_now_add=True)

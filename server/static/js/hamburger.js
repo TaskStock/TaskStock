@@ -34,6 +34,26 @@ document.querySelector('#tb-hamburger').addEventListener('click', () => {
     left_section.style.left = '0';    
     tb_section.style.left = '-70px';
 })
+if (window.matchMedia("(min-width: 900px) and (max-width: 1080px)").matches){
+    const tb_section = document.querySelector('section');
+    const tb_small_section = document.querySelector('#tb-section');
+    document.addEventListener('click', (event) => {
+        // 클릭된 요소가 tb_hamburger contents 내부에 속하는지 확인
+        let clickedInsideEditContainer = false;
+        console.log(event.target);
+        if (tb_section.contains(event.target) || tb_small_section.contains(event.target)) {
+            clickedInsideEditContainer = true;
+        }
+
+        // 클릭된 요소가 editContainer 내부에 속하지 않는 경우 section 넣기
+        if (!clickedInsideEditContainer) {
+            left_section.style.left = '-350px';
+        }
+    });
+}
+
+
+
 
 // dark mode toggle
 const bodyEl = document.querySelector('body');
@@ -94,6 +114,7 @@ if (window.matchMedia("(max-width: 600px)").matches){
             right_section.style.right = '-100%';
         }
     })
+
 }
 function mb_tab(){
     if (window.matchMedia("(max-width: 600px)").matches) {

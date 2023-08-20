@@ -228,6 +228,12 @@ main{
     outline: none;
     margin-top: 10px;
 }
+#todo-add--select option,
+.todo-edit--select option{
+    background: rgba(0,0,0,0.3);
+    /* background-color: red; */
+    color: red;
+}
 #todo-add--category,
 .todo-edit--category{
     width: 100%;
@@ -376,6 +382,8 @@ main{
 }
 #value_marketCap{
     grid-area: value1;
+    display: flex;
+    gap: 5px;
 }
 #value_groupValKey{
     grid-area: key2;
@@ -456,7 +464,13 @@ main{
     }
 }
 
-
+#ochl_open,
+#ochl_close,
+#ochl_high,
+#ochl_low{
+    display: flex;
+    gap: 5px;
+}
 
 /* badge */
 #dashboard--badge__container {
@@ -492,6 +506,17 @@ main{
     opacity: 0;
     visibility: hidden;
     transition: var(--transition);
+}
+@media screen and (max-width: 1080px) {
+    .badge-modal{
+        transform: translate(calc(50px - 50%), -50%);
+    }   
+}
+@media screen and (max-width: 600px) {
+    .badge-modal{
+        width: 80%;
+        transform: translate(-50%, -50%);
+    }   
 }
 .badge-modal.modalShow{
     opacity: 1;
@@ -565,6 +590,12 @@ main{
 .badge-container:hover img{
     top: -2px;
 }
+/* select option 커스텀 */
+
+
+
+
+
 
 @media screen and (max-width: 600px) {
     body{
@@ -595,7 +626,4 @@ main{
     #mb-main--nav > input{
         display: none;
     }
-    
-    
-   
 }

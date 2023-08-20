@@ -49,3 +49,17 @@ document.addEventListener('click', (event) => {
         }
     
 });
+
+// 모바일에서는 hover가 아니라 click했을 때 애니메이션
+
+if (window.matchMedia("(max-width: 600px)").matches) {
+    const mb_modalTop = document.querySelector('.badge-modal--top');
+    mb_modalTop.addEventListener('touchstart', () => {
+        const coinImg = mb_modalTop.querySelector('img');
+        coinImg.style.animation = 'coinRotate 1s';
+        coinImg.addEventListener('animationend', () => {
+            coinImg.style.animation = 'none';
+        });
+    })
+}
+

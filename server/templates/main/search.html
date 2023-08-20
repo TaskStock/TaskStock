@@ -34,7 +34,7 @@
                             {% if user.img %}
                                 <img class="friend-info-pic" src="{{ user.img.url }}" alt="Profile Image">
                             {% else %}
-                                <img class="friend-info-pic" src="{% static 'img/blank-profile-picture.png' %}" alt="Default Profile Image">
+                                <img class="friend-info-pic" src="{% static 'img/blank-profile-picture.PNG' %}" alt="Default Profile Image">
                             {% endif %}
                         </div>
                         <div class="search-result__name-container">
@@ -47,9 +47,9 @@
                         <div class="search-result__info">
                             <div class="search-result__right-upper-container">
                                 {% if user.percentage < 0 %}
-                                <img src="{% static 'img/icon-stock-down.png' %}" alt="down imgage">
+                                <img src="{% static 'img/icon-stock-down.PNG' %}" alt="down imgage">
                                 {% elif user.percentage > 0 %}
-                                <img src="{% static 'img/icon-stock-up.png' %}" alt="up imgage">
+                                <img src="{% static 'img/icon-stock-up.PNG' %}" alt="up imgage">
                                 {% else %}
                                 <i class="fa-solid fa-minus"></i>
                                 {% endif %}
@@ -131,11 +131,11 @@
                 }
 
                 if(user.percentage<0) {
-                        up_down_image = '<img src="{% static "img/icon-stock-down.png" %}">';                        
+                        up_down_image = '<img src="{% static "img/icon-stock-down.PNG" %}">';                        
                         percent_color = 'blue'
                     } else if (user.percentage>0) {
                         percent_color = 'red'
-                        up_down_image = '<img src="{% static "img/icon-stock-up.png" %}">';                      
+                        up_down_image = '<img src="{% static "img/icon-stock-up.PNG" %}">';                      
                     }
                 
                 atagInput = document.createElement('a');

@@ -65,7 +65,6 @@ function load() {
             const {todos: todos, category_datas: category_datas} = await res.json();
             handleDateResponse(todos, category_datas);
             has_unchecked_todos();
-        
         })
         if (i - paddingDays === day && nav === 0) {
             daySquare.id = 'currentDay';
@@ -79,6 +78,23 @@ function load() {
 
     calendar.appendChild(daySquare);    
   }
+}
+
+function delayTodoButton(){
+    // 연속으로 클릭하지 못하도록 설정
+    const checkBoxes = document.querySelectorAll(`.todo-checkbox`);
+    checkBoxes.forEach(checkBox => {
+        checkBox.addEventListener('click', () => {
+            if (!checkBox.classList.contains('disabled')) {
+                checkBox.classList.add('disabled'); // 클릭된 요소를 비활성화 스타일로 변경
+    
+                // 1초(1000 밀리초) 후에 요소 다시 활성화 스타일로 변경
+                setTimeout(() => {
+                    checkBox.classList.remove('disabled');
+                }, 1500);
+            }
+        });
+    });
 }
 
 function handleDateResponse(todos, category_datas){
@@ -160,7 +176,7 @@ function handleDateResponse(todos, category_datas){
                                 <div level="5"></div>
                             </div>
                         </div>
-                        <div class="todo-add--category">
+                        <div class="todo-edit--category">
                             <span>카테고리를 수정하세요</span>
                             <select class="todo-edit--select">
                                 <option value="">None</option>
@@ -177,6 +193,7 @@ function handleDateResponse(todos, category_datas){
             }
 
         }
+        delayTodoButton();
     }
 
 }
