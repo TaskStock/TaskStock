@@ -206,7 +206,11 @@
     </div>
     {% block page %}
     {% endblock %}
-
+    <script>
+        axios.defaults.xsrfCookieName = 'csrftoken'
+        axios.defaults.xsrfHeaderName = "X-CSRFToken"
+        axios.defaults.headers.common['X-CSRFToken'] = getCookie("csrftoken");
+    </script>
     <script>
 
         document.addEventListener("DOMContentLoaded", function(){

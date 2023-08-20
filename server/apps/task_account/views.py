@@ -9,6 +9,7 @@ from .forms import SignupForm
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 from .models import Value, Category
 
@@ -104,6 +105,7 @@ def signup1(request):
 
 
 @csrf_exempt
+@login_required
 def signup2(request):
 
     if request.method == 'POST':
