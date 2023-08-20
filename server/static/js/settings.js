@@ -132,8 +132,9 @@ function onNavigationClick(elementClassName) {
   });
 }
 
-
 // mobile 화면에서 소개란 row 3으로
-if (window.matchMedia("(max-width: 600px)").matches){
-  document.querySelector('.profile-description__textarea > textarea').setAttribute('rows', '3');
+if (window.matchMedia("(max-width: 600px)").matches) {
+  document
+    .querySelector(".profile-description__textarea > textarea")
+    .setAttribute("rows", "3");
 }

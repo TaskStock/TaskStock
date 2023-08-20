@@ -126,11 +126,12 @@
                                     public
                                 </label>
                             </div>
-                            <div class="radio__set">
+                            <div class="radio__set preventSelect">
                                 <label>
-                                    <input type="radio" name="security" value="private" onchange="updateProfile(this)" {% if user.hide %} checked {% endif %} />
+                                    <input type="radio" name="security" value="private" onchange="updateProfile(this)" onclick="return(false);" {% if user.hide %} checked {% endif %} />
                                     private
                                 </label>
+                                <p>미출시 기능입니다.</p>
                             </div>                            
                         </form>
                     </div>      
@@ -147,11 +148,12 @@
                                     한국어
                                 </label>
                             </div>
-                            <div class="radio__set">
+                            <div class="radio__set preventSelect">
                                 <label>
-                                    <input type="radio" name="language" value="EN" onchange="updateProfile(this)" />
+                                    <input type="radio" name="language" value="EN" onchange="updateProfile(this)"  onclick="return(false);" />
                                     English
                                 </label>
+                                <p>미출시 기능입니다.</p>
                             </div>
                             {% elif user.language == 'EN' %}
                             <div class="radio__set">
@@ -165,6 +167,7 @@
                                     <input type="radio" name="radio_answer" value="EN" onchange="updateProfile(this)" checked />
                                     English
                                 </label>
+                                <p>미출시 기능입니다.</p>
                             </div>
                             {% endif %}
                             
