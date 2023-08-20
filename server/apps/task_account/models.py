@@ -34,7 +34,7 @@ class User(AbstractUser):
     tzinfo = models.CharField(max_length=50, default='Asia/Seoul')
     todo_cnt = models.IntegerField(default=0)
     percentage = models.FloatField(default=0)
-    custom_active = models.BooleanField(default=False)
+    custom_active = models.BooleanField(default=True)
 
 
     # false = public, true = private
