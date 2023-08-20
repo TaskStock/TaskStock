@@ -49,3 +49,5 @@ document.addEventListener('click', (event) => {
         }
     
 });
+
+// 모바일에서는 hover가 아니라 click했을 때 애니메이션

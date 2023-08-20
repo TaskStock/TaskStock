@@ -53,6 +53,9 @@ function paintStar(level){
 if(plus != null){
     plus.addEventListener('click', () => {
         document.querySelector('.todo-plus').classList.toggle('active');
+        setTimeout(() => {
+            document.querySelector('.todo-add--input input').focus();
+        }, 500);
 
         // // 오류메세지 초기화
         document.querySelector(`.todo-add--container .todo-add--input span`).style.color = '#fff';
@@ -229,7 +232,13 @@ const edit_todo = (todo_id) => {
 
         if(edit_container.classList.contains('active')){
             const content = edit_container.querySelector('input');
-            content.focus();
+            setTimeout(() => {
+                // 커서 끝으로 
+                const editContent = content.value;
+                content.focus();
+                content.value = '';
+                content.value = editContent;
+            }, 500);
          
             edit_container.querySelectorAll(`.edit-todo-level > div`).forEach(star => {
                 star.addEventListener('click', () => {
@@ -539,48 +548,6 @@ function handleCompletedTodos(todo_cnt){
 
 has_unchecked_todos();
 
-// price-taspi, my-info--sff 업데이트   
-// function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage) {
-//     document.querySelector("#ochl_open").innerHTML = `<span class="counter">${valueStart}</span> ₩`;
-//     document.querySelector("#ochl_close").innerHTML = `<span class="counter">${valueEnd}</span> ₩`;` ₩`;
-//     document.querySelector("#ochl_high").innerHTML = `<span class="counter">${valueHigh}</span> ₩`;
-//     document.querySelector("#ochl_low").innerHTML = `<span class="counter">${valueLow}</span> ₩`;
-
-//     if (percentage !== null) {
-//         const displayElement = document.querySelector(".percentage-display");
-//         const valueElement = displayElement.querySelector(".percentage-value");
-//         const iconElement = document.getElementById("percentage-icon");
-
-//         const percentValue = parseFloat(percentage);
-//         valueElement.innerText = `${percentage} %`;
-
-//         if (iconElement) {
-//             iconElement.remove();
-//         }
-
-//         const misPercentageBox = document.querySelector("#mis-percentage");
-//         misPercentageBox.innerHTML=`
-//         <span class="percentage-value"><span class="counter">${percentValue}</span> %</span>
-//         `;
-//         if (percentValue > 0) {
-//             misPercentageBox.innerHTML+=`
-//             <i class="fa-solid fa-chevron-up" id="percentage-icon" style="color: red;"></i>
-//             `;
-//         } else if (percentValue < 0) {
-//             misPercentageBox.innerHTML=`
-//             <i class="fa-solid fa-chevron-down" id="percentage-icon" style="color: blue;"></i>
-//             `;
-//         }
-//     }
-    
-//     // async function executeCounting() {
-//     //     await counting(); // counting() 함수의 프로미스가 완료될 때까지 기다림
-//     // }
-
-//     // executeCounting(); // 비동기 작업이 모두 완료된 후에 counting() 함수 실행
-// }
-
-
 // 
 
 async function animateCounter(element, startValue, endValue, duration = 400, delay = 10) {
@@ -622,6 +589,7 @@ async function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, pe
         const valueElement = displayElement.querySelector(".percentage-value");
         const iconElement = document.getElementById("percentage-icon");
         const percentValue = parseFloat(percentage);
+    
         valueElement.innerText = `${percentage} %`;
 
         if (iconElement) {
@@ -644,5 +612,10 @@ async function updateValueElements(valueStart, valueEnd, valueHigh, valueLow, pe
         }
     }
 }
+
+// comma 찍기
+const marketCap = document.querySelector('#value_marketCap span:first-child');
+const displayMarketCap = addCommasToNumber(marketCap.innerText);
+marketCap.innerText = displayMarketCap;
 
 
