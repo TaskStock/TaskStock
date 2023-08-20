@@ -24,6 +24,21 @@ level_stars.forEach(star => {
     }
 )})
 
+// 연속으로 클릭하지 못하도록 설정
+const checkBoxes = document.querySelectorAll(`.todo-checkbox`);
+checkBoxes.forEach(checkBox => {
+    checkBox.addEventListener('click', () => {
+        if (!checkBox.classList.contains('disabled')) {
+            checkBox.classList.add('disabled'); // 클릭된 요소를 비활성화 스타일로 변경
+
+            // 1초(1000 밀리초) 후에 요소 다시 활성화 스타일로 변경
+            setTimeout(() => {
+                checkBox.classList.remove('disabled');
+            }, 1500);
+        }
+    });
+});
+
 
 function paintStar(level){
     document.querySelectorAll('.sel-todo-level div').forEach(star => {
@@ -187,7 +202,7 @@ const handleTodoResponse = async(todo_id, level, content, category_datas, catego
         `;
     }
     
-    
+    delayTodoButton();
     update_chart();
     has_unchecked_todos();
     updateValueElements(valueStart, valueEnd, valueHigh, valueLow, percentage)
@@ -391,6 +406,10 @@ const handleDelTodoRes = async(my_combo, todo_id, date_id, todo_cnt, valueStart,
 // check todo
 const check_todo = async(todo_id) => {
     const checkBox = document.querySelector(`.todo-checkbox-${todo_id}`);
+    if(checkBox.classList.contains('disabled')){
+        return;
+    }
+
     checkBox.classList.toggle('True');
     let status = '';
     // True || False

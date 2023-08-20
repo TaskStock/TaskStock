@@ -206,7 +206,11 @@
     </div>
     {% block page %}
     {% endblock %}
-
+    <script>
+        axios.defaults.xsrfCookieName = 'csrftoken'
+        axios.defaults.xsrfHeaderName = "X-CSRFToken"
+        axios.defaults.headers.common['X-CSRFToken'] = getCookie("csrftoken");
+    </script>
     <script>
 
         document.addEventListener("DOMContentLoaded", function(){
@@ -323,7 +327,6 @@
     <script src="https://kit.fontawesome.com/6fbcf91afd.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{% static 'js/addCommas.js' %}"></script>
-    
 
     
     {% block extra %}

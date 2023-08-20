@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 
 import random
-
+from django.db.models import F
 
 #스케줄링 관련 함수
 def decrease_value(user, target_arrow):
@@ -27,7 +27,7 @@ def decrease_value(user, target_arrow):
     value_object = get_value_for_date(user, target_arrow)  #get_value_for_date함수는 local arrow 받아야 함
     
     if not value_object:
-        print('전날 접속 안해서 value 없는 사용자')
+        # print('전날 접속 안해서 value 없는 사용자')
         return
 
     todos = Todo.objects.filter(value=value_object, goal_check=False)
@@ -35,7 +35,7 @@ def decrease_value(user, target_arrow):
         value_object.end -= todo.level * 1000
         value_object.save()
         
-    print('process_decrease 가치 감소 check 실행')
+    # print('process_decrease 가치 감소 check 실행')
     
     
 
@@ -43,6 +43,7 @@ def decrease_value(user, target_arrow):
 
 #시간대 설정
 @csrf_exempt
+@login_required
 def set_timezone(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -52,7 +53,7 @@ def set_timezone(request):
         user = request.user
         user.tzinfo = user_timezone
         user.save()
-        print(user.tzinfo)
+        # print(user.tzinfo)
         return JsonResponse({'status':'success'})
     return JsonResponse({'status':'fail'})
 
@@ -81,7 +82,7 @@ def alarm_calculate_account(user, target_arrow):
     value_object = get_value_for_date(user, target_arrow)  #get_value_for_date함수는 local arrow 받아야 함
     
     if not value_object:
-        print('전날 접속 안해서 value 없는 사용자')
+        # print('전날 접속 안해서 value 없는 사용자')
         return
 
     result = value_object.end-value_object.start
@@ -137,7 +138,33 @@ def alarm_calculate_follow(user):
         )
 
 def alarm_calculate_group():
-    pass
+    top_3_groups = Group.objects.order_by('-price')[:3]
+    for index, group in enumerate(top_3_groups):
+        users = group.user_set.all()
+        # 그룹 랭킹 1등
+        if index==0:
+            for user in users:
+                Alarm.objects.create(
+                    user=user,
+                    content="당신의 그룹 "+group.name+" 이 랭킹 "+str(index+1)+"등을 달성했습니다!",
+                    alarm_type="group",
+                )
+        # 그룹 랭킹 2등
+        elif index==1:
+            for user in users:
+                Alarm.objects.create(
+                    user=user,
+                    content="당신의 그룹 "+group.name+" 이 랭킹 "+str(index+1)+"등을 달성했습니다!",
+                    alarm_type="group",
+                )
+        # 그룹 랭킹 3등
+        else:
+            for user in users:
+                Alarm.objects.create(
+                    user=user,
+                    content="당신의 그룹 "+group.name+" 이 랭킹 "+str(index+1)+"등을 달성했습니다!",
+                    alarm_type="group",
+                )
 
 def alarm_calculate_ranking():
     users = User.objects.all()
@@ -172,9 +199,7 @@ def alarm_calculate_ranking():
             alarm_type="ranking",
         )
 
-
-    
-
+@login_required
 def settings(request):
     user=request.user
     # 한 유저가 다른 유저의 프로필을 방문했을 때의 경우도 설계해야함
@@ -185,6 +210,7 @@ def settings(request):
     return render(request, 'main/settings.html', context=ctx)
 
 # 내가 아닌 다른 유저의 프로필을 보는 함수
+@login_required
 def profile(request):
     username=request.GET.get('username')
     try:
@@ -209,7 +235,7 @@ def profile(request):
     if value == None:
         #로그인 했을 때 value가 없는 경우 create
         value = createValue(target_user)
-        print('home로딩하면서 createValue')
+        # print('home로딩하면서 createValue')
         
     elif value.is_dummy and not value.is_updated:
         #오늘의 데이터가 미리 만들어진 더미데이터면(add_todo, values_for_chart) 업데이트로 접근
@@ -258,6 +284,7 @@ def profile(request):
     return render(request, 'main/profile.html', context=ctx)
 
 @csrf_exempt
+@login_required
 def update_profile(request):
     type = request.POST.get("type")
     radio = request.POST.get("radio")
@@ -285,6 +312,7 @@ def update_profile(request):
 
 
 @csrf_exempt
+@login_required
 def change_password(request):
     current_password = request.POST.get("current-password")
 
@@ -310,6 +338,7 @@ def change_password(request):
     return JsonResponse({"result": result})
 
 @csrf_exempt
+@login_required
 def search_ajax(request):
     search_content = request.POST.get("text")
 
@@ -342,6 +371,7 @@ def search_ajax(request):
     return JsonResponse({"users": users})
 
 @csrf_exempt
+@login_required
 def follow_list(request):
     current_user=request.user
     
@@ -403,6 +433,7 @@ def createValue(user, target_arrow=None):
 
 
 @csrf_exempt
+@login_required
 def chart_ajax(request):
     day = int(request.POST.get("day"))
     username = request.POST.get("username")
@@ -417,6 +448,7 @@ def chart_ajax(request):
     return JsonResponse({"dataset": dataset})
 
 @csrf_exempt
+@login_required
 def follow(request):
     buttonText = request.POST.get("buttonText")
     username = request.POST.get("username")
@@ -446,6 +478,7 @@ def follow(request):
     return JsonResponse({"text": text, "f_ajax_count":following_count,})
 
 # ---환희 작업---#
+@login_required
 def home(request):
     current_user = request.user
     value = get_value_for_date(current_user)
@@ -453,7 +486,7 @@ def home(request):
     if value == None:
         #로그인 했을 때 value가 없는 경우 create
         value = createValue(current_user)
-        print('home로딩하면서 createValue')
+        # print('home로딩하면서 createValue')
         
     elif value.is_dummy and not value.is_updated:
         #오늘의 데이터가 미리 만들어진 더미데이터면(add_todo, values_for_chart) 업데이트로 접근
@@ -554,16 +587,17 @@ def get_value_for_date(user, target_arrow=None):
     
     try:    
         value_object = Value.objects.get(user=user, date__gte=start_utc_arrow.datetime, date__lte=end_utc_arrow.datetime)
-        print('get_value_for_date try 실행:, 검색범위', start_utc_arrow,'부터',end_utc_arrow )
+        # print('get_value_for_date try 실행:, 검색범위', start_utc_arrow,'부터',end_utc_arrow )
     except Value.DoesNotExist:
         value_object = None
-        print('get_value_for_date Value가 검색 범위 내 없음, Value=None 반환')
-        print('get_value_for_date except 실행:, 검색범위', start_utc_arrow,'부터',end_utc_arrow )
+        # print('get_value_for_date Value가 검색 범위 내 없음, Value=None 반환')
+        # print('get_value_for_date except 실행:, 검색범위', start_utc_arrow,'부터',end_utc_arrow )
 
     return value_object
 
 
 @csrf_exempt
+@login_required
 def click_date(request):
     # 자바스크립트에서 날짜를 전달한다
     date_str = request.POST.get('str')  # '8/21/2023' 브라우저의로컬 시간대 들어온다
@@ -629,9 +663,10 @@ Todo 추가 하는 함수
 할 일 추가 버튼 누름 -> 새로운 Todo객체 생성(ajax로 구현할 예정) -> high, low 업데이트
 """
 @csrf_exempt
+@login_required
 def add_todo(request):
     if request.method == 'POST':
-        print('add_todo실행')
+        # print('add_todo실행')
         req = json.loads(request.body)
         content = req['content']
         my_level = req['level']
@@ -644,7 +679,7 @@ def add_todo(request):
         # date_str을 사용자의 timezone을 고려해서 arrow로 객체로 변환(local)
         target_arrow = arrow.get(date_str, 'M/D/YYYY', tzinfo=current_user.tzinfo).ceil('day')
         
-        print('add_todo local target_arrow:', target_arrow)
+        # print('add_todo local target_arrow:', target_arrow)
         # date 일치하는 value 객체 가져오기
         value = get_value_for_date(current_user, target_arrow)
         
@@ -660,7 +695,7 @@ def add_todo(request):
             high=0,
             is_dummy = True,
             )
-            print('add_todo에서 완료 눌렀을 때 value 없는 날이라 일단 0으로 다 박음, create된 datetime =', target_arrow )
+            # print('add_todo에서 완료 눌렀을 때 value 없는 날이라 일단 0으로 다 박음, create된 datetime =', target_arrow )
             value = get_value_for_date(current_user, target_arrow)
         
         # 현재 user의 caregory 객체 가져오기
@@ -737,7 +772,7 @@ def delete_todo(request, pk):
 
         #체크되어 있다면
         if todo.goal_check:
-            print('delete_todo today_Value들어옴')
+            # print('delete_todo today_Value들어옴')
             #todo_cnt 업데이트
             current_user.todo_cnt -= 1  # 완료된 할 일의 숫자 감소
             #close 업데이트
@@ -751,7 +786,7 @@ def delete_todo(request, pk):
             current_user.percentage=today_value.percentage
             current_user.save()
             today_value.save()
-            print(today_value.end)
+            # print(today_value.end)
             
 
         #todo삭제
@@ -839,7 +874,7 @@ def check_todo(request, pk):
         current_user = request.user
         #오늘의 value 가져오기
         value = get_value_for_date(current_user)
-        print('check_todo에서 가져온 value 날짜:', value.date)
+        # print('check_todo에서 가져온 value 날짜:', value.date)
         
         #해당되는 todo 가져오기
         todo = Todo.objects.get(pk=todo_id)
@@ -905,12 +940,12 @@ def values_for_chart(user, term):
 
     # 사용자의 시간대를 기반으로 UTC arrow로 변환
     current_utc_arrow = local_to_utc(start_local_arrow)
-    print('value_for_chart local utc arrow:', current_utc_arrow)
+    # print('value_for_chart local utc arrow:', current_utc_arrow)
     start_utc_arrow = current_utc_arrow.shift(days=-term+1)
     next_utc_arrow = start_utc_arrow.shift(days=1)
     
     dummy_candidate = [start_utc_arrow, next_utc_arrow]
-    print('value_for_chart dummy_candidate:', dummy_candidate)
+    # print('value_for_chart dummy_candidate:', dummy_candidate)
     # DB에 존재하는 로컬 시간대 날짜들 가져오기
     range_values = Value.objects.filter(user=user, date__range=(start_utc_arrow.datetime, current_utc_arrow.datetime))
     value_datetimes =[value.date.date() for value in range_values]
@@ -931,11 +966,11 @@ def values_for_chart(user, term):
 
     # 최종 데이터 다시 쿼리하기
     values = Value.objects.filter(user=user, date__range=(start_utc_arrow.datetime, current_utc_arrow.datetime))
-    print('start:', start_utc_arrow.datetime)
-    print('current:', current_utc_arrow.datetime)
+    # print('start:', start_utc_arrow.datetime)
+    # print('current:', current_utc_arrow.datetime)
 
     dataset = [[arrow_to_date(utc_to_local(arrow.get(value.date), user_timezone)), value.start, value.high, value.low, value.end] for value in values]
-    print(dataset)
+    # print(dataset)
     
     return dataset
     
@@ -1061,7 +1096,7 @@ def process_badges(value):
 
 
 #---선우 작업---#
-
+@login_required
 def search(request):
     top_users = User.objects.annotate(max_end=models.Max('value_user__end')).order_by('-max_end')[:5]
 
@@ -1082,6 +1117,7 @@ def landing_page(request):
 
 
 # alarm
+@login_required
 def alarm(request):
     non_read_alarm=Alarm.objects.filter(user=request.user, is_read=False).order_by('-created_at')
     read_alarm=Alarm.objects.filter(user=request.user, is_read=True).order_by('-created_at').exclude(pk__in=[alarm.pk for alarm in non_read_alarm])
@@ -1099,6 +1135,7 @@ def alarm(request):
 
 
 # category
+@login_required
 def category(request):
     current_user=request.user
     finish_categorys = Category.objects.filter(user=current_user, finish=True)
@@ -1114,6 +1151,7 @@ def category(request):
 
 # category ajax
 @csrf_exempt
+@login_required
 def create_category(request):
     input_name = request.POST.get('name')
 
@@ -1144,6 +1182,7 @@ def create_category(request):
     return JsonResponse({'success':success, 'category_data':category_data, 'error_text':error_text})
 
 @csrf_exempt
+@login_required
 def update_category(request):
     name = request.POST.get('name')
     pk = request.POST.get('pk')
@@ -1168,6 +1207,7 @@ def update_category(request):
     return JsonResponse({'error_text':error_text, 'origin_name':origin_name,})
 
 @csrf_exempt
+@login_required
 def delete_category(request):
     pk = request.POST.get('pk')
     
@@ -1178,6 +1218,7 @@ def delete_category(request):
     return JsonResponse({'success':True})
 
 @csrf_exempt
+@login_required
 def finish_category(request):
     isChecked = request.POST.get('isChecked')
     pk = request.POST.get('pk')
@@ -1196,6 +1237,7 @@ def finish_category(request):
     return JsonResponse({'success':True, 'name':name})
 
 @csrf_exempt
+@login_required
 def click_category(request):
     pk = request.POST.get('pk')
     
@@ -1221,6 +1263,7 @@ def click_category(request):
     return JsonResponse({'category_data':category_data, 'todo_datas':todo_datas, 'todo_count':todo_count,})
 
 @csrf_exempt
+@login_required
 def update_memory(request):
     pk = request.POST.get('pk')
     memory = request.POST.get('memory')
@@ -1234,6 +1277,7 @@ def update_memory(request):
 
 # group
 # URL 뒤의 pk값을 가져와 해당 그룹의 페이지를 보여줌.
+@login_required
 def group(request,pk):
     group = Group.objects.get(id=pk)
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
@@ -1285,6 +1329,7 @@ def group(request,pk):
 
 
 @csrf_exempt
+@login_required
 def follow_group(request):
     buttonText = request.POST.get("group-button")
     group = request.POST.get("group")
@@ -1312,7 +1357,7 @@ def follow_group(request):
     
     return JsonResponse({'text': text})
 
-
+@login_required
 def create_group(request):
     user = request.user
     if request.method == 'POST':
@@ -1338,7 +1383,7 @@ def create_group(request):
                 add_group_price(user)
                 return JsonResponse({'result': 'Success'})
 
-
+@login_required
 def update_group(request):
     if request.method == 'POST':
         update_content = request.POST.get("update_name")
@@ -1352,6 +1397,7 @@ def update_group(request):
             group.save()
             return JsonResponse({'result': 'Success'})
 
+@login_required
 def delete_group(request,pk):
     if request.method == 'POST':
         group = Group.objects.get(pk=pk)
@@ -1371,6 +1417,7 @@ def add_delta_to_group(user, target_arrow):
     return
 
 # group search에 관한 함수
+@login_required
 def search_group(request):
     groups = Group.objects.all().order_by('-delta')
     current_user = request.user
@@ -1401,6 +1448,7 @@ def search_group(request):
 
 
 @csrf_exempt
+@login_required
 def search_group_ajax(request):
     search_contents = request.POST.get("textContent")
 
