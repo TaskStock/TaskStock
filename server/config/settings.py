@@ -17,6 +17,20 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# reading .env file
+environ.Env.read_env(BASE_DIR / '../.env')
+
+# sentry
+import raven
+DSN_URL=env('DSN_URL')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -24,10 +38,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-5sp39*kq37f7m6=xce#a1p293xy1^sa1fd_fe@g6t_)js(&&(_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['172.30.1.38',
-'127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -51,6 +64,9 @@ INSTALLED_APPS = [
 
     # provider
     'allauth.socialaccount.providers.google',
+
+    # logging 위한 sentry
+    'raven.contrib.django.raven_compat',
 ]
 
 # user 모델이 사용자 인증 모델이라고 알림
@@ -92,12 +108,26 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# mysqlDB
+MYSQL_DBNAME=env('MYSQL_DBNAME')
+MYSQL_USERNAME=env('MYSQL_USERNAME')
+MYSQL_PASSWD=env('MYSQL_PASSWD')
+MYSQL_HOST=env('MYSQL_HOST')
+MYSQL_PORT=env('MYSQL_PORT')
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': MYSQL_DBNAME,
+        'USER': MYSQL_USERNAME,
+        'PASSWORD': MYSQL_PASSWD,
+        'HOST': MYSQL_HOST,
+        'PORT': MYSQL_PORT,
+    },
 }
+DATABASE_ROUTERS = [
+    # 'router.BubbleRouter',
+]
 
 
 # Password validation
@@ -135,8 +165,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/' 
-STATICFILES_DIRS = [ BASE_DIR / 'static', ] 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+if DEBUG == True:
+   STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+   STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -159,15 +192,7 @@ SITE_ID = 1
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/main/'	# 로그인 후 리다이렉트 되는 곳
 
-import environ
 
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
-
-# reading .env file
-environ.Env.read_env(BASE_DIR / '../.env')
 
 SOCIAL_AUTH_GOOGLE_CLIENT_ID=env('SOCIAL_AUTH_GOOGLE_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_SECRET=env('SOCIAL_AUTH_GOOGLE_SECRET')
@@ -205,8 +230,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-EMAIL_USE_SSL = False
-
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -215,3 +238,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default	
 
 SCHEDULER_DEFAULT = True
+
+# sentry
+RAVEN_CONFIG={
+    'dsn':'{}'.format(DSN_URL),
+}
