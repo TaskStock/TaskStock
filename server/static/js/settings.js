@@ -92,15 +92,15 @@ function setupTextarea() {
 
   textarea.addEventListener("input", function () {
     const text = textarea.value;
-    const remainingChars = 50 - text.length;
+    const remainingChars = 20 - text.length;
 
     // 남은 글자 수를 업데이트
-    label.textContent = `${text.length}/50`;
+    label.textContent = `${text.length}/20`;
 
     // 글자 수가 50자를 초과하면 입력을 막음
     if (remainingChars < 0) {
-      textarea.value = text.slice(0, 50);
-      label.textContent = "50/50";
+      textarea.value = text.slice(0, 20);
+      label.textContent = "20/20";
     }
   });
 }

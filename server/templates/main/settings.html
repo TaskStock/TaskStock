@@ -85,7 +85,7 @@
                         <div class="profile-description__textarea">
                             <label for="profile-description">소개</label>
                             <textarea rows="1" name="profile-description" id="profile-description" cols="40" rows="5">{% if user.introduce %}{{ user.introduce }}{% endif %}</textarea>
-                            <p>0/50</p>
+                            <p>0/20</p>
                         </div>
                         
                         <button type="submit">완료</button>
@@ -100,11 +100,12 @@
                         
                         <form action="" class="email-alarm__form">
                             {% csrf_token %}
-                            <div class="radio__set">
+                            <div class="radio__set preventSelect">
                                 <label>
-                                    <input type="radio" name="email_alarm" value="alarm-set" onchange="updateProfile(this)" {% if user.email_alarm %} checked {% endif %} />
+                                    <input type="radio" name="email_alarm" value="alarm-set" onchange="updateProfile(this)" onclick="return(false);" {% if user.email_alarm %} checked {% endif %} />
                                     설정
                                 </label>
+                                <p>미출시 기능입니다.</p>
                             </div>
                             <div class="radio__set">
                                 <label>
