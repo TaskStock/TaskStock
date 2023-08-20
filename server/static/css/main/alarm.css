@@ -81,9 +81,7 @@
 .alarm-content__container span{
     font-size: var(--body2);
 }
-.alarm-content__container span{
-width: 70px;
-}
+
 .alarm-image__container {
     display: flex;
     justify-content: center;
