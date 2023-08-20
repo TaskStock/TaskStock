@@ -17,7 +17,7 @@ const hoverImage = (newHeader, newDescription) => {
 landingImgs[0].addEventListener("mouseenter", () => {
   hoverImage(
     "To-Do를 작성해 보세요.",
-    "To-Do 작성을 통해 당신의 목표를 계획해보세요."
+    "To-Do 작성을 통해 당신의 목표를 계획해보세요.더 많은 To-Do를 완료할 수록 붉은 원이 진해집니다."
   );
 });
 
@@ -60,7 +60,7 @@ const changingImage = document.getElementById("changing-image");
 const imageSources = [
   "/static/img/landing-page-4-1-1.PNG",
   "/static/img/landing-page-4-1-2.PNG",
-  "/static/img/landing-6-1.PNG",
+  "/static/img/landing-page-4-1.PNG",
 ];
 
 let currentImageIndex = 0;
@@ -71,3 +71,19 @@ const updateImage = () => {
 };
 
 setInterval(updateImage, 2000);
+
+// page-vision 호버 이벤트
+// page-vision 호버 이벤트
+const follow = document.getElementById("page-vision__following");
+const group = document.getElementById("page-vision__group");
+const imageContainer = document.querySelector(".introduction-vision__image");
+
+follow.addEventListener("mouseenter", () => {
+  imageContainer.innerHTML =
+    '<img src="/static/img/landing-page-6-1-2.PNG" alt="rule image">';
+});
+
+group.addEventListener("mouseenter", () => {
+  imageContainer.innerHTML =
+    '<img src="/static/img/landing-page-6-1-1.PNG" alt="rule image">';
+});
