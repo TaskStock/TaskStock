@@ -1205,7 +1205,19 @@ def click_category(request):
         'memory':category.memory,
     }
 
-    return JsonResponse({'category_data':category_data})
+    todos = category.todo_category.all()
+    todo_count=len(todos)
+
+    todo_datas=[]
+
+    for todo in todos:
+        todo_data={
+            "content":todo.content,
+            "level":todo.level,
+        }
+        todo_datas.append(todo_data)    
+
+    return JsonResponse({'category_data':category_data, 'todo_datas':todo_datas, 'todo_count':todo_count,})
 
 @csrf_exempt
 def update_memory(request):
