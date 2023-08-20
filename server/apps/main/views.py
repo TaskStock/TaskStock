@@ -201,8 +201,10 @@ def alarm_calculate_ranking():
 
 @login_required
 def settings(request):
+    if not request.user.custom_active:
+        return redirect('/signup/step2/')
+
     user=request.user
-    # 한 유저가 다른 유저의 프로필을 방문했을 때의 경우도 설계해야함
     
     ctx ={ 
         'user':user,
@@ -212,6 +214,9 @@ def settings(request):
 # 내가 아닌 다른 유저의 프로필을 보는 함수
 @login_required
 def profile(request):
+    if not request.user.custom_active:
+        return redirect('/signup/step2/')
+
     username=request.GET.get('username')
     try:
         target_user = User.objects.get(username=username)   #해당 페이지의 주인 user
@@ -480,6 +485,8 @@ def follow(request):
 # ---환희 작업---#
 @login_required
 def home(request):
+    if not request.user.custom_active:
+        return redirect('/signup/step2/')
     current_user = request.user
     value = get_value_for_date(current_user)
     
@@ -1098,6 +1105,8 @@ def process_badges(value):
 #---선우 작업---#
 @login_required
 def search(request):
+    if not request.user.custom_active:
+        return redirect('/signup/step2/')
     top_users = User.objects.annotate(max_end=models.Max('value_user__end')).order_by('-max_end')[:5]
 
     ctx = {
@@ -1119,6 +1128,8 @@ def landing_page(request):
 # alarm
 @login_required
 def alarm(request):
+    if not request.user.custom_active:
+        return redirect('/signup/step2/')
     non_read_alarm=Alarm.objects.filter(user=request.user, is_read=False).order_by('-created_at')
     read_alarm=Alarm.objects.filter(user=request.user, is_read=True).order_by('-created_at').exclude(pk__in=[alarm.pk for alarm in non_read_alarm])
 
@@ -1137,6 +1148,8 @@ def alarm(request):
 # category
 @login_required
 def category(request):
+    if not request.user.custom_active:
+        return redirect('/signup/step2/')
     current_user=request.user
     finish_categorys = Category.objects.filter(user=current_user, finish=True)
     not_finish_categorys = Category.objects.filter(user=current_user, finish=False)
@@ -1279,6 +1292,8 @@ def update_memory(request):
 # URL 뒤의 pk값을 가져와 해당 그룹의 페이지를 보여줌.
 @login_required
 def group(request,pk):
+    if not request.user.custom_active:
+        return redirect('/signup/step2/')
     group = Group.objects.get(id=pk)
     users = group.user_set.all()  # 그룹에 연결된 사용자들을 가져옵니다.
     value_dic={}
@@ -1419,6 +1434,8 @@ def add_delta_to_group(user, target_arrow):
 # group search에 관한 함수
 @login_required
 def search_group(request):
+    if not request.user.custom_active:
+        return redirect('/signup/step2/')
     groups = Group.objects.all().order_by('-delta')
     current_user = request.user
 
