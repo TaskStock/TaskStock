@@ -241,7 +241,12 @@ input[type="radio"]:checked {
     margin-left: var(--gutter);
 }
 
-
+.preventSelect {
+    color: grey;
+}
+.preventSelect p {
+    margin-top: 8px;
+}
 /* 비밀번호 변경 시 결과 css */
 .error{
     border: 1px solid var(--red_error) !important;
@@ -299,3 +304,4 @@ input[type="radio"]:checked {
     }
 
 }
+
