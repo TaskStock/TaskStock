@@ -523,4 +523,7 @@ section header img,
 .percentage-display{
     font-size: var(--body2);
     width: 70px;
+    display: flex;
+    justify-content: flex-end;
 }
+
