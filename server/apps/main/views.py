@@ -528,6 +528,8 @@ def update_userinfo(request):
             user.name = name
         if introduce:
             user.introduce = introduce
+
+        update_create_user(user)    
             
         user.save()
     
@@ -1429,5 +1431,14 @@ def delete_group_price(current_user):
         my_group.price -= value
     
         current_user.my_group.save()
+    else:
+        pass
+
+def update_create_user(current_user):
+    my_group = current_user.my_group
+
+    if my_group is not None and my_group.create_user_id == current_user.username:
+        my_group.create_user = current_user.name
+        my_group.save()
     else:
         pass
