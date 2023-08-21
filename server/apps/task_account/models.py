@@ -129,7 +129,7 @@ class Badge(models.Model):
     #배지 부여할 때
     #user.badges.add(some_badge)
 
-
+#알람 모델
 class Alarm(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='alarm_user')
     content = models.TextField()

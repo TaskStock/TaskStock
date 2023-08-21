@@ -36,7 +36,7 @@
             <div class="categories-container">
                 <div id="category-not-finish-list">
                     <h2>진행중인 프로젝트</h2>
-                    <h2 id="cnff-h2" {% if not_finish_categorys %} class="displayNone" {% endif %} >진행중인 카테고리가 없습니다.</h2>
+                    <h2 id="cnff-h2" {% if not_finish_categorys %} class="displayNone" {% endif %} >진행중인 프로젝트가 없습니다.</h2>
                     <div id="category-not-finish-for">
                         {% for category in not_finish_categorys %}
                         <div class="category-item" id="nf-category-{{category.pk}}" onclick="click_category({{category.pk}}, 'unfinish')">
@@ -49,7 +49,7 @@
                 </div>
                 <div id="category-finish-list">
                     <h2>완료한 프로젝트</h2>
-                    <h2 id="cff-h2" {% if finish_categorys %} class="displayNone" {% endif %} >완료한 카테고리가 없습니다.</h2>
+                    <h2 id="cff-h2" {% if finish_categorys %} class="displayNone" {% endif %} >완료한 프로젝트가 없습니다.</h2>
                     <div id="category-finish-for">
                         {% for category in finish_categorys %}
                         <div class="category-item" id="f-category-{{category.pk}}" onclick="click_category({{category.pk}}, 'finish')">
@@ -63,7 +63,7 @@
             
         </div>
         <div id="category-detail-container">
-            <h2>카테고리를 선택하거나 추가해주세요.</h2>
+            <h2>프로젝트를 선택하거나 추가해주세요.</h2>
         </div>
         
         <div class="category-modal">

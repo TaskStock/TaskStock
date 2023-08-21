@@ -235,7 +235,7 @@ main{
 }
 #todo-add--select option,
 .todo-edit--select option{
-    background-color: var(--section-color);
+    background: #1f1f1f;
     color: white;
 }
 #todo-add--category,
