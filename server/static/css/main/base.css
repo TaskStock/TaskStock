@@ -415,6 +415,7 @@ section header img,
         position: relative;
         overflow-x: hidden !important;
         width: 100%;
+        overflow-y: hidden;
     }
     section{
         width: 90%;
@@ -434,7 +435,7 @@ section header img,
     #tb-section{
         width: 90%;
         margin-right: -90%;
-        right: -100%;
+        right: -102%;
         position: relative;
         top: 0;
         z-index: 1000;

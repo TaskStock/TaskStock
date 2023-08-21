@@ -630,4 +630,7 @@ main{
     #mb-main--nav > input{
         display: none;
     }
+    .dashboard-bottom__badge{
+        margin-bottom: 100px;
+    }
 }

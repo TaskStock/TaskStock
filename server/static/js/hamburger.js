@@ -100,7 +100,7 @@ if (window.matchMedia("(max-width: 600px)").matches){
         mb_hbg_left.classList.toggle('active');
         if(mb_hbg_left.classList.contains('active')){
             left_section.style.left = '0';    
-            right_section.style.right = '-100%';
+            right_section.style.right = '-102%';
         }else{
             left_section.style.left = '-90%';   
         } 
@@ -108,12 +108,34 @@ if (window.matchMedia("(max-width: 600px)").matches){
     mb_hbg_right.addEventListener('click', () => {
         mb_hbg_right.classList.toggle('active');
         if(mb_hbg_right.classList.contains('active')){
-            right_section.style.right = '-10%';
+            right_section.style.right = '-32%';
             left_section.style.left = '-90%'; 
         }else{
-            right_section.style.right = '-100%';
+            right_section.style.right = '-102%';
         }
     })
+    document.addEventListener('touchstart', (event) => {
+        if(mb_hbg_right.classList.contains('active')){
+            let clickedInsideEditContainer = false;
+            // console.log(event.target);
+            if (right_section.contains(event.target) || mb_hbg_right.contains(event.target)) {
+                clickedInsideEditContainer = true;
+            }
+            if (!clickedInsideEditContainer) {
+                right_section.style.right = '-102%';
+            }
+        } else if(mb_hbg_left.classList.contains('active')){
+            let clickedInsideEditContainer = false;
+            // console.log(event.target);
+            if (left_section.contains(event.target) || mb_hbg_left.contains(event.target)) {
+                clickedInsideEditContainer = true;
+            }
+            if (!clickedInsideEditContainer) {
+                left_section.style.left = '-90%';   
+            }
+        }
+    });
+
 
 }
 function mb_tab(){
