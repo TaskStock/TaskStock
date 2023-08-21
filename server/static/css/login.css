@@ -191,7 +191,10 @@ main{
     background-color: white;
     margin-top: 10px;
     font-size: var(--body2);
-
+}
+.signup1-btn:hover{
+    background-color: black;
+    color: white;
 }
 .signup-btn-td a{
     display: flex;
@@ -216,4 +219,7 @@ main{
 
 .displayNone{
     display: none !important;
+}
+.email-skip:hover{
+    text-decoration: underline;
 }
