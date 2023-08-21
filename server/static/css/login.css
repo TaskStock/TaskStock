@@ -163,7 +163,7 @@ main{
     width: 320px;
     height: 34px;
     border-radius: var(--border-r);
-    border: 1px solid var(--grey_border);
+    border: 2px solid var(--grey_border);
     background-color: var(--grey_bg);
     padding: 0 var(--gutter);
     margin-top: 5px;
