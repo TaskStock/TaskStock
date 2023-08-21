@@ -188,13 +188,15 @@ def email_validation(request):
         EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
         smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
 
+        EMAIL_LINK = config('EMAIL_LINK')
+
         if type=="email_validation":
             user=request.user
             user.email=email
             user.save()
 
             subject = 'Activate Your Account'
-            message = f'Click the link to activate your account: http://127.0.0.1:8000//activate/{user.username}/'
+            message = f'Click the link to activate your account: {EMAIL_LINK}/activate/{user.username}/'
         elif type=="find_password":
             username = request.POST.get("username")
             user=User.objects.get(username=username)
