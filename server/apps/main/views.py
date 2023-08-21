@@ -1228,6 +1228,9 @@ def update_category(request):
     name = request.POST.get('name')
     pk = request.POST.get('pk')
 
+    if len(name) > 30:
+        name = name[:30]
+
     update_category = Category.objects.get(pk=pk)
     origin_name=update_category.name
         
