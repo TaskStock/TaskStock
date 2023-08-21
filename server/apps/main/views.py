@@ -1319,10 +1319,10 @@ def group(request,pk):
         if value == None:
             utc_arrow_now = local_to_utc(get_current_arrow(user.tzinfo).ceil('day'))
             value = Value.objects.filter(user=user, date__lte=utc_arrow_now.datetime).last()
-            value_dic[user.name] = [value.end, 0]   #가치는 오늘 이전 생긴 것 중 가장 최근의 것 가지고 오고 오늘 value가 None이라면 번 돈은 0이므로
+            value_dic[user.username] = [value.end, 0]   #가치는 오늘 이전 생긴 것 중 가장 최근의 것 가지고 오고 오늘 value가 None이라면 번 돈은 0이므로
         else:
             earning = value.end - value.start
-            value_dic[user.name] = [value.end, earning]    #key: user.name / value: user value의 종가, 변화량
+            value_dic[user.username] = [value.end, earning]    #key: user.name / value: user value의 종가, 변화량
 
         
     sorted_value_items = sorted(value_dic.items(), key=lambda x: x[1][1], reverse=True)
