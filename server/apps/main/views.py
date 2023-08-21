@@ -522,7 +522,7 @@ def home(request):
     
     followings_len = current_user.followings.count()
 
-    categorys = Category.objects.all()
+    categorys = Category.objects.filter(user=current_user)
 
     check_non_read_alarms = Alarm.objects.filter(user=current_user, is_read=False)
     if not check_non_read_alarms:
