@@ -289,7 +289,9 @@
             body: formData,
         });
         const {success}=await res.json();
-        category_delete(pk, type);
+        if(success == true){
+            category_delete(pk, type);
+        }
     }
     const category_delete = (pk, type) => {
         const categoryBox = document.querySelector('#category-detail-container');

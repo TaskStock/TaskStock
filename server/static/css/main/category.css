@@ -506,9 +506,17 @@
     visibility: hidden; 
     transition: var(--transition);
 }
+
 .category-modal.modalShow{
     opacity: 1;
     visibility: visible;
+}
+@media screen and (max-width: 1000px) {
+    .category-modal{
+        width: 80%;
+        transform: translate(-50%, -50%);
+    }
+    
 }
 .category-modal i{
     font-size: var(--heading3);
@@ -517,11 +525,13 @@
 .category-modal h2{
     font-size: var(--subheading);
     color: white;
+    text-align: center;
 }
 .category-modal p, 
 .category-modal button{
     font-size: var(--body2);
     color: white;
+    text-align: center;
 }
 .cat-modal--btns{
     display: flex;
