@@ -522,7 +522,7 @@ def home(request):
     
     followings_len = current_user.followings.count()
 
-    categorys = Category.objects.all()
+    categorys = Category.objects.filter(user=current_user)
 
     check_non_read_alarms = Alarm.objects.filter(user=current_user, is_read=False)
     if not check_non_read_alarms:
@@ -711,8 +711,8 @@ def add_todo(request):
         except ObjectDoesNotExist:
             category = None
 
-        #edit todo 에서 카테고리 수정할 수 있도록 모든 카테고리 객체 전달
-        categorys = Category.objects.all()
+        #edit todo 에서 카테고리 수정할 수 있도록 유저의 모든 카테고리 객체 전달
+        categorys = Category.objects.filter(user=current_user)
         category_datas=[]
 
         for tmp in categorys:
