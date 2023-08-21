@@ -1196,6 +1196,9 @@ def category(request):
 def create_category(request):
     input_name = request.POST.get('name')
 
+    if len(input_name) > 29:
+        input_name = input_name[:29]
+
     error_text=""
     if input_name=="":
         success=False
@@ -1228,8 +1231,8 @@ def update_category(request):
     name = request.POST.get('name')
     pk = request.POST.get('pk')
 
-    if len(name) > 30:
-        name = name[:30]
+    if len(name) > 29:
+        name = name[:29]
 
     update_category = Category.objects.get(pk=pk)
     origin_name=update_category.name
