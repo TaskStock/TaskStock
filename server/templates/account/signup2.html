@@ -5,9 +5,10 @@
     {% csrf_token %}
     <label for="email">Email</label>
     <input type="text" placeholder="user@user.com" id="email" name="email">
-    <div id="error-message" style="color: red; font-size: var(--body2);"></div>
+    <div id="error-message" style="font-size: var(--body2);"></div>
     <button type="submit" class="signup1-btn">이메일로 로그인 링크 받기</button>
 </form>
+<a href="/main/" style="font-size: var(--body2);" class="email-skip">건너뛰기</a>
 
 
 {% endblock %}
@@ -46,10 +47,13 @@
         if(validation){
             errorMessageElement.textContent = '올바른 이메일 형식이 아닙니다.';
             emailInput.classList.add('error');
+            errorMessageElement.style.color = 'red';
             // 오류 발생했을 때 error 클래스 css 추가 필요
         }else{
             localStorage.setItem('check_code', email_code);
             localStorage.setItem('check_email', email);
+            errorMessageElement.textContent = '이메일을 보냈습니다! 메일함을 확인해주세요.';
+            errorMessageElement.style.color = 'green';
         }
     }
 

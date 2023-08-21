@@ -16,7 +16,9 @@
             <div class="user-info--left">
                 <div class="user-info--about">
                     <div class="user-info--name">{{target_user.name}}</div>
+                    {% if target_user.introdce != None %}
                     <div class="user-info--comment">{{target_user.introduce}}</div>
+                    {% endif %}
                 </div>
                 <div class="user-info--sff__container" id="user-info--sff__container-des">
                     <span>Today</span>
@@ -90,7 +92,7 @@
             </script>
             <div class="dashboard-top__value">
                 <span id="value_marketCapKey">Market Cap</span>
-                <span id="value_marketCap" style="font-size: var(--subheading)">{{market_cap}} ₩</span>
+                <span id="value_marketCap" style="font-size: var(--subheading)"><span>{{market_cap}}</span> ₩</span>
 
                 {% if target_user.my_group %}
                 <span id="value_groupValKey">My Group</span>
@@ -253,10 +255,7 @@
                         
                         <div class="todo-checkbox todo-checkbox-{{todo.pk}} {{todo.goal_check}}"></div>
                         
-                        <input type="text" 
-                            class="todo-contents" 
-                            value="{{todo.content}}"
-                            readonly>
+                        <div class="todo-contents">{{todo.content}}</div>
                         <div class="todo-level todo-level-{{todo.pk}}">
 
                         {% with level=todos_levels_dict|get_item:todo.id %}

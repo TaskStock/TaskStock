@@ -205,9 +205,16 @@ def settings(request):
         return redirect('/signup/step2/')
 
     user=request.user
+
+    check_non_read_alarms = Alarm.objects.filter(user=request.user, is_read=False)
+    if not check_non_read_alarms:
+        alarm=False
+    else:
+        alarm=True
     
     ctx ={ 
         'user':user,
+        'alarm':alarm,
     }
     return render(request, 'main/settings.html', context=ctx)
 
@@ -273,6 +280,12 @@ def profile(request):
     todos_sub_dict = {}
     for todo in todos:
         todos_sub_dict[todo.pk] = 5 - todo.level
+
+    check_non_read_alarms = Alarm.objects.filter(user=request.user, is_read=False)
+    if not check_non_read_alarms:
+        alarm=False
+    else:
+        alarm=True
     
     ctx ={ 
         'user':current_user,
@@ -285,6 +298,7 @@ def profile(request):
         'percentage': value.percentage,
         'market_cap':market_cap,
         'value':value,
+        'alarm':alarm,
     }
     return render(request, 'main/profile.html', context=ctx)
 
@@ -522,7 +536,7 @@ def home(request):
     
     followings_len = current_user.followings.count()
 
-    categorys = Category.objects.all()
+    categorys = Category.objects.filter(user=current_user)
 
     check_non_read_alarms = Alarm.objects.filter(user=current_user, is_read=False)
     if not check_non_read_alarms:
@@ -711,8 +725,8 @@ def add_todo(request):
         except ObjectDoesNotExist:
             category = None
 
-        #edit todo 에서 카테고리 수정할 수 있도록 모든 카테고리 객체 전달
-        categorys = Category.objects.all()
+        #edit todo 에서 카테고리 수정할 수 있도록 유저의 모든 카테고리 객체 전달
+        categorys = Category.objects.filter(user=current_user)
         category_datas=[]
 
         for tmp in categorys:
@@ -1109,8 +1123,15 @@ def search(request):
         return redirect('/signup/step2/')
     top_users = User.objects.annotate(max_end=models.Max('value_user__end')).order_by('-max_end')[:5]
 
+    check_non_read_alarms = Alarm.objects.filter(user=request.user, is_read=False)
+    if not check_non_read_alarms:
+        alarm=False
+    else:
+        alarm=True
+
     ctx = {
         'users': top_users,
+        'alarm': alarm,
     }
 
     return render(request, 'main/search.html',context=ctx)
@@ -1154,10 +1175,17 @@ def category(request):
     finish_categorys = Category.objects.filter(user=current_user, finish=True)
     not_finish_categorys = Category.objects.filter(user=current_user, finish=False)
 
+    check_non_read_alarms = Alarm.objects.filter(user=current_user, is_read=False)
+    if not check_non_read_alarms:
+        alarm=False
+    else:
+        alarm=True
+
     ctx = {
         'user': current_user,
         'finish_categorys': finish_categorys,
         'not_finish_categorys': not_finish_categorys,
+        'alarm': alarm,
     }
 
     return render(request, 'main/category.html', context=ctx)
@@ -1319,16 +1347,22 @@ def group(request,pk):
         if value == None:
             utc_arrow_now = local_to_utc(get_current_arrow(user.tzinfo).ceil('day'))
             value = Value.objects.filter(user=user, date__lte=utc_arrow_now.datetime).last()
-            value_dic[user.name] = [value.end, 0]   #가치는 오늘 이전 생긴 것 중 가장 최근의 것 가지고 오고 오늘 value가 None이라면 번 돈은 0이므로
+            value_dic[user.username] = [value.end, 0]   #가치는 오늘 이전 생긴 것 중 가장 최근의 것 가지고 오고 오늘 value가 None이라면 번 돈은 0이므로
         else:
             earning = value.end - value.start
-            value_dic[user.name] = [value.end, earning]    #key: user.name / value: user value의 종가, 변화량
+            value_dic[user.username] = [value.end, earning]    #key: user.name / value: user value의 종가, 변화량
 
         
     sorted_value_items = sorted(value_dic.items(), key=lambda x: x[1][1], reverse=True)
     value_dic = {user: value for user, value in sorted_value_items}
 
     group_position = next((index for index, g in enumerate(ordered_groups) if g == group), None)
+
+    check_non_read_alarms = Alarm.objects.filter(user=request.user, is_read=False)
+    if not check_non_read_alarms:
+        alarm=False
+    else:
+        alarm=True
     
     context = {
         'group': group,
@@ -1338,6 +1372,7 @@ def group(request,pk):
         'am_I_creator': am_I_creator,
         'users_length': len(users),
         'group_position': group_position,
+        'alarm': alarm,
     }
     return render(request, 'main/group.html', context)
 
