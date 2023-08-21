@@ -102,7 +102,6 @@ def signup1(request):
             user = form.save()
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth.login(request, user)
-
             user.custom_active=True
             user.save()
 
@@ -195,7 +194,7 @@ def email_validation(request):
             user.save()
 
             subject = 'Activate Your Account'
-            message = f'Click the link to activate your account: https://task-stock.com/activate/{user.username}/'
+            message = f'Click the link to activate your account: http://127.0.0.1:8000//activate/{user.username}/'
         elif type=="find_password":
             username = request.POST.get("username")
             user=User.objects.get(username=username)
