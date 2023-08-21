@@ -251,10 +251,10 @@
             headers:{},
             body: formData,
         });
-        const {error_text, origin_name}=await res.json();
-        category_update(error_text, origin_name, name, pk);
+        const {error_text, origin_name, changed_name}=await res.json();
+        category_update(error_text, origin_name, changed_name, pk);
     }
-    const category_update = (error_text, origin_name, name, pk) => {
+    const category_update = (error_text, origin_name, changed_name, pk) => {
         const categoryBox = document.querySelector('#cdc-name-box');
         const inputElement = document.querySelector('#update_name-'+pk);
         inputElement.remove();
@@ -263,9 +263,9 @@
         h2Element.setAttribute('id', 'cdc-name-'+pk);
 
         if(error_text==""){
-            h2Element.textContent=name;
+            h2Element.textContent=changed_name;
             const listItem = document.querySelector('#tag-'+pk);
-            listItem.textContent=name;
+            listItem.textContent=changed_name;
         }            
         else
             h2Element.textContent=origin_name;

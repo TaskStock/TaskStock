@@ -1251,7 +1251,7 @@ def update_category(request):
         update_category.save()
         error_text=""
 
-    return JsonResponse({'error_text':error_text, 'origin_name':origin_name,})
+    return JsonResponse({'error_text':error_text, 'origin_name':origin_name, 'changed_name':name,})
 
 @csrf_exempt
 @login_required
