@@ -123,6 +123,7 @@ DATABASES = {
         'PASSWORD': MYSQL_PASSWD,
         'HOST': MYSQL_HOST,
         'PORT': MYSQL_PORT,
+        "OPTIONS": {"charset": "utf8mb4"},
     },
 }
 DATABASE_ROUTERS = [

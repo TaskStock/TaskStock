@@ -102,7 +102,7 @@ class Value(models.Model):
 
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='category_user')
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=30)
     finish = models.BooleanField(default=False)
     memory = models.TextField(null=True)
 

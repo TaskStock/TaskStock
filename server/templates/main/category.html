@@ -103,6 +103,19 @@
         })
     }
 
+    function setupTextarea_category() {
+        const textarea = document.getElementById("name");
+
+        textarea.addEventListener("input", function () {
+            const text = textarea.value;
+            const remainingChars = 20 - text.length;
+
+            // 글자 수가 30자를 초과하면 입력을 막음
+            if (remainingChars < 0) {
+            textarea.value = text.slice(0, 30);
+            }
+        });
+    }
 
 
     // 리스트에 카테고리가 없다면 없다고 알리는 알림 문구 표시
