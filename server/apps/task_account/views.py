@@ -102,8 +102,7 @@ def signup1(request):
             user = form.save()
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth.login(request, user)
-
-            user.custom_active=True 
+            user.custom_active=True
             user.save()
 
             return redirect('/signup/step2/')
