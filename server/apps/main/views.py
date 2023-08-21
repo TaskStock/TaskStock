@@ -670,7 +670,7 @@ def click_date(request):
     except Value.DoesNotExist:
         todos = []
         
-    categorys = Category.objects.all()
+    categorys = Category.objects.filter(user=target_user)
 
     category_datas=[]
 
