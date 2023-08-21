@@ -16,7 +16,9 @@
             <div class="user-info--left">
                 <div class="user-info--about">
                     <div class="user-info--name">{{target_user.name}}</div>
+                    {% if target_user.introdce != None %}
                     <div class="user-info--comment">{{target_user.introduce}}</div>
+                    {% endif %}
                 </div>
                 <div class="user-info--sff__container" id="user-info--sff__container-des">
                     <span>Today</span>
