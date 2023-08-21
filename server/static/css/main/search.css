@@ -24,10 +24,10 @@
 .search-top3-trophy i{
     font-size: var(--subheading);
 }
-
-
-
-
+.search-container{
+    overflow-y: scroll;
+    padding-bottom: 200px;
+}
 .search-form input {
     color: var(--checked-border);
     height: 34px;
@@ -62,6 +62,7 @@
     .search-result > a{
         width: 100%;
     }
+   
 }
 .user-rank-container__list {
     display: flex;

@@ -280,7 +280,7 @@ section header img,
 /* search */
 .follow-container{
     flex-grow: 1;
-    /* overflow: hidden; */
+    padding-bottom: 150px;
     overflow-y: scroll;
     
 }

@@ -85,10 +85,6 @@
 {% endblock %}
 
 {% block extra %}
-<!-- Bootstrap JS and Popper.js (required for dropdowns and other features) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
     // info toggle
@@ -107,6 +103,19 @@
         })
     }
 
+    function setupTextarea_category() {
+        const textarea = document.getElementById("name");
+
+        textarea.addEventListener("input", function () {
+            const text = textarea.value;
+            const remainingChars = 20 - text.length;
+
+            // 글자 수가 30자를 초과하면 입력을 막음
+            if (remainingChars < 0) {
+            textarea.value = text.slice(0, 30);
+            }
+        });
+    }
 
 
     // 리스트에 카테고리가 없다면 없다고 알리는 알림 문구 표시
@@ -242,10 +251,10 @@
             headers:{},
             body: formData,
         });
-        const {error_text, origin_name}=await res.json();
-        category_update(error_text, origin_name, name, pk);
+        const {error_text, origin_name, changed_name}=await res.json();
+        category_update(error_text, origin_name, changed_name, pk);
     }
-    const category_update = (error_text, origin_name, name, pk) => {
+    const category_update = (error_text, origin_name, changed_name, pk) => {
         const categoryBox = document.querySelector('#cdc-name-box');
         const inputElement = document.querySelector('#update_name-'+pk);
         inputElement.remove();
@@ -254,9 +263,9 @@
         h2Element.setAttribute('id', 'cdc-name-'+pk);
 
         if(error_text==""){
-            h2Element.textContent=name;
+            h2Element.textContent=changed_name;
             const listItem = document.querySelector('#tag-'+pk);
-            listItem.textContent=name;
+            listItem.textContent=changed_name;
         }            
         else
             h2Element.textContent=origin_name;
@@ -471,6 +480,7 @@
         
         // 영구 삭제 
         const deleteCheckBtn = document.querySelector('#c-modal-complete-btn');
+        deleteCheckBtn.removeEventListener('click', delete_category_action);
         deleteCheckBtn.addEventListener('click', function() {
             delete_category_action(pk, type);
         });
