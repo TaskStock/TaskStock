@@ -20,9 +20,11 @@ defusedxml==0.7.1
 Django==3.2
 django-allauth==0.54.0
 django-apscheduler==0.6.2
+django-decouple==2.1
 django-dotenv==1.4.2
 django-environ==0.10.0
 django-timezone-field==5.1
+environ==1.0
 gTTS==2.2.4
 gunicorn==21.2.0
 idna==3.4
