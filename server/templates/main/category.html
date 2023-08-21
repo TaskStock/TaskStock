@@ -480,6 +480,7 @@
         
         // 영구 삭제 
         const deleteCheckBtn = document.querySelector('#c-modal-complete-btn');
+        deleteCheckBtn.removeEventListener('click', delete_category_action);
         deleteCheckBtn.addEventListener('click', function() {
             delete_category_action(pk, type);
         });
