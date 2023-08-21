@@ -91,7 +91,7 @@ darkBtn.forEach(btn => {
         }        
 })})
 
-if (window.matchMedia("(max-width: 600px)").matches){
+if (window.matchMedia("(max-width: 400px)").matches){
     // 모바일 햄버거 왼쪽
     const mb_hbg_left = document.querySelector('#mb--header .gg-menu-left-alt');
     const mb_hbg_right = document.querySelector('#mb--header .gg-menu-right-alt');
@@ -100,7 +100,7 @@ if (window.matchMedia("(max-width: 600px)").matches){
         mb_hbg_left.classList.toggle('active');
         if(mb_hbg_left.classList.contains('active')){
             left_section.style.left = '0';    
-            right_section.style.right = '-100%';
+            right_section.style.right = '-102%';
         }else{
             left_section.style.left = '-90%';   
         } 
@@ -108,10 +108,10 @@ if (window.matchMedia("(max-width: 600px)").matches){
     mb_hbg_right.addEventListener('click', () => {
         mb_hbg_right.classList.toggle('active');
         if(mb_hbg_right.classList.contains('active')){
-            right_section.style.right = '-10%';
+            right_section.style.right = '-32%';
             left_section.style.left = '-90%'; 
         }else{
-            right_section.style.right = '-100%';
+            right_section.style.right = '-102%';
         }
     })
 
