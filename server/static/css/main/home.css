@@ -235,9 +235,8 @@ main{
 }
 #todo-add--select option,
 .todo-edit--select option{
-    background: rgba(0,0,0,0.3);
-    /* background-color: red; */
-    color: red;
+    background: #1f1f1f;
+    color: white;
 }
 #todo-add--category,
 .todo-edit--category{
