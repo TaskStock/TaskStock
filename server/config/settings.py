@@ -244,4 +244,5 @@ SCHEDULER_DEFAULT = True
 # sentry
 RAVEN_CONFIG={
     'dsn':'{}'.format(DSN_URL),
+    'release': raven.fetch_git_sha(os.path.join(os.path.dirname(__file__), '../..')),
 }
