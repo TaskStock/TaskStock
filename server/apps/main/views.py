@@ -670,7 +670,7 @@ def click_date(request):
     except Value.DoesNotExist:
         todos = []
         
-    categorys = Category.objects.all()
+    categorys = Category.objects.filter(user=target_user)
 
     category_datas=[]
 
@@ -1196,6 +1196,9 @@ def category(request):
 def create_category(request):
     input_name = request.POST.get('name')
 
+    if len(input_name) > 29:
+        input_name = input_name[:29]
+
     error_text=""
     if input_name=="":
         success=False
@@ -1228,6 +1231,9 @@ def update_category(request):
     name = request.POST.get('name')
     pk = request.POST.get('pk')
 
+    if len(name) > 29:
+        name = name[:29]
+
     update_category = Category.objects.get(pk=pk)
     origin_name=update_category.name
         
@@ -1245,7 +1251,7 @@ def update_category(request):
         update_category.save()
         error_text=""
 
-    return JsonResponse({'error_text':error_text, 'origin_name':origin_name,})
+    return JsonResponse({'error_text':error_text, 'origin_name':origin_name, 'changed_name':name,})
 
 @csrf_exempt
 @login_required

@@ -18,10 +18,17 @@ scheduler.add_jobstore(DjangoJobStore(), "default")
 next_run = arrow.now('Asia/Seoul').replace(hour=0, minute=0, second=0, microsecond=0).shift(days=1).datetime
 @register_job(scheduler, "interval", days=1, next_run_time=next_run, replace_existing=True)
 def porcess_midnight():
-    groups = Group.objects.all()
-    for group in groups:
-        group.delta = 0
-        group.save()
+    with transaction.atomic():
+        groups = Group.objects.select_for_update().all()
+        for group in groups:
+            group.delta = 0
+            group.save()
+
+    with transaction.atomic():
+        per_users=User.objects.select_for_update().all()
+        for user in per_users:
+            user.percentage = 0
+            user.save()
     
     users = User.objects.all()
     for user in users:
@@ -36,8 +43,9 @@ def porcess_midnight():
         # 정산 결과 알림
         alarm_calculate_account(user, previous_day)
         alarm_calculate_follow(user)
-        alarm_calculate_group()
-        alarm_calculate_ranking()
+        
+    alarm_calculate_group()
+    alarm_calculate_ranking()
     
     return
 
