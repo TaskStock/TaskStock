@@ -63,7 +63,20 @@ if(plus != null){
 
     });
 }
-
+document.addEventListener('click', (event) => {
+    if(document.querySelector('.todo-plus').classList.contains('active')){
+        let clickedInsideEditContainer = false;
+        console.log(event.target);
+        if (document.querySelector('.todo-add--container').contains(event.target) || plus.contains(event.target)) {
+            clickedInsideEditContainer = true;
+        }
+        // 클릭된 요소가 editContainer 내부에 속하지 않는 경우 section 넣기
+        if (!clickedInsideEditContainer) {
+            document.querySelector('.todo-plus').classList.remove('active');
+        }
+    }
+});
+    
 
 const add_todo = async(date_id) => {
     const url = '/main/add_todo/';

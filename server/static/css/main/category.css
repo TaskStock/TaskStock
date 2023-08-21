@@ -426,7 +426,8 @@
     font-size: var(--body2);
     margin-top: var(--offset);
 }
-#cdc-delete-box button{
+#cdc-delete-box button,
+#cdc-memory-box button{
     font-size: var(--body2);
     padding: 10px 16px;
     background-color: var(--red-1);
@@ -435,7 +436,12 @@
     color: white;
     position: relative;
 }
-#cdc-delete-box button:hover{
+#cdc-memory-box button{
+    background-color: var(--box-color);
+    border: none;
+}
+#cdc-delete-box button:hover,
+#cdc-memory-box button:hover{
     top: -2px;
 }
 

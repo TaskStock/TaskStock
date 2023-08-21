@@ -250,12 +250,6 @@
                     <div class="todo-item todo-item-{{todo.pk}} ">
                         
                         <div class="todo-checkbox todo-checkbox-{{todo.pk}} {{todo.goal_check}}" onclick="check_todo({{todo.pk}})"></div>
-                        
-                        <!-- <input type="text" 
-                               class="todo-contents" 
-                               onclick="edit_todo({{todo.pk}})"
-                               value="{{todo.content}}"
-                               readonly> -->
                         <div class="todo-contents" onclick="edit_todo({{todo.pk}})">
                         {{todo.content}}</div>
                         <div class="todo-level todo-level-{{todo.pk}}">
