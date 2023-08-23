@@ -35,9 +35,6 @@ def decrease_value(user, target_arrow):
         value_object.end -= todo.level * 1000
         value_object.save()
         
-    # print('process_decrease 가치 감소 check 실행')
-    
-    
 
 
 

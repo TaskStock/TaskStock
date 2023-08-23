@@ -27,12 +27,15 @@ def porcess_midnight():
     for user in users:
         current_time = get_current_arrow(user.tzinfo)   #사용자의 로컬 시간대
         #if current_time.hour == 0 and current_time.minute == 0: #글로벌 대응용 로직
-        
+    
         previous_day = current_time.shift(days=-1)
-        decrease_value(user, previous_day)
-
-        #add_delta_to_group(user, previous_day)
-
+        try:
+            decrease_value(user, previous_day)
+        except Exception as e:
+            # 로그나 출력을 통해 오류를 기록
+            print(f"Error for user {user.id}: {e}")
+            continue
+        
         # 정산 결과 알림
         alarm_calculate_account(user, previous_day)
         alarm_calculate_follow(user)
