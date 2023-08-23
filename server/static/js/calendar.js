@@ -177,9 +177,9 @@ function handleDateResponse(todos, category_datas){
                             </div>
                         </div>
                         <div class="todo-edit--category">
-                            <span>카테고리를 수정하세요</span>
+                            <span>프로젝트를 수정하세요</span>
                             <select class="todo-edit--select">
-                                <option value="">None</option>
+                                <option value="">프로젝트 없음</option>
                                 ${category_html}
                             </select>
                         </div>

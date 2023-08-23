@@ -280,7 +280,7 @@ section header img,
 /* search */
 .follow-container{
     flex-grow: 1;
-    /* overflow: hidden; */
+    padding-bottom: 150px;
     overflow-y: scroll;
     
 }
@@ -390,6 +390,9 @@ section header img,
         flex-direction: column;
         align-items: center;
         flex-shrink: 0;
+        position: relative;
+        transform: translateX(20px);
+        margin-right: 20px;
     }
     #tb-hamburger{
         margin-top: var(--offset);
@@ -425,23 +428,25 @@ section header img,
     main{
         margin-top: 62px;
         overflow-x: hidden;
+        width: 100%;
         
     }
     #mb--header{
         display: flex;
         width: 100%;
     }
-
     #tb-section{
         width: 90%;
         margin-right: -90%;
-        right: -102%;
+        right: -100%;
         position: relative;
         top: 0;
         z-index: 1000;
         align-items: flex-start;
         z-index: 600;
         transition: all 1s;
+        transform: translateX(90px);
+        /* margin-right: 0px; */
     }
     .tb-hamburger-contents{
         align-items: flex-start;

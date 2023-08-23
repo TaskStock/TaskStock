@@ -16,21 +16,25 @@ scheduler.add_jobstore(DjangoJobStore(), "default")
 
 # 하루에 한번 - 우리나라만 대상으로 할 경우 UTC기준 15시/KST기준 00시에 한번씩 실행되게 하면 됨
 next_run = arrow.now('Asia/Seoul').replace(hour=0, minute=0, second=0, microsecond=0).shift(days=1).datetime
-def process_midnight():
-    groups = Group.objects.all()
-    for group in groups:
-        try:
+@register_job(scheduler, "interval", days=1, next_run_time=next_run, replace_existing=True)
+def porcess_midnight():
+    with transaction.atomic():
+        groups = Group.objects.select_for_update().all()
+        for group in groups:
             group.delta = 0
             group.save()
-        except Exception as e:
-            print(f"Error updating group {group.id}: {e}")
-            continue
 
+    with transaction.atomic():
+        per_users=User.objects.select_for_update().all()
+        for user in per_users:
+            user.percentage = 0
+            user.save()
+    
     users = User.objects.all()
+    current_time = get_current_arrow('Asia/Seoul')   
+    previous_day = current_time.shift(days=-1)
+    
     for user in users:
-        current_time = get_current_arrow(user.tzinfo)   # 사용자의 로컬 시간대
-        previous_day = current_time.shift(days=-1)
-
         try:
             decrease_value(user, previous_day)
         except Exception as e:
