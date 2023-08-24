@@ -31,26 +31,39 @@ def porcess_midnight():
             user.save()
     
     users = User.objects.all()
-    for user in users:
-        current_time = get_current_arrow(user.tzinfo)   #사용자의 로컬 시간대
-        #if current_time.hour == 0 and current_time.minute == 0: #글로벌 대응용 로직
+    current_time = get_current_arrow('Asia/Seoul')   
+    previous_day = current_time.shift(days=-1)
     
-        previous_day = current_time.shift(days=-1)
+    for user in users:
         try:
             decrease_value(user, previous_day)
         except Exception as e:
-            # 로그나 출력을 통해 오류를 기록
-            print(f"Error for user {user.id}: {e}")
+            print(f"Error decreasing value for user {user.id}: {e}")
             continue
-        
-        # 정산 결과 알림
-        alarm_calculate_account(user, previous_day)
-        alarm_calculate_follow(user)
-        
-    alarm_calculate_group()
-    alarm_calculate_ranking()
-    
-    return
+
+        try:
+            alarm_calculate_account(user, previous_day)
+        except Exception as e:
+            print(f"Error in alarm_calculate_account for user {user.id}: {e}")
+            continue
+
+        try:
+            alarm_calculate_follow(user)
+        except Exception as e:
+            print(f"Error in alarm_calculate_follow for user {user.id}: {e}")
+            continue
+
+        try:
+            alarm_calculate_group()
+        except Exception as e:
+            print(f"Error in alarm_calculate_group: {e}")
+            continue
+
+        try:
+            alarm_calculate_ranking()
+        except Exception as e:
+            print(f"Error in alarm_calculate_ranking: {e}")
+            continue
 
 
 if not scheduler.running:

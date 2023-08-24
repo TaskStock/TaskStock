@@ -60,10 +60,10 @@ const darkBtn = document.querySelectorAll('.menu-right__darkmode');
 const activeTheme = localStorage.getItem('theme');
 
 if(activeTheme){
-    bodyEl.classList.add('dark');
+    bodyEl.classList.remove('dark');
     darkBtn.forEach(btn => {
-        btn.querySelector('i').classList.remove('gg-moon');
         btn.querySelector('i').classList.add('gg-sun');
+        btn.querySelector('i').classList.remove('gg-moon');
         btn.querySelector('span').innerHTML = 'Light Mode';
     })
 }
@@ -71,15 +71,14 @@ if(activeTheme){
 darkBtn.forEach(btn => {
     btn.addEventListener('click', () => {
         bodyEl.classList.toggle('dark');
-        // console.log('clicked');
     
         if(bodyEl.classList.contains('dark')){
-            localStorage.setItem('theme', 'dark');
+            localStorage.removeItem('theme');
             btn.querySelector('i').classList.remove('gg-moon');
             btn.querySelector('i').classList.add('gg-sun');
             btn.querySelector('span').innerHTML = 'Light Mode';
         }else{
-            localStorage.removeItem('theme');
+            localStorage.setItem('theme', 'light');
             btn.querySelector('i').classList.remove('gg-sun');
             btn.querySelector('i').classList.add('gg-moon');
             btn.querySelector('span').innerHTML = 'Dark Mode';
